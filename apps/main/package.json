@@ -1,0 +1,17 @@
+{
+  "name": "main",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "storybook-docs": "storybook dev --docs",
+    "preprocess": "node scripts/preprocess.js"
+  },
+  "devDependencies": {
+    "next-transpile-modules": "^10.0.1"
+  }
+}

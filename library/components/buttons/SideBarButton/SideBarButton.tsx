@@ -1,0 +1,62 @@
+import styled, { css } from 'styled-components'
+import { styleToCss, propertyBreakpoints } from '@peiko/styled'
+import { BaseButton } from '../BaseButton/BaseButton'
+import { getIconSize } from '../utils/get-icon-size'
+import { getButtonFont } from '../utils/get-button-font'
+import { getButtonSize } from '../utils/get-button-size'
+import {
+  buttonPressedColors,
+  buttonBaseColors,
+  buttonDisabledColors,
+  buttonFocusColors,
+  buttonHoverColors,
+} from '../utils/button-colors-styles'
+import { TButtonProps } from '../types'
+
+export const SideBarButton = styled(BaseButton)((props) => {
+  const { theme, size = 'm' } = props
+  const { palette } = theme
+  const { styles } = props
+
+  return css`
+    ${getButtonSize(size)}
+    ${getButtonFont(size, theme)}
+    ${getIconSize(size)}
+
+    ${buttonBaseColors({
+      color: palette.main2,
+      icon: palette.main2,
+    })}
+
+    ${buttonFocusColors({
+      bg: palette.base100,
+    })}
+
+    ${buttonHoverColors({
+      bg: palette.base200,
+    })}
+
+    ${buttonPressedColors({
+      bg: palette.base100,
+    })}
+
+    ${buttonDisabledColors({
+      color: palette.main12,
+      icon: palette.main12,
+    })}
+
+
+    ${propertyBreakpoints<TButtonProps['size']>({
+      props: size,
+      values: (value) =>
+        css`
+          ${getButtonFont(value, theme)}
+          ${getButtonSize(value)}
+          ${getIconSize(value)}
+        }
+        `,
+    })}
+
+    ${styles && styleToCss(styles, theme)}
+  `
+})

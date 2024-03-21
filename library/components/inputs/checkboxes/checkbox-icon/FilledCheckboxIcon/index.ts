@@ -1,0 +1,1 @@
+export { FilledCheckboxIcon } from './FilledCheckboxIcon'

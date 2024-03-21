@@ -1,0 +1,5 @@
+export const INPUT_CLASS = 'custom-input'
+export const SEARCH_CLASS = 'custom_search'
+export const CONTAINER_CLASS = 'custom_container'
+export const BUTTON_CLASS = 'custom_button'
+export const DROPDOWN_CLASS = 'custom_dropdown'

@@ -1,0 +1,24 @@
+{
+  "phone": "Phone Number",
+  "password": "Password",
+  "new-password": "New Password",
+  "repeat-password": "Repeat Password",
+  "confirm-password": "Confirm New Password",
+  "current-password": "Current Password",
+  "first-name": "First Name",
+  "last-name": "Last Name",
+  "birth-date": "Date of Birth",
+  "address": "Delivery Address",
+  "address-unit": "Apt, unit, etc.",
+  "placeholder": {
+    "password": "Min. 6 symbols",
+    "repeat-password": "Repeat Password",
+    "confirm-password": "Repeat your new password",
+    "current-password": "Enter your current password",
+    "first-name": "Enter your name",
+    "last-name": "Enter your last name",
+    "address": "Address, city, or zip code"
+  },
+  "copy-success": "Copied!",
+  "copy-error": "Error!"
+}

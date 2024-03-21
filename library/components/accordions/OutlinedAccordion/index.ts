@@ -1,0 +1,1 @@
+export { OutlinedAccordion } from './OutlinedAccordion'

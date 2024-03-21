@@ -1,0 +1,1 @@
+export { FilledChip } from './FilledChip'

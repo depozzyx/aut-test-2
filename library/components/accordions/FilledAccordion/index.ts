@@ -1,0 +1,1 @@
+export { FilledAccordion } from './FilledAccordion'

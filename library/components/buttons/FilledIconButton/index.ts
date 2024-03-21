@@ -1,0 +1,1 @@
+export { FilledIconButton } from './FilledIconButton'

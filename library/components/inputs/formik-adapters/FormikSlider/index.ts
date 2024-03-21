@@ -1,0 +1,1 @@
+export { FormikSlider } from './FormikSlider'

@@ -1,0 +1,14 @@
+services:
+  nuxt-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.main
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NUXT_PORT=3000
+      - CHOKIDAR_USEPOLLING=true
+    command: 'yarn start-main'

@@ -1,0 +1,19 @@
+#---------------------------------------------------------------
+#-- Stages --
+#---------------------------------------------------------------
+stages:
+  - check_propject
+
+#---------------------------------------------------------------
+#-- Сhecking the existence of the directory and files in it. --
+#---------------------------------------------------------------
+check_propject:
+  stage: check_propject
+  script:
+    - yarn install
+    - yarn tsc
+    - yarn lint-deploy
+  only:
+    - merge_requests
+  except:
+    - develop

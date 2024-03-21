@@ -1,0 +1,1 @@
+export { OutlinedChip } from './OutlinedChip'

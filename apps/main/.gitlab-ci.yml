@@ -1,0 +1,187 @@
+#---------------------------------------------------------------
+#-- Variables Section --
+#---------------------------------------------------------------
+.common:
+  tags:
+    - &ENV_TAG_PROD production
+    - &ENV_TAG_DEV develop
+  only:
+    - &ENV_ONLY_PROD master
+    - &ENV_ONLY_DEV develop
+
+#---------------------------------------------------------------
+#-- Deploy stages --
+#---------------------------------------------------------------
+stages:
+  - check_clone
+  - deploy
+  - update
+  - build
+  - restart
+
+#---------------------------------------------------------------
+#-- Сhecking the existence of the directory and files in it. --
+#---------------------------------------------------------------
+test_dir_dev:
+  stage: check_clone
+  tags:
+    - *ENV_TAG_DEV
+  only:
+    - *ENV_ONLY_DEV
+  script:
+    - 'echo $CI_PROJECT_PATH;'
+    - 'echo $CI_SERVER_HOST;'
+    - 'echo $CI_COMMIT_REF_NAME;'
+    - 'echo $CI_COMMIT_NAME;'
+    - 'echo $CI_COMMIT_BRANCH;'
+    - 'echo git clone --branch $CI_COMMIT_REF_NAME git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git www'
+    # -- If the directory exists and there are files in it, then no action is required --
+    - "[ -d ~/www ] && [ `ls -1q ~/www | wc -l` -ne '0' ] && echo 'Look ok' && exit 0;"
+    #-- Else. Remove old dir if exist --
+    - '[ -d ~/www ] && rm -fr ~/www'
+    #-- Clone project--
+    - 'cd ~ && git clone --branch $CI_COMMIT_REF_NAME git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git www'
+
+test_dir_prod:
+  stage: check_clone
+  tags:
+    - *ENV_TAG_PROD
+  only:
+    - *ENV_ONLY_PROD
+  script:
+    - 'echo $CI_PROJECT_PATH;'
+    - 'echo $CI_SERVER_HOST;'
+    - 'echo $CI_COMMIT_REF_NAME;'
+    - 'echo $CI_COMMIT_NAME;'
+    - 'echo $CI_COMMIT_BRANCH;'
+    - 'echo git clone --branch $CI_COMMIT_REF_NAME git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git www'
+    # -- If the directory exists and there are files in it, then no action is required --
+    - "[ -d ~/www ] && [ `ls -1q ~/www | wc -l` -ne '0' ] && echo 'Look ok' && exit 0;"
+    #-- Else. Remove old dir if exist --
+    - '[ -d ~/www ] && rm -fr ~/www'
+    #-- Clone project--
+    - 'cd ~ && git clone --branch $CI_COMMIT_REF_NAME git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git www'
+
+
+
+#---------------------------------------------------------------
+#-- Git deploy --
+#---------------------------------------------------------------
+git_pull_dev:
+  stage: deploy
+  tags:
+    - *ENV_TAG_DEV
+  only:
+    - *ENV_ONLY_DEV
+  script:
+    - 'cd ~/www && git stash && git pull'
+  when: on_success
+
+git_pull_prod:
+  stage: deploy
+  tags:
+    - *ENV_TAG_PROD
+  only:
+    - *ENV_ONLY_PROD
+  script:
+    - 'cd ~/www && git stash && git pull'
+  when: on_success
+
+
+
+#---------------------------------------------------------------
+#-- Compouser update --
+#---------------------------------------------------------------
+update_npm_dev:
+  stage: update
+  tags:
+    - *ENV_TAG_DEV
+  only:
+    - *ENV_ONLY_DEV
+  script:
+    - 'cd ~/www && yarn install'
+  when: on_success
+
+update_npm_prod:
+  stage: update
+  tags:
+    - *ENV_TAG_PROD
+  only:
+    - *ENV_ONLY_PROD
+  script:
+    - 'cd ~/www && yarn install'
+  when: on_success
+
+
+
+#---------------------------------------------------------------
+#-- Node Build --
+#---------------------------------------------------------------
+build_npm_dev:
+  stage: build
+  tags:
+    - *ENV_TAG_DEV
+  only:
+    - *ENV_ONLY_DEV
+  script:
+    - 'cd ~/www && yarn build-storybook'
+  when: on_success
+
+build_v2_dev:
+  stage: build
+  tags:
+    - *ENV_TAG_DEV
+  only:
+    - *ENV_ONLY_DEV
+  script:
+    - 'cd ~/www && yarn build'
+  when: on_success
+
+build_npm_prod:
+  stage: build
+  tags:
+    - *ENV_TAG_PROD
+  only:
+    - *ENV_ONLY_PROD
+  script:
+    - 'cd ~/www && yarn build-storybook'
+  when: on_success
+
+build_v2_prod:
+  stage: build
+  tags:
+    - *ENV_TAG_PROD
+  only:
+    - *ENV_ONLY_PROD
+  script:
+    - 'cd ~/www && yarn build'
+  when: on_success
+
+
+#---------------------------------------------------------------
+#-- Node Restart --
+#---------------------------------------------------------------
+restart_npm_dev:
+  stage: restart
+  tags:
+    - *ENV_TAG_DEV
+  only:
+    - *ENV_ONLY_DEV
+  script:
+    - 'pm2 info BUILDv2-DEV && pm2 stop BUILDv2-DEV || true'
+    - 'pm2 info BUILDv2-DEV && pm2 delete BUILDv2-DEV || true'
+    - 'cd ~/www && /usr/bin/pm2 start yarn --interpreter bash --name BUILDv2-DEV -- start'
+  when: on_success
+
+restart_npm_prod:
+  stage: restart
+  tags:
+    - *ENV_TAG_PROD
+  only:
+    - *ENV_ONLY_PROD
+  script:
+    - 'pm2 info BUILDv2-PRODUCTION && pm2 stop BUILDv2-PRODUCTION || true'
+    - 'pm2 info BUILDv2-PRODUCTION && pm2 delete BUILDv2-PRODUCTION || true'
+    - 'cd ~/www && /usr/bin/pm2 start yarn --interpreter bash --name BUILDv2-PRODUCTION -- start'
+  when: on_success
+
