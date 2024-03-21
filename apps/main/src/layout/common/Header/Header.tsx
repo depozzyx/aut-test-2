@@ -1,5 +1,4 @@
 import { useHeaderHeight } from '@/layout/common/hooks/use-header-height'
-import { AuthNavigation } from '@/features/auth/containers/AuthNavigation'
 import * as S from './Header.styles'
 
 export const Header: React.FC = () => {
@@ -7,9 +6,7 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <S.Header ref={headerRef}>
-        <AuthNavigation />
-      </S.Header>
+      <S.Header ref={headerRef} />
     </>
   )
 }

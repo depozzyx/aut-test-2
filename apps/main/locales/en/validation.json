@@ -2,7 +2,5 @@
   "required": "This field is required",
   "password-match": "Passwords don't match",
   "invalid-email": "Invalid email",
-  "age": "You must be at least 19 years old",
-  "invalid-age": "You must be at least 19 years old",
   "invalid-date": "Invalid date"
 }
