@@ -1,5 +1,5 @@
 import { CSSProperties, DefaultTheme } from 'styled-components'
-import { TMediaQueries } from '@peiko/styled'
+import { TMediaQueries } from '@peiko/styles'
 
 export type TDimensions = {
   /**

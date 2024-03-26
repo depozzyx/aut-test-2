@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { propertyBreakpoints } from '@peiko/styled'
+import { propertyBreakpoints } from '@peiko/styles'
 import { TAdaptive } from './types'
 
 export const Container = styled('div')<TAdaptive>(

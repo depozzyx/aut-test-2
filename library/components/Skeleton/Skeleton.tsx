@@ -1,5 +1,5 @@
 import styled, { DefaultTheme, css, keyframes } from 'styled-components'
-import { formatCssProperty } from '@peiko/styled'
+import { formatCssProperty } from '@peiko/styles'
 import { TSkeletonProps } from './types'
 
 const pulse = keyframes`

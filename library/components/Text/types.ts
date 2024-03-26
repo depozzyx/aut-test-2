@@ -1,6 +1,6 @@
 import React from 'react'
-import type { TStylesProps, TMediaQueries } from '@peiko/styled'
-import { TFonts } from '@peiko/styled'
+import type { TStylesProps, TMediaQueries } from '@peiko/styles'
+import { TFonts } from '@peiko/styles'
 import { DefaultTheme } from 'styled-components'
 
 export type TText = {

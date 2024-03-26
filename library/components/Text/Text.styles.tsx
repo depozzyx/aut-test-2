@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-import { styleToCss, propertyBreakpoints } from '@peiko/styled'
+import { styleToCss, propertyBreakpoints } from '@peiko/styles'
 import { TText } from './types'
 
 export const StyledText = styled.p<TText>((props) => {

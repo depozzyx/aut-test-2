@@ -1,6 +1,6 @@
 import ScrollContainer from 'react-indiana-drag-scroll'
 import styled from 'styled-components'
-import { formatCssProperty } from '@peiko/styled'
+import { formatCssProperty } from '@peiko/styles'
 import { THorizontalContainerProps } from './types'
 
 const Container = styled(ScrollContainer)<{ gap: THorizontalContainerProps['gap'] }>`
@@ -10,7 +10,7 @@ const Container = styled(ScrollContainer)<{ gap: THorizontalContainerProps['gap'
   gap: ${({ gap }) => (gap ? formatCssProperty(gap, 'px') : '0px')};
 `
 
-export const HorizontallScroll: React.FC<THorizontalContainerProps> = ({
+export const HorizontalScroll: React.FC<THorizontalContainerProps> = ({
   children,
   gap = 16,
   ...props

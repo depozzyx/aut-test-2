@@ -1,7 +1,7 @@
 import styled, { DefaultTheme, css } from 'styled-components'
 import ReactSelect, { GroupBase, Props } from 'react-select'
 import { CSSProperties } from 'react'
-import { TStylesProps, formatCssProperty, styleToCss } from '@peiko/styled'
+import { TStylesProps, formatCssProperty, styleToCss } from '@peiko/styles'
 import { TSelectOption, TSelectProps } from './types'
 import { getIconSize } from './utils/get-icon-size'
 
@@ -175,16 +175,16 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
       color: ${palette.main8};
 
       &--is-focused {
-        background-color: ${palette.base100};
+        background-color: ${palette['btn-focus']};
       }
 
       &:hover {
-        background-color: ${palette.base100};
+        background-color: ${palette['btn-focus']};
       }
 
       &--is-selected {
         cursor: default !important;
-        background-color: ${palette.base100};
+        background-color: ${palette['btn-focus']};
         color: ${palette.main2};
         pointer-events: none;
       }

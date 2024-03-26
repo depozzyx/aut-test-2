@@ -1,6 +1,6 @@
 import { CSSProperties, DefaultTheme } from 'styled-components'
-import { TMediaQueries } from '@peiko/styled/types/breakpoints'
-import { TStylesProps } from '@peiko/styled'
+import { TMediaQueries } from '@peiko/styles/types/breakpoints'
+import { TStylesProps } from '@peiko/styles'
 
 export type TCardStylesProps = {
   /**

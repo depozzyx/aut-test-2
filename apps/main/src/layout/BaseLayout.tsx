@@ -13,7 +13,7 @@ type PageLayoutProps = Props & Partial<Props>
 
 const BodyColor = createGlobalStyle`
   body {
-    background-color: ${(props) => props.theme.palette.textWhite};
+    background-color: ${(props) => props.theme.palette.main};
   }
 `
 
@@ -21,7 +21,7 @@ export const ContentWrapper = styled.div<PageLayoutProps>(
   (props) => css`
     display: flex;
     margin: 0 auto;
-    background-color: ${props.theme.palette.bgColour};
+    background-color: ${props.theme.palette.base};
     min-height: ${props.minHeight || 'calc(100vh - var(--header-height))'};
     overflow-x: hidden;
     align-items: center;
@@ -33,7 +33,7 @@ export const Content = styled.div<PageLayoutProps>((props) => {
   const base = `
   display: flex;
   flex-direction: column;
-  background-color: ${props.theme.palette.bgColour};
+  background-color: ${props.theme.palette.base};
   margin: 0 auto;
   width: 100%;
   max-width: ${props.maxWidth ?? '100%'};

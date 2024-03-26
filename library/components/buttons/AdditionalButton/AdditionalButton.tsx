@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components'
-import { styleToCss, propertyBreakpoints } from '@peiko/styled'
+import { styleToCss, propertyBreakpoints } from '@peiko/styles'
 import { getIconSize } from '../utils/get-icon-size'
 import { getButtonFont } from '../utils/get-button-font'
 import { getButtonSize } from '../utils/get-button-size'
-import { BaseButton } from '../BaseButton/BaseButton'
+import { BaseButton } from '../BaseButton'
 import {
   buttonActiveColors,
   buttonBaseColors,
@@ -35,7 +35,7 @@ export const AdditionalButton = styled(BaseButton)((props) => {
     })}
 
     ${buttonHoverColors({
-      bg: palette.base100,
+      bg: palette['btn-focus'],
     })}
 
     ${buttonPressedColors({

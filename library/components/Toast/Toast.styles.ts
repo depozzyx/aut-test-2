@@ -24,7 +24,7 @@ export const Container = styled(ToastContainer)<{ offsetY?: number }>((props) =>
       padding: 8px 24px;
       ${fonts.f5};
       line-height: 24px;
-      background-color: ${palette.base4};
+      background-color: ${palette.base3};
     }
 
     .Toastify__close-button {

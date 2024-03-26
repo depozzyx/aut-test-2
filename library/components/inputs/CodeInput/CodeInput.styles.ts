@@ -52,7 +52,7 @@ export const Code = styled(ReactCodeInput)((props) => {
       transition-property: border-color;
       border: 2px solid ${({ theme }) => theme.palette.base3} !important;
       margin-right: 8px;
-      background-color: ${disabled ? theme.palette.base100 : theme.palette.base3};
+      background-color: ${disabled ? theme.palette.base : theme.palette.base3};
 
       ${mediaQueries.xs} {
         width: 46px !important;

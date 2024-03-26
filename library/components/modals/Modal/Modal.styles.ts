@@ -1,7 +1,7 @@
 import PopupComponent from 'reactjs-popup'
 import styled, { css, keyframes } from 'styled-components'
 import { CSSProperties } from 'react'
-import { formatCssProperty } from '@peiko/styled'
+import { formatCssProperty } from '@peiko/styles'
 import { WINDOW_HEIGHT } from '@peiko/constants/css'
 import { IconButton } from '@peiko/components/buttons/IconButton'
 

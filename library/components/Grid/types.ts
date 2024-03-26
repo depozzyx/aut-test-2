@@ -1,7 +1,7 @@
-import { TStylesProps, TMediaQueries } from '@peiko/styled'
+import { TStylesProps, TMediaQueries } from '@peiko/styles'
 
 /**
- * Breakpoint colums
+ * Breakpoint columns
  */
 export type TItemColumn = TMediaQueries<number>
 

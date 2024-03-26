@@ -26,7 +26,7 @@
       "@/api-rest/*": ["api/rest/*"]
     },
     "typeRoots": [
-      "../../node_modules/@peiko/styled/types", 
+      "../../node_modules/@peiko/styles/types",
       "../../node_modules/@peiko/types/declare",
       "../../node_modules/@types"
     ],

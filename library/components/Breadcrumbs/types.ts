@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { TMediaQueries } from '@peiko/styled'
+import { TMediaQueries } from '@peiko/styles'
 
 type TBreadCrumb = {
   href: string

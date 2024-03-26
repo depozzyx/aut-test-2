@@ -1,1 +1,1 @@
-export { HorizontallScroll } from './HorizontallScroll'
+export { HorizontalScroll } from './HorizontalScroll'

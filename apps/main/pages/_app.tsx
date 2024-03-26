@@ -8,7 +8,7 @@ import { useWindowHeight } from '@peiko/hooks/use-window-height'
 import { InitUser } from '@/features/common/user/InitUser'
 import { injectStore } from '@/api-rest/instance'
 import { GlobalError, NetworkError } from '@/features/common/error'
-import { StyledProvider } from '@peiko/styled'
+import { StyledProvider } from '@peiko/styles'
 
 injectStore(store)
 

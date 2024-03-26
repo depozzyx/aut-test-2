@@ -1,6 +1,6 @@
 import styled, { CSSProperties, css } from 'styled-components'
 import { getTrackBackground, Direction } from 'react-range'
-import { formatCssProperty } from '@peiko/styled'
+import { formatCssProperty } from '@peiko/styles'
 import { SliderValues } from './types'
 
 type TTrack = {

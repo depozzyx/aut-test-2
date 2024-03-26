@@ -2,11 +2,11 @@
 import { StoryObj, Meta } from '@storybook/react'
 import { Card } from '@peiko/components/Card'
 import { Text } from '@peiko/components/Text'
-import { HorizontallScroll } from './HorizontallScroll'
+import { HorizontalScroll } from './HorizontalScroll'
 
-const meta: Meta<typeof HorizontallScroll> = {
-  title: 'Data display/HorizontallScroll',
-  component: HorizontallScroll,
+const meta: Meta<typeof HorizontalScroll> = {
+  title: 'Data display/HorizontalScroll',
+  component: HorizontalScroll,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
   },
@@ -15,7 +15,7 @@ const meta: Meta<typeof HorizontallScroll> = {
 }
 
 export default meta
-type Story = StoryObj<typeof HorizontallScroll>
+type Story = StoryObj<typeof HorizontalScroll>
 
 /**
  *

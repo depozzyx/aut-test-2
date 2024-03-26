@@ -34,7 +34,7 @@ export const StyledDayPicker = styled(DayPicker)((props) => {
     }
 
     .rdp-button:active:not([disabled]):not(.rdp-day_selected) {
-      background-color: ${palette.base100};
+      background-color: ${palette.base};
     }
 
     .rdp-button:focus-visible:not([disabled]) {

@@ -2,7 +2,7 @@ import { DefaultTheme } from 'styled-components'
 import { mediaQueries } from './breakpoints'
 import { zIndex } from './z-index'
 import { shadow } from './shadow'
-import { palette, darktPalete } from './palette'
+import { palette } from './palette'
 import { fonts } from './fonts'
 
 export type TTheme = 'light' | 'dark'
@@ -24,7 +24,6 @@ export const theming: TTheming = {
   dark: {
     palette: {
       ...palette,
-      ...darktPalete,
     },
     ...theme,
   },

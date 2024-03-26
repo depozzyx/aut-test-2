@@ -1,5 +1,5 @@
 import { CSSProperties } from 'styled-components'
-import { TStylesProps, TDefaultMediaQueries } from '@peiko/styled'
+import { TStylesProps, TDefaultMediaQueries } from '@peiko/styles'
 import { TLabelProps } from '../types'
 
 // textarea

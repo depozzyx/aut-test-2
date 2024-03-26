@@ -4,7 +4,7 @@ import {
   propertyBreakpoints,
   styleToCss,
   formatCssProperty,
-} from '@peiko/styled'
+} from '@peiko/styles'
 import { TTextAreaSizes } from './types'
 
 type TTextAreaCont = TStylesProps & {

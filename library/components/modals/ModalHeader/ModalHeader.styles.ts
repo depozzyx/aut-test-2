@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { propertyBreakpoints, styleToCss } from '@peiko/styled'
+import { propertyBreakpoints, styleToCss } from '@peiko/styles'
 import { THeaderProps } from './types'
 
 export const Wrapper = styled.div<Pick<THeaderProps, 'alignItems' | 'gap' | 'styles'>>(

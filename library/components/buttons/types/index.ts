@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes, FocusEvent, ReactNode } from 'react'
 import { CSSProperties, DefaultTheme } from 'styled-components'
 import { LinkProps } from 'next/link'
-import { TStylesProps, TMediaQueries } from '@peiko/styled'
+import { TStylesProps, TMediaQueries } from '@peiko/styles'
 
 export type TSize = 's' | 'm' | 'l'
 

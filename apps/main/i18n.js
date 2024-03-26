@@ -6,6 +6,6 @@ module.exports = {
   loadLocaleFrom: (lang, ns) =>
     import(`./.locales/${lang}/${ns}.json`).then((m) => m.default),
   pages: {
-    '*': ['inputs', 'error', 'validation'],
+    '*': ['inputs', 'error', 'validation', 'routing', 'common', 'auth'],
   },
 }

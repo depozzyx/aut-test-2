@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
-import { styleToCss, propertyBreakpoints } from '@peiko/styled'
-import { BaseButton } from '../BaseButton/BaseButton'
+import { styleToCss, propertyBreakpoints } from '@peiko/styles'
+import { BaseButton } from '../BaseButton'
 import { getIconSize } from '../utils/get-icon-size'
 import { getButtonFont } from '../utils/get-button-font'
 import { getButtonSize } from '../utils/get-button-size'
@@ -29,7 +29,7 @@ export const SideBarButton = styled(BaseButton)((props) => {
     })}
 
     ${buttonFocusColors({
-      bg: palette.base100,
+      bg: palette['btn-focus'],
     })}
 
     ${buttonHoverColors({
@@ -37,7 +37,7 @@ export const SideBarButton = styled(BaseButton)((props) => {
     })}
 
     ${buttonPressedColors({
-      bg: palette.base100,
+      bg: palette['btn-focus'],
     })}
 
     ${buttonDisabledColors({

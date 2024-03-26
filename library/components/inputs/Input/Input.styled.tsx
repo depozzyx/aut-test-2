@@ -5,7 +5,7 @@ import {
   propertyBreakpoints,
   styleToCss,
   formatCssProperty,
-} from '@peiko/styled'
+} from '@peiko/styles'
 import { TInputSizes } from './types'
 
 type TInputCont = TStylesProps & {

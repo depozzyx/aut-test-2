@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { propertyBreakpoints, styleToCss } from '@peiko/styled'
+import { propertyBreakpoints, styleToCss } from '@peiko/styles'
 import { BaseChip } from '../BaseChip'
 import { getChipSize } from '../utils/get-chip-size'
 import {
@@ -26,7 +26,7 @@ export const OutlinedChip = styled(BaseChip)((props) => {
 
     ${onClick &&
     chipFocusColors({
-      bg: palette.base100,
+      bg: palette['btn-focus'],
     })}
 
     ${onClick &&
@@ -36,7 +36,7 @@ export const OutlinedChip = styled(BaseChip)((props) => {
     
     ${onClick &&
     chipPressedColors({
-      bg: palette.base100,
+      bg: palette['btn-focus'],
     })}
     
     ${disabled &&

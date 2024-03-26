@@ -1,4 +1,4 @@
-import { TStylesProps, TMediaQueries } from '@peiko/styled'
+import { TStylesProps, TMediaQueries } from '@peiko/styles'
 import { DefaultTheme } from 'styled-components'
 
 export type TBadgeProps = {

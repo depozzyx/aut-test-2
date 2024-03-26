@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextTranslate = require('next-translate')
 const withTM = require('next-transpile-modules')([
-  '@peiko/styled',
+  '@peiko/styles',
   '@peiko/hooks',
   '@peiko/components',
   '@peiko/utils',

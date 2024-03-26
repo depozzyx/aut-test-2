@@ -1,5 +1,12 @@
 import { TDefaultBreakpoints, TDefaultMediaQueries } from './types/breakpoints'
 
+export interface IBreakpoints<T = string> {
+  xs: T
+  sm: T
+  md: T
+  lg: T
+}
+
 export const breakpoints: TDefaultBreakpoints<number> = {
   xs: 0,
   sm: 720,

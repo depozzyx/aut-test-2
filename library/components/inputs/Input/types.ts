@@ -1,7 +1,7 @@
 import { ChangeEvent, ReactElement } from 'react'
 import { Props as InputMaskProps } from 'react-input-mask'
 import { CSSProperties } from 'styled-components'
-import { TStylesProps, TDefaultMediaQueries } from '@peiko/styled'
+import { TStylesProps, TDefaultMediaQueries } from '@peiko/styles'
 import { TLabelProps } from '../types'
 
 // input

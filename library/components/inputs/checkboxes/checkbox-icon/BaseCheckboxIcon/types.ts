@@ -1,4 +1,4 @@
-import { TStylesProps, TMediaQueries } from '@peiko/styled'
+import { TStylesProps, TMediaQueries } from '@peiko/styles'
 
 type TSize = 's' | 'm' | 'l'
 

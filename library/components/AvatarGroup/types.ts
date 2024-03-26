@@ -1,5 +1,5 @@
 import React from 'react'
-import { TStylesProps, TMediaQueries } from '@peiko/styled'
+import { TStylesProps, TMediaQueries } from '@peiko/styles'
 import { DefaultTheme } from 'styled-components'
 import { TAvatarProps } from '../Avatar/types'
 

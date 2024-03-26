@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { styleToCss, propertyBreakpoints } from '@peiko/styled'
+import { styleToCss, propertyBreakpoints } from '@peiko/styles'
 import { BaseIconButton } from '../BaseIconButton'
 import {
   buttonBaseColors,
@@ -30,7 +30,7 @@ export const FilledIconButton = styled(BaseIconButton)((props) => {
     })}
 
     ${buttonFocusColors({
-      outline: palette.base100,
+      outline: palette['btn-focus'],
     })}
 
     ${buttonHoverColors({
@@ -38,12 +38,12 @@ export const FilledIconButton = styled(BaseIconButton)((props) => {
     })}
 
     ${buttonPressedColors({
-      outline: palette.base100,
+      outline: palette['btn-focus'],
     })}
 
     ${buttonDisabledColors({
       color: palette.main12,
-      bg: palette.base4,
+      bg: palette['btn-disabled'],
       icon: palette.main12,
     })}
 

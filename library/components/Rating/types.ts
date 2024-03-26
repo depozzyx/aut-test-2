@@ -1,4 +1,4 @@
-import { TStylesProps, TDefaultMediaQueries } from '@peiko/styled'
+import { TStylesProps, TDefaultMediaQueries } from '@peiko/styles'
 import { DefaultTheme } from 'styled-components'
 
 export type TRatingProps = {

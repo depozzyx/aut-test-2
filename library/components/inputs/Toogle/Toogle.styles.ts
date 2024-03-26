@@ -36,7 +36,7 @@ export const Label = styled.label<{ checked: boolean; disabled?: boolean }>((pro
 
     ${disabled &&
     css`
-      background-color: ${checked ? palette.main12 : palette.base4};
+      background-color: ${checked ? palette.main12 : palette.base};
     `}
   `
 })
@@ -94,7 +94,7 @@ export const Input = styled.input`
     pointer-events: none;
     + ${ToogleButton} {
       background-color: ${({ theme, checked }) =>
-        checked ? theme.palette.base4 : theme.palette.main12};
+        checked ? theme.palette.base : theme.palette.main12};
     }
   }
 `

@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
-import { styleToCss } from '@peiko/styled/utils/style-to-css'
-import { formatCssProperty } from '@peiko/styled/utils/format-css-property'
-import { propertyBreakpoints } from '@peiko/styled/utils/property-breakpoints'
+import { styleToCss } from '@peiko/styles/utils/style-to-css'
+import { formatCssProperty } from '@peiko/styles/utils/format-css-property'
+import { propertyBreakpoints } from '@peiko/styles/utils/property-breakpoints'
 import { TCardProps } from './types'
 
 const DEFAULT_BORDER_RADIUS = '8px'

@@ -63,7 +63,7 @@ export type TStylesProps = {
    *
    * The benefit of using this prop is that you can use any css property if you need.
    *
-   * But for complex customization better to use `styled` api from `styled-components`.
+   * But for complex customization better to use `styles` api from `styles-components`.
    *
    * In `styles` keys are camelCased css properties.
    *

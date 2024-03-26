@@ -1,6 +1,6 @@
 import { SVGProps } from 'react'
 import styled, { css } from 'styled-components'
-import { propertyBreakpoints, TMediaQueries } from '@peiko/styled'
+import { propertyBreakpoints, TMediaQueries } from '@peiko/styles'
 import { TDimensions } from '../types'
 
 type TBaseIcon = {

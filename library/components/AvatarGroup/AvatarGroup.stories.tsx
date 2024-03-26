@@ -115,7 +115,7 @@ export const WithSpacing: Story = {
  */
 export const CustomBg: Story = {
   args: {
-    defaultAvatarBg: 'base100',
+    defaultAvatarBg: 'base',
     total: 6,
     avatars: [
       { alt: 'Test Testovich1', src: image.src },

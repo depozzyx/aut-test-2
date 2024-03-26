@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { propertyBreakpoints } from '@peiko/styled'
+import { propertyBreakpoints } from '@peiko/styles'
 import { Text } from '@peiko/components/Text'
 import { TBreadCrumbsProps } from './types'
 
