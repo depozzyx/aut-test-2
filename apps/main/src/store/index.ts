@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, AnyAction } from '@reduxjs/toolkit'
 import errorReducer from '@/features/common/error/store'
 import userReducer from '@/features/common/user/store'
+import signInReducer from '@/features/auth/store/sign-in'
 
 const store = configureStore({
   reducer: {
     error: errorReducer,
     user: userReducer,
+    signIn: signInReducer,
   },
 })
 

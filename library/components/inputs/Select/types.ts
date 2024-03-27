@@ -73,7 +73,7 @@ export type TSelectProps = {
    * */
   onChange?: (p: TSelectEvent) => void
   /**
-   * If error is provided input will be styled as error and render error message below
+   * If error is provided input will be styles as error and render error message below
    * @default undefined
    * @type string
    * */

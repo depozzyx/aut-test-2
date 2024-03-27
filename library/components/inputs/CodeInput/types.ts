@@ -25,7 +25,7 @@ export type TCodeInputProps = {
    */
   onChange?: (code: string) => void
   /**
-   * If error is provided input will be styled as error and render error message below
+   * If error is provided input will be styles as error and render error message below
    */
   error?: string
   /**

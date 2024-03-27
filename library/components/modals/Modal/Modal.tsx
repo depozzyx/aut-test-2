@@ -11,7 +11,7 @@ import { TModalProps } from './types'
  *
  * You may pass any children you want to show in the modal
  *
- * Consider Card or Box components for modal content cause they can be easily styled
+ * Consider Card or Box components for modal content cause they can be easily styles
  */
 export const Modal: React.FC<TModalProps> = ({
   open,

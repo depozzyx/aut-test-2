@@ -8,8 +8,9 @@
     "baseUrl": "src",
     "paths": {
       "@/utils/*": ["utils/*"],
-      "@/styled/*": ["styled/*"],
+      "@/styles/*": ["styles/*"],
       "@/html/*": ["html/*"],
+      "@/assets/*": ["assets/*"],
       "@/store": ["store"],
       "@/inputs/*": ["components/inputs/*"],
       "@/types/*": ["types/*"],

@@ -17,7 +17,7 @@ export type TCheckBoxProps = {
    * */
   onChange?: (e: TCheckboxEvent) => void
   /**
-   * If error is provided checkbox will be styled as error
+   * If error is provided checkbox will be styles as error
    */
   error?: string
   /**

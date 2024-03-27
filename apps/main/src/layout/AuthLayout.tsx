@@ -20,10 +20,11 @@ export const ContentWrapper = styled.div<PageLayoutProps>(
   (props) => css`
     display: flex;
     margin: 0 auto;
-    background-color: ${props.theme.palette.base};
+    background-color: ${props.theme.palette.base2};
     min-height: ${props.minHeight || 'calc(100vh - var(--header-height))'};
     overflow-x: hidden;
     align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100vh;
   `,

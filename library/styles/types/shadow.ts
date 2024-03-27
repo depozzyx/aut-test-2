@@ -1,5 +1,6 @@
 export type TDefaultShadow = {
   card: string
+  table: string
 }
 export type TCustomShadow = {
   // customShadowName: string
