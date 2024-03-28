@@ -35,7 +35,7 @@ export const AdditionalButton = styled(BaseButton)((props) => {
     })}
 
     ${buttonHoverColors({
-      bg: palette['btn-focus'],
+      bg: palette.main15,
     })}
 
     ${buttonPressedColors({

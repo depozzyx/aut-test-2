@@ -5,6 +5,12 @@ export const getIconButtonSize = (
   size: TIconButtonProps['size'],
 ): FlattenSimpleInterpolation => {
   switch (size) {
+    case 'xs':
+      return css`
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+      `
     case 's':
       return css`
         width: 32px;
@@ -20,8 +26,8 @@ export const getIconButtonSize = (
     case 'l':
       return css`
         width: 60px;
-        border-radius: 50%;
         height: 60px;
+        border-radius: 50%;
       `
     default:
       return css``

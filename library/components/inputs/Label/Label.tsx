@@ -26,7 +26,7 @@ export const Label: React.FC<TLabelProps> = ({
           readOnly={readOnly}
           onClick={onClick}
         >
-          <S.Text variant="f5">{label}</S.Text>
+          <S.Text variant="f6">{label}</S.Text>
         </S.Label>
       </S.TopCont>
     )}

@@ -20,7 +20,7 @@ export const Container = styled(ReactRating)<{
     }
 
     svg path {
-      fill: ${color ? theme.palette[color] : theme.palette['btn-focus']};
+      fill: ${color ? theme.palette[color] : theme.palette.main15};
     }
 
     ${disabled &&

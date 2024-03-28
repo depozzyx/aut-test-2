@@ -26,7 +26,7 @@ export const OutlinedChip = styled(BaseChip)((props) => {
 
     ${onClick &&
     chipFocusColors({
-      bg: palette['btn-focus'],
+      bg: palette.main15,
     })}
 
     ${onClick &&
@@ -36,7 +36,7 @@ export const OutlinedChip = styled(BaseChip)((props) => {
     
     ${onClick &&
     chipPressedColors({
-      bg: palette['btn-focus'],
+      bg: palette.main15,
     })}
     
     ${disabled &&

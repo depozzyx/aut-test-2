@@ -46,7 +46,7 @@ export const FilledChip = styled(BaseChip)((props) => {
     ${disabled &&
     chipDisabledColors({
       color: palette.main12,
-      bg: palette['btn-disabled'],
+      bg: palette.main17,
       icon: palette.main12,
     })}
 

@@ -30,9 +30,11 @@ export type TDefaultPalette = {
   main12: Color
   main13: Color
   main14: Color
-  'btn-focus': Color
-  'btn-disabled': Color
-  'btn-pressed-border': Color
+  main15: Color
+  main16: Color
+  main17: Color
+  main18: Color
+  main19: Color
   overlay: Color
 }
 

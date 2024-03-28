@@ -31,18 +31,18 @@ export const GradientIconButton = styled(BaseIconButton)((props) => {
     })}
 
     ${buttonFocusColors({
-      outline: palette['btn-focus'],
+      outline: palette.main15,
       gradient: palette.main,
     })}
 
     ${buttonPressedColors({
       bg: palette.main2,
-      outline: palette['btn-focus'],
+      outline: palette.main15,
     })}
 
     ${buttonDisabledColors({
       color: palette.main12,
-      bg: palette['btn-disabled'],
+      bg: palette.main17,
       icon: palette.main12,
     })}
 

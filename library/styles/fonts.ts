@@ -33,9 +33,10 @@ const defaultFonts: TDefaultFonts = {
   `,
   f6: `
     font-size: 14px;
-    font-weight: 600;
-    line-height: 24px;
+    font-weight: 400;
+    line-height: 20px;
     letter-spacing: 0;
+    font-family: 'Roboto', sans-serif;
   `,
   f7: `
     font-size: 14px;

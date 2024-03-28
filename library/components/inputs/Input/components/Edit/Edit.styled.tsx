@@ -21,19 +21,19 @@ export const Container = styled.div<TIconContainerProps>(({ disabled, theme }) =
     outline: none;
     cursor: pointer;
 
-    ${iconColor('main8')}
+    ${iconColor('main3')}
 
     &:focus {
-      ${iconColor('main8')}
+      ${iconColor('main3')}
     }
 
     &:hover {
-      ${iconColor('main8')}
+      ${iconColor('main3')}
     }
 
     ${disabled &&
     css`
-      ${iconColor('main8')}
+      ${iconColor('main3')}
       pointer-events: none;
     `}
   `

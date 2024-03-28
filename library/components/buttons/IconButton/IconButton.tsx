@@ -31,15 +31,15 @@ export const IconButton = styled(BaseIconButton)((props) => {
     })}
 
     ${buttonFocusColors({
-      bg: palette['btn-focus'],
+      bg: palette.main15,
     })}
 
     ${buttonHoverColors({
-      bg: palette.base200,
+      bg: palette.main19,
     })}
 
     ${buttonPressedColors({
-      bg: palette['btn-focus'],
+      bg: palette.main15,
     })}
 
     ${buttonDisabledColors({
@@ -55,7 +55,7 @@ export const IconButton = styled(BaseIconButton)((props) => {
 
     ${active &&
     buttonActiveColors({
-      bg: palette['btn-focus'],
+      bg: palette.main15,
     })}
 
 

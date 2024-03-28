@@ -15,7 +15,7 @@ export type TDimensions = {
    *
    * @default m
    */
-  size?: 'xs' | 's' | 'm'
+  size?: 'xs' | 's' | 'm' | 'l'
 }
 
 export type TIcon = {

@@ -175,16 +175,16 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
       color: ${palette.main8};
 
       &--is-focused {
-        background-color: ${palette['btn-focus']};
+        background-color: ${palette.main15};
       }
 
       &:hover {
-        background-color: ${palette['btn-focus']};
+        background-color: ${palette.main15};
       }
 
       &--is-selected {
         cursor: default !important;
-        background-color: ${palette['btn-focus']};
+        background-color: ${palette.main15};
         color: ${palette.main2};
         pointer-events: none;
       }

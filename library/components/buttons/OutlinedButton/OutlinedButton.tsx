@@ -33,8 +33,8 @@ export const OutlinedButton = styled(BaseButton)((props) => {
 
     ${buttonFocusColors({
       color: palette.main2,
-      bg: palette['btn-focus'],
-      icon: palette['btn-focus'],
+      bg: palette.main15,
+      icon: palette.main15,
     })}
 
     ${buttonHoverColors({
@@ -44,7 +44,7 @@ export const OutlinedButton = styled(BaseButton)((props) => {
     })}
 
     ${buttonPressedColors({
-      bg: palette['btn-focus'],
+      bg: palette.main15,
       outline: palette.base200,
     })}
 

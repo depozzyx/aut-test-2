@@ -24,7 +24,7 @@ export const Container = styled.div<TContainer>`
     border: ${BORDER_WIDTH} solid
       ${(props) => (props.error ? props.theme.palette.main7 : props.theme.palette.base3)} !important;
     caret-color: ${(props) =>
-      props.error ? props.theme.palette.main7 : props.theme.palette.main8} !important;
+      props.error ? props.theme.palette.main7 : props.theme.palette.main3} !important;
   }
 `
 

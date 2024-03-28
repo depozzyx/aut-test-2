@@ -1,10 +1,10 @@
 import { NextPage } from 'next'
 import { AuthLayout } from '@/layout/AuthLayout'
-import { SignInForm } from '@/features/auth/SignInForm'
+import { SignIn } from '@/features/auth/SignIn'
 
 const SignInPage: NextPage = () => (
   <AuthLayout>
-    <SignInForm />
+    <SignIn />
   </AuthLayout>
 )
 

@@ -29,7 +29,7 @@ export const SideBarButton = styled(BaseButton)((props) => {
     })}
 
     ${buttonFocusColors({
-      bg: palette['btn-focus'],
+      bg: palette.main15,
     })}
 
     ${buttonHoverColors({
@@ -37,7 +37,7 @@ export const SideBarButton = styled(BaseButton)((props) => {
     })}
 
     ${buttonPressedColors({
-      bg: palette['btn-focus'],
+      bg: palette.main15,
     })}
 
     ${buttonDisabledColors({

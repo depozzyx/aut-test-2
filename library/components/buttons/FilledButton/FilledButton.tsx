@@ -32,20 +32,20 @@ export const FilledButton = styled(BaseButton)((props) => {
     })}
 
     ${buttonFocusColors({
-      outline: palette['btn-focus'],
+      outline: palette.main15,
     })}
 
     ${buttonHoverColors({
-      bg: palette['btn-focus'],
+      bg: palette.main19,
     })}
 
     ${buttonPressedColors({
-      outline: palette['btn-focus'],
+      outline: palette.main16,
     })}
 
     ${buttonDisabledColors({
-      color: palette.main12,
-      bg: palette['btn-disabled'],
+      color: palette.main18,
+      bg: palette.main17,
       icon: palette.main12,
     })}
 

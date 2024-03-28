@@ -1,7 +1,11 @@
-import { FC } from 'react'
+import { AuthLayout } from '@/layout/AuthLayout'
+import { ResetPassword } from '@/features/auth/ResetPassword'
+import { NextPage } from 'next'
 
-export const ResetPassword: FC = () => {
-  const text = 'Reset Password'
+const ForgotPasswordPage: NextPage = () => (
+  <AuthLayout>
+    <ResetPassword />
+  </AuthLayout>
+)
 
-  return <div>{text}</div>
-}
+export default ForgotPasswordPage

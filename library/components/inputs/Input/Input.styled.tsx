@@ -18,14 +18,14 @@ type TInputCont = TStylesProps & {
 
 const TRANSITION = '200ms'
 const BORDER_WIDTH = 2
-const BORDER_RADIUS = 8
+const BORDER_RADIUS = 4
 
 const inputFont = (size: TInputSizes['size'], theme: DefaultTheme) => {
   switch (size) {
     case 'm':
-      return theme.fonts.f5
+      return theme.fonts.f6
     default:
-      return theme.fonts.f5
+      return theme.fonts.f6
   }
 }
 
@@ -33,7 +33,7 @@ const containerSize = (size?: TInputSizes['size']) => {
   switch (size) {
     case 's':
       return css`
-        height: 48px;
+        height: 30px;
       `
     case 'm':
       return css`
@@ -80,8 +80,13 @@ export const InputContainer = styled.div<TInputCont>((props) => {
   const { palette } = props.theme
 
   const states = css`
+    ${props.error &&
+    css`
+      border-color: ${palette.main13} !important;
+    `}
+
     &:hover {
-      border-color: ${!props.error && palette.main11};
+      border-color: ${!props.error && palette.main2};
     }
 
     &:focus {
@@ -89,7 +94,7 @@ export const InputContainer = styled.div<TInputCont>((props) => {
         background-color: transparent !important;
       }
       & svg path {
-        fill: ${palette.main11} !important;
+        fill: ${palette.main3} !important;
       }
     }
 
@@ -104,7 +109,7 @@ export const InputContainer = styled.div<TInputCont>((props) => {
       }
 
       & svg path {
-        fill: ${palette.main12} !important;
+        fill: ${palette.main3} !important;
       }
     `}
   `
@@ -116,8 +121,8 @@ export const InputContainer = styled.div<TInputCont>((props) => {
     width: 100%;
     position: relative;
     ${containerSize(size)}
-    background-color: ${palette.base3};
-    border: ${BORDER_WIDTH}px solid ${props.error ? palette.main7 : palette.base3};
+    background-color: ${palette.base};
+    border: ${BORDER_WIDTH}px solid ${props.error ? palette.main13 : palette.main17};
     border-radius: ${BORDER_RADIUS}px;
     caret-color: auto;
     transition: border ${TRANSITION} linear;
@@ -131,7 +136,7 @@ export const InputContainer = styled.div<TInputCont>((props) => {
     & > input {
       ${inputFont(props.size, theme)}
       &::placeholder {
-        color: ${props.theme.palette.main11};
+        color: ${props.theme.palette.main18};
       }
     }
 
@@ -140,12 +145,12 @@ export const InputContainer = styled.div<TInputCont>((props) => {
     }
 
     svg path {
-      fill: ${(props) => props.theme.palette.main11};
+      fill: ${(props) => props.theme.palette.main3};
     }
 
     :focus-within {
       svg path {
-        fill: ${(props) => props.theme.palette.main8};
+        fill: ${(props) => props.theme.palette.main3};
       }
     }
 
@@ -174,7 +179,7 @@ export const baseInput = css`
   padding: 10px 16px;
   border: none;
   background-color: unset;
-  color: ${(props) => props.theme.palette.main8};
+  color: ${(props) => props.theme.palette.main5};
 
   &:-webkit-autofill,
   &:-webkit-autofill:hover,

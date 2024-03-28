@@ -25,7 +25,7 @@ export const FilledCheckboxIcon = styled(BaseCheckboxIcon)((props) => {
     })}
 
     ${checkboxIconHoverColors({
-      bg: palette['btn-focus'],
+      bg: palette.main15,
     })}
 
     ${checkboxIconPressedColors({
@@ -34,7 +34,7 @@ export const FilledCheckboxIcon = styled(BaseCheckboxIcon)((props) => {
 
     ${disabled &&
     checkboxIconDisabledColors({
-      bg: palette['btn-disabled'],
+      bg: palette.main17,
       icon: palette.main12,
     })}
 

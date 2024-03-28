@@ -5,7 +5,7 @@ export const GlobalStyles = createGlobalStyle`
   ${normalize}
 
   * {
-    font-family: 'Chakra Petch', sans-serif;
+    font-family: 'Roboto', sans-serif;
     box-sizing: border-box;
   }
 

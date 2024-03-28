@@ -1,0 +1,8 @@
+{
+  "logo-name": "Autodialer software",
+  "statuses": {
+    "success": "Success!",
+    "error": "Error!"
+  },
+  "confirm": "Confirm"
+}

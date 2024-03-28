@@ -24,6 +24,7 @@ export const getSize = (size: TDimensions['size']): string => {
   if (size === 'xs') return '12px'
   if (size === 's') return '20px'
   if (size === 'm') return '24px'
+  if (size === 'l') return '40px'
   return '20px'
 }
 
