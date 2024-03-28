@@ -8,6 +8,8 @@ import { NextLink } from '@peiko/components/links/NextLink'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { useRedux } from '@/hooks/use-redux'
 import { ROUTES } from '@/constants/routes'
+import { EmailIcon } from '@peiko/components/icons/EmailIcon'
+import { LockIcon } from '@peiko/components/icons/LockIcon'
 import {
   Container,
   FormWrapper,
@@ -55,6 +57,7 @@ export const SignIn: FC = () => {
                 id="email"
                 formik={formik}
                 width={247}
+                startAdornment={<EmailIcon width="24px" height="24px" />}
               />
               <WarningText>{!formik.errors.email && t('sign-in.warning')}</WarningText>
             </EmailField>
@@ -67,6 +70,7 @@ export const SignIn: FC = () => {
               id="password"
               formik={formik}
               width={247}
+              startAdornment={<LockIcon width="24px" height="24px" />}
             />
           </Fields>
           <NextLink href={ROUTES.RESET_PASSWORD}>

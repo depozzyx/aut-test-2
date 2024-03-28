@@ -176,7 +176,7 @@ export const baseInput = css`
   width: 100%;
   outline: none;
   height: 100%;
-  padding: 10px 16px;
+  padding: 4px 8px 4px 4px;
   border: none;
   background-color: unset;
   color: ${(props) => props.theme.palette.main5};
@@ -202,11 +202,11 @@ const Adornment = styled.div`
 `
 
 export const StartAdornment = styled(Adornment)`
-  padding-left: 12px;
+  padding-left: 8px;
 `
 
 export const EndAdornment = styled(Adornment)`
-  padding-right: 12px;
+  padding-right: 8px;
 `
 
 export const Input = styled.input`

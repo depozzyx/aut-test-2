@@ -6,6 +6,7 @@ import * as yup from 'yup'
 import { validation } from '@/utils/validation'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
+import { EmailIcon } from '@peiko/components/icons/EmailIcon'
 import {
   FormWrapper,
   Title,
@@ -44,6 +45,7 @@ export const ResetPassword: FC = () => {
             id="email"
             formik={formik}
             width={247}
+            startAdornment={<EmailIcon width="24px" height="24px" />}
           />
           <FilledButton
             type="submit"

@@ -6,6 +6,7 @@ import { Logo } from '@/features/auth/components/Logo'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { validation } from '@/utils/validation'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
+import { LockIcon } from '@peiko/components/icons/LockIcon'
 import { Container, FormWrapper, SubTitle, Title } from './ChangePasswordForm.styled'
 
 export const ChangePasswordForm: FC = () => {
@@ -33,26 +34,27 @@ export const ChangePasswordForm: FC = () => {
         <FormWrapper>
           <Title>{t('reset-password.title')}</Title>
           <SubTitle>{t('reset-password.subtitle')}</SubTitle>
-
           <FormikInput
             id="password"
             name="password"
             type="password"
             size="s"
-            label={{ label: t('inputs:password') }}
-            placeholder={t('inputs:placeholder.password')}
+            label={{ label: t('inputs:new-password') }}
+            placeholder={t('inputs:placeholder.new-password')}
             formik={formik}
             width={247}
+            startAdornment={<LockIcon width="24px" height="24px" />}
           />
           <FormikInput
             id="password"
             name="confirmPassword"
             type="confirmPassword"
             size="s"
-            label={{ label: t('inputs:password') }}
-            placeholder={t('inputs:placeholder.password')}
+            label={{ label: t('inputs:repeat-password') }}
+            placeholder={t('inputs:placeholder.repeat-password')}
             formik={formik}
             width={247}
+            startAdornment={<LockIcon width="24px" height="24px" />}
           />
           <FilledButton
             type="submit"

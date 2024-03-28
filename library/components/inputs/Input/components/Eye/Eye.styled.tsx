@@ -17,7 +17,7 @@ export const Container = styled.div<TIconContainerProps>(({ disabled, theme }) =
 
   return css`
     display: flex;
-    margin-right: 10px;
+    margin-right: 8px;
     outline: none;
     cursor: pointer;
 
