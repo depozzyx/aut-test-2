@@ -32,7 +32,8 @@ const defaultPalette: TDefaultPalette = {
   main16: '#FBB587', // btn-pressed border
   main17: '#C5C5C5',
   main18: '#8E8E8E',
-  main19: '#CE5200', // btn-hover
+  main19: '#57585D',
+  main20: '#CE5200', // btn-hover
   overlay: '#FEFEFE',
 }
 

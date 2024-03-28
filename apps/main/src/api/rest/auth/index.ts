@@ -6,6 +6,7 @@ import {
   TLogoutRes,
   TResetPasswordRes,
   TChangePasswordReq,
+  TResetPasswordReq,
 } from './types'
 
 const login = (data: TLoginReq): TAxiosResponse<TLoginRes> =>
@@ -13,8 +14,8 @@ const login = (data: TLoginReq): TAxiosResponse<TLoginRes> =>
 
 const logout = (): TAxiosResponse<TLogoutRes> => api.delete('/auth/logout')
 
-const resetPassword = (email: string): TAxiosResponse<TResetPasswordRes> =>
-  api.post('/auth/reset-password', { email })
+const resetPassword = (data: TResetPasswordReq): TAxiosResponse<TResetPasswordRes> =>
+  api.post('/auth/reset-password', data)
 
 const changePassword = (data: TChangePasswordReq): TAxiosResponse<TResetPasswordRes> =>
   api.post('/auth/change-password', data)

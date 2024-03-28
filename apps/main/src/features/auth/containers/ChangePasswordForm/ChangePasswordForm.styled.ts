@@ -38,4 +38,5 @@ export const SubTitle = styled.h2`
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
+  text-align: center;
 `

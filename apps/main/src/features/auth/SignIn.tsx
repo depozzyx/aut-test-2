@@ -76,7 +76,12 @@ export const SignIn: FC = () => {
           <NextLink href={ROUTES.RESET_PASSWORD}>
             <ForgotPassword>{t('forgot-password-link')}</ForgotPassword>
           </NextLink>
-          <FilledButton type="submit" size="s" width="100%">
+          <FilledButton
+            type="submit"
+            size="s"
+            width="100%"
+            disabled={!formik.isValid || !formik.dirty}
+          >
             {t('sign-in.action')}
           </FilledButton>
         </FormWrapper>

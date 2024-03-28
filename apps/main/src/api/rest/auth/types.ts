@@ -24,6 +24,10 @@ export type TLogoutRes = TBaseResponse & {
   meta: unknown
 }
 
+export type TResetPasswordReq = {
+  email: string
+}
+
 export type TResetPasswordRes = {
   statusCode: number
   meta: unknown

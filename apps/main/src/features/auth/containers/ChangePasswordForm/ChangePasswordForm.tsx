@@ -7,10 +7,13 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { validation } from '@/utils/validation'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { LockIcon } from '@peiko/components/icons/LockIcon'
+import { useRedux } from '@/hooks/use-redux'
+import { changePasswordAsync } from '@/features/auth/store/change-password'
 import { Container, FormWrapper, SubTitle, Title } from './ChangePasswordForm.styled'
 
 export const ChangePasswordForm: FC = () => {
   const { t } = useTranslation('auth')
+  const { dispatch } = useRedux()
 
   const formik = useFormik({
     initialValues: {
@@ -22,8 +25,7 @@ export const ChangePasswordForm: FC = () => {
       confirmPassword: validation.repeatPassword,
     }),
     onSubmit: (formData) => {
-      // eslint-disable-next-line no-console
-      console.log('ChangePasswordForm', formData)
+      dispatch(changePasswordAsync({ formData, formik }))
     },
   })
 
@@ -32,8 +34,8 @@ export const ChangePasswordForm: FC = () => {
       <Logo />
       <form onSubmit={formik.handleSubmit} autoComplete="off">
         <FormWrapper>
-          <Title>{t('reset-password.title')}</Title>
-          <SubTitle>{t('reset-password.subtitle')}</SubTitle>
+          <Title>{t('change-password.title')}</Title>
+          <SubTitle>{t('change-password.subtitle')}</SubTitle>
           <FormikInput
             id="password"
             name="password"
@@ -48,7 +50,7 @@ export const ChangePasswordForm: FC = () => {
           <FormikInput
             id="password"
             name="confirmPassword"
-            type="confirmPassword"
+            type="password"
             size="s"
             label={{ label: t('inputs:repeat-password') }}
             placeholder={t('inputs:placeholder.repeat-password')}

@@ -35,7 +35,7 @@ export const IconButton = styled(BaseIconButton)((props) => {
     })}
 
     ${buttonHoverColors({
-      bg: palette.main19,
+      bg: palette.main20,
     })}
 
     ${buttonPressedColors({

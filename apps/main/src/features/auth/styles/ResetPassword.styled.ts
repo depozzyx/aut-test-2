@@ -8,7 +8,7 @@ const commonStyles = `
   align-items: center;
 `
 
-export const Container = styled.div`
+export const FormContainer = styled.div`
   ${commonStyles};
   max-width: 552px;
   padding: 32px 48px;

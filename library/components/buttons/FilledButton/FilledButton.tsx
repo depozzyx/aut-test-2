@@ -36,7 +36,7 @@ export const FilledButton = styled(BaseButton)((props) => {
     })}
 
     ${buttonHoverColors({
-      bg: palette.main19,
+      bg: palette.main20,
     })}
 
     ${buttonPressedColors({

@@ -19,9 +19,9 @@ export const FilledChip = styled(BaseChip)((props) => {
 
   return css`
     ${chipBaseColors({
-      color: palette.main8,
+      color: palette.main19,
       bg: palette.base3,
-      icon: palette.main8,
+      icon: palette.main3,
       border: palette.base3,
     })}
 
