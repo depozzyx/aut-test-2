@@ -5,8 +5,6 @@ import { handleActionErrors } from '@/utils/handle-action-errors'
 import { apiAuth } from '@/api-rest/auth'
 import { TFormPropsAsync } from '@peiko/types/formik'
 import { TLoginReq } from '@/api-rest/auth/types'
-import Router from 'next/router'
-import { ROUTES } from '@/routes'
 import { userActions } from '@/features/common/user'
 
 export type TInit = {
@@ -46,7 +44,6 @@ export const signInAsync =
       dispatch(setIsLoading(true))
       const { data } = await apiAuth.login(formData)
       dispatch(userActions.setUserData(data.data))
-      await Router.push({ pathname: ROUTES.CABINET_DASHBOARD })
     } catch (e) {
       handleActionErrors({
         e,

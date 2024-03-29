@@ -4,5 +4,6 @@
     "success": "Success!",
     "error": "Error!"
   },
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "close": "Close"
 }
