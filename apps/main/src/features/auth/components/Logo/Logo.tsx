@@ -11,7 +11,7 @@ export const Logo: FC = () => {
   return (
     <LogoWrapper>
       <BaseImage src={logo} width={146} height={50} />
-      <Text>{t('logo-name')}</Text>
+      <Text variant="f8">{t('logo-name')}</Text>
     </LogoWrapper>
   )
 }

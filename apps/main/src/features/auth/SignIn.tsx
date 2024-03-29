@@ -10,17 +10,10 @@ import { useRedux } from '@/hooks/use-redux'
 import { ROUTES } from '@/constants/routes'
 import { EmailIcon } from '@peiko/components/icons/EmailIcon'
 import { LockIcon } from '@peiko/components/icons/LockIcon'
-import {
-  Container,
-  FormWrapper,
-  Title,
-  Fields,
-  EmailField,
-  WarningText,
-  ForgotPassword,
-} from './styles/SignIn.styled'
+import { Text } from '@peiko/components/Text'
+import { AuthFormCard } from '@/features/auth/components/AuthFormCard'
+import { Flex } from '@/components/Flex'
 import { signInAsync } from './store/sign-in'
-import { Logo } from './components/Logo'
 
 export const SignIn: FC = () => {
   const { t } = useTranslation('auth')
@@ -42,13 +35,14 @@ export const SignIn: FC = () => {
   })
 
   return (
-    <Container>
-      <Logo />
+    <AuthFormCard maxWidth={332}>
       <form onSubmit={formik.handleSubmit} autoComplete="off">
-        <FormWrapper>
-          <Title>{t('sign-in.title')}</Title>
-          <Fields>
-            <EmailField>
+        <Flex direction="column" align="center" justify="center" gap={24} fullWidth>
+          <Text tag="h4" variant="f4">
+            {t('sign-in.title')}
+          </Text>
+          <Flex direction="column" align="center" justify="center" gap={16} fullWidth>
+            <Flex direction="column" gap={4} fullWidth>
               <FormikInput
                 size="s"
                 name="email"
@@ -56,11 +50,15 @@ export const SignIn: FC = () => {
                 placeholder={t('inputs:placeholder.email')}
                 id="email"
                 formik={formik}
-                width={247}
+                width={246}
                 startAdornment={<EmailIcon width="24px" height="24px" />}
               />
-              <WarningText>{!formik.errors.email && t('sign-in.warning')}</WarningText>
-            </EmailField>
+              {!formik.errors.email && (
+                <Text variant="f10" color="main17">
+                  {t('sign-in.warning')}
+                </Text>
+              )}
+            </Flex>
             <FormikInput
               size="s"
               name="password"
@@ -69,12 +67,21 @@ export const SignIn: FC = () => {
               placeholder={t('inputs:placeholder.password')}
               id="password"
               formik={formik}
-              width={247}
+              width={246}
               startAdornment={<LockIcon width="24px" height="24px" />}
             />
-          </Fields>
+          </Flex>
           <NextLink href={ROUTES.RESET_PASSWORD}>
-            <ForgotPassword>{t('forgot-password-link')}</ForgotPassword>
+            <Text
+              variant="f10"
+              styles={{
+                alignSelf: 'flex-end',
+                textDecoration: 'underline',
+                cursor: 'pointer',
+              }}
+            >
+              {t('forgot-password-link')}
+            </Text>
           </NextLink>
           <FilledButton
             type="submit"
@@ -84,8 +91,8 @@ export const SignIn: FC = () => {
           >
             {t('sign-in.action')}
           </FilledButton>
-        </FormWrapper>
+        </Flex>
       </form>
-    </Container>
+    </AuthFormCard>
   )
 }

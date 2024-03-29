@@ -1,7 +1,8 @@
 import { FC } from 'react'
 
-import { Box } from '@peiko/components/Box'
-import { Message, StyledFilledChip, Title } from './AuthNotification.styled'
+import { Flex } from '@/components/Flex'
+import { Text } from '@peiko/components/Text'
+import { StyledFilledChip } from './AuthNotification.styled'
 
 export type TStatuses = 'success' | 'error' | 'info'
 
@@ -18,20 +19,18 @@ export const AuthNotification: FC<IAuthNotificationProps> = ({
   message,
   onClose,
 }) => (
-  <StyledFilledChip
-    status={status}
-    size="m"
-    styles={{
-      width: '100%',
-      height: '48px',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    }}
-    onDelete={onClose}
-  >
-    <Box styles={{ display: 'flex', flexDirection: 'column' }}>
-      {title && <Title>{title}</Title>}
-      {message && <Message>{message}</Message>}
-    </Box>
+  <StyledFilledChip status={status} size="m" onDelete={onClose}>
+    <Flex direction="column">
+      {title && (
+        <Text variant="f9" color="main3">
+          {title}
+        </Text>
+      )}
+      {message && (
+        <Text variant="f10" color="main19">
+          {message}
+        </Text>
+      )}
+    </Flex>
   </StyledFilledChip>
 )

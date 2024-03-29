@@ -5,6 +5,8 @@ import { handleActionErrors } from '@/utils/handle-action-errors'
 import { apiAuth } from '@/api-rest/auth'
 import { TFormPropsAsync } from '@peiko/types/formik'
 import { TLoginReq } from '@/api-rest/auth/types'
+import Router from 'next/router'
+import { ROUTES } from '@/routes'
 
 export type TInit = {
   isLoading: boolean
@@ -41,9 +43,8 @@ export const signInAsync =
   async (dispatch) => {
     try {
       dispatch(setIsLoading(true))
-      const { data } = await apiAuth.login(formData)
-      // eslint-disable-next-line no-console
-      console.log(data)
+      await apiAuth.login(formData)
+      await Router.push({ pathname: ROUTES.CABINET_DASHBOARD })
     } catch (e) {
       handleActionErrors({
         e,

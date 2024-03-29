@@ -23,9 +23,9 @@ const BORDER_RADIUS = 4
 const inputFont = (size: TInputSizes['size'], theme: DefaultTheme) => {
   switch (size) {
     case 'm':
-      return theme.fonts.f6
+      return theme.fonts.f8
     default:
-      return theme.fonts.f6
+      return theme.fonts.f8
   }
 }
 
@@ -37,15 +37,15 @@ const containerSize = (size?: TInputSizes['size']) => {
       `
     case 'm':
       return css`
-        height: 52px;
+        height: 30px;
       `
     case 'l':
       return css`
-        height: 56px;
+        height: 42px;
       `
     default:
       return css`
-        height: 52px;
+        height: 42px;
       `
   }
 }
@@ -86,7 +86,7 @@ export const InputContainer = styled.div<TInputCont>((props) => {
     `}
 
     &:hover {
-      border-color: ${!props.error && palette.main2};
+      border-color: ${!props.error && palette.main3};
     }
 
     &:focus {

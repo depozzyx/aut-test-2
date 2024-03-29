@@ -21,7 +21,7 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    color: ${({ theme }) => theme.palette.main8};
+    color: ${({ theme }) => theme.palette.main5};
     background: ${({ theme }) => theme.palette.base};
     line-height: 1.5;
   }

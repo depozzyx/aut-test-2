@@ -1,20 +1,13 @@
 import { FC } from 'react'
 import useTranslation from 'next-translate/useTranslation'
-import { Logo } from '@/features/auth/components/Logo'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+import { Text } from '@peiko/components/Text'
 import { validation } from '@/utils/validation'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { EmailIcon } from '@peiko/components/icons/EmailIcon'
-import { Box } from '@peiko/components/Box'
 import { useRedux } from '@/hooks/use-redux'
-import {
-  FormWrapper,
-  Title,
-  FormContainer,
-  SubTitle,
-} from '@/features/auth/styles/ResetPassword.styled'
 import { AuthNotification } from '@/features/auth/components/AuthNotification/AuthNotification'
 import {
   resetPasswordAsync,
@@ -23,6 +16,8 @@ import {
   setStatusCode,
 } from '@/features/auth/store/reset-password'
 import { useUnmount } from 'react-use'
+import { AuthFormCard } from '@/features/auth/components/AuthFormCard'
+import { Flex } from '@/components/Flex'
 
 export const ResetPassword: FC = () => {
   const { t } = useTranslation('auth')
@@ -50,21 +45,16 @@ export const ResetPassword: FC = () => {
   }
 
   return (
-    <Box
-      styles={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        maxWidth: '552px',
-        gap: '12px',
-      }}
-    >
-      <FormContainer>
-        <Logo />
+    <Flex direction="column" align="center" maxWidth={552} gap={12}>
+      <AuthFormCard>
         <form onSubmit={formik.handleSubmit} autoComplete="off">
-          <FormWrapper>
-            <Title>{t('reset-password.title')}</Title>
-            <SubTitle>{t('reset-password.subtitle')}</SubTitle>
+          <Flex direction="column" align="center" justify="center" gap={24}>
+            <Text tag="h4" variant="f4">
+              {t('reset-password.title')}
+            </Text>
+            <Text variant="f7" styles={{ whiteSpace: 'nowrap' }}>
+              {t('reset-password.subtitle')}
+            </Text>
             <FormikInput
               size="s"
               name="email"
@@ -72,7 +62,7 @@ export const ResetPassword: FC = () => {
               placeholder={t('inputs:placeholder.email')}
               id="email"
               formik={formik}
-              width={247}
+              width={246}
               startAdornment={<EmailIcon width="24px" height="24px" />}
             />
             <FilledButton
@@ -80,13 +70,13 @@ export const ResetPassword: FC = () => {
               size="s"
               width="100%"
               disabled={!formik.isValid || !formik.dirty}
-              styles={{ marginTop: '24px', maxWidth: '247px' }}
+              styles={{ marginTop: '24px', maxWidth: '246px' }}
             >
               {t('reset-password.action')}
             </FilledButton>
-          </FormWrapper>
+          </Flex>
         </form>
-      </FormContainer>
+      </AuthFormCard>
       {statusCode && (
         <AuthNotification
           status="info"
@@ -95,6 +85,6 @@ export const ResetPassword: FC = () => {
           onClose={handleHideNotification}
         />
       )}
-    </Box>
+    </Flex>
   )
 }

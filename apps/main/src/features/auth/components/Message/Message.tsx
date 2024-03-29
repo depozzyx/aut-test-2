@@ -5,7 +5,8 @@ import { ErrorIcon } from '@peiko/components/icons/ErrorIcon'
 import { Text } from '@peiko/components/Text'
 import useTranslation from 'next-translate/useTranslation'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
-import { Container, Close, Content, Title, MessageBlock } from './Message.styled'
+import { Flex } from '@/components/Flex'
+import { Container, Close } from './Message.styled'
 
 interface IMessageProps {
   status: 'success' | 'error'
@@ -36,16 +37,16 @@ export const Message: FC<IMessageProps> = ({
           <CloseIcon size="xs" />
         </Close>
       )}
-      <Content>
+      <Flex direction="column" align="center">
         {statusIcon}
-        <MessageBlock>
-          <Title>{statusTitle}</Title>
-          <Text>{message}</Text>
-        </MessageBlock>
+        <Flex direction="column" align="center" gap={16} styles={{ marginTop: '40px' }}>
+          <Text variant="f2">{statusTitle}</Text>
+          <Text variant="f7">{message}</Text>
+        </Flex>
         <FilledButton width="236px" styles={{ marginTop: '48px' }} onClick={buttonAction}>
           {buttonText}
         </FilledButton>
-      </Content>
+      </Flex>
     </Container>
   )
 }

@@ -1,9 +1,18 @@
-type DefaultFontVariant = 'f1' | 'f2' | 'f3' | 'f4' | 'f5' | 'f6' | 'f7'
-type CustomFontVariant = ''
+type DefaultFontVariant =
+  | 'f1'
+  | 'f2'
+  | 'f3'
+  | 'f4'
+  | 'f5'
+  | 'f6'
+  | 'f7'
+  | 'f8'
+  | 'f9'
+  | 'f10'
+  | 'f11'
 
-export type TFontVariant = DefaultFontVariant | CustomFontVariant
+export type TFontVariant = DefaultFontVariant
 
 export type TDefaultFonts = Record<DefaultFontVariant, string>
-export type TCustomFonts = Record<CustomFontVariant, string>
 
-export type TFonts = Record<TFontVariant, string> & Record<CustomFontVariant, string>
+export type TFonts = Record<TFontVariant, string>

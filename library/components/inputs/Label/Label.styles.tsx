@@ -17,7 +17,7 @@ export const Label = styled.label<{
   const { theme, color, required, readOnly } = props
   return css`
     ${Text} {
-      ${theme.fonts.f6};
+      ${theme.fonts.f8};
       color: ${(color && theme.palette[color]) || theme.palette.main5};
     }
 
