@@ -11,7 +11,7 @@ export const Permissions: React.FC = ({ children }) => {
   useEffect(() => {
     if (userFetching) return
     if (!user) {
-      replace(ROUTES.SIGN_UP)
+      replace(ROUTES.SIGN_IN)
     }
   }, [user, userFetching])
 

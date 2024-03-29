@@ -5,13 +5,9 @@ import { NextLink } from '@peiko/components/links/NextLink'
 import { ROUTES } from '@/constants/routes'
 import { NotFoundIcon } from '@peiko/components/icons/NotFoundIcon'
 import { ServerErrorIcon } from '@peiko/components/icons/ServerErrorIcon'
-import {
-  Container,
-  ErrorText,
-  Content,
-  ActionsContainer,
-} from '@/features/common/error/styles/PageError.styled'
 import { useRouter } from 'next/router'
+import { Flex } from '@/components/Flex'
+import { Text } from '@peiko/components/Text'
 
 type TErrorPageProps = {
   status: 404 | 500 | null
@@ -35,19 +31,30 @@ export const ErrorPage: FC<TErrorPageProps> = ({ status }) => {
   const handleGoBack = () => router.back()
 
   return (
-    <Container>
-      <Content>
+    <Flex
+      direction="column"
+      align="center"
+      justify="center"
+      gap={60}
+      width="100%"
+      height="100%"
+    >
+      <Flex direction="column" align="center" justify="center" gap={24}>
         {ErrorIcon}
-        <ErrorText>{errorText}</ErrorText>
-      </Content>
-      <ActionsContainer>
+        <Text variant="f2" color="main5">
+          {errorText}
+        </Text>
+      </Flex>
+      <Flex gap={24} align="center" justify="center" width={496}>
         <NextLink href={ROUTES.HOME}>
-          <FilledButton size="l">{t('routing:home')}</FilledButton>
+          <FilledButton width="100%" size="l">
+            {t('routing:home')}
+          </FilledButton>
         </NextLink>
-        <FilledButton size="l" onClick={handleGoBack}>
+        <FilledButton size="l" width="100%" onClick={handleGoBack}>
           {t('routing:go-back')}
         </FilledButton>
-      </ActionsContainer>
-    </Container>
+      </Flex>
+    </Flex>
   )
 }

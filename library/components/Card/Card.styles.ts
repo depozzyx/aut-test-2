@@ -23,8 +23,8 @@ export const CardContainer = styled.div<TCardProps>((props) => {
   } = props
 
   return css`
-    background: ${bgColor ? theme.palette[bgColor] : theme.palette.base3};
-    box-shadow: ${boxShadow};
+    background: ${bgColor ? theme.palette[bgColor] : theme.palette.base};
+    box-shadow: ${boxShadow || theme.shadow.table};
     max-width: ${formatCssProperty(maxWidth) || '100%'};
     border-radius: ${formatCssProperty(borderRadius) || DEFAULT_BORDER_RADIUS};
     padding: ${formatCssProperty(padding) || DEFAULT_PADDING};

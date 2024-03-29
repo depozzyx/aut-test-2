@@ -7,6 +7,7 @@ import { TFormPropsAsync } from '@peiko/types/formik'
 import { TLoginReq } from '@/api-rest/auth/types'
 import Router from 'next/router'
 import { ROUTES } from '@/routes'
+import { userActions } from '@/features/common/user'
 
 export type TInit = {
   isLoading: boolean
@@ -43,7 +44,8 @@ export const signInAsync =
   async (dispatch) => {
     try {
       dispatch(setIsLoading(true))
-      await apiAuth.login(formData)
+      const { data } = await apiAuth.login(formData)
+      dispatch(userActions.setUserData(data.data))
       await Router.push({ pathname: ROUTES.CABINET_DASHBOARD })
     } catch (e) {
       handleActionErrors({

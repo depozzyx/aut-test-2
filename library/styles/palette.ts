@@ -34,7 +34,7 @@ const defaultPalette: TDefaultPalette = {
   main18: '#8E8E8E',
   main19: '#57585D',
   main20: '#CE5200', // btn-hover
-  overlay: '#FEFEFE',
+  overlay: 'rgba(203, 217, 227, 0.56)',
 }
 
 export const palette = { ...defaultPalette }

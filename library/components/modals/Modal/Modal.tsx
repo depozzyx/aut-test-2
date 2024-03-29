@@ -54,7 +54,7 @@ export const Modal: React.FC<TModalProps> = ({
     <S.Popup modal nested open={open} onClose={onClose} closeOnDocumentClick={false}>
       <S.Container ref={containerRef} tabIndex={0} maxWidth={maxWidth}>
         {onClose && !hideCloseButton && (
-          <S.Close onClick={onClose}>
+          <S.Close onClick={onClose} iconColor="main5" size="s">
             <CloseIcon />
           </S.Close>
         )}

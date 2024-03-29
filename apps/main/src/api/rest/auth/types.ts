@@ -8,7 +8,7 @@ type TTokenInfo = {
   exp: number
 }
 
-type TCommonResponseData = {
+export type TCommonResponseData = {
   accessToken: TTokenInfo
   refreshToken: TTokenInfo
 }

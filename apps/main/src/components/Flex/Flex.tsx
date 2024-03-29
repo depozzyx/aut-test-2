@@ -7,3 +7,5 @@ export const Flex: FC<TFlexComponentProps> = ({ children, onClick, ...rest }) =>
     {children}
   </FlexContainer>
 )
+
+Flex.displayName = 'Flex'
