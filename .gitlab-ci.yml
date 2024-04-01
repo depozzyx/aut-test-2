@@ -1,19 +1,186 @@
 #---------------------------------------------------------------
-#-- Stages --
+#-- Common --
+#---------------------------------------------------------------
+.common:
+  tags:
+    - &ENV_TAG_DEV develop
+    - &ENV_TAG_STAGE stage
+    - &ENV_TAG_PROD production
+  only:
+    - &ENV_ONLY_DEV develop
+    - &ENV_ONLY_STAGE stage
+    - &ENV_ONLY_PROD master
+
+#---------------------------------------------------------------
+#-- Deploy stages --
 #---------------------------------------------------------------
 stages:
-  - check_propject
+    - check_propject
+    - check_clone
+    - pull_source_code
+    - update
+    - build
+    - restart
+
+#---------------------------------------------------------------
+#-- Сhecking project --
+#---------------------------------------------------------------
+check_propject:
+    stage: check_propject
+    script:
+    - yarn install
+    - yarn tsc
+    - yarn lint-deploy
+    only:
+    - merge_requests
+    except:
+    - develop
 
 #---------------------------------------------------------------
 #-- Сhecking the existence of the directory and files in it. --
 #---------------------------------------------------------------
-check_propject:
-  stage: check_propject
-  script:
-    - yarn install
-    - yarn tsc
-    - yarn lint-deploy
+git_clone_source_dev:
+    stage: check_clone
+    tags:
+        - *ENV_TAG_DEV
+    only:
+        - *ENV_ONLY_DEV
+    script:
+        - "echo $CI_PROJECT_PATH;"
+        - "echo $CI_SERVER_HOST;"
+        - "echo $CI_COMMIT_REF_NAME;"
+        - "echo $CI_COMMIT_NAME;"
+        - "echo $CI_COMMIT_BRANCH;"
+        - "echo git clone --branch $CI_COMMIT_REF_NAME git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git www-frnt"
+        # -- If the directory exists and there are files in it, then no action is required --
+        - "[ -d ~/www-frnt ] && [ `ls -1q ~/www-frnt| wc -l` -ne '0' ] && echo 'Look ok' && exit 0;"
+        #-- Else. Remove old dir if exist --
+        - "[ -d ~/www-frnt ] && rm -fr ~/www-frnt"
+        #-- Clone project--
+        - "cd ~ && git clone --branch $CI_COMMIT_REF_NAME git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git www-frnt"
+    when: on_success
+
+git_clone_source_prod:
+    stage: check_clone
+    tags:
+        - *ENV_TAG_PROD
+    only:
+        - *ENV_ONLY_PROD
+    script:
+        - "echo $CI_PROJECT_PATH;"
+        - "echo $CI_SERVER_HOST;"
+        - "echo $CI_COMMIT_REF_NAME;"
+        - "echo $CI_COMMIT_NAME;"
+        - "echo $CI_COMMIT_BRANCH;"
+        - "echo git clone --branch $CI_COMMIT_REF_NAME git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git www-frnt"
+        # -- If the directory exists and there are files in it, then no action is required --
+        - "[ -d ~/www-frnt ] && [ `ls -1q ~/www-frnt| wc -l` -ne '0' ] && echo 'Look ok' && exit 0;"
+        #-- Else. Remove old dir if exist --
+        - "[ -d ~/www-frnt ] && rm -fr ~/www-frnt"
+        #-- Clone project--
+        - "cd ~ && git clone --branch $CI_COMMIT_REF_NAME git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git www-frnt"
+    when: on_success
+
+
+
+#---------------------------------------------------------------
+#-- Git deploy --
+#---------------------------------------------------------------
+git_pull_dev:
+  stage: pull_source_code
+  tags:
+    - *ENV_TAG_DEV
   only:
-    - merge_requests
-  except:
-    - develop
+    - *ENV_ONLY_DEV
+  script:
+    - 'cd ~/www-frnt && git stash && git pull'
+  when: on_success
+
+git_pull_prod:
+  stage: pull_source_code
+  tags:
+    - *ENV_TAG_PROD
+  only:
+    - *ENV_ONLY_PROD
+  script:
+    - 'cd ~/www-frnt && git stash && git pull'
+  when: on_success
+
+
+
+#---------------------------------------------------------------
+#-- Compouser update --
+#---------------------------------------------------------------
+update_yarn_dev:
+  stage: update
+  tags:
+    - *ENV_TAG_DEV
+  only:
+    - *ENV_ONLY_DEV
+  script:
+    - 'cd ~/www-frnt && yarn install'
+  when: on_success
+
+update_yarn_prod:
+  stage: update
+  tags:
+    - *ENV_TAG_PROD
+  only:
+    - *ENV_ONLY_PROD
+  script:
+    - 'cd ~/www-frnt && yarn install'
+  when: on_success
+
+
+
+#---------------------------------------------------------------
+#-- Node Build --
+#---------------------------------------------------------------
+build_npm_dev:
+  stage: build
+  tags:
+    - *ENV_TAG_DEV
+  only:
+    - *ENV_ONLY_DEV
+  script:
+    - 'cd ~/www-frnt && yarn build-main'
+  when: on_success
+
+build_npm_prod:
+  stage: build
+  tags:
+    - *ENV_TAG_PROD
+  only:
+    - *ENV_ONLY_PROD
+  script:
+    - 'cd ~/www-frnt && yarn build-main'
+  when: on_success
+
+
+
+#---------------------------------------------------------------
+#-- Node Restart --
+#---------------------------------------------------------------
+restart_npm_dev:
+  stage: restart
+  tags:
+    - *ENV_TAG_DEV
+  only:
+    - *ENV_ONLY_DEV
+  script:
+    - 'pm2 info FRONT-DEV && pm2 stop FRONT-DEV || true'
+    - 'pm2 info FRONT-DEV && pm2 delete FRONT-DEV || true'
+    - 'cd ~/www-frnt && /usr/bin/pm2 start yarn --interpreter bash --name FRONT-DEV -- start-main'
+  when: on_success
+
+restart_npm_prod:
+  stage: restart
+  tags:
+    - *ENV_TAG_PROD
+  only:
+    - *ENV_ONLY_PROD
+  script:
+    - 'pm2 info FRONT-PROD && pm2 stop FRONT-PROD || true'
+    - 'pm2 info FRONT-PROD && pm2 delete FRONT-PROD || true'
+    - 'cd ~/www-frnt && /usr/bin/pm2 start yarn --interpreter bash --name FRONT-PROD -- start-main'
+  when: on_success
