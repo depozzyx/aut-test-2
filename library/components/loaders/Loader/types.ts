@@ -1,5 +1,5 @@
 import { CSSProperties, DefaultTheme } from 'styled-components'
-import { TStylesProps } from '@peiko/styled'
+import { TStylesProps } from '@peiko/styles'
 import { TIcon } from '@peiko/components/icons'
 
 export type TLoaderProps = {

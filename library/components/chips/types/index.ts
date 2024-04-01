@@ -1,4 +1,4 @@
-import { TStylesProps, TMediaQueries } from '@peiko/styled'
+import { TStylesProps, TMediaQueries } from '@peiko/styles'
 
 export type TChipSizes = 's' | 'm' | 'l'
 

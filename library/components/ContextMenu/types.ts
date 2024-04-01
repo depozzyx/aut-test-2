@@ -32,4 +32,12 @@ export type TContextMenu = Omit<PopupProps, 'children'> & {
    * Define custom z-index for the menu.
    */
   zIndex?: number
+  /**
+   * Define to show the arrow on the menu.
+   */
+  withArrow?: boolean
+  /**
+   * Define custom style for the arrow.
+   */
+  arrowStyle?: React.CSSProperties
 }

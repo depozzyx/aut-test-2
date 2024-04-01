@@ -11,7 +11,7 @@ import { TModalProps } from './types'
  *
  * You may pass any children you want to show in the modal
  *
- * Consider Card or Box components for modal content cause they can be easily styled
+ * Consider Card or Box components for modal content cause they can be easily styles
  */
 export const Modal: React.FC<TModalProps> = ({
   open,
@@ -54,7 +54,7 @@ export const Modal: React.FC<TModalProps> = ({
     <S.Popup modal nested open={open} onClose={onClose} closeOnDocumentClick={false}>
       <S.Container ref={containerRef} tabIndex={0} maxWidth={maxWidth}>
         {onClose && !hideCloseButton && (
-          <S.Close onClick={onClose}>
+          <S.Close onClick={onClose} iconColor="main5" size="s">
             <CloseIcon />
           </S.Close>
         )}

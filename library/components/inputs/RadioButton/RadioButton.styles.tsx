@@ -42,13 +42,13 @@ export const Wrapper = styled.label<{ disabled?: boolean; error?: string }>((pro
       cursor: pointer;
 
       &:focus ~ ${TargetElement} {
-        box-shadow: 0 0 0px 2px ${(props) => props.theme.palette.base100};
+        box-shadow: 0 0 0px 2px ${(props) => props.theme.palette.base};
       }
     }
 
     &:hover {
       ${TargetElement} {
-        box-shadow: 0 0 0px 2px ${(props) => props.theme.palette.base100};
+        box-shadow: 0 0 0px 2px ${(props) => props.theme.palette.base};
       }
     }
 

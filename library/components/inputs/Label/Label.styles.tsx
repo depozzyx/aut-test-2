@@ -17,15 +17,15 @@ export const Label = styled.label<{
   const { theme, color, required, readOnly } = props
   return css`
     ${Text} {
-      ${theme.fonts.f5};
-      color: ${(color && theme.palette[color]) || theme.palette.main8};
+      ${theme.fonts.f8};
+      color: ${(color && theme.palette[color]) || theme.palette.main5};
     }
 
     ${required &&
     css`
       &:after {
         content: ' *';
-        color: ${(color && theme.palette[color]) || theme.palette.main8};
+        color: ${(color && theme.palette[color]) || theme.palette.main5};
       }
     `}
 

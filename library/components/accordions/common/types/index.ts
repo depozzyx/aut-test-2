@@ -1,4 +1,4 @@
-import { TStylesProps } from '@peiko/styled'
+import { TStylesProps } from '@peiko/styles'
 
 export type TContainer = {
   isOpen: boolean

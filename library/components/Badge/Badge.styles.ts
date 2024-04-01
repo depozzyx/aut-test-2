@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { styleToCss, propertyBreakpoints, formatCssProperty } from '@peiko/styled'
+import { styleToCss, propertyBreakpoints, formatCssProperty } from '@peiko/styles'
 import { TBadgeProps } from './types'
 
 export const Container = styled.div`

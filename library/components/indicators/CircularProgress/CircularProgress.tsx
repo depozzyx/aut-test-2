@@ -17,7 +17,7 @@ export const CircularProgress: React.FC<TCircularProgressProps> = ({
   return (
     <svg height={radius * 2} width={radius * 2}>
       <circle
-        stroke={theme.palette.base4}
+        stroke={theme.palette.base}
         fill="transparent"
         strokeWidth={stroke}
         r={normalizedRadius}

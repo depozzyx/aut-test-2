@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { CSSProperties } from 'styled-components'
-import { TStylesProps, TMediaQueries } from '@peiko/styled'
+import { TStylesProps, TMediaQueries } from '@peiko/styles'
 import { TText } from '@peiko/components/Text'
 import { TDimensions, TIcon } from '@peiko/components/icons/types'
 

@@ -1,5 +1,5 @@
 import styled, { css, keyframes } from 'styled-components'
-import { styleToCss } from '@peiko/styled'
+import { styleToCss } from '@peiko/styles'
 import { TLoaderProps } from './types'
 
 const rotate = keyframes`

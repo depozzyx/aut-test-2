@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { propertyBreakpoints, styleToCss } from '@peiko/styled'
+import { propertyBreakpoints, styleToCss } from '@peiko/styles'
 import { BaseChip } from '../BaseChip'
 import { getChipSize } from '../utils/get-chip-size'
 import {
@@ -19,9 +19,9 @@ export const FilledChip = styled(BaseChip)((props) => {
 
   return css`
     ${chipBaseColors({
-      color: palette.main8,
+      color: palette.main19,
       bg: palette.base3,
-      icon: palette.main8,
+      icon: palette.main3,
       border: palette.base3,
     })}
 
@@ -46,7 +46,7 @@ export const FilledChip = styled(BaseChip)((props) => {
     ${disabled &&
     chipDisabledColors({
       color: palette.main12,
-      bg: palette.base4,
+      bg: palette.main17,
       icon: palette.main12,
     })}
 

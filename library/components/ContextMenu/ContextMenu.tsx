@@ -24,6 +24,8 @@ export const ContextMenu: React.FC<TContextMenu> = ({
   disableAutoFocus,
   zIndex = 99,
   contentStyle,
+  withArrow = false,
+  arrowStyle,
   ...props
 }) => {
   const [client, setClient] = useState(false)
@@ -82,7 +84,8 @@ export const ContextMenu: React.FC<TContextMenu> = ({
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
       contentStyle={{ ...contentStyle, zIndex }}
-      arrow={false}
+      arrow={withArrow}
+      arrowStyle={arrowStyle}
     >
       <>
         {customMenu && (

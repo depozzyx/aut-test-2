@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TDefaultMediaQueries } from '@peiko/styled'
+import { TDefaultMediaQueries } from '@peiko/styles'
 import { StarFillIcon } from '@peiko/components/icons/StarFillIcon'
 import { StarIcon } from '@peiko/components/icons/StarIcon'
 import { TRatingProps } from './types'

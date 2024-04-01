@@ -6,10 +6,10 @@ export const getButtonFont = (
   theme: DefaultTheme,
 ): string => {
   if (size === 'm') {
-    return theme.fonts.f5
+    return theme.fonts.f6
   }
   if (size === 's') {
-    return theme.fonts.f7
+    return theme.fonts.f6
   }
-  return theme.fonts.f3
+  return theme.fonts.f6
 }

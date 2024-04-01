@@ -1,13 +1,28 @@
 import { api } from '@/api-rest/instance'
 import { TAxiosResponse } from '@/api-rest/types'
-import { TLogInReq, TLogInRes } from './types'
+import {
+  TLoginReq,
+  TLoginRes,
+  TLogoutRes,
+  TResetPasswordRes,
+  TChangePasswordReq,
+  TResetPasswordReq,
+} from './types'
 
-const loginTelegram = (key: TLogInReq): TAxiosResponse<TLogInRes> =>
-  api.post('auth/login-telegram', key)
+const login = (data: TLoginReq): TAxiosResponse<TLoginRes> =>
+  api.post('/auth/login', data)
 
-const logout = (): TAxiosResponse<unknown> => api.delete('auth/logout')
+const logout = (): TAxiosResponse<TLogoutRes> => api.delete('/auth/logout')
+
+const resetPassword = (data: TResetPasswordReq): TAxiosResponse<TResetPasswordRes> =>
+  api.post('/auth/reset-password', data)
+
+const changePassword = (data: TChangePasswordReq): TAxiosResponse<TResetPasswordRes> =>
+  api.post('/auth/change-password', data)
 
 export const apiAuth = {
-  loginTelegram,
+  login,
   logout,
+  resetPassword,
+  changePassword,
 }

@@ -1,5 +1,5 @@
 import { CSSProperties } from 'styled-components'
-import { TStylesProps, TDefaultMediaQueries } from '@peiko/styled'
+import { TStylesProps, TDefaultMediaQueries } from '@peiko/styles'
 import { TLabelProps } from '../types'
 
 // textarea
@@ -37,7 +37,7 @@ export type TTextAreaProps = {
    * */
   value?: string
   /**
-   * If error is provided textarea will be styled as error and render error message below
+   * If error is provided textarea will be styles as error and render error message below
    * @default undefined
    * @type string
    * */

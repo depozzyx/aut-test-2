@@ -3,7 +3,7 @@ import { AuthLayout } from '@/layout/AuthLayout'
 import { ErrorPage } from '@/features/common/error'
 
 const NotFoundPage: NextPage = () => (
-  <AuthLayout justifyContent="center">
+  <AuthLayout>
     <ErrorPage status={404} />
   </AuthLayout>
 )

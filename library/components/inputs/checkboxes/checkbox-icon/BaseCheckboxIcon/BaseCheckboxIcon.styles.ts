@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { styleToCss, propertyBreakpoints } from '@peiko/styled'
+import { styleToCss, propertyBreakpoints } from '@peiko/styles'
 import { Text } from '@peiko/components/Text'
 import { getCheckboxIconSize } from '../utils/get-checkbox-icon-size'
 import { TCheckboxIconProps } from './types'

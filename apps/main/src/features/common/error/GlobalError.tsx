@@ -23,6 +23,17 @@ export const GlobalError: React.FC = () => {
       description={description}
       onClose={onClose}
       status="error"
+      submitTitle={t('common:close')}
+      submitStyles={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      cardProps={{
+        styles: {
+          minWidth: '552px',
+        },
+      }}
     />
   )
 }

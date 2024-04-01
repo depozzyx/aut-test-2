@@ -9,8 +9,8 @@ import * as S from './ModalHeader.styles'
 import { THeaderProps } from './types'
 
 const ICON_DIMENSIONS = {
-  width: '60px',
-  height: '60px',
+  width: '40px',
+  height: '40px',
 }
 
 export const ModalHeader: React.FC<THeaderProps> = ({
@@ -60,7 +60,7 @@ export const ModalHeader: React.FC<THeaderProps> = ({
         </Box>
       )}
       {hasTitle && <Text variant={variantTitle || 'f2'}>{textTitle}</Text>}
-      {description && <Text variant={variantDesc || 'f5'}>{description}</Text>}
+      {description && <Text variant={variantDesc || 'f7'}>{description}</Text>}
     </S.Wrapper>
   )
 }

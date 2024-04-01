@@ -1,5 +1,5 @@
 import styled, { CSSProperties, css } from 'styled-components'
-import { formatCssProperty } from '@peiko/styled'
+import { formatCssProperty } from '@peiko/styles'
 import { TLinearProgressProps } from './types'
 
 export const Container = styled.div<{
@@ -15,7 +15,6 @@ export const Container = styled.div<{
     background-color: ${(props) => props.theme.palette.base3};
     border-radius: ${borderRadius ? formatCssProperty(borderRadius, 'px') : '4px'};
     position: relative;
-    border-radius: 4px;
     overflow: hidden;
   `
 })

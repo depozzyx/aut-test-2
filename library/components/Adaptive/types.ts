@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react'
-import { TMediaQueries } from '@peiko/styled'
+import { TMediaQueries } from '@peiko/styles'
 
 export type TAdaptive = {
   /** The visible on the display by breakpoints

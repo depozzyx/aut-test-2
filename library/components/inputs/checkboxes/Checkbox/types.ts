@@ -5,7 +5,7 @@ export type TCheckboxEvent = {
 
 export type TCheckBoxProps = {
   /**
-   * Specify if the radio buttpn is disabled
+   * Specify if the radio button is disabled
    * @default false
    * @type boolean
    * */
@@ -17,7 +17,7 @@ export type TCheckBoxProps = {
    * */
   onChange?: (e: TCheckboxEvent) => void
   /**
-   * If error is provided checkbox will be styled as error
+   * If error is provided checkbox will be styles as error
    */
   error?: string
   /**

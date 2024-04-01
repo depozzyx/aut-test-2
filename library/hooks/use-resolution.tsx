@@ -1,4 +1,4 @@
-import { breakpoints } from '@peiko/styled'
+import { breakpoints } from '@peiko/styles'
 import { useEffect, useState } from 'react'
 import { debounce } from 'throttle-debounce'
 

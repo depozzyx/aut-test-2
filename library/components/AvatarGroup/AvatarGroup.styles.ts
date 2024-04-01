@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { propertyBreakpoints } from '@peiko/styled'
+import { propertyBreakpoints } from '@peiko/styles'
 import { TAvatarGroupProps } from './types'
 
 export const Group = styled('div')<{ spacing: TAvatarGroupProps['spacing'] }>(

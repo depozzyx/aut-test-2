@@ -1,4 +1,4 @@
-import { TStylesProps } from '@peiko/styled'
+import { TStylesProps } from '@peiko/styles'
 import { TCardProps } from '@peiko/components/Card/types'
 import { TModalProps } from '../Modal/types'
 import { THeaderProps } from '../ModalHeader'

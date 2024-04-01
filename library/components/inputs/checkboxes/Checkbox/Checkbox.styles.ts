@@ -177,7 +177,7 @@ export const CheckBoxContainer = styled.div<{
       ${Target} {
         color: ${error ? theme.palette.main7 : theme.palette.main2};
         ${targetBorderStyle(error ? theme.palette.main7 : theme.palette.main2)}
-        box-shadow: 0 0 0px 4px ${(props) => props.theme.palette.base100};
+        box-shadow: 0 0 0px 4px ${(props) => props.theme.palette.base};
       }
     }
 
@@ -200,7 +200,7 @@ export const CheckBoxContainer = styled.div<{
 
     input {
       &:focus ~ ${Target} {
-        box-shadow: 0 0 0px 4px ${(props) => props.theme.palette.base100};
+        box-shadow: 0 0 0px 4px ${(props) => props.theme.palette.base};
         ${targetBorderStyle(error ? theme.palette.main7 : theme.palette.main2)}
       }
 

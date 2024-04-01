@@ -30,7 +30,7 @@ const refreshAuthLogic = async () => {
   }
 
   return axios
-    .post('auth/refresh', {}, config)
+    .post('/auth/refresh', {}, config)
     .then(() => Promise.resolve())
     .catch((e) => {
       if (!axios.isAxiosError(e) || !e.response) return

@@ -1,5 +1,9 @@
 export const ROUTES = {
   HOME: '/',
   SIGN_IN: '/auth/sign-in',
-  SIGN_UP: '/auth/sign-up',
+  RESET_PASSWORD: '/auth/reset-password',
+  CHANGE_PASSWORD: '/auth/change-password',
+  CABINET_DASHBOARD: '/cabinet/dashboard',
+  CABINET_CALLS: '/cabinet/calls',
+  SETTINGS: '/settings',
 }

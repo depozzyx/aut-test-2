@@ -8,8 +8,9 @@
     "baseUrl": "src",
     "paths": {
       "@/utils/*": ["utils/*"],
-      "@/styled/*": ["styled/*"],
+      "@/styles/*": ["styles/*"],
       "@/html/*": ["html/*"],
+      "@/assets/*": ["assets/*"],
       "@/store": ["store"],
       "@/inputs/*": ["components/inputs/*"],
       "@/types/*": ["types/*"],
@@ -26,7 +27,7 @@
       "@/api-rest/*": ["api/rest/*"]
     },
     "typeRoots": [
-      "../../node_modules/@peiko/styled/types", 
+      "../../node_modules/@peiko/styles/types",
       "../../node_modules/@peiko/types/declare",
       "../../node_modules/@types"
     ],

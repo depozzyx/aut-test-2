@@ -29,7 +29,7 @@ export const ModalMessage: React.FC<TModalMessage> = ({
   }
 
   return (
-    <Modal onClose={onClose} maxWidth={maxWidth || '400px'} {...props}>
+    <Modal onClose={onClose} maxWidth={maxWidth || '582px'} {...props}>
       <Card
         fullWidth
         xs={{ padding: '32px 44px 32px', borderRadius: '8px' }}
@@ -44,8 +44,8 @@ export const ModalMessage: React.FC<TModalMessage> = ({
         />
         {children}
         {submitTitle && (
-          <Box styles={{ marginTop: '32px', ...submitStyles }}>
-            <FilledButton width="100%" onClick={closeSubmitHandler}>
+          <Box styles={{ marginTop: '48px', ...submitStyles }}>
+            <FilledButton width="100%" maxWidth="236px" onClick={closeSubmitHandler}>
               {submitTitle}
             </FilledButton>
           </Box>

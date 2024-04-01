@@ -17,7 +17,7 @@ export const Step = styled.div<{ isActive: boolean }>`
   align-items: center;
   justify-content: center;
   background-color: ${({ isActive, theme }) =>
-    isActive ? theme.palette.main2 : theme.palette.base4};
+    isActive ? theme.palette.main2 : theme.palette.base};
 `
 
 export const StepLine = styled.div`

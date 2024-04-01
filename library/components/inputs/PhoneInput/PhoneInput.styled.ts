@@ -1,5 +1,5 @@
 import styled, { CSSProperties, css } from 'styled-components'
-import { formatCssProperty } from '@peiko/styled'
+import { formatCssProperty } from '@peiko/styles'
 import {
   BUTTON_CLASS,
   CONTAINER_CLASS,
@@ -72,7 +72,7 @@ export const Container = styled.div<{
       border-radius: ${BORDER_RADIUS}px;
       padding: 0 16px 0 52px !important;
       outline: none;
-      color: var(--font-primary);
+      color: ${theme.palette.main2};
       background-color: ${theme.palette.base3} !important;
       box-sizing: border-box;
       transition: $transition-normal;

@@ -40,19 +40,19 @@ export const Default: Story = {
     container: true,
     children: (
       <>
-        <Grid item xs={12} styles={{ backgroundColor: (theme) => theme.palette.base100 }}>
+        <Grid item xs={12} styles={{ backgroundColor: (theme) => theme.palette.base }}>
           Grid item 12
         </Grid>
-        <Grid item xs={6} styles={{ backgroundColor: (theme) => theme.palette.base100 }}>
+        <Grid item xs={6} styles={{ backgroundColor: (theme) => theme.palette.base }}>
           Grid item 6
         </Grid>
-        <Grid item xs={6} styles={{ backgroundColor: (theme) => theme.palette.base100 }}>
+        <Grid item xs={6} styles={{ backgroundColor: (theme) => theme.palette.base }}>
           Grid item 6
         </Grid>
-        <Grid item xs={9} styles={{ backgroundColor: (theme) => theme.palette.base100 }}>
+        <Grid item xs={9} styles={{ backgroundColor: (theme) => theme.palette.base }}>
           Grid item 9
         </Grid>
-        <Grid item xs={3} styles={{ backgroundColor: (theme) => theme.palette.base100 }}>
+        <Grid item xs={3} styles={{ backgroundColor: (theme) => theme.palette.base }}>
           Grid item 3
         </Grid>
       </>
@@ -69,16 +69,16 @@ export const WithCustomSpacing: Story = {
     container: true,
     children: (
       <>
-        <Grid item xs={6} styles={{ backgroundColor: (theme) => theme.palette.base100 }}>
+        <Grid item xs={6} styles={{ backgroundColor: (theme) => theme.palette.base }}>
           Grid item 6
         </Grid>
-        <Grid item xs={6} styles={{ backgroundColor: (theme) => theme.palette.base100 }}>
+        <Grid item xs={6} styles={{ backgroundColor: (theme) => theme.palette.base }}>
           Grid item 6
         </Grid>
-        <Grid item xs={6} styles={{ backgroundColor: (theme) => theme.palette.base100 }}>
+        <Grid item xs={6} styles={{ backgroundColor: (theme) => theme.palette.base }}>
           Grid item 6
         </Grid>
-        <Grid item xs={6} styles={{ backgroundColor: (theme) => theme.palette.base100 }}>
+        <Grid item xs={6} styles={{ backgroundColor: (theme) => theme.palette.base }}>
           Grid item 6
         </Grid>
       </>
@@ -96,10 +96,10 @@ export const WithCustomColumns: Story = {
     container: true,
     children: (
       <>
-        <Grid item xs={12} styles={{ backgroundColor: (theme) => theme.palette.base100 }}>
+        <Grid item xs={12} styles={{ backgroundColor: (theme) => theme.palette.base }}>
           Grid item 12
         </Grid>
-        <Grid item xs={12} styles={{ backgroundColor: (theme) => theme.palette.base100 }}>
+        <Grid item xs={12} styles={{ backgroundColor: (theme) => theme.palette.base }}>
           Grid item 12
         </Grid>
       </>
@@ -120,7 +120,7 @@ export const WithBreakPoints: Story = {
           item
           xs={12}
           sm={6}
-          styles={{ backgroundColor: (theme) => theme.palette.base100 }}
+          styles={{ backgroundColor: (theme) => theme.palette.base }}
         >
           Grid item xs: 12, sm: 6
         </Grid>
@@ -128,7 +128,7 @@ export const WithBreakPoints: Story = {
           item
           xs={12}
           sm={6}
-          styles={{ backgroundColor: (theme) => theme.palette.base100 }}
+          styles={{ backgroundColor: (theme) => theme.palette.base }}
         >
           Grid item xs: 12, sm: 6
         </Grid>
@@ -146,7 +146,7 @@ export const WithCustomStyles: Story = {
     container: true,
     styles: {
       padding: '32px',
-      backgroundColor: (theme) => theme.palette.base100,
+      backgroundColor: (theme) => theme.palette.base,
     },
     children: (
       <>

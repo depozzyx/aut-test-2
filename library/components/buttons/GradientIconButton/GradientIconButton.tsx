@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { styleToCss, propertyBreakpoints } from '@peiko/styled'
+import { styleToCss, propertyBreakpoints } from '@peiko/styles'
 import { BaseIconButton } from '../BaseIconButton'
 import {
   buttonBaseColors,
@@ -31,18 +31,18 @@ export const GradientIconButton = styled(BaseIconButton)((props) => {
     })}
 
     ${buttonFocusColors({
-      outline: palette.base100,
+      outline: palette.main15,
       gradient: palette.main,
     })}
 
     ${buttonPressedColors({
       bg: palette.main2,
-      outline: palette.base100,
+      outline: palette.main15,
     })}
 
     ${buttonDisabledColors({
       color: palette.main12,
-      bg: palette.base4,
+      bg: palette.main17,
       icon: palette.main12,
     })}
 

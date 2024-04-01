@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react'
-import { HorizontallScroll } from '@peiko/components/HorizontalScroll'
+import { HorizontalScroll } from '@peiko/components/HorizontalScroll'
 import { InlineLoader } from '@peiko/components/loaders/InlineLoader'
 import { THeader, TRow, TTableProps } from './types'
 import * as S from './Table.styled'
@@ -142,7 +142,7 @@ export function Table<R extends TRow, H extends THeader<keyof R['row']>>({
   ].join(' ')
 
   return (
-    <HorizontallScroll hideScrollbars={Boolean(loading)}>
+    <HorizontalScroll hideScrollbars={Boolean(loading)}>
       <InlineLoader loading={loading} borderRadius={4} />
       <S.Table gridTemplateColumns={gridTemplateColumns}>
         {renderHeader()}
@@ -150,6 +150,6 @@ export function Table<R extends TRow, H extends THeader<keyof R['row']>>({
         {isFallback && emptyComponent}
       </S.Table>
       <InlineLoader loading={loading} borderRadius={4} />
-    </HorizontallScroll>
+    </HorizontalScroll>
   )
 }

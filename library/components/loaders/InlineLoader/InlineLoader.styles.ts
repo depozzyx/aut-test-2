@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { formatCssProperty } from '@peiko/styled'
+import { formatCssProperty } from '@peiko/styles'
 import { TInlineLoaderContainerProps } from './types'
 
 export const Container = styled.div<TInlineLoaderContainerProps>`

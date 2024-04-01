@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
-import { styleToCss, propertyBreakpoints } from '@peiko/styled'
-import { BaseButton } from '../BaseButton/BaseButton'
+import { styleToCss } from '@peiko/styles/utils/style-to-css'
+import { propertyBreakpoints } from '@peiko/styles/utils/property-breakpoints'
+import { BaseButton } from '../BaseButton'
 import {
   buttonPressedColors,
   buttonBaseColors,
@@ -26,28 +27,30 @@ export const FilledButton = styled(BaseButton)((props) => {
           
     ${buttonBaseColors({
       color: palette.base,
-      bg: palette.main2,
+      bg: palette.main,
       icon: palette.base,
     })}
 
     ${buttonFocusColors({
-      outline: palette.base100,
+      bg: palette.main15,
     })}
 
     ${buttonHoverColors({
-      bg: palette.main3,
+      bg: palette.main20,
     })}
 
     ${buttonPressedColors({
-      outline: palette.base100,
+      outline: palette.main16,
+      bg: palette.main15,
     })}
 
     ${buttonDisabledColors({
-      color: palette.main12,
-      bg: palette.base4,
-      icon: palette.main12,
+      color: palette.main18,
+      bg: palette.main17,
+      icon: palette.main18,
     })}
 
+    // ToDo: check if this is correct
     ${active &&
     buttonActiveColors({
       color: palette.base,

@@ -5,24 +5,27 @@ export const getButtonSize = (size: TButtonProps['size']): FlattenSimpleInterpol
   switch (size) {
     case 's':
       return css`
-        padding: 0 16px;
-        height: 40px;
-        gap: 8px;
+        padding: 4px 8px;
+        height: 32px;
+        gap: 4px;
         border-radius: 8px;
+        //max-width: 134px;
       `
     case 'm':
       return css`
-        padding: 0 24px;
-        height: 40px;
-        gap: 12px;
+        padding: 4px 8px;
+        height: 36px;
+        gap: 4px;
         border-radius: 8px;
+        //max-width: 236px;
       `
     case 'l':
       return css`
-        padding: 0 32px;
-        height: 60px;
+        padding: 4px 8px;
+        height: 42px;
         gap: 16px;
         border-radius: 8px;
+        //max-width: 246px;
       `
     default:
       return css``

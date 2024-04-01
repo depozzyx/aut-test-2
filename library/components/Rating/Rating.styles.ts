@@ -1,6 +1,6 @@
 import { Rating as ReactRating } from 'react-simple-star-rating'
 import styled, { css } from 'styled-components'
-import { propertyBreakpoints, styleToCss } from '@peiko/styled'
+import { propertyBreakpoints, styleToCss } from '@peiko/styles'
 import { TRatingProps } from './types'
 
 export const Container = styled(ReactRating)<{
@@ -20,7 +20,7 @@ export const Container = styled(ReactRating)<{
     }
 
     svg path {
-      fill: ${color ? theme.palette[color] : theme.palette.base100};
+      fill: ${color ? theme.palette[color] : theme.palette.main15};
     }
 
     ${disabled &&

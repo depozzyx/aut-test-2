@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import { SingleValue } from 'react-select'
 import { CSSProperties, DefaultTheme } from 'styled-components'
-import { TStylesProps } from '@peiko/styled'
+import { TStylesProps } from '@peiko/styles'
 import { TLabelProps } from '../types'
 
 export type TSelectOption = {
@@ -73,7 +73,7 @@ export type TSelectProps = {
    * */
   onChange?: (p: TSelectEvent) => void
   /**
-   * If error is provided input will be styled as error and render error message below
+   * If error is provided input will be styles as error and render error message below
    * @default undefined
    * @type string
    * */

@@ -5,7 +5,7 @@ import {
   propertyBreakpoints,
   styleToCss,
   formatCssProperty,
-} from '@peiko/styled'
+} from '@peiko/styles'
 import { TInputSizes } from './types'
 
 type TInputCont = TStylesProps & {
@@ -18,14 +18,14 @@ type TInputCont = TStylesProps & {
 
 const TRANSITION = '200ms'
 const BORDER_WIDTH = 2
-const BORDER_RADIUS = 8
+const BORDER_RADIUS = 4
 
 const inputFont = (size: TInputSizes['size'], theme: DefaultTheme) => {
   switch (size) {
     case 'm':
-      return theme.fonts.f5
+      return theme.fonts.f8
     default:
-      return theme.fonts.f5
+      return theme.fonts.f8
   }
 }
 
@@ -33,19 +33,19 @@ const containerSize = (size?: TInputSizes['size']) => {
   switch (size) {
     case 's':
       return css`
-        height: 48px;
+        height: 30px;
       `
     case 'm':
       return css`
-        height: 52px;
+        height: 30px;
       `
     case 'l':
       return css`
-        height: 56px;
+        height: 42px;
       `
     default:
       return css`
-        height: 52px;
+        height: 42px;
       `
   }
 }
@@ -80,8 +80,13 @@ export const InputContainer = styled.div<TInputCont>((props) => {
   const { palette } = props.theme
 
   const states = css`
+    ${props.error &&
+    css`
+      border-color: ${palette.main13} !important;
+    `}
+
     &:hover {
-      border-color: ${!props.error && palette.main11};
+      border-color: ${!props.error && palette.main3};
     }
 
     &:focus {
@@ -89,7 +94,7 @@ export const InputContainer = styled.div<TInputCont>((props) => {
         background-color: transparent !important;
       }
       & svg path {
-        fill: ${palette.main11} !important;
+        fill: ${palette.main3} !important;
       }
     }
 
@@ -104,7 +109,7 @@ export const InputContainer = styled.div<TInputCont>((props) => {
       }
 
       & svg path {
-        fill: ${palette.main12} !important;
+        fill: ${palette.main3} !important;
       }
     `}
   `
@@ -116,8 +121,8 @@ export const InputContainer = styled.div<TInputCont>((props) => {
     width: 100%;
     position: relative;
     ${containerSize(size)}
-    background-color: ${palette.base3};
-    border: ${BORDER_WIDTH}px solid ${props.error ? palette.main7 : palette.base3};
+    background-color: ${palette.base};
+    border: ${BORDER_WIDTH}px solid ${props.error ? palette.main13 : palette.main17};
     border-radius: ${BORDER_RADIUS}px;
     caret-color: auto;
     transition: border ${TRANSITION} linear;
@@ -131,7 +136,7 @@ export const InputContainer = styled.div<TInputCont>((props) => {
     & > input {
       ${inputFont(props.size, theme)}
       &::placeholder {
-        color: ${props.theme.palette.main11};
+        color: ${props.theme.palette.main18};
       }
     }
 
@@ -140,12 +145,12 @@ export const InputContainer = styled.div<TInputCont>((props) => {
     }
 
     svg path {
-      fill: ${(props) => props.theme.palette.main11};
+      fill: ${(props) => props.theme.palette.main3};
     }
 
     :focus-within {
       svg path {
-        fill: ${(props) => props.theme.palette.main8};
+        fill: ${(props) => props.theme.palette.main3};
       }
     }
 
@@ -171,10 +176,10 @@ export const baseInput = css`
   width: 100%;
   outline: none;
   height: 100%;
-  padding: 10px 16px;
+  padding: 4px 8px 4px 4px;
   border: none;
   background-color: unset;
-  color: ${(props) => props.theme.palette.main8};
+  color: ${(props) => props.theme.palette.main5};
 
   &:-webkit-autofill,
   &:-webkit-autofill:hover,
@@ -197,11 +202,11 @@ const Adornment = styled.div`
 `
 
 export const StartAdornment = styled(Adornment)`
-  padding-left: 12px;
+  padding-left: 8px;
 `
 
 export const EndAdornment = styled(Adornment)`
-  padding-right: 12px;
+  padding-right: 8px;
 `
 
 export const Input = styled.input`

@@ -1,7 +1,8 @@
 {
-  "404": "Not found",
+  "error": "Error",
+  "404": "Page not found",
   "404-desc": "Oops! Page not found. Please try using search.",
-  "500": "Internal Server Error",
+  "500": "Internal server error",
   "500-desc": "Something went wrong. You can use the menu or return to home page.",
   "default-message": "Something went wrong",
   "network-error-message": "No internet connection"

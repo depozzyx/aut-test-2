@@ -1,5 +1,5 @@
 import styled, { DefaultTheme, css } from 'styled-components'
-import { styleToCss, formatCssProperty, propertyBreakpoints } from '@peiko/styled'
+import { styleToCss, formatCssProperty, propertyBreakpoints } from '@peiko/styles'
 import { TAvatarProps } from './types'
 
 export const Container = styled.div<{

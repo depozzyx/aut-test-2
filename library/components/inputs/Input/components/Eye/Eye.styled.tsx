@@ -10,30 +10,30 @@ export const Container = styled.div<TIconContainerProps>(({ disabled, theme }) =
 
     return css`
       svg path {
-        stroke: ${theme.palette[color]};
+        stroke: ${theme.palette[color] || theme.palette.main3};
       }
     `
   }
 
   return css`
     display: flex;
-    margin-right: 22px;
+    margin-right: 8px;
     outline: none;
     cursor: pointer;
 
-    ${iconColor('main8')}
+    ${iconColor('main3')}
 
     &:focus {
-      ${iconColor('main8')}
+      ${iconColor('main3')}
     }
 
     &:hover {
-      ${iconColor('main8')}
+      ${iconColor('main3')}
     }
 
     ${disabled &&
     css`
-      ${iconColor('main8')}
+      ${iconColor('main3')}
       pointer-events: none;
     `}
   `
