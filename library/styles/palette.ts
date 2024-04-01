@@ -34,6 +34,11 @@ const defaultPalette: TDefaultPalette = {
   main18: '#8E8E8E',
   main19: '#57585D',
   main20: '#CE5200', // btn-hover
+  main21: '#DDDADA',
+  main22: '#FFC8A5', // text-btn-focus-bg
+  main23: '#FF9652', // text-btn-hover-bg
+  main24: '#FF9D5D', // text-btn-pressed-bg
+  main25: '#B04600', // text-btn-hover-color
   overlay: 'rgba(203, 217, 227, 0.56)',
 }
 

@@ -8,6 +8,7 @@ export const FlexContainer = styled.div<TFlexComponentProps>((props) => {
     justify = 'flex-start',
     align = 'stretch',
     wrap = 'nowrap',
+    cursor,
     gap,
     maxWidth,
     margin,
@@ -44,6 +45,7 @@ export const FlexContainer = styled.div<TFlexComponentProps>((props) => {
     ${color && `color: ${theme.palette[color] || color};`}
     ${fullHeight && 'height: 100%;'}
     ${fullWidth && 'width: 100%;'}
+    ${cursor && `cursor: ${cursor};`}
 
     ${styles && styleToCss(styles, theme)};
   `

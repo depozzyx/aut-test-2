@@ -2,9 +2,8 @@ import { NextPage } from 'next'
 import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
 
-const DashboardPage: NextPage = () => {
-  const text = 'Dashboard'
-
+const CallsPage: NextPage = () => {
+  const text = 'Calls'
   return (
     <Permissions>
       <CabinetLayout>{text}</CabinetLayout>
@@ -12,4 +11,4 @@ const DashboardPage: NextPage = () => {
   )
 }
 
-export default DashboardPage
+export default CallsPage

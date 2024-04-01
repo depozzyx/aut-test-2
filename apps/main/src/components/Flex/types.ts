@@ -2,6 +2,9 @@ import { DefaultTheme, CSSProperties } from 'styled-components'
 import { TStylesProps } from '@peiko/styles'
 
 export type TFlexComponentProps = {
+  tag?: keyof JSX.IntrinsicElements
+  ref?: React.Ref<HTMLDivElement>
+  onClick?: () => void
   bgColor?: keyof DefaultTheme['palette']
   color?: keyof DefaultTheme['palette']
   direction?: CSSProperties['flexDirection']
@@ -17,7 +20,8 @@ export type TFlexComponentProps = {
   borderWidth?: CSSProperties['borderWidth'] | number
   borderColor?: keyof DefaultTheme['palette']
   borderRadius?: CSSProperties['borderRadius'] | number
+  cursor?: CSSProperties['cursor']
   fullHeight?: boolean
   fullWidth?: boolean
-  onClick?: () => void
+  children?: React.ReactNode
 } & TStylesProps

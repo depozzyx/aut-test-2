@@ -1,11 +1,13 @@
-import { FC } from 'react'
+import { forwardRef } from 'react'
 import { TFlexComponentProps } from './types'
 import { FlexContainer } from './Flex.styled'
 
-export const Flex: FC<TFlexComponentProps> = ({ children, onClick, ...rest }) => (
-  <FlexContainer as={onClick ? 'button' : undefined} onClick={onClick} {...rest}>
-    {children}
-  </FlexContainer>
+export const Flex = forwardRef<HTMLDivElement, TFlexComponentProps>(
+  ({ children, onClick, tag, ...rest }, ref) => (
+    <FlexContainer ref={ref} as={tag} onClick={onClick} {...rest}>
+      {children}
+    </FlexContainer>
+  ),
 )
 
 Flex.displayName = 'Flex'

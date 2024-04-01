@@ -24,25 +24,31 @@ export const TextButton = styled(BaseButton)((props) => {
     ${getIconSize(size)}
 
     ${buttonBaseColors({
-      color: palette.main2,
-      icon: palette.main2,
+      color: palette.main,
+      icon: palette.main,
     })}
 
     ${buttonFocusColors({
-      bg: palette.main15,
+      bg: palette.main22,
+      color: palette.main,
+      icon: palette.main,
     })}
 
     ${buttonHoverColors({
-      bg: palette.base200,
+      bg: palette.main23,
+      color: palette.main25,
+      icon: palette.main25,
     })}
 
     ${buttonPressedColors({
-      bg: palette.main15,
+      bg: palette.main24,
+      color: palette.main25,
+      icon: palette.main25,
     })}
 
     ${buttonDisabledColors({
-      color: palette.main12,
-      icon: palette.main12,
+      color: palette.main18,
+      icon: palette.main18,
     })}
 
     ${propertyBreakpoints<TButtonProps['size']>({
