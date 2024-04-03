@@ -7,8 +7,8 @@ import { SidebarItem } from './components/SidebarItem'
 
 export const Sidebar = (): JSX.Element => {
   const { t } = useTranslation('common')
-  const links = useMenuLinks()
   const { logoutAsync } = useAuth()
+  const links = useMenuLinks()
 
   const handleLogout = () => {
     logoutAsync()

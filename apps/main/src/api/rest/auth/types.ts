@@ -1,3 +1,6 @@
+import { TUserPermissions, TUserRoles } from '@/types/entities/profile'
+import { TGeneratedSuccessStatuses } from '@/constants/success-status'
+
 export type TLoginReq = {
   email: string
   password: string
@@ -8,20 +11,16 @@ type TTokenInfo = {
   exp: number
 }
 
-export type TCommonResponseData = {
+export type TLoginResponseData = {
   accessToken: TTokenInfo
   refreshToken: TTokenInfo
+  role: TUserRoles
+  permissions: TUserPermissions
 }
 
-type TBaseResponse = {
-  statusCode: number
-  data: TCommonResponseData
-}
-
-export type TLoginRes = TBaseResponse
-
-export type TLogoutRes = TBaseResponse & {
-  meta: unknown
+export type TLoginRes = {
+  statusCode: TGeneratedSuccessStatuses
+  data: TLoginResponseData
 }
 
 export type TResetPasswordReq = {

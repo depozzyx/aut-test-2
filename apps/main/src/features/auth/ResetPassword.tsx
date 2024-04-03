@@ -8,7 +8,7 @@ import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInpu
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { EmailIcon } from '@peiko/components/icons/EmailIcon'
 import { useRedux } from '@/hooks/use-redux'
-import { AuthNotification } from '@/features/auth/components/AuthNotification/AuthNotification'
+import { Snackbar } from '@/components/Snackbar'
 import {
   resetPasswordAsync,
   reset,
@@ -78,7 +78,7 @@ export const ResetPassword: FC = () => {
         </form>
       </AuthFormCard>
       {statusCode && (
-        <AuthNotification
+        <Snackbar
           status="info"
           title={t('reset-password.notification.title')}
           message={t('reset-password.notification.message')}

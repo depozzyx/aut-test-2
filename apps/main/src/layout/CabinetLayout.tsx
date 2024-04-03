@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { CSSProperties, css, createGlobalStyle } from 'styled-components'
 import { TDefaultBreakpoints } from '@peiko/styles/types/breakpoints'
+import { Text } from '@peiko/components/Text'
 import { Sidebar } from '@/layout/common/Sidebar'
 import { Header } from './common/Header'
 
@@ -9,6 +10,7 @@ type TProps = {
   maxWidth?: CSSProperties['maxWidth']
   padding?: CSSProperties['padding']
   justifyContent?: CSSProperties['justifyContent']
+  title?: string
 }
 
 type TCabinetLayoutProps = TProps & Partial<TDefaultBreakpoints<TProps>>
@@ -43,7 +45,7 @@ export const Content = styled.div<TCabinetLayoutProps>((props) => {
   max-width: ${props.maxWidth ?? '100%'};
   justify-content: ${props.justifyContent || 'flex-start'};
   padding: ${props.padding ?? '0'};
-  height: 100%; 
+  height: 100%;
 `
 
   return css`
@@ -51,13 +53,18 @@ export const Content = styled.div<TCabinetLayoutProps>((props) => {
   `
 })
 
-export const CabinetLayout: React.FC<TCabinetLayoutProps> = ({ children, ...props }) => (
+export const CabinetLayout: React.FC<TCabinetLayoutProps> = ({
+  children,
+  title,
+  ...props
+}) => (
   <>
     <BodyColor />
     <Header />
     <ContentWrapper {...props}>
       <Sidebar />
-      <Content padding="24px 26px 26px 40px" {...props}>
+      <Content id="cabinetContent" padding="24px 26px 26px 40px" {...props}>
+        <Text variant="f2">{title}</Text>
         {children}
       </Content>
     </ContentWrapper>

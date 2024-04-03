@@ -20,5 +20,14 @@ module.exports = () =>
       webpack(config) {
         return config
       },
+      async redirects() {
+        return [
+          {
+            source: '/',
+            destination: '/cabinet/dashboard',
+            permanent: true,
+          },
+        ]
+      },
     }),
   )
