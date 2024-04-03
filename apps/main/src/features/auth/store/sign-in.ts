@@ -5,7 +5,7 @@ import { handleActionErrors } from '@/utils/handle-action-errors'
 import { apiAuth } from '@/api-rest/auth'
 import { TFormPropsAsync } from '@peiko/types/formik'
 import { TLoginReq } from '@/api-rest/auth/types'
-// import { userActions } from '@/features/common/user'
+import { userActions } from '@/features/common/user'
 
 export type TInit = {
   isLoading: boolean
@@ -42,10 +42,14 @@ export const signInAsync =
   async (dispatch) => {
     try {
       dispatch(setIsLoading(true))
-      // Todo: Implement the login method
-      // const { data } = await apiAuth.login(formData)
-      await apiAuth.login(formData)
-      // dispatch(userActions.setUserData(data.data))
+      const {
+        data: { data },
+      } = await apiAuth.login(formData)
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { accessToken, refreshToken, ...profileData } = data
+
+      dispatch(userActions.setUserData(profileData))
     } catch (e) {
       handleActionErrors({
         e,

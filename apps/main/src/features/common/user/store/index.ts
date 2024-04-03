@@ -9,7 +9,7 @@ import { TProfile } from '@/types/entities/profile'
 export type TInit = {
   userFetching: boolean
   loading: boolean
-  user: TProfile | null
+  user: TProfile | Omit<TProfile, 'id' | 'email'> | null
 }
 
 const init: TInit = {
@@ -22,7 +22,7 @@ const userState = createSlice({
   name: 'user',
   initialState: init,
   reducers: {
-    setUser(state, action: PayloadAction<TProfile>) {
+    setUser(state, action: PayloadAction<TInit['user']>) {
       state.user = action.payload
     },
     setUserFetching(state, action: PayloadAction<boolean>) {
@@ -43,10 +43,10 @@ const { setUser, setUserFetching, setLoading, removeUser } = userState.actions
 const userSelector: TSelector<TInit> = (state) => state.user
 
 const setUserData =
-  (userData: TProfile): TAsyncAction =>
+  (userData: TInit['user']): TAsyncAction =>
   async (dispatch) => {
     dispatch(setUser(userData))
-    if (userData.id) {
+    if (userData?.role) {
       authorized.set()
     }
   }

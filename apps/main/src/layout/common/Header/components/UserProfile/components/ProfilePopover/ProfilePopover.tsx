@@ -1,5 +1,6 @@
 import { ReactElement } from 'react'
 import { useRouter } from 'next/router'
+import useTranslation from 'next-translate/useTranslation'
 import { Avatar } from '@peiko/components/Avatar'
 import { Text } from '@peiko/components/Text'
 import { Flex } from '@/components/Flex'
@@ -11,13 +12,14 @@ import { SettingsIcon } from '@peiko/components/icons/SettingsIcon'
 import { ROUTES } from '@/routes'
 import { useAuth } from '@/features/common/user'
 import { TFlexComponentProps } from '@/components/Flex/types'
+import { TUserRoles } from '@/types/entities/profile'
 import { Divider, ItemWrapper } from './ProfilePopover.styled'
 
 export interface IProfilePopoverProps {
   name?: string
   phone?: string
   email?: string
-  role?: string
+  userRole?: TUserRoles
   avatar?: string
 }
 
@@ -35,18 +37,18 @@ const PopoverMenuItem = ({
 }: IPopoverMenuItemProps & TFlexComponentProps): JSX.Element => (
   <ItemWrapper align="center" gap={8} onClick={onClick} {...rest}>
     {icon}
-    <Text>{title}</Text>
+    <Text variant="f9">{title}</Text>
   </ItemWrapper>
 )
 
-export const ProfilePopover = (props: IProfilePopoverProps): JSX.Element => {
-  const {
-    name = 'John Johnson',
-    phone = '(207) 555-0119',
-    email = 'john.johnson@example.com',
-    role = 'Manager',
-    avatar = avatarMock.src,
-  } = props
+export const ProfilePopover = ({
+  name = 'John Johnson',
+  phone = '(207) 555-0119',
+  email = 'john.johnson@example.com',
+  userRole,
+  avatar = avatarMock.src,
+}: IProfilePopoverProps): JSX.Element => {
+  const { t } = useTranslation('user')
 
   const router = useRouter()
 
@@ -67,23 +69,23 @@ export const ProfilePopover = (props: IProfilePopoverProps): JSX.Element => {
         <Flex direction="column" align="center">
           <Text variant="f4">{name}</Text>
           <Text variant="f6" color="main18">
-            {role}
+            {t(`roles.${userRole}`)}
           </Text>
         </Flex>
       </Flex>
       <Flex direction="column" gap={16}>
-        <PopoverMenuItem icon={<PhoneIcon />} title={phone} />
-        <PopoverMenuItem icon={<EmailIcon />} title={email} />
+        {phone && <PopoverMenuItem icon={<PhoneIcon />} title={phone} />}
+        {email && <PopoverMenuItem icon={<EmailIcon />} title={email} />}
         <PopoverMenuItem
           icon={<SettingsIcon />}
-          title="Settings"
+          title={t('routing:settings')}
           onClick={handleGoToSettings}
           cursor="pointer"
         />
         <Divider />
         <PopoverMenuItem
           icon={<LogoutIcon color="main5" />}
-          title="Logout"
+          title={t('common:logout')}
           onClick={handleLogout}
           cursor="pointer"
         />

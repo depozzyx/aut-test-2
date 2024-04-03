@@ -15,7 +15,7 @@ export type TLoginResponseData = {
   accessToken: TTokenInfo
   refreshToken: TTokenInfo
   role: TUserRoles
-  permissions: TUserPermissions
+  permissions: TUserPermissions[]
 }
 
 export type TLoginRes = {
@@ -23,17 +23,17 @@ export type TLoginRes = {
   data: TLoginResponseData
 }
 
-export type TResetPasswordReq = {
+export type TForgotPasswordReq = {
   email: string
 }
 
-export type TResetPasswordRes = {
+export type TForgotPasswordRes = {
   statusCode: number
   meta: unknown
   data: unknown
 }
 
-export type TChangePasswordReq = {
+export type TResetPasswordReq = {
   token: string
   password: string
   confirmPassword: string

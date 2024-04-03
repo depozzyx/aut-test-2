@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import Popup from 'reactjs-popup'
 import { useUnmount } from 'react-use'
 import { useResolution } from '@peiko/hooks/use-resolution'
 import { useScrollLock } from '@peiko/hooks/use-scroll-lock'
-import { Container } from './ContextMenu.styles'
+import { Container, StyledPopup } from './ContextMenu.styles'
 import { TContextMenu } from './types'
 
 /**
@@ -26,6 +25,8 @@ export const ContextMenu: React.FC<TContextMenu> = ({
   contentStyle,
   withArrow = false,
   arrowStyle,
+  customOpenHandler,
+  customCloseHandler,
   ...props
 }) => {
   const [client, setClient] = useState(false)
@@ -77,12 +78,22 @@ export const ContextMenu: React.FC<TContextMenu> = ({
     return typeof props.trigger === 'function' ? props.trigger(false) : <></>
   }
 
+  const handleOnOpen = () => {
+    setOpen(true)
+    if (customOpenHandler) customOpenHandler()
+  }
+
+  const handleOnClose = () => {
+    setOpen(false)
+    if (customCloseHandler) customCloseHandler()
+  }
+
   return (
-    <Popup
+    <StyledPopup
       {...props}
       open={open}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
+      onOpen={handleOnOpen}
+      onClose={handleOnClose}
       contentStyle={{ ...contentStyle, zIndex }}
       arrow={withArrow}
       arrowStyle={arrowStyle}
@@ -104,6 +115,6 @@ export const ContextMenu: React.FC<TContextMenu> = ({
           </Container>
         )}
       </>
-    </Popup>
+    </StyledPopup>
   )
 }

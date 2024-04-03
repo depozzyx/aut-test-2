@@ -14,14 +14,9 @@ type TReturn = {
   resetStyle: () => void
 }
 
-type SafeCSSProperties = Exclude<
-  keyof CSSStyleDeclaration,
-  'length' | 'parentRule' | number | symbol
->
-
 type TParams = {
   selector: string
-  styleProperty: SafeCSSProperties
+  styleProperty: string
   newValue: string
 }
 
@@ -30,12 +25,13 @@ function useToggleStyle({ selector, styleProperty, newValue }: TParams): TReturn
 
   const applyStyle = useCallback(() => {
     const element = document.querySelector(selector) as HTMLElement | null
-    if (!element) return
+    if (element) {
+      const computedStyle = window.getComputedStyle(element)
+      originalValueRef.current =
+        originalValueRef.current ?? computedStyle.getPropertyValue(styleProperty)
 
-    // Directly handle the original value storage and style application
-    originalValueRef.current =
-      originalValueRef.current ?? (element.style.getPropertyValue(styleProperty) || '')
-    element.style.setProperty(styleProperty, newValue)
+      element.style.setProperty(styleProperty, newValue)
+    }
   }, [selector, styleProperty, newValue])
 
   const resetStyle = useCallback(() => {

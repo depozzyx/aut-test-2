@@ -3,23 +3,24 @@ import { Flex } from '@/components/Flex'
 
 export const ItemWrapper = styled(Flex)<{ onClick?: () => void }>`
   ${({ theme, onClick }) => css`
-    //&:last-child {
-    //  margin-top: 16px;
-    //}
-
     ${onClick &&
     css`
       &:hover {
-        background-color: ${theme.palette.main22};
-        color: ${theme.palette.main25};
+        > p {
+          color: ${theme.palette.main};
+        }
+
+        svg path {
+          fill: ${theme.palette.main};
+          stroke: ${theme.palette.main};
+        }
       }
     `}
   `}
 `
 
 export const Divider = styled.hr`
-  border-top: 1px solid ${({ theme }) => theme.palette.main17};
-  width: 1px;
-  height: 1px;
-  background-color: ${({ theme }) => theme.palette.main17};
+  border-top: 0.5px solid ${({ theme }) => theme.palette.main17};
+  width: 100%;
+  margin: 0;
 `
