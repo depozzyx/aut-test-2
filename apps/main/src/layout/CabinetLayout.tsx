@@ -3,6 +3,8 @@ import styled, { CSSProperties, css, createGlobalStyle } from 'styled-components
 import { TDefaultBreakpoints } from '@peiko/styles/types/breakpoints'
 import { Text } from '@peiko/components/Text'
 import { Sidebar } from '@/layout/common/Sidebar'
+import { Notification } from '@/features/common/notifications'
+import { Flex } from '@/components/Flex'
 import { Header } from './common/Header'
 
 type TProps = {
@@ -76,9 +78,14 @@ export const CabinetLayout: React.FC<TCabinetLayoutProps> = ({
     <Header />
     <ContentWrapper {...props}>
       <Sidebar />
-      <Content padding="24px 26px 26px 40px" {...props}>
-        <CustomPopupOverlay id="customPopupOverlay" />
-        <Text variant="f2">{title}</Text>
+      <Content padding="12px 26px 26px 40px" {...props}>
+        <Flex align="center" justify="space-between">
+          <CustomPopupOverlay id="customPopupOverlay" />
+          <Text variant="f2" styles={{ paddingTop: '12px' }}>
+            {title}
+          </Text>
+          <Notification />
+        </Flex>
         {children}
       </Content>
     </ContentWrapper>

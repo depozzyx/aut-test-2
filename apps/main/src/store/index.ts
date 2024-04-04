@@ -4,6 +4,7 @@ import userReducer from '@/features/common/user/store'
 import signInReducer from '@/features/auth/store/sign-in'
 import forgotPasswordReducer from '@/features/auth/store/forgot-password'
 import resetPasswordReducer from '@/features/auth/store/reset-password'
+import notificationsReducer from '@/features/common/notifications/store'
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     signIn: signInReducer,
     forgotPassword: forgotPasswordReducer,
     resetPassword: resetPasswordReducer,
+    notifications: notificationsReducer,
   },
 })
 

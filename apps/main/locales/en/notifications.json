@@ -1,0 +1,10 @@
+{
+    "campaign": {
+        "changes-saved": "<translate>Changes saved to</translate> <value>{{ campaignName }}</value>",
+        "success-delete": "<value>{{ campaignName }}</value> <translate>was successfully deleted</translate>",
+        "active": "<value>{{ campaignName }}</value> <translate>is active now</translate>",
+        "paused": "<value>{{ campaignName }}</value> <translate>is paused</translate>",
+        "success-download": "<translate>Custom Report was successfully downloaded</translate>",
+        "export-error": "<translate>There is an error when exporting a custom report. Try again</translate>"
+    }
+}
