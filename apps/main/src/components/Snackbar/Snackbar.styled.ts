@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { FilledChip } from '@peiko/components/chips/FilledChip'
 import { TDefaultPalette } from '@peiko/styles/types/palette'
-import { TStatuses } from './Snackbar'
+import { TStatuses } from '@/features/common/notifications'
 
 const bgColors: Record<TStatuses, keyof TDefaultPalette> = {
   success: 'base300',
@@ -17,8 +17,10 @@ const borderColors: Record<TStatuses, keyof TDefaultPalette> = {
 
 export const StyledFilledChip = styled(FilledChip)<{
   status: TStatuses
+  maxWidth: string
 }>`
   width: 100%;
+  max-width: ${({ maxWidth }) => maxWidth};
   height: 48px;
   justify-content: space-between;
   align-items: center;
