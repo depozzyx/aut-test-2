@@ -6,7 +6,7 @@ export const InitLoader: FC = () => {
   const { userFetching } = useAuth()
 
   if (userFetching) {
-    return <Loader width="32px" height="32px" />
+    return <Loader width="64px" height="64px" />
   }
 
   return null

@@ -3,26 +3,25 @@ import { TAxiosResponse } from '@/api-rest/types'
 import {
   TLoginReq,
   TLoginRes,
-  TLogoutRes,
-  TResetPasswordRes,
-  TChangePasswordReq,
+  TForgotPasswordRes,
   TResetPasswordReq,
+  TForgotPasswordReq,
 } from './types'
 
 const login = (data: TLoginReq): TAxiosResponse<TLoginRes> =>
   api.post('/auth/login', data)
 
-const logout = (): TAxiosResponse<TLogoutRes> => api.delete('/auth/logout')
+const logout = (): TAxiosResponse<void> => api.delete('/auth/logout')
 
-const resetPassword = (data: TResetPasswordReq): TAxiosResponse<TResetPasswordRes> =>
+const forgotPassword = (data: TForgotPasswordReq): TAxiosResponse<TForgotPasswordRes> =>
   api.post('/auth/reset-password', data)
 
-const changePassword = (data: TChangePasswordReq): TAxiosResponse<TResetPasswordRes> =>
+const resetPassword = (data: TResetPasswordReq): TAxiosResponse<TForgotPasswordRes> =>
   api.post('/auth/change-password', data)
 
 export const apiAuth = {
   login,
   logout,
+  forgotPassword,
   resetPassword,
-  changePassword,
 }

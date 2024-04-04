@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { FilledChip } from '@peiko/components/chips/FilledChip'
 import { TDefaultPalette } from '@peiko/styles/types/palette'
-import { TStatuses } from './AuthNotification'
+import { TStatuses } from './Snackbar'
 
 const bgColors: Record<TStatuses, keyof TDefaultPalette> = {
   success: 'base300',

@@ -42,8 +42,14 @@ export const signInAsync =
   async (dispatch) => {
     try {
       dispatch(setIsLoading(true))
-      const { data } = await apiAuth.login(formData)
-      dispatch(userActions.setUserData(data.data))
+      const {
+        data: { data },
+      } = await apiAuth.login(formData)
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { accessToken, refreshToken, ...profileData } = data
+
+      dispatch(userActions.setUserData(profileData))
     } catch (e) {
       handleActionErrors({
         e,

@@ -40,4 +40,12 @@ export type TContextMenu = Omit<PopupProps, 'children'> & {
    * Define custom style for the arrow.
    */
   arrowStyle?: React.CSSProperties
+  /**
+   * Custom open handler.
+   */
+  customOpenHandler?: () => void
+  /**
+   * Custom close handler.
+   */
+  customCloseHandler?: () => void
 }

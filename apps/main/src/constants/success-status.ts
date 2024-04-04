@@ -1,4 +1,4 @@
-export const SUCESS_STATUS = {
+export const SUCCESS_STATUS = {
   OK: 200,
   CREATED: 201,
   NO_CONTENT: 204,
@@ -8,3 +8,5 @@ export const SUCESS_STATUS = {
   ALREADY_REPORTED: 208,
   IM_USED: 226,
 } as const
+
+export type TGeneratedSuccessStatuses = typeof SUCCESS_STATUS[keyof typeof SUCCESS_STATUS]

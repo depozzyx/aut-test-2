@@ -6,13 +6,13 @@ import { validation } from '@/utils/validation'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { NextLink } from '@peiko/components/links/NextLink'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
-import { useRedux } from '@/hooks/use-redux'
-import { ROUTES } from '@/constants/routes'
 import { EmailIcon } from '@peiko/components/icons/EmailIcon'
 import { LockIcon } from '@peiko/components/icons/LockIcon'
 import { Text } from '@peiko/components/Text'
-import { AuthFormCard } from '@/features/auth/components/AuthFormCard'
+import { useRedux } from '@/hooks/use-redux'
+import { ROUTES } from '@/constants/routes'
 import { Flex } from '@/components/Flex'
+import { AuthFormCard } from './components/AuthFormCard'
 import { signInAsync } from './store/sign-in'
 
 export const SignIn: FC = () => {
@@ -71,7 +71,7 @@ export const SignIn: FC = () => {
               startAdornment={<LockIcon width="24px" height="24px" />}
             />
           </Flex>
-          <NextLink href={ROUTES.RESET_PASSWORD}>
+          <NextLink href={ROUTES.FORGOT_PASSWORD}>
             <Text
               variant="f10"
               styles={{

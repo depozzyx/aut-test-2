@@ -3,14 +3,13 @@ import { TSelector, TAsyncAction } from '@/store'
 import { handleRestError } from '@/features/common/error'
 import { apiAuth } from '@/api-rest/auth'
 import { authorized } from '@/browser-api/authorized'
-// import { apiProfile } from '@/api-rest/profile'
-// import { TProfile } from '@/types/entities/profile'
-import { TCommonResponseData } from '@/api-rest/auth/types'
+import { apiProfile } from '@/api-rest/profile'
+import { TProfile } from '@/types/entities/profile'
 
 export type TInit = {
   userFetching: boolean
   loading: boolean
-  user: TCommonResponseData | null
+  user: TProfile | Omit<TProfile, 'id' | 'email'> | null
 }
 
 const init: TInit = {
@@ -23,7 +22,7 @@ const userState = createSlice({
   name: 'user',
   initialState: init,
   reducers: {
-    setUser(state, action: PayloadAction<TCommonResponseData>) {
+    setUser(state, action: PayloadAction<TInit['user']>) {
       state.user = action.payload
     },
     setUserFetching(state, action: PayloadAction<boolean>) {
@@ -44,10 +43,10 @@ const { setUser, setUserFetching, setLoading, removeUser } = userState.actions
 const userSelector: TSelector<TInit> = (state) => state.user
 
 const setUserData =
-  (userData: TCommonResponseData): TAsyncAction =>
+  (userData: TInit['user']): TAsyncAction =>
   async (dispatch) => {
     dispatch(setUser(userData))
-    if (userData.accessToken) {
+    if (userData?.role) {
       authorized.set()
     }
   }
@@ -58,9 +57,8 @@ const getProfile = (): TAsyncAction => async (dispatch) => {
       dispatch(setUserFetching(false))
       return
     }
-    // ToDo: uncomment after adding profile api
-    // const { data } = await apiProfile.get()
-    // dispatch(setUser(data.data))
+    const { data } = await apiProfile.get()
+    dispatch(setUser(data.data))
   } catch (e) {
     handleRestError({
       e,

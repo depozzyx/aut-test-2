@@ -2,23 +2,18 @@ import { FC } from 'react'
 
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
-import { StyledFilledChip } from './AuthNotification.styled'
+import { StyledFilledChip } from './Snackbar.styled'
 
 export type TStatuses = 'success' | 'error' | 'info'
 
-export interface IAuthNotificationProps {
+export interface ISnackbarProps {
   status: TStatuses
   title?: string
   message?: string
   onClose: () => void
 }
 
-export const AuthNotification: FC<IAuthNotificationProps> = ({
-  status,
-  title,
-  message,
-  onClose,
-}) => (
+export const Snackbar: FC<ISnackbarProps> = ({ status, title, message, onClose }) => (
   <StyledFilledChip status={status} size="m" onDelete={onClose}>
     <Flex direction="column">
       {title && (

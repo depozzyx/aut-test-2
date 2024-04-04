@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { CSSProperties, css, createGlobalStyle } from 'styled-components'
 import { TDefaultBreakpoints } from '@peiko/styles/types/breakpoints'
+import { Text } from '@peiko/components/Text'
 import { Sidebar } from '@/layout/common/Sidebar'
 import { Header } from './common/Header'
 
@@ -9,6 +10,7 @@ type TProps = {
   maxWidth?: CSSProperties['maxWidth']
   padding?: CSSProperties['padding']
   justifyContent?: CSSProperties['justifyContent']
+  title?: string
 }
 
 type TCabinetLayoutProps = TProps & Partial<TDefaultBreakpoints<TProps>>
@@ -19,7 +21,7 @@ const BodyColor = createGlobalStyle`
   }
 `
 
-export const ContentWrapper = styled.div<TCabinetLayoutProps>(
+const ContentWrapper = styled.div<TCabinetLayoutProps>(
   (props) => css`
     display: flex;
     margin: 0 auto;
@@ -29,21 +31,21 @@ export const ContentWrapper = styled.div<TCabinetLayoutProps>(
     overflow-x: hidden;
     align-items: stretch;
     width: 100%;
-    //align-items: center;
   `,
 )
 
-export const Content = styled.div<TCabinetLayoutProps>((props) => {
+const Content = styled.div<TCabinetLayoutProps>((props) => {
   const base = `
+  position: relative;
   display: flex;
   flex-direction: column;
-  background-color: ${props.theme.palette.base};
-  margin: 0 auto;
+  justify-content: ${props.justifyContent || 'flex-start'};
   width: 100%;
   max-width: ${props.maxWidth ?? '100%'};
-  justify-content: ${props.justifyContent || 'flex-start'};
+  min-height: 'calc(100vh - var(--header-height))';
+  margin: 0 auto;
   padding: ${props.padding ?? '0'};
-  height: 100%; 
+  background-color: ${props.theme.palette.base};
 `
 
   return css`
@@ -51,13 +53,32 @@ export const Content = styled.div<TCabinetLayoutProps>((props) => {
   `
 })
 
-export const CabinetLayout: React.FC<TCabinetLayoutProps> = ({ children, ...props }) => (
+const CustomPopupOverlay = styled.div(
+  ({ theme }) => css`
+    position: absolute;
+    inset: 0px;
+    z-index: 1;
+    display: none;
+    width: 100%;
+    min-height: 'calc(100vh - var(--header-height))';
+    background: ${theme.palette.overlay};
+    pointer-events: none;
+  `,
+)
+
+export const CabinetLayout: React.FC<TCabinetLayoutProps> = ({
+  children,
+  title,
+  ...props
+}) => (
   <>
     <BodyColor />
     <Header />
     <ContentWrapper {...props}>
       <Sidebar />
       <Content padding="24px 26px 26px 40px" {...props}>
+        <CustomPopupOverlay id="customPopupOverlay" />
+        <Text variant="f2">{title}</Text>
         {children}
       </Content>
     </ContentWrapper>

@@ -1,9 +1,9 @@
 import { AuthLayout } from '@/layout/AuthLayout'
-import { ResetPassword } from '@/features/auth/ResetPassword'
 import { NextPage } from 'next'
+import { ResetPassword } from '@/features/auth/ResetPassword'
 import { PermissionAuth } from '@/features/common/permissions/PermissionAuth'
 
-const ForgotPasswordPage: NextPage = () => (
+const ResetPasswordPage: NextPage = () => (
   <PermissionAuth>
     <AuthLayout>
       <ResetPassword />
@@ -11,4 +11,4 @@ const ForgotPasswordPage: NextPage = () => (
   </PermissionAuth>
 )
 
-export default ForgotPasswordPage
+export default ResetPasswordPage

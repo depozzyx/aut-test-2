@@ -12,7 +12,7 @@ type PageLayoutProps = Props & Partial<Props>
 
 const BodyColor = createGlobalStyle`
   body {
-    background-color: ${(props) => props.theme.palette.main};
+    background-color: ${(props) => props.theme.palette.base};
   }
 `
 

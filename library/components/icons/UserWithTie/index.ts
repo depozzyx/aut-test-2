@@ -1,0 +1,1 @@
+export { UserWithTie } from './UserWithTie'
