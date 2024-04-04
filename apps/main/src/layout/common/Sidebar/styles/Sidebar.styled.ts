@@ -8,6 +8,6 @@ export const Container = styled(Flex)(
     align-items: center;
     justify-content: space-between;
     background-color: ${theme.palette.main4};
-    /* flex: 0 0 100px; */
+    flex: 0 0 100px;
   `,
 )

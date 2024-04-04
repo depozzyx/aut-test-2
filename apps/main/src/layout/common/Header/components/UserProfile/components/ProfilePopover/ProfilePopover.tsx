@@ -1,10 +1,9 @@
 import { ReactElement } from 'react'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
-import { Avatar } from '@peiko/components/Avatar'
+import { UserRoleIcon } from '@/features/common/user/components/UserRoleIcon'
 import { Text } from '@peiko/components/Text'
 import { Flex } from '@/components/Flex'
-import avatarMock from '@/assets/img/avatar.png'
 import { EmailIcon } from '@peiko/components/icons/EmailIcon'
 import { PhoneIcon } from '@peiko/components/icons/PhoneIcon'
 import { LogoutIcon } from '@peiko/components/icons/LogoutIcon'
@@ -20,7 +19,6 @@ export interface IProfilePopoverProps {
   phone?: string
   email?: string
   userRole?: TUserRoles
-  avatar?: string
 }
 
 interface IPopoverMenuItemProps {
@@ -45,8 +43,7 @@ export const ProfilePopover = ({
   name = 'John Johnson',
   phone = '(207) 555-0119',
   email = 'john.johnson@example.com',
-  userRole,
-  avatar = avatarMock.src,
+  userRole = 'manager',
 }: IProfilePopoverProps): JSX.Element => {
   const { t } = useTranslation('user')
 
@@ -65,7 +62,7 @@ export const ProfilePopover = ({
   return (
     <Flex direction="column" align="center" gap={48}>
       <Flex direction="column" align="center" gap={8}>
-        <Avatar size={64} src={avatar} alt="avatar" />
+        <UserRoleIcon userRole={userRole} iconSize="28px" variant="medium" />
         <Flex direction="column" align="center">
           <Text variant="f4">{name}</Text>
           <Text variant="f6" color="main18">

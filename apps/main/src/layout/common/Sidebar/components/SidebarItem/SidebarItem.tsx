@@ -16,11 +16,12 @@ export const SidebarItem = ({ title, link, onClick }: ISidebarItemProps): JSX.El
   const content = (
     <ItemWrapper
       height={74}
-      padding="8px 20px"
+      padding="8px 11px"
       direction="column"
       align="center"
       justify="center"
       cursor="pointer"
+      gap={3}
       onClick={onClick}
       isSelected={pathname === link}
     >
