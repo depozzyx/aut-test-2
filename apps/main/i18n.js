@@ -6,7 +6,7 @@ module.exports = {
   loadLocaleFrom: (lang, ns) =>
     import(`/.locales/${lang}/${ns}.json`).then((m) => m.default),
   pages: {
-    '*': ['inputs', 'error', 'common', 'modal-message'],
+    '*': ['inputs', 'error', 'common', 'modal-message', 'notifications'],
     '/auth/sign-in': ['error', 'validation', 'inputs', 'auth'],
     '/auth/forgot-password': ['error', 'validation', 'inputs', 'auth'],
     '/auth/reset-password': ['error', 'validation', 'inputs', 'auth'],
