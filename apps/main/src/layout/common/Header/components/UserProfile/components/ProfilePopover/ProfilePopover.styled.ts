@@ -20,7 +20,7 @@ export const ItemWrapper = styled(Flex)<{ onClick?: () => void }>`
 `
 
 export const Divider = styled.hr`
-  border-top: 0.5px solid ${({ theme }) => theme.palette.main17};
+  border-top: 0.5px solid ${({ theme }) => theme.palette.main21};
   width: 100%;
   margin: 0;
 `

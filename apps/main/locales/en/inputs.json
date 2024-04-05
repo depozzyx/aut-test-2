@@ -1,14 +1,15 @@
 {
   "email": "Email",
   "password": "Password",
-  "new-password": "New Password",
-  "repeat-password": "Repeat Password",
-  "confirm-password": "Confirm New Password",
+  "new-password": "New password",
+  "repeat-password": "Repeat password",
+  "confirm-password": "Confirm new password",
   "placeholder": {
     "email": "Enter your email here",
     "password": "Enter your password here",
     "new-password": "Enter your new password",
-    "repeat-password": "Repeat Password",
-    "confirm-password": "Repeat your new password"
+    "repeat-password": "Repeat password",
+    "confirm-password": "Repeat your new password",
+    "search": "Search by campaign name, lead name, agent name..."
   }
 }

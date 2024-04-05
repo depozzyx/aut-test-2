@@ -6,7 +6,7 @@ import { TStatuses } from '@/features/common/notifications'
 const bgColors: Record<TStatuses, keyof TDefaultPalette> = {
   success: 'base300',
   error: 'base400',
-  info: 'base3',
+  info: 'base4',
 }
 
 const borderColors: Record<TStatuses, keyof TDefaultPalette> = {
@@ -25,10 +25,15 @@ export const StyledFilledChip = styled(FilledChip)<{
   justify-content: space-between;
   align-items: center;
   background-color: ${({ theme, status }) =>
-    theme.palette[bgColors[status]] || theme.palette.base3};
+    theme.palette[bgColors[status]] || theme.palette.base4};
   border-color: ${({ theme, status }) =>
-    theme.palette[borderColors[status]] || theme.palette.base3};
+    theme.palette[borderColors[status]] || theme.palette.main3};
   box-shadow: ${({ theme }) => theme.shadow.table};
   border-width: 1px;
   border-radius: 8px;
+
+  svg path {
+    fill: ${({ theme, status }) =>
+      theme.palette[borderColors[status]] || theme.palette.main5};
+  }
 `

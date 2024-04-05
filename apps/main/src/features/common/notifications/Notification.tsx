@@ -16,7 +16,7 @@ export const Notification = (): TReturn => {
   const textColor: Record<TStatuses, keyof TDefaultPalette> = {
     error: 'main13',
     success: 'main11',
-    info: 'main13',
+    info: 'main3',
   }
 
   return (

@@ -83,6 +83,11 @@ export const InputContainer = styled.div<TInputCont>((props) => {
     ${props.error &&
     css`
       border-color: ${palette.main13} !important;
+
+      svg path {
+        fill: ${palette.main13} !important;
+        stroke: ${palette.main13} !important;
+      }
     `}
 
     &:hover {
@@ -100,8 +105,8 @@ export const InputContainer = styled.div<TInputCont>((props) => {
 
     ${props.disabled &&
     css`
-      border-color: ${palette.base2} !important;
-      background-color: ${palette.base2};
+      border-color: ${palette.main22} !important;
+      background-color: ${palette.main20};
       pointer-events: none;
 
       & button {
@@ -109,7 +114,7 @@ export const InputContainer = styled.div<TInputCont>((props) => {
       }
 
       & svg path {
-        fill: ${palette.main3} !important;
+        fill: ${palette.main5} !important;
       }
     `}
   `
@@ -122,7 +127,7 @@ export const InputContainer = styled.div<TInputCont>((props) => {
     position: relative;
     ${containerSize(size)}
     background-color: ${palette.base};
-    border: ${BORDER_WIDTH}px solid ${props.error ? palette.main13 : palette.main17};
+    border: ${BORDER_WIDTH}px solid ${props.error ? palette.main13 : palette.main21};
     border-radius: ${BORDER_RADIUS}px;
     caret-color: auto;
     transition: border ${TRANSITION} linear;
@@ -136,7 +141,7 @@ export const InputContainer = styled.div<TInputCont>((props) => {
     & > input {
       ${inputFont(props.size, theme)}
       &::placeholder {
-        color: ${props.theme.palette.main18};
+        color: ${props.theme.palette.main22};
       }
     }
 

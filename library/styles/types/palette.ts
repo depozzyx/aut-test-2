@@ -6,6 +6,7 @@ export type TDefaultPalette = {
   base: Color
   base2: Color
   base3: Color
+  base4: Color
   base200: Color
   base300: Color
   base400: Color
@@ -17,15 +18,10 @@ export type TDefaultPalette = {
   main4: Color
   main5: Color
   main6: Color
-  main100: Color
   main7: Color
-  'main2-100': Color
   main8: Color
-  'main3-100': Color
   main9: Color
-  'main4-100': Color
   main10: Color
-  'main5-100': Color
   main11: Color
   main12: Color
   main13: Color
@@ -39,8 +35,11 @@ export type TDefaultPalette = {
   main21: Color
   main22: Color
   main23: Color
-  main24: Color
-  main25: Color
+  'main6-100': Color
+  'main7-100': Color
+  'main8-100': Color
+  'main9-100': Color
+  'main10-100': Color
   overlay: Color
 }
 

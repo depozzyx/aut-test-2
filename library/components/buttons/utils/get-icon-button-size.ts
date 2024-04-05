@@ -17,6 +17,12 @@ export const getIconButtonSize = (
         height: 32px;
         border-radius: 50%;
       `
+    case 'sm':
+      return css`
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+      `
     case 'm':
       return css`
         width: 40px;
