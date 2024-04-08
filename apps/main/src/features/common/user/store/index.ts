@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+// import Router from 'next/router'
 import { TSelector, TAsyncAction } from '@/store'
 import { handleRestError } from '@/features/common/error'
 import { apiAuth } from '@/api-rest/auth'
 import { authorized } from '@/browser-api/authorized'
 import { apiProfile } from '@/api-rest/profile'
 import { TProfile } from '@/types/entities/profile'
+// import { ROUTES } from '@/constants/routes'
 
 export type TInit = {
   userFetching: boolean
@@ -81,6 +83,8 @@ export const logoutAsync = (): TAsyncAction => async (dispatch) => {
     await apiAuth.logout()
     authorized.remove()
     dispatch(removeUser())
+    // ToDO: check if it's necessary
+    // Router.push(ROUTES.LOGOUT)
   } catch (e) {
     handleRestError({ e, dispatch })
   } finally {

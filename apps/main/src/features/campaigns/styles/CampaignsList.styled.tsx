@@ -17,7 +17,7 @@ export const Panel = styled.div`
 `
 
 export const CustomFilterBtn = styled((props) => (
-  <FilledIconButton {...props}>
+  <FilledIconButton size="sm" iconColor="main3" {...props}>
     <FiltersIcon width="24px" height="24px" />
   </FilledIconButton>
 ))(

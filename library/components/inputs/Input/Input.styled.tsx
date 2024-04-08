@@ -5,6 +5,7 @@ import {
   propertyBreakpoints,
   styleToCss,
   formatCssProperty,
+  TStyle,
 } from '@peiko/styles'
 import { TInputSizes } from './types'
 
@@ -37,7 +38,7 @@ const containerSize = (size?: TInputSizes['size']) => {
       `
     case 'm':
       return css`
-        height: 30px;
+        height: 36px;
       `
     case 'l':
       return css`
@@ -206,9 +207,16 @@ const Adornment = styled.div`
   padding: 2px;
 `
 
-export const StartAdornment = styled(Adornment)`
-  padding-left: 8px;
-`
+export const StartAdornment = styled(Adornment)<{ startAdornmentStyles?: TStyle }>(
+  (props) => {
+    const { startAdornmentStyles, theme } = props
+
+    return css`
+      padding-left: 8px;
+      ${startAdornmentStyles && styleToCss(startAdornmentStyles, theme)}
+    `
+  },
+)
 
 export const EndAdornment = styled(Adornment)`
   padding-right: 8px;

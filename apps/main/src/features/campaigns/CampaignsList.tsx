@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { Flex } from '@/components/Flex'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
@@ -8,20 +7,19 @@ import { Container, Panel, CustomFilterBtn } from './styles/CampaignsList.styled
 
 export const CampaignsList = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
-  const [searchValue] = useState<string>('')
 
   return (
     <Container>
       <Panel>
         <Flex gap={16}>
-          <SearchField searchValue={searchValue} />
-          <CustomFilterBtn size="sm" iconColor="main3" />
+          <SearchField />
+          <CustomFilterBtn />
         </Flex>
         <FilledButton
           size="m"
           maxWidth="236px"
           width="100%"
-          startIcon={<PlusIcon width="24px" height="24px" />}
+          startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
         >
           {t('add-campaign')}
         </FilledButton>

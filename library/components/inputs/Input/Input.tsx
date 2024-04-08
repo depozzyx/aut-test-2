@@ -27,6 +27,7 @@ export const Input: React.FC<TInputProps> = ({
   debounce = 0,
   inputProps,
   styles,
+  startAdornmentStyles,
   ...props
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -133,7 +134,10 @@ export const Input: React.FC<TInputProps> = ({
       readOnly={readOnly}
     >
       {startAdornment && (
-        <S.StartAdornment>
+        <S.StartAdornment
+          className="start-adornment"
+          startAdornmentStyles={startAdornmentStyles}
+        >
           {typeof startAdornment === 'function'
             ? startAdornment({
                 value: String(localValue),
