@@ -19,35 +19,35 @@ export const FilledChip = styled(BaseChip)((props) => {
 
   return css`
     ${chipBaseColors({
-      color: palette.main19,
-      bg: palette.base3,
-      icon: palette.main3,
-      border: palette.base3,
+      bg: palette.main14,
+      icon: palette.base,
+      color: palette.base,
     })}
 
     ${onClick &&
     chipFocusColors({
-      bg: palette.base200,
-      icon: palette.main2,
+      bg: palette.main2,
+      icon: palette.main4,
+      color: palette.main4,
     })}
 
     ${onClick &&
     chipHoverColors({
-      color: palette.main2,
-      icon: palette.main2,
+      icon: palette.main4,
+      color: palette.main4,
     })}
     
     ${onClick &&
     chipPressedColors({
-      bg: palette.base200,
-      icon: palette.main2,
+      bg: palette.main2,
+      icon: palette.main4,
     })}
     
     ${disabled &&
     chipDisabledColors({
-      color: palette.main12,
-      bg: palette.main17,
-      icon: palette.main12,
+      bg: palette.main21,
+      icon: palette.main22,
+      color: palette.main22,
     })}
 
     ${propertyBreakpoints<TChipProps['size']>({

@@ -11,7 +11,7 @@ export interface ITriggerProps {
 }
 
 export const Trigger = forwardRef<HTMLDivElement, ITriggerProps>(
-  ({ name = 'John J.', userRole = 'Manager', ...rest }, ref): JSX.Element => {
+  ({ name = 'John J.', userRole = 'manager', ...rest }, ref): JSX.Element => {
     const { t } = useTranslation('user')
 
     return (
@@ -26,7 +26,7 @@ export const Trigger = forwardRef<HTMLDivElement, ITriggerProps>(
         <UserRoleIcon userRole={userRole} />
         <Flex direction="column" height="100%" align="center" justify="center">
           <Text variant="f8">{name}</Text>
-          <Text variant="f10" color="main18" styles={{ fontWeight: 300 }}>
+          <Text variant="f10" color="main22" styles={{ fontWeight: 300 }}>
             {t(`roles.${userRole}`)}
           </Text>
         </Flex>

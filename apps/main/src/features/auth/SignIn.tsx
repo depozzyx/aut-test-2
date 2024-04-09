@@ -54,7 +54,7 @@ export const SignIn: FC = () => {
                 startAdornment={<EmailIcon width="24px" height="24px" />}
               />
               {!formik.errors.email && (
-                <Text variant="f10" color="main17">
+                <Text variant="f10" color="main21">
                   {t('sign-in.warning')}
                 </Text>
               )}

@@ -1,7 +1,7 @@
 import { ChangeEvent, ReactElement } from 'react'
 import { Props as InputMaskProps } from 'react-input-mask'
 import { CSSProperties } from 'styled-components'
-import { TStylesProps, TDefaultMediaQueries } from '@peiko/styles'
+import { TStylesProps, TDefaultMediaQueries, TStyle } from '@peiko/styles'
 import { TLabelProps } from '../types'
 
 // input
@@ -207,6 +207,7 @@ export type TInputProps = {
    * @default 0
    * */
   decimals?: number
+  startAdornmentStyles?: TStyle
 } & TInputSizes &
   TInputMaskProps &
   TStylesProps

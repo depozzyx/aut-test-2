@@ -1,0 +1,1 @@
+export { InfoColumn } from './InfoColumn'

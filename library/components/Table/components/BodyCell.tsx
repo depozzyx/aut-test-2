@@ -27,7 +27,7 @@ const Cell = styled.div<TBodyCellProps>(
       css`
         border-top-left-radius: ${BORDER_RADIUS};
         border-bottom-left-radius: ${hasCollapseRow ? '0' : BORDER_RADIUS};
-        border-left: ${BORDER};
+        /* border-left: ${BORDER}; */
       `
 
     const borderRight =
@@ -35,7 +35,7 @@ const Cell = styled.div<TBodyCellProps>(
       css`
         border-top-right-radius: ${BORDER_RADIUS};
         border-bottom-right-radius: ${hasCollapseRow ? '0' : BORDER_RADIUS};
-        border-right: ${BORDER};
+        /* border-right: ${BORDER}; */
       `
 
     const padding = css`
@@ -52,9 +52,11 @@ const Cell = styled.div<TBodyCellProps>(
       ${borderRight}
       ${padding}
       ${marginBottom}
-      border-bottom: ${hasCollapseRow ? '0' : BORDER};
-      border-top: ${BORDER};
+      /* border-bottom: ${hasCollapseRow ? '0' : BORDER};
+      border-top: ${BORDER}; */
       white-space: ${props.whiteSpace};
+      background-color: ${theme.palette.base3};
+      height: 46px;
     `
   },
 )

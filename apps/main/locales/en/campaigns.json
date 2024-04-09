@@ -1,0 +1,19 @@
+{
+    "add-campaign": "Add new Campaign",
+    "statuses": {
+        "active": "Active",
+        "pause": "Paused",
+        "complete": "Completed"
+    },
+    "headers": {
+        "campaign-name": "Campaign Name",
+        "creation-date": "Creation Date",
+        "status": "Status",
+        "leads": "Leads",
+        "agents": "Agents",
+        "view": "View",
+        "action": "Action",
+        "edit": "Edit",
+        "delete": "Delete"
+    }
+}

@@ -35,15 +35,15 @@ export const TextButton = styled(BaseButton)((props) => {
     })}
 
     ${buttonHoverColors({
-      bg: palette.main23,
-      color: palette.main25,
-      icon: palette.main25,
+      bg: palette.main19,
+      color: palette.main16,
+      icon: palette.main16,
     })}
 
     ${buttonPressedColors({
-      bg: palette.main24,
-      color: palette.main25,
-      icon: palette.main25,
+      bg: palette.main17,
+      color: palette.main16,
+      icon: palette.main16,
     })}
 
     ${buttonDisabledColors({

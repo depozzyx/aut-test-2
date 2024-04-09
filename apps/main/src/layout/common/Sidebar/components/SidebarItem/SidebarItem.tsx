@@ -26,7 +26,7 @@ export const SidebarItem = ({ title, link, onClick }: ISidebarItemProps): JSX.El
       isSelected={pathname === link}
     >
       <SidebarItemIcon />
-      <Text variant="f10" color="base">
+      <Text variant="f10" color="base" styles={{ textAlign: 'center' }}>
         {title}
       </Text>
     </ItemWrapper>

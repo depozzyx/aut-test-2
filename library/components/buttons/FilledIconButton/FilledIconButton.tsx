@@ -14,7 +14,7 @@ import { getIconSize } from '../utils/get-icon-size'
 import { getButtonFont } from '../utils/get-button-font'
 
 export const FilledIconButton = styled(BaseIconButton)((props) => {
-  const { theme, size = 'm', active } = props
+  const { theme, size = 'm', iconColor, active } = props
   const { palette } = theme
   const { styles } = props
 
@@ -25,33 +25,34 @@ export const FilledIconButton = styled(BaseIconButton)((props) => {
 
     ${buttonBaseColors({
       color: palette.base,
-      bg: palette.main2,
-      icon: palette.base,
+      bg: palette.main,
+      icon: iconColor ? palette[iconColor] : palette.base,
     })}
 
     ${buttonFocusColors({
-      outline: palette.main15,
+      bg: palette.main15,
     })}
 
     ${buttonHoverColors({
-      bg: palette.main3,
+      bg: palette.main16,
     })}
 
     ${buttonPressedColors({
-      outline: palette.main15,
+      outline: palette.main18,
+      bg: palette.main15,
     })}
 
     ${buttonDisabledColors({
-      color: palette.main12,
-      bg: palette.main17,
-      icon: palette.main12,
+      color: palette.main22,
+      bg: palette.main21,
+      icon: palette.main22,
     })}
 
 
     ${active &&
     buttonActiveColors({
       color: palette.base,
-      bg: palette.main3,
+      bg: palette.main15,
       icon: palette.base,
     })}
 

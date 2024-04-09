@@ -26,8 +26,8 @@ export const IconButton = styled(BaseIconButton)((props) => {
     ${getIconSize(size)}
 
     ${buttonBaseColors({
-      color: palette.main2,
-      icon: iconColor ? palette[iconColor] : palette.main2,
+      color: palette.main, // it's not clear when it's used
+      icon: iconColor ? palette[iconColor] : palette.main,
     })}
 
     ${buttonFocusColors({
@@ -35,7 +35,7 @@ export const IconButton = styled(BaseIconButton)((props) => {
     })}
 
     ${buttonHoverColors({
-      bg: palette.main20,
+      bg: palette.main16,
     })}
 
     ${buttonPressedColors({
@@ -43,14 +43,14 @@ export const IconButton = styled(BaseIconButton)((props) => {
     })}
 
     ${buttonDisabledColors({
-      color: palette.main11,
-      icon: palette.main11,
+      color: palette.main21,
+      icon: palette.main21,
     })}
 
     ${isLoading &&
     buttonLoadingColors({
-      color: palette.main2,
-      icon: palette.main2,
+      color: palette.main,
+      icon: palette.main,
     })}
 
     ${active &&

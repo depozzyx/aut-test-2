@@ -44,10 +44,10 @@ const Content = styled.div<TCabinetLayoutProps>((props) => {
   justify-content: ${props.justifyContent || 'flex-start'};
   width: 100%;
   max-width: ${props.maxWidth ?? '100%'};
-  min-height: 'calc(100vh - var(--header-height))';
+  min-height: calc(100vh - var(--header-height));
   margin: 0 auto;
   padding: ${props.padding ?? '0'};
-  background-color: ${props.theme.palette.base};
+  background-color: ${props.theme.palette.base2};
 `
 
   return css`
@@ -62,7 +62,7 @@ const CustomPopupOverlay = styled.div(
     z-index: 1;
     display: none;
     width: 100%;
-    min-height: 'calc(100vh - var(--header-height))';
+    min-height: calc(100vh - var(--header-height));
     background: ${theme.palette.overlay};
     pointer-events: none;
   `,
@@ -79,8 +79,8 @@ export const CabinetLayout: React.FC<TCabinetLayoutProps> = ({
     <ContentWrapper {...props}>
       <Sidebar />
       <Content padding="12px 26px 26px 40px" {...props}>
+        <CustomPopupOverlay id="customPopupOverlay" />
         <Flex align="center" justify="space-between">
-          <CustomPopupOverlay id="customPopupOverlay" />
           <Text variant="f2" styles={{ paddingTop: '12px' }}>
             {title}
           </Text>

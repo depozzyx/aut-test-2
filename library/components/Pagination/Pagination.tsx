@@ -1,9 +1,8 @@
 import { useRouter } from 'next/router'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
-import { FilledIconButton } from '@peiko/components/buttons/FilledIconButton'
 import { TIconButton } from '@peiko/components/buttons/types'
 import { getPaginationData } from './utils/get-pagination'
-import { Container } from './Pagination.styles'
+import { Container, PaginationBtn } from './Pagination.styles'
 import { TPagination, TPaginationButton } from './types'
 import { Dots } from './components/Dots'
 import { PAGINATION_CONFIG_DESKTOP, PAGINATION_CONFIG_MOBILE } from './constants'
@@ -11,7 +10,7 @@ import { normalizePage } from './utils/normalize-page'
 
 export const Pagination: React.FC<TPagination> = ({
   ssr = false,
-  size = 'm',
+  size = 'sm',
   currentPage = 0,
   lastPage = 0,
   onChange,
@@ -78,7 +77,7 @@ export const Pagination: React.FC<TPagination> = ({
 
     if (arrowDirection) {
       return (
-        <FilledIconButton
+        <PaginationBtn
           size={size}
           key={`${page}${arrowDirection}`}
           onClick={() => onChange?.(Number(buttonPage))}
@@ -87,16 +86,16 @@ export const Pagination: React.FC<TPagination> = ({
           link={link}
         >
           <ArrowIcon
-            color={hasDisabled ? 'main11' : 'main8'}
+            color={hasDisabled ? 'main22' : 'main2'}
             direction={arrowDirection}
             transition="none"
           />
-        </FilledIconButton>
+        </PaginationBtn>
       )
     }
 
     return (
-      <FilledIconButton
+      <PaginationBtn
         size={size}
         active={active}
         key={`${page}${arrowDirection}`}
@@ -106,7 +105,7 @@ export const Pagination: React.FC<TPagination> = ({
         link={link}
       >
         {buttonPage}
-      </FilledIconButton>
+      </PaginationBtn>
     )
   }
 

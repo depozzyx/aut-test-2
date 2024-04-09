@@ -33,19 +33,19 @@ const Container = styled.div<TContinerProps>((props) => {
 
   const direction = () => {
     switch (props.direction) {
-      case 'left':
+      case 'up':
         return css`
           transform: rotate(90deg);
         `
-      case 'right':
+      case 'down':
         return css`
           transform: rotate(270deg);
         `
-      case 'up':
+      case 'left':
         return css`
           transform: rotate(0deg);
         `
-      case 'down':
+      case 'right':
         return css`
           transform: rotate(180deg);
         `

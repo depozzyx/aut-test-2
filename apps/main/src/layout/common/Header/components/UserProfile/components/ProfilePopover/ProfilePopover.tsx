@@ -65,7 +65,7 @@ export const ProfilePopover = ({
         <UserRoleIcon userRole={userRole} iconSize="28px" variant="medium" />
         <Flex direction="column" align="center">
           <Text variant="f4">{name}</Text>
-          <Text variant="f6" color="main18">
+          <Text variant="f6" color="main22">
             {t(`roles.${userRole}`)}
           </Text>
         </Flex>
