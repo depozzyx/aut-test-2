@@ -26,7 +26,7 @@ export const IconButton = styled(BaseIconButton)((props) => {
     ${getIconSize(size)}
 
     ${buttonBaseColors({
-      color: palette.main,
+      color: palette.main, // it's not clear when it's used
       icon: iconColor ? palette[iconColor] : palette.main,
     })}
 

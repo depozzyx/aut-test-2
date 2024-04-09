@@ -6,6 +6,7 @@ import forgotPasswordReducer from '@/features/auth/store/forgot-password'
 import resetPasswordReducer from '@/features/auth/store/reset-password'
 import notificationsReducer from '@/features/common/notifications/store'
 import modalsReducer from '@/features/common/modals/store'
+import campaignsReducer from '@/features/campaigns/store/campaigns-list'
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     resetPassword: resetPasswordReducer,
     notifications: notificationsReducer,
     modals: modalsReducer,
+    campaigns: campaignsReducer,
   },
 })
 

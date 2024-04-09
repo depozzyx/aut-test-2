@@ -8,6 +8,7 @@ const Container = styled(ScrollContainer)<{ gap: THorizontalContainerProps['gap'
   display: flex;
   flex-direction: row;
   gap: ${({ gap }) => (gap ? formatCssProperty(gap, 'px') : '0px')};
+  width: 100%;
 `
 
 export const HorizontalScroll: React.FC<THorizontalContainerProps> = ({

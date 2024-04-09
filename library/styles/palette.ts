@@ -39,6 +39,7 @@ const defaultPalette: TDefaultPalette = {
   'main9-100': '#EB7100',
   'main10-100': '#0048FF',
   overlay: 'rgba(203, 217, 227, 0.56)',
+  transparent: 'transparent',
 }
 
 export const palette = { ...defaultPalette }

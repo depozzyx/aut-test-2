@@ -41,6 +41,7 @@ export type TDefaultPalette = {
   'main9-100': Color
   'main10-100': Color
   overlay: Color
+  transparent: Color
 }
 
 export type TPalette = TDefaultPalette

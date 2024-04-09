@@ -1,6 +1,6 @@
 import { TModalNames } from '../constants'
 
-export type TModals = {
+export type TModal = {
   modalName: TModalNames
   isOpen: boolean
 }

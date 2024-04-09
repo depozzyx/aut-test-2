@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { TSelector } from '@/store'
-import { TModals } from '../types'
+import { TModal } from '../types'
 
 export type TInit = {
-  modalState: null | TModals
+  modalState: null | TModal
 }
 
 const init: TInit = {
@@ -14,7 +14,7 @@ const modals = createSlice({
   name: 'modals',
   initialState: init,
   reducers: {
-    setModal(state, action: PayloadAction<TModals>) {
+    setModal(state, action: PayloadAction<TModal>) {
       state.modalState = action.payload
     },
     resetModalsState(state) {
@@ -26,6 +26,6 @@ const modals = createSlice({
 // actions
 export const modalsActions = modals.actions
 // selectors
-export const selectModals: TSelector<TInit> = (state) => state.modals
+export const selectModal: TSelector<TInit> = (state) => state.modals
 
 export default modals.reducer

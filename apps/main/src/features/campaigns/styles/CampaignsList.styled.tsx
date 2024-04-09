@@ -6,7 +6,7 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   padding-top: 16px;
 `
 
@@ -30,3 +30,18 @@ export const CustomFilterBtn = styled((props) => (
     }
   `,
 )
+
+export const TableContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 8px;
+`
+
+export const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 40px;
+`
