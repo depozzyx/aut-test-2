@@ -20,7 +20,7 @@ export const Notification = (): TReturn => {
   }
 
   return (
-    <Snackbar status={notification.status} onClose={resetNotifications}>
+    <Snackbar status={notification.status} onClose={resetNotifications} withAnimation>
       <Flex align="center" gap={3}>
         <Trans
           i18nKey={notification.key}

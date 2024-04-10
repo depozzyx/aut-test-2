@@ -11,6 +11,7 @@ export interface ISnackbarProps {
   message?: string
   onClose: () => void
   maxWidth?: string
+  withAnimation?: boolean
 }
 
 export const Snackbar: FC<ISnackbarProps> = ({
@@ -19,6 +20,7 @@ export const Snackbar: FC<ISnackbarProps> = ({
   message,
   onClose,
   maxWidth = '552px',
+  withAnimation,
   children,
 }) => {
   const defaultContent = (
@@ -37,7 +39,13 @@ export const Snackbar: FC<ISnackbarProps> = ({
   )
 
   return (
-    <StyledFilledChip status={status} maxWidth={maxWidth} size="m" onDelete={onClose}>
+    <StyledFilledChip
+      status={status}
+      maxWidth={maxWidth}
+      size="m"
+      onDelete={onClose}
+      withAnimation={withAnimation}
+    >
       {children || defaultContent}
     </StyledFilledChip>
   )

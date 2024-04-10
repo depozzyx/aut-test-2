@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { keyframes, css } from 'styled-components'
 import { FilledChip } from '@peiko/components/chips/FilledChip'
 import { TDefaultPalette } from '@peiko/styles/types/palette'
 import { TStatuses } from '@/features/common/notifications'
@@ -15,9 +15,21 @@ const borderColors: Record<TStatuses, keyof TDefaultPalette> = {
   info: 'main3',
 }
 
+const slideInRight = keyframes`
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`
+
 export const StyledFilledChip = styled(FilledChip)<{
   status: TStatuses
   maxWidth: string
+  withAnimation?: boolean
 }>`
   width: 100%;
   max-width: ${({ maxWidth }) => maxWidth};
@@ -36,4 +48,12 @@ export const StyledFilledChip = styled(FilledChip)<{
     fill: ${({ theme, status }) =>
       theme.palette[borderColors[status]] || theme.palette.main5};
   }
+
+  ${({ withAnimation }) =>
+    withAnimation &&
+    css`
+      transform: translateX(100%);
+      opacity: 0;
+      animation: ${slideInRight} 0.5s forwards ease-out;
+    `}
 `
