@@ -19,6 +19,7 @@ export const Modal: React.FC<TModalProps> = ({
   children,
   disableCloseOutside,
   maxWidth,
+  containerWidth,
   hideCloseButton,
 }) => {
   const [isClient, setIsClient] = useState(false)
@@ -52,7 +53,12 @@ export const Modal: React.FC<TModalProps> = ({
 
   return (
     <S.Popup modal nested open={open} onClose={onClose} closeOnDocumentClick={false}>
-      <S.Container ref={containerRef} tabIndex={0} maxWidth={maxWidth}>
+      <S.Container
+        ref={containerRef}
+        tabIndex={0}
+        containerWidth={containerWidth}
+        maxWidth={maxWidth}
+      >
         {onClose && !hideCloseButton && (
           <S.Close onClick={onClose} iconColor="main5" size="s">
             <CloseIcon />

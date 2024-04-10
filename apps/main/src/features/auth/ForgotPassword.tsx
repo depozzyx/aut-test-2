@@ -81,7 +81,6 @@ export const ForgotPassword: FC = () => {
         <Snackbar
           status="info"
           title={t('forgot-password.notification.title')}
-          message={t('forgot-password.notification.message')}
           onClose={handleHideNotification}
         />
       )}

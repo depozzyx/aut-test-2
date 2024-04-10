@@ -24,7 +24,7 @@ export const Snackbar: FC<ISnackbarProps> = ({
   const defaultContent = (
     <Flex direction="column">
       {title && (
-        <Text variant="f9" color="main3">
+        <Text variant="f8" color="main3">
           {title}
         </Text>
       )}

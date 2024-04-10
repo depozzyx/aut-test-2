@@ -15,5 +15,6 @@
         "action": "Action",
         "edit": "Edit",
         "delete": "Delete"
-    }
+    },
+    "delete-campaign": "<translate>Are you sure you want to delete <value>{{ campaignName }}</value>?</translate>"
 }

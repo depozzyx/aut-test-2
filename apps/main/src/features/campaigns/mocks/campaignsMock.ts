@@ -1,6 +1,6 @@
 import { TCampaignStatus } from '../types'
 
-type TCampaign = {
+export type TCampaign = {
   id: number
   name: string
   date: string
