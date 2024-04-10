@@ -9,8 +9,8 @@ export type TAgent = {
 export const agentsMock: TAgent[] = [
   {
     id: 1,
-    name: 'Esther Howard',
-    email: 'estherhoward.example.com',
+    name: 'Howard Esther',
+    email: 'howardesther.example.com',
     role: 'manager',
     campaigns: ['Campaign Name 1', 'Campaign Name 2', 'Campaign Name 3'],
   },
@@ -23,8 +23,8 @@ export const agentsMock: TAgent[] = [
   },
   {
     id: 3,
-    name: 'Esther Howard',
-    email: 'estherhoward.example.com',
+    name: 'Donald Trump',
+    email: 'donaldtrump.example.com',
     role: 'manager',
     campaigns: ['Campaign Name 7', 'Campaign Name 8', 'Campaign Name 9'],
   },

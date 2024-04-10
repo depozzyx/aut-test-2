@@ -8,5 +8,6 @@
         "edit": "Edit",
         "delete": "Delete"
     },
-    "delete-agent": "<translate>Are you sure you want to delete <value>{{ agentName }}</value>?</translate>"
+    "delete-agent": "<translate>Are you sure you want to delete <value>{{ agentName }}</value>?</translate>",
+    "campaigns-amount": "{{ campaignsAmount }} campaigns"
 }

@@ -1,5 +1,5 @@
 import { PopupProps } from 'reactjs-popup/dist/types'
-import { CSSProperties } from 'styled-components'
+import { CSSProperties, DefaultTheme } from 'styled-components'
 
 type TRenderMenuProps = {
   onClose: () => void
@@ -18,4 +18,19 @@ export type TTooltipProps = {
    * @default 100%
    */
   maxWidth?: CSSProperties['maxWidth']
+  /**
+   * Define the background color of the tooltip content.
+   * @default base3
+   */
+  contentBackgroundColor?: keyof DefaultTheme['palette']
+  /**
+   * Define the color of the tooltip arrow.
+   * @default base3
+   */
+  arrowColor?: keyof DefaultTheme['palette']
+  /**
+   * Define the border color of the tooltip content.
+   * @default main8
+   */
+  contenBorderColor?: keyof DefaultTheme['palette']
 } & Omit<PopupProps, 'children'>

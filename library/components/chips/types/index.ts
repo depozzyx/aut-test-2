@@ -4,6 +4,10 @@ export type TChipSizes = 's' | 'm' | 'l'
 
 export type TChipProps = {
   /**
+   * The content of the chip.
+   */
+  children?: React.ReactNode
+  /**
    * The background color of the chip.
    */
   color?: string

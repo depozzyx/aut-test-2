@@ -10,6 +10,7 @@ import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import { InfoColumn } from '../../components/InfoColumn'
 import { TAgent } from '../../mocks/agentsMock'
+import { CampaignsTooltip } from '../CampaignsTooltip/CampaignsTooltip'
 
 type TAgentRowKeys = 'name' | 'edit' | 'delete' | 'email' | 'role' | 'campaigns'
 
@@ -41,7 +42,7 @@ export const AgentsListTable = memo(
         name: <InfoColumn title={agent.name} />,
         email: <InfoColumn title={agent.email} />,
         role: <InfoColumn title={t(`user:roles.${agent.role}`)} />,
-        campaigns: <InfoColumn title={agent.role} />,
+        campaigns: <CampaignsTooltip campaigns={agent.campaigns} />,
         edit: (
           <IconButton onClick={() => handleEdit(agent.id)} iconColor="transparent">
             <EditIcon width="24px" height="24px" />
