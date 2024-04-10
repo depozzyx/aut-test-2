@@ -24,4 +24,8 @@ export type TModalProps = {
    * @default false
    */
   hideCloseButton?: boolean
+  /**
+   * Specify the width of the modal. Otherwise it will be 100% of the screen width.
+   */
+  containerWidth?: CSSProperties['width']
 }

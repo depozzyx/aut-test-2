@@ -30,11 +30,7 @@ export const ModalMessage: React.FC<TModalMessage> = ({
 
   return (
     <Modal onClose={onClose} maxWidth={maxWidth || '582px'} {...props}>
-      <Card
-        fullWidth
-        xs={{ padding: '32px 44px 32px', borderRadius: '8px' }}
-        {...cardProps}
-      >
+      <Card fullWidth xs={{ padding: '32px 44px', borderRadius: '8px' }} {...cardProps}>
         <ModalHeader
           title={title}
           description={description}

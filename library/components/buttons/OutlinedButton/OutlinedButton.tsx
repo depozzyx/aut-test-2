@@ -26,40 +26,43 @@ export const OutlinedButton = styled(BaseButton)((props) => {
     ${getButtonFont(size, theme)}
 
     ${buttonBaseColors({
-      border: palette.main2,
-      color: palette.main2,
-      icon: palette.main2,
+      border: palette.main,
+      color: palette.main,
+      icon: palette.main,
     })}
 
     ${buttonFocusColors({
-      color: palette.main2,
-      bg: palette.main15,
-      icon: palette.main15,
+      color: palette.main,
+      bg: palette.main18,
+      icon: palette.main,
+      border: palette.main,
     })}
 
     ${buttonHoverColors({
-      color: palette.main2,
-      bg: palette.base200,
-      icon: palette.main2,
+      color: palette.main16,
+      bg: palette.main19,
+      icon: palette.main16,
+      border: palette.main16,
     })}
 
     ${buttonPressedColors({
-      bg: palette.main15,
-      outline: palette.base200,
+      color: palette.main16,
+      bg: palette.main17,
+      outline: palette.main18,
     })}
 
     ${buttonDisabledColors({
       color: palette.main12,
-      bg: 'transparent',
+      bg: palette.transparent,
       border: palette.main12,
       icon: palette.main12,
     })}
 
     ${isLoading &&
     `${buttonLoadingColors({
-      color: palette.main2,
-      bg: palette.main,
-      icon: palette.main2,
+      color: palette.main,
+      bg: palette.main18,
+      icon: palette.main,
     })}`}
 
     ${propertyBreakpoints<TIconButtonProps['size']>({

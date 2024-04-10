@@ -6,5 +6,7 @@
   },
   "confirm": "Confirm",
   "close": "Close",
-  "logout": "Logout"
+  "logout": "Logout",
+  "delete": "Delete",
+  "cancel": "Cancel"
 }

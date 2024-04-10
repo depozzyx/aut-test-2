@@ -3,7 +3,7 @@ import { TSelector } from '@/store'
 import { TModal } from '../types'
 
 export type TInit = {
-  modalState: null | TModal
+  modalState: TModal | null
 }
 
 const init: TInit = {
