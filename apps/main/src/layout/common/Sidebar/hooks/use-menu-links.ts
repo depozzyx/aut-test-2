@@ -28,7 +28,7 @@ export const useMenuLinks = (): TMenuItem[] => {
     },
     {
       title: t('agents-list'),
-      link: ROUTES.CABINET_AGENT_LIST,
+      link: ROUTES.CABINET_AGENTS_LIST,
       disabled: false,
     },
   ]
