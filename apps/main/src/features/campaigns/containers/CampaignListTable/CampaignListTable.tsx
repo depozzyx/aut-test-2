@@ -28,20 +28,16 @@ type TCampaignRowKeys =
 interface ICampaignListTableProps {
   data: TCampaign[]
   onDelete: (id: number) => void
+  changeStatus: (id: number) => void
 }
 
 export const CampaignListTable = memo(
-  ({ data, onDelete }: ICampaignListTableProps): JSX.Element => {
+  ({ data, onDelete, changeStatus }: ICampaignListTableProps): JSX.Element => {
     const { t } = useTranslation('campaigns')
 
     const handleView = useCallback((id: number) => {
       // eslint-disable-next-line no-console
       console.log(`View ${id}`)
-    }, [])
-
-    const handleAction = useCallback((id: number) => {
-      // eslint-disable-next-line no-console
-      console.log(`Action ${id}`)
     }, [])
 
     const handleEdit = useCallback((id: number) => {
@@ -74,7 +70,7 @@ export const CampaignListTable = memo(
           </IconButton>
         ),
         action: (
-          <ActionBtn status={campaign.status} onClick={() => handleAction(campaign.id)} />
+          <ActionBtn status={campaign.status} onClick={() => changeStatus(campaign.id)} />
         ),
         edit: (
           <IconButton onClick={() => handleEdit(campaign.id)} iconColor="transparent">

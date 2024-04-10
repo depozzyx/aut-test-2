@@ -22,6 +22,7 @@ import {
   selectCampaignsPagination,
   selectCampaignsList,
   setSelectedId,
+  setCampaignStatus,
 } from './store/campaigns-list'
 import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
 
@@ -46,6 +47,10 @@ export const CampaignsList = (): JSX.Element => {
     setModal({ modalName: MODAL_NAMES.DELETE_CAMPAIGN, isOpen: true })
   }, [])
 
+  const handleAction = useCallback((id: number) => {
+    dispatch(setCampaignStatus(id))
+  }, [])
+
   return (
     <>
       <Container>
@@ -64,7 +69,11 @@ export const CampaignsList = (): JSX.Element => {
           </FilledButton>
         </Panel>
         <TableContainer>
-          <CampaignListTable data={campaignList} onDelete={handleDelete} />
+          <CampaignListTable
+            data={campaignList}
+            onDelete={handleDelete}
+            changeStatus={handleAction}
+          />
         </TableContainer>
         <PaginationContainer>
           <Pagination lastPage={total} currentPage={page} />
