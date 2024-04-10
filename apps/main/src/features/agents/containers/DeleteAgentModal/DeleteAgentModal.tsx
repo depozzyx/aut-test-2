@@ -9,42 +9,42 @@ import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useRedux } from '@/hooks/use-redux'
 import useNotification from '@/features/common/notifications/hooks/use-notifications'
-import { selectSelectedCampaign, deleteCampaign } from '../../store/campaigns-list'
+import { selectSelectedAgent, deleteAgent } from '../../store/agents-list'
 
-export const DeleteCampaignModal = (): JSX.Element => {
+export const DeleteAgentModal = (): JSX.Element => {
   const { t } = useTranslation('common')
   const { select, dispatch } = useRedux()
   const { modalState, resetModals } = useModals()
   const { setNotification } = useNotification()
 
-  const selectedCampaign = select(selectSelectedCampaign)
+  const selectedAgent = select(selectSelectedAgent)
 
   const showModal =
-    modalState?.modalName === MODAL_NAMES.DELETE_CAMPAIGN && modalState.isOpen
+    modalState?.modalName === MODAL_NAMES.DELETE_AGENT && modalState.isOpen
 
-  const campaignName = 'Campaign name 1'
+  const agentName = 'Esther Howard'
 
   const handleDelete = () => {
-    if (!selectedCampaign) return
-    dispatch(deleteCampaign(selectedCampaign.id))
+    if (!selectedAgent) return
+    dispatch(deleteAgent(selectedAgent.id))
     resetModals()
     setNotification({
-      key: 'notifications:campaign.success-delete',
+      key: 'notifications:agent.success-delete',
       status: 'success',
-      values: { campaignName: selectedCampaign.name },
+      values: { agentName: selectedAgent.name || agentName },
     })
   }
 
   const title = (
     <Flex align="center" justify="center" width="330px" styles={{ textAlign: 'center' }}>
       <Trans
-        i18nKey="campaigns:delete-campaign"
+        i18nKey="agents:delete-agent"
         components={{
           translate: <Text tag="span" variant="f2" />,
           value: <Text tag="span" variant="f2" color="main2" />,
         }}
         values={{
-          campaignName: selectedCampaign?.name || campaignName,
+          agentName: selectedAgent?.name || agentName,
         }}
       />
     </Flex>

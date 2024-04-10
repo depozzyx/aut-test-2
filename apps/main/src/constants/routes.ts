@@ -7,5 +7,6 @@ export const ROUTES = {
   CABINET_DASHBOARD: '/cabinet/dashboard',
   CABINET_CALLS: '/cabinet/calls',
   CABINET_CAMPAIGNS_LIST: '/cabinet/campaigns-list',
+  CABINET_AGENT_LIST: '/cabinet/agent-list',
   SETTINGS: '/settings',
 }

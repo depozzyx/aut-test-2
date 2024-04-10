@@ -4,5 +4,6 @@
   "dashboard": "Dashboard",
   "calls": "Calls",
   "settings": "Settings",
-  "campaigns-list": "Campaigns List"
+  "campaigns-list": "Campaigns List",
+  "agents-list": "Agents List"
 }

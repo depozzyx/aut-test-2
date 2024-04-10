@@ -1,0 +1,12 @@
+{
+    "add-agent": "Add new Agent",
+    "headers": {
+        "agent-name": "Agent Name",
+        "email": "Email",
+        "role": "Role",
+        "campaigns": "Campaigns",
+        "edit": "Edit",
+        "delete": "Delete"
+    },
+    "delete-agent": "<translate>Are you sure you want to delete <value>{{ agentName }}</value>?</translate>"
+}

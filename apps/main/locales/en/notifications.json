@@ -6,5 +6,8 @@
         "paused": "<value>{{ campaignName }}</value> <translate>is paused</translate>",
         "success-download": "<translate>Custom Report was successfully downloaded</translate>",
         "export-error": "<translate>There is an error when exporting a custom report. Try again</translate>"
+    },
+    "agent": {
+        "success-delete": "<value>{{ agentName }}</value> <translate>was successfully deleted</translate>"
     }
 }
