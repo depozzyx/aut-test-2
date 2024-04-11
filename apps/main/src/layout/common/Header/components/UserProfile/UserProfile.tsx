@@ -15,6 +15,11 @@ const contentStyles = {
   filter: 'drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.25))',
 }
 
+const shortenName = (fullName: string) => {
+  const [firstName, lastName] = fullName.split(' ')
+  return `${firstName} ${lastName.charAt(0)}.`
+}
+
 export const UserProfile = (): JSX.Element => {
   const { user } = useAuth()
 
@@ -24,6 +29,8 @@ export const UserProfile = (): JSX.Element => {
     newValue: 'block',
   })
 
+  const shortName = shortenName(user?.name || '')
+
   return (
     <ContextMenu
       on="hover"
@@ -31,7 +38,7 @@ export const UserProfile = (): JSX.Element => {
       renderMenu={() => (
         <ProfilePopover userRole={user?.role} email={user?.email} name={user?.name} />
       )}
-      trigger={<Trigger userRole={user?.role} name={user?.name} />}
+      trigger={<Trigger userRole={user?.role} name={shortName} />}
       offsetY={18}
       arrowStyle={arrowStyles}
       contentStyle={contentStyles}
