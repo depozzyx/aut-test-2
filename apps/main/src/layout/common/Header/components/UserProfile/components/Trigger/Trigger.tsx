@@ -17,7 +17,7 @@ export const Trigger = forwardRef<HTMLDivElement, ITriggerProps>(
     return (
       <Flex ref={ref} padding="8px 16px" gap={8} cursor="pointer" {...rest}>
         <UserRoleIcon userRole={userRole} />
-        <Flex direction="column" height="100%" align="center" justify="center">
+        <Flex direction="column" height="100%" justify="center">
           <Text variant="f8">{name}</Text>
           <Text variant="f10" color="main22" styles={{ fontWeight: 300 }}>
             {t(`roles.${userRole}`)}
