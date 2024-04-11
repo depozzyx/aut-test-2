@@ -76,13 +76,14 @@ export const DayPickerInput: React.FC<TDayPickerInputProps> = ({
         placeholder={placeholder || dateFormat.toUpperCase()}
         onChange={handleInputChange}
         value={inputValue}
+        endAdornmentStyles={{ paddingRight: '0 !important' }}
         endAdornment={
           <ContextMenu
             repositionOnResize
             position="bottom left"
             offsetY={10}
             trigger={
-              <IconButton iconColor="main11" disabled={props.disabled}>
+              <IconButton iconColor="main5" disabled={props.disabled}>
                 <CalendarIcon />
               </IconButton>
             }
