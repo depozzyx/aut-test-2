@@ -21,6 +21,7 @@ import {
 } from './store/agents-list'
 import { AgentsListTable } from './containers/AgentsListTable'
 import { DeleteAgentModal } from './containers/DeleteAgentModal'
+import { EditAgentModal } from './containers/EditAgentModal'
 
 export const AgentsList = (): JSX.Element => {
   const { t } = useTranslation('agents')
@@ -43,6 +44,10 @@ export const AgentsList = (): JSX.Element => {
     setModal({ modalName: MODAL_NAMES.DELETE_AGENT, isOpen: true })
   }, [])
 
+  const handleEditAgent = useCallback(() => {
+    setModal({ modalName: MODAL_NAMES.EDIT_AGENT, isOpen: true })
+  }, [])
+
   return (
     <>
       <Container>
@@ -57,13 +62,18 @@ export const AgentsList = (): JSX.Element => {
           </FilledButton>
         </Panel>
         <TableContainer>
-          <AgentsListTable data={agentsList} onDelete={handleDelete} />
+          <AgentsListTable
+            data={agentsList}
+            onDelete={handleDelete}
+            editAgent={handleEditAgent}
+          />
         </TableContainer>
         <PaginationContainer>
           <Pagination lastPage={total} currentPage={page} />
         </PaginationContainer>
       </Container>
       <DeleteAgentModal />
+      <EditAgentModal />
     </>
   )
 }

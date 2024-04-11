@@ -29,20 +29,21 @@ interface ICampaignListTableProps {
   data: TCampaign[]
   onDelete: (id: number) => void
   changeStatus: (id: number) => void
+  editCampaign: (id: number) => void
 }
 
 export const CampaignListTable = memo(
-  ({ data, onDelete, changeStatus }: ICampaignListTableProps): JSX.Element => {
+  ({
+    data,
+    onDelete,
+    changeStatus,
+    editCampaign,
+  }: ICampaignListTableProps): JSX.Element => {
     const { t } = useTranslation('campaigns')
 
     const handleView = useCallback((id: number) => {
       // eslint-disable-next-line no-console
       console.log(`View ${id}`)
-    }, [])
-
-    const handleEdit = useCallback((id: number) => {
-      // eslint-disable-next-line no-console
-      console.log(`Edit ${id}`)
     }, [])
 
     const headers: THeader<TCampaignRowKeys>[] = [
@@ -73,7 +74,7 @@ export const CampaignListTable = memo(
           <ActionBtn status={campaign.status} onClick={() => changeStatus(campaign.id)} />
         ),
         edit: (
-          <IconButton onClick={() => handleEdit(campaign.id)} iconColor="transparent">
+          <IconButton onClick={() => editCampaign(campaign.id)} iconColor="transparent">
             <EditIcon width="24px" height="24px" />
           </IconButton>
         ),

@@ -5,14 +5,13 @@ import { ModalMessage } from '@peiko/components/modals/ModalMessage'
 import { Text } from '@peiko/components/Text'
 // import { EditCampaignForm } from './components/EditCampaignForm'
 
-export const EditCampaignModal = (): JSX.Element => {
-  const { t } = useTranslation('campaigns')
+export const EditAgentModal = (): JSX.Element => {
+  const { t } = useTranslation('agents')
   const { modalState, resetModals } = useModals()
 
-  const showModal =
-    modalState?.modalName === MODAL_NAMES.EDIT_CAMPAIGN && modalState.isOpen
+  const showModal = modalState?.modalName === MODAL_NAMES.EDIT_AGENT && modalState.isOpen
 
-  const title = <Text>{t('edit-campaign.title')}</Text>
+  const title = <Text>{t('edit-agent.title')}</Text>
 
   return (
     <ModalMessage

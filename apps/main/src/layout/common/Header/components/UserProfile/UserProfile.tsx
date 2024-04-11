@@ -28,7 +28,7 @@ export const UserProfile = (): JSX.Element => {
     <ContextMenu
       on="hover"
       position="bottom center"
-      renderMenu={() => <ProfilePopover userRole={user?.role} />}
+      renderMenu={() => <ProfilePopover userRole={user?.role} email={user?.email} />}
       trigger={<Trigger userRole={user?.role} />}
       offsetY={18}
       arrowStyle={arrowStyles}
