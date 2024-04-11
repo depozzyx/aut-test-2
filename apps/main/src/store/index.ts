@@ -8,6 +8,7 @@ import notificationsReducer from '@/features/common/notifications/store'
 import modalsReducer from '@/features/common/modals/store'
 import campaignsReducer from '@/features/campaigns/store/campaigns-list'
 import agentsReducer from '@/features/agents/store/agents-list'
+import createCampaignReducer from '@/features/campaigns/store/create-campaign'
 
 const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
     modals: modalsReducer,
     campaigns: campaignsReducer,
     agents: agentsReducer,
+    createCampaign: createCampaignReducer,
   },
 })
 

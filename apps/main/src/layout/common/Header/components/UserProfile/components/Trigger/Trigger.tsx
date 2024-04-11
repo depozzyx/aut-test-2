@@ -15,14 +15,7 @@ export const Trigger = forwardRef<HTMLDivElement, ITriggerProps>(
     const { t } = useTranslation('user')
 
     return (
-      <Flex
-        ref={ref}
-        padding="8px 16px"
-        maxWidth={128}
-        gap={8}
-        cursor="pointer"
-        {...rest}
-      >
+      <Flex ref={ref} padding="8px 16px" gap={8} cursor="pointer" {...rest}>
         <UserRoleIcon userRole={userRole} />
         <Flex direction="column" height="100%" align="center" justify="center">
           <Text variant="f8">{name}</Text>

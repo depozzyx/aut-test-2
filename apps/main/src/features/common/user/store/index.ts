@@ -11,7 +11,7 @@ import { TProfile } from '@/types/entities/profile'
 export type TInit = {
   userFetching: boolean
   loading: boolean
-  user: TProfile | Omit<TProfile, 'id' | 'email'> | null
+  user: TProfile | null
 }
 
 const init: TInit = {

@@ -38,12 +38,24 @@ const campaigns = createSlice({
       state.campaignList = state.campaignList.filter(({ id }) => id !== action.payload)
       state.selectedId = null
     },
+    setCampaignStatus(state, action: PayloadAction<TInit['selectedId']>) {
+      state.campaignList = state.campaignList.map((campaign) => {
+        if (campaign.id === action.payload) {
+          if (campaign.status === 'active') {
+            return { ...campaign, status: 'pause' } // Change "paused" to "pause"
+          }
+          return { ...campaign, status: 'active' }
+        }
+        return campaign
+      })
+    },
     reset: () => init,
   },
 })
 
 // actions
-export const { setPagination, setSelectedId, deleteCampaign, reset } = campaigns.actions
+export const { setPagination, setSelectedId, deleteCampaign, reset, setCampaignStatus } =
+  campaigns.actions
 // selectors
 
 export const selectCampaigns: TSelector<TInit> = (state) => state.campaigns

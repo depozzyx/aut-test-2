@@ -22,8 +22,11 @@ import {
   selectCampaignsPagination,
   selectCampaignsList,
   setSelectedId,
+  setCampaignStatus,
 } from './store/campaigns-list'
 import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
+import { CreateCampaignModal } from './containers/CreateCampaignModal'
+import { EditCampaignModal } from './containers/EditCampaignModal'
 
 export const CampaignsList = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
@@ -46,6 +49,18 @@ export const CampaignsList = (): JSX.Element => {
     setModal({ modalName: MODAL_NAMES.DELETE_CAMPAIGN, isOpen: true })
   }, [])
 
+  const handleAction = useCallback((id: number) => {
+    dispatch(setCampaignStatus(id))
+  }, [])
+
+  const handleCreateCampaign = useCallback(() => {
+    setModal({ modalName: MODAL_NAMES.CREATE_CAMPAIGN, isOpen: true })
+  }, [])
+
+  const handleEditCampaign = useCallback(() => {
+    setModal({ modalName: MODAL_NAMES.EDIT_CAMPAIGN, isOpen: true })
+  }, [])
+
   return (
     <>
       <Container>
@@ -59,17 +74,25 @@ export const CampaignsList = (): JSX.Element => {
             maxWidth="236px"
             width="100%"
             startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
+            onClick={handleCreateCampaign}
           >
             {t('add-campaign')}
           </FilledButton>
         </Panel>
         <TableContainer>
-          <CampaignListTable data={campaignList} onDelete={handleDelete} />
+          <CampaignListTable
+            data={campaignList}
+            onDelete={handleDelete}
+            changeStatus={handleAction}
+            editCampaign={handleEditCampaign}
+          />
         </TableContainer>
         <PaginationContainer>
           <Pagination lastPage={total} currentPage={page} />
         </PaginationContainer>
       </Container>
+      <CreateCampaignModal />
+      <EditCampaignModal />
       <DeleteCampaignModal />
     </>
   )

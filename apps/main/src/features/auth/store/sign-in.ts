@@ -49,7 +49,14 @@ export const signInAsync =
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { accessToken, refreshToken, ...profileData } = data
 
-      dispatch(userActions.setUserData(profileData))
+      dispatch(
+        userActions.setUserData({
+          id: 0,
+          email: '',
+          name: '',
+          ...profileData,
+        }),
+      )
     } catch (e) {
       handleActionErrors({
         e,

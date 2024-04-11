@@ -16,5 +16,20 @@
         "edit": "Edit",
         "delete": "Delete"
     },
-    "delete-campaign": "<translate>Are you sure you want to delete <value>{{ campaignName }}</value>?</translate>"
+    "delete-campaign": "<translate>Are you sure you want to delete <value>{{ campaignName }}</value>?</translate>",
+    "create-campaign": {
+            "title": "Create new Campaign",
+            "campaign-name": "Campaign Name",
+            "agent-assignment": "Agent Assignment",
+            "lead-selection": "Lead Selection",
+            "creation-date": "Creation Date",
+            "scenario-setup": "Scenario Setup",
+            "call-frequency": "Call Frequency",
+            "time-for-calls": "Time for Call",
+            "review": "Review"
+    },
+    "edit-campaign": {
+        "title": "Edit Campaign"
+    }
+
 }

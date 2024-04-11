@@ -1,4 +1,4 @@
-import { useCallback, memo } from 'react'
+import { memo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { deepEqual } from '@/utils/deep-equal'
 import { Table } from '@peiko/components/Table'
@@ -17,16 +17,12 @@ type TAgentRowKeys = 'name' | 'edit' | 'delete' | 'email' | 'role' | 'campaigns'
 interface IAgentListTableProps {
   data: TAgent[]
   onDelete: (id: number) => void
+  editAgent: (id: number) => void
 }
 
 export const AgentsListTable = memo(
-  ({ data, onDelete }: IAgentListTableProps): JSX.Element => {
+  ({ data, onDelete, editAgent }: IAgentListTableProps): JSX.Element => {
     const { t } = useTranslation('agents')
-
-    const handleEdit = useCallback((id: number) => {
-      // eslint-disable-next-line no-console
-      console.log(`Edit ${id}`)
-    }, [])
 
     const headers: THeader<TAgentRowKeys>[] = [
       { label: t('headers.agent-name'), value: 'name' },
@@ -44,7 +40,7 @@ export const AgentsListTable = memo(
         role: <InfoColumn title={t(`user:roles.${agent.role}`)} />,
         campaigns: <CampaignsTooltip campaigns={agent.campaigns} />,
         edit: (
-          <IconButton onClick={() => handleEdit(agent.id)} iconColor="transparent">
+          <IconButton onClick={() => editAgent(agent.id)} iconColor="transparent">
             <EditIcon width="24px" height="24px" />
           </IconButton>
         ),

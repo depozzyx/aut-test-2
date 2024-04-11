@@ -27,9 +27,10 @@ export const ActionBtn = ({ status, onClick }: IActionBtnProps): JSX.Element => 
   }
 
   const iconColor = status === CAMPAIGN_STATUSES.COMPLETE ? 'main22' : 'main3'
+  const disabled = status === CAMPAIGN_STATUSES.COMPLETE
 
   return (
-    <IconButton iconColor={iconColor} onClick={onClick}>
+    <IconButton disabled={disabled} iconColor={iconColor} onClick={onClick}>
       {icon}
     </IconButton>
   )
