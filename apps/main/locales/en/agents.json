@@ -11,7 +11,11 @@
     "delete-agent": "<translate>Are you sure you want to delete <value>{{ agentName }}</value>?</translate>",
     "campaigns-amount": "{{ campaignsAmount }} campaigns",
     "edit-agent": {
-        "title": "Edit agent`s info"
+        "title": "Edit agent`s info",
+        "agent-name": "Agent Name",
+        "email": "Email",
+        "role": "Role",
+        "assigned-campaigns": "Assigned Campaigns"
     },
     "create-agent": {
         "title": ""
