@@ -9,5 +9,7 @@
   "logout": "Logout",
   "delete": "Delete",
   "cancel": "Cancel",
-  "save": "Save"
+  "save": "Save",
+  "back": "Back",
+  "submit": "Submit"
 }

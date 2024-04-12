@@ -10,8 +10,9 @@ import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSel
 import { FormikDayPickerInput } from '@peiko/components/inputs/formik-adapters/FormikDayPickerInput'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { setFormData } from '@/features/campaigns/store/create-campaign'
+import { MODAL_NAMES } from '@/features/common/modals/constants'
 
-interface IinitialValues {
+export interface IinitialValues {
   name: string
   assignedAgentIds: string
   leadSelection: string
@@ -40,15 +41,15 @@ const initialValues: IinitialValues = {
 
 export const CreateCampaignForm = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
-  const { resetModals } = useModals()
+  const { resetModals, setModal } = useModals()
   const { dispatch } = useRedux()
 
   const formik = useFormik({
     initialValues,
     validationSchema: yup.object().shape({}),
     onSubmit: (formData) => {
-      dispatch(setFormData({ formData, formik }))
-      resetModals()
+      dispatch(setFormData(formData))
+      setModal({ modalName: MODAL_NAMES.REVIEW_CAMPAIGN, isOpen: true })
     },
   })
 

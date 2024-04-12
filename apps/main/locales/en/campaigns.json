@@ -36,6 +36,8 @@
         "response-rate": "Response Rate",
         "status": "Status",
         "conversion-rate": "Conversion Rate"
+    },
+    "review-campaign": {
+        "title": "Review New Campaign"
     }
-
 }
