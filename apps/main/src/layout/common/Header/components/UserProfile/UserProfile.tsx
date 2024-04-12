@@ -17,7 +17,7 @@ const contentStyles = {
 
 const shortenName = (fullName: string) => {
   const [firstName, lastName] = fullName.split(' ')
-  return `${firstName} ${lastName.charAt(0)}.`
+  return `${firstName} ${lastName?.charAt(0)}.`
 }
 
 export const UserProfile = (): JSX.Element => {

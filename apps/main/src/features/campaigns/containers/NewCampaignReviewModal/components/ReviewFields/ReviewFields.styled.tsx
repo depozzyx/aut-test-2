@@ -1,18 +1,24 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
 
-export const Field = styled((props) => (
-  <Flex direction="column" gap={8}>
+const FieldWrapper = styled(Flex)`
+  border-bottom: 1px solid ${({ theme }) => theme.palette.main21};
+`
+
+export const Field = ({
+  label,
+  value,
+}: {
+  label: string
+  value: string | unknown
+}): JSX.Element => (
+  <FieldWrapper direction="column" gap={8}>
     <Text variant="f8" color="main22">
-      {props.label}
+      {label}
     </Text>
     <Text variant="f6" color="main5" styles={{ fontWeight: 500 }}>
-      {props.value}
+      {value}
     </Text>
-  </Flex>
-))(
-  ({ theme }) => css`
-    border-bottom: 1px solid ${theme.palette.main21};
-  `,
+  </FieldWrapper>
 )

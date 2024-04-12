@@ -14,5 +14,6 @@ module.exports = {
     '/cabinet/calls': ['user', 'routing'],
     '/cabinet/campaigns-list': ['user', 'routing', 'campaigns'],
     '/cabinet/agents-list': ['user', 'routing', 'agents'],
+    '/cabinet/create-agent': ['user', 'routing', 'agents'],
   },
 }

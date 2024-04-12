@@ -9,8 +9,7 @@ import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInpu
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 import { FormikDayPickerInput } from '@peiko/components/inputs/formik-adapters/FormikDayPickerInput'
 import useModals from '@/features/common/modals/hooks/use-modals'
-import { setFormData } from '@/features/campaigns/store/create-campaign'
-import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { createCampaignAsync } from '@/features/campaigns/store/create-campaign'
 
 export interface IinitialValues {
   name: string
@@ -41,15 +40,14 @@ const initialValues: IinitialValues = {
 
 export const CreateCampaignForm = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
-  const { resetModals, setModal } = useModals()
+  const { resetModals } = useModals()
   const { dispatch } = useRedux()
 
   const formik = useFormik({
     initialValues,
     validationSchema: yup.object().shape({}),
     onSubmit: (formData) => {
-      dispatch(setFormData(formData))
-      setModal({ modalName: MODAL_NAMES.REVIEW_CAMPAIGN, isOpen: true })
+      dispatch(createCampaignAsync(formData))
     },
   })
 
@@ -93,6 +91,7 @@ export const CreateCampaignForm = (): JSX.Element => {
               width={326}
               size="s"
               styles={{ padding: '0 6px 0 16px' }}
+              disabled
             />
           </Flex>
           <Flex direction="column" gap={16} maxWidth="326px" width="100%">
