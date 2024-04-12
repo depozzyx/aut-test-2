@@ -18,6 +18,7 @@
         "assigned-campaigns": "Assigned Campaigns"
     },
     "create-agent": {
-        "title": "Create new Agent"
+        "title": "Create new Agent",
+        "action": "Create agent"
     }
 }
