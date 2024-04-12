@@ -3,7 +3,7 @@ import useModals from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { Text } from '@peiko/components/Text'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
-// import { CreateCampaignForm } from './components/CreateCampaignForm'
+import { CreateCampaignForm } from './components/CreateCampaignForm'
 
 export const CreateCampaignModal = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
@@ -22,7 +22,7 @@ export const CreateCampaignModal = (): JSX.Element => {
       maxWidth="756px"
       containerWidth="100%"
     >
-      {/* <CreateCampaignForm /> */}
+      <CreateCampaignForm />
     </ModalMessage>
   )
 }

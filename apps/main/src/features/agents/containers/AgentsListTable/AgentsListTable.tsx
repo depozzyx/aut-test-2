@@ -10,7 +10,7 @@ import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import { InfoColumn } from '../../components/InfoColumn'
 import { TAgent } from '../../mocks/agentsMock'
-import { CampaignsTooltip } from '../CampaignsTooltip/CampaignsTooltip'
+import { CampaignsTooltip } from '../../components/CampaignsTooltip/CampaignsTooltip'
 
 type TAgentRowKeys = 'name' | 'edit' | 'delete' | 'email' | 'role' | 'campaigns'
 

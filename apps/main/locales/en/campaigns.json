@@ -29,7 +29,15 @@
             "review": "Review"
     },
     "edit-campaign": {
-        "title": "Edit Campaign"
+        "title": "Edit Campaign",
+        "campaign-name": "Campaign Name",
+        "creation-date": "Creation Date",
+        "call-frequency": "Call Frequency",
+        "response-rate": "Response Rate",
+        "status": "Status",
+        "conversion-rate": "Conversion Rate"
+    },
+    "review-campaign": {
+        "title": "Review New Campaign"
     }
-
 }

@@ -28,7 +28,7 @@ function CustomSelect<
 }
 
 const TRANSITION_DURATION = '250ms'
-const BORDER_RADIUS = '8px'
+const BORDER_RADIUS = '4px'
 const MENU_BORDER_RADIUS = '8px'
 
 export const Container = styled.div<TContainer>(
@@ -39,20 +39,20 @@ export const Container = styled.div<TContainer>(
 
 export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
   const { palette, fonts, zIndex } = theme
-  const { size = 'l', hasScroll, width, backgroundColor, styles, error } = props
+  const { size = 's', hasScroll, width, backgroundColor, styles, error } = props
 
   const fontControll = () => {
-    if (size === 'l') {
-      return fonts.f4
+    if (size === 's') {
+      return fonts.f8
     }
-    return fonts.f5
+    return fonts.f8
   }
 
   const fontOption = () => {
-    if (size === 'l') {
-      return fonts.f5
+    if (size === 's') {
+      return fonts.f8
     }
-    return fonts.f6
+    return fonts.f8
   }
 
   const disabled = () =>
@@ -66,7 +66,7 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     switch (size) {
       case 's':
         return css`
-          height: 48px;
+          height: 30px;
           padding: 0 16px;
         `
       case 'm':
@@ -85,10 +85,14 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
   }
 
   return css`
-    z-index: ${props.zIndex || zIndex.low};
+    position: relative;
+    /* z-index: ${props.zIndex || zIndex.low}; */
 
     .custom-rs__control {
-      border: 2px solid ${palette.base3};
+      display: flex;
+      position: relative;
+      align-items: center;
+      border: 1px solid ${palette.main21};
       border-radius: ${BORDER_RADIUS};
       background-color: ${backgroundColor || palette.base3};
       width: ${width ? '100%' : 'fit-content'};
@@ -96,24 +100,27 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
       transition-duration: ${TRANSITION_DURATION};
       transition-timing-function: linear;
       outline: none;
+      min-height: 30px;
       ${sizeControl()}
       ${fontControll}
       ${error && `border-color: ${palette.main7} !important;`}
 
       &:hover {
         cursor: pointer;
-        border-color: ${palette.main11};
+        border-color: ${palette.main3};
       }
 
       .custom-rs__indicator {
         svg path {
-          fill: ${palette.main11};
+          fill: ${palette.main5};
         }
+        width: 24px;
+        height: 24px;
         ${getIconSize(size)}
       }
 
       .custom-rs__input-container {
-        color: ${palette.main8};
+        color: ${palette.main5};
       }
 
       &--is-focused {
@@ -130,26 +137,30 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     }
 
     .custom-rs__single-value {
-      color: ${palette.main8};
+      color: ${palette.main5};
       ${disabled}
     }
 
     .custom-rs__value-container {
       padding: 0;
+      height: 28px;
+      align-items: center;
     }
 
     .custom-rs__placeholder {
-      color: ${palette.main11};
+      color: ${palette.main22};
     }
 
     .custom-rs__menu {
       min-width: 100%;
+      position: absolute;
       overflow: hidden;
       width: fit-content;
       background-color: ${palette.base3};
       border-radius: ${hasScroll
         ? `${MENU_BORDER_RADIUS} 0px 0px ${MENU_BORDER_RADIUS}`
         : MENU_BORDER_RADIUS};
+      z-index: ${zIndex.high} !important;
 
       *::-webkit-scrollbar {
         border: 1px solid ${palette.base3};
@@ -164,28 +175,29 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     }
 
     .custom-rs__option {
-      ${fontOption}
+      ${fontOption};
+      position: relative;
       display: flex;
       cursor: pointer;
       font-family: inherit;
       align-items: center;
-      height: 44px;
+      height: 38px;
       padding: 0 32px;
       white-space: nowrap;
-      color: ${palette.main8};
+      color: ${palette.main5};
 
       &--is-focused {
-        background-color: ${palette.main15};
+        background-color: ${palette.main21};
       }
 
       &:hover {
-        background-color: ${palette.main15};
+        background-color: ${palette.main22};
       }
 
       &--is-selected {
         cursor: default !important;
-        background-color: ${palette.main15};
-        color: ${palette.main2};
+        background-color: ${palette.base4};
+        color: ${palette.main5};
         pointer-events: none;
       }
     }

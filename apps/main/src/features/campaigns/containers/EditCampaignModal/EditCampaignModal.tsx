@@ -3,7 +3,7 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
 import { Text } from '@peiko/components/Text'
-// import { EditCampaignForm } from './components/EditCampaignForm'
+import { EditCampaignForm } from './components/EditCampaignForm'
 
 export const EditCampaignModal = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
@@ -19,9 +19,10 @@ export const EditCampaignModal = (): JSX.Element => {
       title={title}
       open={showModal}
       onClose={resetModals}
+      maxWidth="756px"
       containerWidth="100%"
     >
-      {/* <EditCampaignForm /> */}
+      <EditCampaignForm />
     </ModalMessage>
   )
 }

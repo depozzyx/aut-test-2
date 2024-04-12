@@ -8,5 +8,8 @@
   "close": "Close",
   "logout": "Logout",
   "delete": "Delete",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "save": "Save",
+  "back": "Back",
+  "submit": "Submit"
 }

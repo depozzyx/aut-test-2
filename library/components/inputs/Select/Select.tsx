@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { components, DropdownIndicatorProps } from 'react-select'
+import { components, DropdownIndicatorProps, NoticeProps } from 'react-select'
 import { useUpdateEffect } from 'react-use'
+import useTranslation from 'next-translate/useTranslation'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
+import { Text } from '@peiko/components/Text'
 import { Label } from '../Label'
 import { TSelectProps, TSelectOption, TSelectEvent } from './types'
 import * as S from './Select.styles'
@@ -10,7 +12,7 @@ export const Select: React.FC<TSelectProps> = ({
   disabled,
   error,
   label,
-  size = 'm',
+  size = 's',
   width,
   zIndex,
   value,
@@ -19,6 +21,7 @@ export const Select: React.FC<TSelectProps> = ({
   isSearchable = false,
   ...props
 }) => {
+  const { t } = useTranslation('inputs')
   const [openCount, setOpenCount] = useState(0)
   const [open, setOpen] = useState(false)
   const [hasScroll, setHasScroll] = useState(false)
@@ -65,11 +68,24 @@ export const Select: React.FC<TSelectProps> = ({
 
       return (
         <components.DropdownIndicator {...props}>
-          <ArrowIcon direction={menuIsOpen ? 'down' : 'up'} />
+          <ArrowIcon
+            direction={menuIsOpen ? 'down' : 'up'}
+            color="main5"
+            width="24px"
+            height="24px"
+          />
         </components.DropdownIndicator>
       )
     },
     [],
+  )
+
+  const NoOptionsMessage = (props: NoticeProps<TSelectOption, false>) => (
+    <components.NoOptionsMessage {...props}>
+      <Text variant="f8" color="main22">
+        {t('no-options')}
+      </Text>
+    </components.NoOptionsMessage>
   )
 
   const id = props.name
@@ -102,7 +118,7 @@ export const Select: React.FC<TSelectProps> = ({
           instanceId={id}
           disabled={disabled}
           onChange={handleChange}
-          components={{ DropdownIndicator }}
+          components={{ DropdownIndicator, NoOptionsMessage }}
           menuShouldScrollIntoView
           menuIsOpen={open}
           hasScroll={hasScroll}

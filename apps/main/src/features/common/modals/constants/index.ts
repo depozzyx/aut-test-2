@@ -7,6 +7,7 @@ export const MODAL_NAMES = {
   APPROVE_CAMPAIGN: 'APPROVE_CAMPAIGN',
   EDIT_AGENT: 'EDIT_AGENT',
   DELETE_AGENT: 'DELETE_AGENT',
+  REVIEW_CAMPAIGN: 'REVIEW_CAMPAIGN',
 } as const
 
 export type TModalNames = typeof MODAL_NAMES[keyof typeof MODAL_NAMES]

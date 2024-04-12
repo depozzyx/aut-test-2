@@ -208,6 +208,7 @@ export type TInputProps = {
    * */
   decimals?: number
   startAdornmentStyles?: TStyle
+  endAdornmentStyles?: TStyle
 } & TInputSizes &
   TInputMaskProps &
   TStylesProps

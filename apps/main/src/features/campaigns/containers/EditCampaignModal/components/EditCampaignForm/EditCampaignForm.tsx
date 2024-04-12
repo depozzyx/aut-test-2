@@ -9,47 +9,37 @@ import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInpu
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 import { FormikDayPickerInput } from '@peiko/components/inputs/formik-adapters/FormikDayPickerInput'
 import useModals from '@/features/common/modals/hooks/use-modals'
-import { setFormData } from '@/features/campaigns/store/create-campaign'
-import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { setFormData } from '@/features/campaigns/store/edit-campaign'
 
-export interface IinitialValues {
+interface IinitialValues {
   name: string
-  assignedAgentIds: string
-  leadSelection: string
   creationDate: string
-  scenarioSetup: string
   callFrequency: string
-  callTime: string
+  responseRate: string
+  status: string
+  conversionRate: string
 }
-
-const mockAgents = [
-  { value: 'Esther Howard', label: 'Esther Howard' },
-  { value: 'John Johnson', label: 'John Johnson' },
-  { value: 'John Johnson', label: 'John Johnson' },
-  { value: 'Tim James', label: 'Tim James' },
-]
 
 const initialValues: IinitialValues = {
   name: 'Campaign Name 123',
-  assignedAgentIds: '',
-  leadSelection: 'Lead List 1',
   creationDate: '',
-  scenarioSetup: 'Direct',
   callFrequency: 'Every hour',
-  callTime: '10 AM - 6 PM',
+  responseRate: '20%',
+  status: 'Paused',
+  conversionRate: '20%',
 }
 
-export const CreateCampaignForm = (): JSX.Element => {
+export const EditCampaignForm = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
-  const { resetModals, setModal } = useModals()
+  const { resetModals } = useModals()
   const { dispatch } = useRedux()
 
   const formik = useFormik({
     initialValues,
     validationSchema: yup.object().shape({}),
     onSubmit: (formData) => {
-      dispatch(setFormData(formData))
-      setModal({ modalName: MODAL_NAMES.REVIEW_CAMPAIGN, isOpen: true })
+      dispatch(setFormData({ formData, formik }))
+      resetModals()
     },
   })
 
@@ -61,84 +51,75 @@ export const CreateCampaignForm = (): JSX.Element => {
             <FormikInput
               size="s"
               name="name"
-              label={{ label: t('create-campaign.campaign-name') }}
+              label={{ label: t('edit-campaign.campaign-name') }}
               id="name"
               formik={formik}
               width={326}
               styles={{ padding: '0 14px' }}
             />
-            <FormikSelect
-              formik={formik}
-              name="assignedAgentIds"
-              label={{ label: t('create-campaign.agent-assignment') }}
-              width={326}
-              size="s"
-              options={mockAgents}
-            />
-            <FormikSelect
-              formik={formik}
-              name="leadSelection"
-              label={{ label: t('create-campaign.lead-selection') }}
-              size="s"
-              width={326}
-              options={[
-                { value: 'Lead List 1', label: 'Lead List 1' },
-                { value: 'Lead List 2', label: 'Lead List 2' },
-              ]}
-            />
             <FormikDayPickerInput
               formik={formik}
               name="creationDate"
-              label={{ label: t('create-campaign.creation-date') }}
+              label={{ label: t('edit-campaign.creation-date') }}
               width={326}
               size="s"
               styles={{ padding: '0 6px 0 16px' }}
             />
-          </Flex>
-          <Flex direction="column" gap={16} maxWidth="326px" width="100%">
-            <FormikSelect
-              formik={formik}
-              name="scenarioSetup"
-              label={{ label: t('create-campaign.scenario-setup') }}
-              width={326}
-              options={[
-                { value: 'Direct', label: 'Direct' },
-                { value: 'Scenario 2', label: 'Scenario 2' },
-              ]}
-            />
             <FormikSelect
               formik={formik}
               name="callFrequency"
-              label={{ label: t('create-campaign.call-frequency') }}
+              label={{ label: t('edit-campaign.call-frequency') }}
               width={326}
               options={[
                 { value: 'Every hour', label: 'Every hour' },
                 { value: 'Every day', label: 'Every day' },
               ]}
             />
+          </Flex>
+          <Flex direction="column" gap={16} maxWidth="326px" width="100%">
             <FormikSelect
               formik={formik}
-              name="callTime"
-              label={{ label: t('create-campaign.time-for-calls') }}
+              name="responseRate"
+              label={{ label: t('edit-campaign.response-rate') }}
               width={326}
               options={[
-                { value: '10 AM - 6 PM', label: '10 AM - 6 PM' },
-                { value: '6 PM - 12 AM', label: '6 PM - 12 AM' },
+                { value: '20%', label: '20%' },
+                { value: '30%', label: '30%' },
+              ]}
+            />
+            <FormikSelect
+              formik={formik}
+              name="status"
+              label={{ label: t('edit-campaign.status') }}
+              width={326}
+              options={[
+                { value: 'Paused', label: 'Paused' },
+                { value: 'Active', label: 'Active' },
+              ]}
+            />
+            <FormikSelect
+              formik={formik}
+              name="conversionRate"
+              label={{ label: t('edit-campaign.conversion-rate') }}
+              width={326}
+              options={[
+                { value: '20%', label: '20%' },
+                { value: '30%', label: '30%' },
               ]}
             />
           </Flex>
         </Flex>
         <Flex align="center" justify="center" gap={24}>
-          <OutlinedButton onClick={resetModals} width="236px">
-            {t('common:cancel')}
-          </OutlinedButton>
           <FilledButton
             type="submit"
             disabled={!formik.isValid || !formik.dirty}
             width="236px"
           >
-            {t('create-campaign.review')}
+            {t('common:save')}
           </FilledButton>
+          <OutlinedButton onClick={resetModals} width="236px">
+            {t('common:cancel')}
+          </OutlinedButton>
         </Flex>
       </Flex>
     </form>
