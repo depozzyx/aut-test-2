@@ -28,6 +28,7 @@ export const Input: React.FC<TInputProps> = ({
   inputProps,
   styles,
   startAdornmentStyles,
+  endAdornmentStyles,
   ...props
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -192,7 +193,7 @@ export const Input: React.FC<TInputProps> = ({
         <Copy size={size} onClick={handleCopyClick} value={localValue} />
       )}
       {endAdornment && (
-        <S.EndAdornment>
+        <S.EndAdornment className="end-adornment" endAdornmentStyles={endAdornmentStyles}>
           {typeof endAdornment === 'function'
             ? endAdornment({
                 value: String(localValue),

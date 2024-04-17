@@ -18,7 +18,7 @@ type TInputCont = TStylesProps & {
 } & TInputSizes
 
 const TRANSITION = '200ms'
-const BORDER_WIDTH = 2
+const BORDER_WIDTH = 1
 const BORDER_RADIUS = 4
 
 const inputFont = (size: TInputSizes['size'], theme: DefaultTheme) => {
@@ -218,9 +218,16 @@ export const StartAdornment = styled(Adornment)<{ startAdornmentStyles?: TStyle 
   },
 )
 
-export const EndAdornment = styled(Adornment)`
-  padding-right: 8px;
-`
+export const EndAdornment = styled(Adornment)<{ endAdornmentStyles?: TStyle }>(
+  (props) => {
+    const { endAdornmentStyles, theme } = props
+
+    return css`
+      padding-right: 8px;
+      ${endAdornmentStyles && styleToCss(endAdornmentStyles, theme)}
+    `
+  },
+)
 
 export const Input = styled.input`
   ${baseInput}

@@ -38,18 +38,18 @@ export const Container = styled.div<TContainer>(
 
 export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
   const { palette, fonts, zIndex } = theme
-  const { size = 'l', hasScroll, width, backgroundColor, styles, error } = props
+  const { size = 's', hasScroll, width, backgroundColor, styles, error } = props
 
   const fontControll = () => {
-    if (size === 'l') {
-      return fonts.f4
+    if (size === 's') {
+      return fonts.f8
     }
-    return fonts.f5
+    return fonts.f8
   }
 
   const fontOption = () => {
-    if (size === 'l') {
-      return fonts.f5
+    if (size === 's') {
+      return fonts.f8
     }
     return fonts.f8
   }
@@ -65,7 +65,7 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     switch (size) {
       case 's':
         return css`
-          height: 48px;
+          height: 30px;
           padding: 0 16px;
         `
       case 'm':
@@ -84,10 +84,14 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
   }
 
   return css`
-    z-index: ${props.zIndex || zIndex.low};
+    position: relative;
+    /* z-index: ${props.zIndex || zIndex.low}; */
 
     .custom-rs__control {
       min-width: 213px;
+      display: flex;
+      position: relative;
+      align-items: center;
       border: 1px solid ${palette.main21};
       border-radius: ${BORDER_RADIUS};
       background-color: ${backgroundColor || palette.base3};
@@ -96,7 +100,7 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
       transition-duration: ${TRANSITION_DURATION};
       transition-timing-function: linear;
       outline: none;
-      min-height: auto;
+      min-height: 30px;
       ${sizeControl()}
       ${fontControll}
       ${error && `border-color: ${palette.main7} !important;`}
@@ -123,7 +127,7 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
       }
 
       .custom-rs__input-container {
-        color: ${palette.main8};
+        color: ${palette.main5};
       }
 
       &--is-focused {
@@ -147,6 +151,8 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
 
     .custom-rs__value-container {
       padding: 0;
+      height: 28px;
+      align-items: center;
     }
 
     .custom-rs__placeholder {
@@ -156,12 +162,14 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
 
     .custom-rs__menu {
       min-width: 100%;
+      position: absolute;
       overflow: hidden;
       width: fit-content;
       background-color: ${palette.base3};
       border-radius: ${hasScroll
         ? `${MENU_BORDER_RADIUS} 0px 0px ${MENU_BORDER_RADIUS}`
         : MENU_BORDER_RADIUS};
+      z-index: ${zIndex.high} !important;
 
       *::-webkit-scrollbar {
         border: 1px solid ${palette.base3};
@@ -176,7 +184,8 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     }
 
     .custom-rs__option {
-      ${fontOption}
+      ${fontOption};
+      position: relative;
       display: flex;
       cursor: pointer;
       font-family: inherit;

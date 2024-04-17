@@ -27,6 +27,7 @@ import {
 import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
 import { CreateCampaignModal } from './containers/CreateCampaignModal'
 import { EditCampaignModal } from './containers/EditCampaignModal'
+import { NewCampaignReviewModal } from './containers/NewCampaignReviewModal'
 
 export const CampaignsList = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
@@ -94,6 +95,7 @@ export const CampaignsList = (): JSX.Element => {
       <CreateCampaignModal />
       <EditCampaignModal />
       <DeleteCampaignModal />
+      <NewCampaignReviewModal />
     </>
   )
 }

@@ -6,5 +6,6 @@
   "settings": "Settings",
   "campaigns-list": "Campaigns List",
   "agents-list": "Agents List",
-  "leads-list": "Leads List"
+  "leads-list": "Leads List",
+  "create-agent": "Create new Agent"
 }

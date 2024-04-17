@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { DropdownIndicatorProps, MenuProps, components } from 'react-select'
+import { DropdownIndicatorProps, MenuProps, components, NoticeProps } from 'react-select'
 import { useUpdateEffect } from 'react-use'
+import useTranslation from 'next-translate/useTranslation'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
+import { Text } from '@peiko/components/Text'
 import { Label } from '../Label'
 import { TSelectProps, TSelectOption, TSelectEvent } from './types'
 import * as S from './Select.styles'
@@ -10,7 +12,7 @@ export const Select: React.FC<TSelectProps> = ({
   disabled,
   error,
   label,
-  size = 'm',
+  size = 's',
   width,
   zIndex,
   value,
@@ -20,6 +22,7 @@ export const Select: React.FC<TSelectProps> = ({
   menuContent,
   ...props
 }) => {
+  const { t } = useTranslation('inputs')
   const [openCount, setOpenCount] = useState(0)
   const [open, setOpen] = useState(false)
   const [hasScroll, setHasScroll] = useState(false)
@@ -86,6 +89,14 @@ export const Select: React.FC<TSelectProps> = ({
     )
   }, [])
 
+  const NoOptionsMessage = (props: NoticeProps<TSelectOption, false>) => (
+    <components.NoOptionsMessage {...props}>
+      <Text variant="f8" color="main22">
+        {t('no-options')}
+      </Text>
+    </components.NoOptionsMessage>
+  )
+
   const id = props.name
 
   // handle case when options changed on the fly
@@ -116,7 +127,7 @@ export const Select: React.FC<TSelectProps> = ({
           instanceId={id}
           disabled={disabled}
           onChange={handleChange}
-          components={{ DropdownIndicator, Menu }}
+          components={{ DropdownIndicator, Menu, NoOptionsMessage }}
           menuShouldScrollIntoView
           menuIsOpen={open}
           hasScroll={hasScroll}

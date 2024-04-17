@@ -1,12 +1,14 @@
 import { useCallback } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
+import { useRouter } from 'next/router'
 import { shallowEqual } from 'react-redux'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
 import { useRedux } from '@/hooks/use-redux'
+import { ROUTES } from '@/constants/routes'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import {
   Container,
@@ -24,6 +26,7 @@ import { DeleteAgentModal } from './containers/DeleteAgentModal'
 import { EditAgentModal } from './containers/EditAgentModal'
 
 export const AgentsList = (): JSX.Element => {
+  const router = useRouter()
   const { t } = useTranslation('agents')
   const { select, dispatch } = useRedux()
   const { setModal } = useModals()
@@ -48,6 +51,10 @@ export const AgentsList = (): JSX.Element => {
     setModal({ modalName: MODAL_NAMES.EDIT_AGENT, isOpen: true })
   }, [])
 
+  const goToCreateAgentPage = () => {
+    router.push(ROUTES.CABINET_CREATE_AGENT)
+  }
+
   return (
     <>
       <Container>
@@ -57,6 +64,7 @@ export const AgentsList = (): JSX.Element => {
             maxWidth="236px"
             width="100%"
             startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
+            onClick={goToCreateAgentPage}
           >
             {t('add-agent')}
           </FilledButton>
