@@ -9,6 +9,7 @@ import modalsReducer from '@/features/common/modals/store'
 import campaignsReducer from '@/features/campaigns/store/campaigns-list'
 import agentsReducer from '@/features/agents/store/agents-list'
 import createCampaignReducer from '@/features/campaigns/store/create-campaign'
+import leadsListReducer from '@/features/leads/store/campaigns-list'
 import editCampaignReducer from '@/features/campaigns/store/edit-campaign'
 
 const store = configureStore({
@@ -23,6 +24,7 @@ const store = configureStore({
     campaigns: campaignsReducer,
     agents: agentsReducer,
     createCampaign: createCampaignReducer,
+    leadsList: leadsListReducer,
     editCampaign: editCampaignReducer,
   },
 })

@@ -31,5 +31,10 @@ export const useMenuLinks = (): TMenuItem[] => {
       link: ROUTES.CABINET_AGENTS_LIST,
       disabled: false,
     },
+    {
+      title: t('leads-list'),
+      link: ROUTES.CABINET_LEADS_LIST,
+      disabled: false,
+    },
   ]
 }

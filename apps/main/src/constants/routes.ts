@@ -8,6 +8,7 @@ export const ROUTES = {
   CABINET_CALLS: '/cabinet/calls',
   CABINET_CAMPAIGNS_LIST: '/cabinet/campaigns-list',
   CABINET_AGENTS_LIST: '/cabinet/agents-list',
+  CABINET_LEADS_LIST: '/cabinet/leads-list',
   CABINET_CREATE_AGENT: '/cabinet/create-agent',
   SETTINGS: '/settings',
 }

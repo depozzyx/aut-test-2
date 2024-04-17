@@ -17,7 +17,7 @@ const contentStyles = {
 
 const shortenName = (fullName: string) => {
   const [firstName, lastName] = fullName.split(' ')
-  return `${firstName} ${lastName?.charAt(0)}.`
+  return `${firstName} ${lastName ? `${lastName.charAt(0)}.` : ''}`
 }
 
 export const UserProfile = (): JSX.Element => {
@@ -36,7 +36,11 @@ export const UserProfile = (): JSX.Element => {
       on="hover"
       position="bottom center"
       renderMenu={() => (
-        <ProfilePopover userRole={user?.role} email={user?.email} name={user?.name} />
+        <ProfilePopover
+          userRole={user?.role}
+          email={user?.email}
+          name={user?.name ?? ''}
+        />
       )}
       trigger={<Trigger userRole={user?.role} name={shortName} />}
       offsetY={18}

@@ -3,6 +3,7 @@ import { HorizontalScroll } from '@peiko/components/HorizontalScroll'
 import { InlineLoader } from '@peiko/components/loaders/InlineLoader'
 import { THeader, TRow, TTableProps } from './types'
 import * as S from './Table.styled'
+import { Box } from '../Box'
 
 type TRenderRow = {
   rowData: TRow['row']
@@ -143,13 +144,15 @@ export function Table<R extends TRow, H extends THeader<keyof R['row']>>({
 
   return (
     <HorizontalScroll hideScrollbars={Boolean(loading)}>
-      <InlineLoader loading={loading} borderRadius={4} />
-      <S.Table gridTemplateColumns={gridTemplateColumns}>
-        {renderHeader()}
-        {!isFallback && renderRows()}
-        {isFallback && emptyComponent}
-      </S.Table>
-      <InlineLoader loading={loading} borderRadius={4} />
+      <Box styles={{ width: '100%' }}>
+        <InlineLoader loading={loading} borderRadius={4} />
+        <S.Table gridTemplateColumns={gridTemplateColumns}>
+          {renderHeader()}
+          {!isFallback && renderRows()}
+          {isFallback && emptyComponent}
+        </S.Table>
+        <InlineLoader loading={loading} borderRadius={4} />
+      </Box>
     </HorizontalScroll>
   )
 }

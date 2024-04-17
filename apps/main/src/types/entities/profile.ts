@@ -37,6 +37,6 @@ export type TProfile = {
   id: number
   email: string
   role: TUserRoles
-  name: string
+  name: string | null
   permissions: TUserPermissions[]
 }

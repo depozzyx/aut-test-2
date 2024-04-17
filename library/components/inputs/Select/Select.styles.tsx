@@ -3,7 +3,6 @@ import ReactSelect, { GroupBase, Props } from 'react-select'
 import { CSSProperties } from 'react'
 import { TStylesProps, formatCssProperty, styleToCss } from '@peiko/styles'
 import { TSelectOption, TSelectProps } from './types'
-import { getIconSize } from './utils/get-icon-size'
 
 type TRSProps = {
   disabled?: boolean
@@ -71,8 +70,8 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
         `
       case 'm':
         return css`
-          height: 56px;
-          padding: 0 24px;
+          height: 30px;
+          padding: 0 16px;
         `
       case 'l':
         return css`
@@ -89,6 +88,7 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     /* z-index: ${props.zIndex || zIndex.low}; */
 
     .custom-rs__control {
+      min-width: 213px;
       display: flex;
       position: relative;
       align-items: center;
@@ -107,16 +107,23 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
 
       &:hover {
         cursor: pointer;
-        border-color: ${palette.main3};
+        border-color: ${palette.main2};
+        .custom-rs__indicator {
+          svg path {
+            fill: ${palette.main2};
+          }
+        }
       }
 
       .custom-rs__indicator {
+        padding: 0;
         svg path {
           fill: ${palette.main5};
         }
-        width: 24px;
-        height: 24px;
-        ${getIconSize(size)}
+        svg {
+          width: 16px;
+          height: 16px;
+        }
       }
 
       .custom-rs__input-container {
@@ -139,6 +146,7 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     .custom-rs__single-value {
       color: ${palette.main5};
       ${disabled}
+      ${theme.fonts.f8}
     }
 
     .custom-rs__value-container {
@@ -149,6 +157,7 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
 
     .custom-rs__placeholder {
       color: ${palette.main22};
+      ${theme.fonts.f8}
     }
 
     .custom-rs__menu {
@@ -182,22 +191,22 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
       font-family: inherit;
       align-items: center;
       height: 38px;
-      padding: 0 32px;
+      padding: 0 16px;
       white-space: nowrap;
       color: ${palette.main5};
 
       &--is-focused {
-        background-color: ${palette.main21};
+        background-color: ${palette.base4};
       }
 
       &:hover {
-        background-color: ${palette.main22};
+        background-color: ${palette.base4};
       }
 
       &--is-selected {
         cursor: default !important;
         background-color: ${palette.base4};
-        color: ${palette.main5};
+        color: ${palette.main2};
         pointer-events: none;
       }
     }
