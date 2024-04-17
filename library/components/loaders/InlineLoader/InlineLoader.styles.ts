@@ -18,7 +18,7 @@ export const Container = styled.div<TInlineLoaderContainerProps>`
 
   & > span {
     background-color: ${({ theme, bgColor }) =>
-      bgColor ? theme.palette[bgColor] : theme.palette.base200} !important;
+      bgColor ? theme.palette[bgColor] : theme.palette.base4} !important;
     span {
       background-color: ${({ theme, color }) =>
         color ? theme.palette[color] : theme.palette.main2} !important;

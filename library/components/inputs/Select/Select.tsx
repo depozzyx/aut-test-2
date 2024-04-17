@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { components, DropdownIndicatorProps } from 'react-select'
+import { DropdownIndicatorProps, MenuProps, components } from 'react-select'
 import { useUpdateEffect } from 'react-use'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { Label } from '../Label'
@@ -17,6 +17,7 @@ export const Select: React.FC<TSelectProps> = ({
   options,
   onChange,
   isSearchable = false,
+  menuContent,
   ...props
 }) => {
   const [openCount, setOpenCount] = useState(0)
@@ -38,9 +39,10 @@ export const Select: React.FC<TSelectProps> = ({
   useEffect(() => {
     if (value === selectValue?.value) return
     const selectOption = options?.find((item) => item.value === value)
+
     if (!selectOption) return
     setValue(selectOption)
-  }, [value])
+  }, [value, options])
 
   useUpdateEffect(() => {
     if (!value) {
@@ -65,19 +67,31 @@ export const Select: React.FC<TSelectProps> = ({
 
       return (
         <components.DropdownIndicator {...props}>
-          <ArrowIcon direction={menuIsOpen ? 'down' : 'up'} />
+          <ArrowIcon direction={menuIsOpen ? 'up' : 'down'} />
         </components.DropdownIndicator>
       )
     },
     [],
   )
 
+  const Menu = useCallback((props: MenuProps<TSelectOption, false>) => {
+    const { children } = props
+
+    return (
+      <components.Menu {...props}>
+        {menuContent?.place === 'prepend' && menuContent.element}
+        {children}
+        {menuContent?.place === 'append' && menuContent.element}
+      </components.Menu>
+    )
+  }, [])
+
   const id = props.name
 
   // handle case when options changed on the fly
   const selectKey = options ? options.map((item) => item.value).join('-') : id
 
-  // handle case when options changed and selected value not in options
+  // handle cas when options changed and selected value not in options
   useUpdateEffect(() => {
     if (!options) return
 
@@ -102,7 +116,7 @@ export const Select: React.FC<TSelectProps> = ({
           instanceId={id}
           disabled={disabled}
           onChange={handleChange}
-          components={{ DropdownIndicator }}
+          components={{ DropdownIndicator, Menu }}
           menuShouldScrollIntoView
           menuIsOpen={open}
           hasScroll={hasScroll}

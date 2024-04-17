@@ -3,7 +3,6 @@ import ReactSelect, { GroupBase, Props } from 'react-select'
 import { CSSProperties } from 'react'
 import { TStylesProps, formatCssProperty, styleToCss } from '@peiko/styles'
 import { TSelectOption, TSelectProps } from './types'
-import { getIconSize } from './utils/get-icon-size'
 
 type TRSProps = {
   disabled?: boolean
@@ -28,7 +27,7 @@ function CustomSelect<
 }
 
 const TRANSITION_DURATION = '250ms'
-const BORDER_RADIUS = '8px'
+const BORDER_RADIUS = '4px'
 const MENU_BORDER_RADIUS = '8px'
 
 export const Container = styled.div<TContainer>(
@@ -52,7 +51,7 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     if (size === 'l') {
       return fonts.f5
     }
-    return fonts.f6
+    return fonts.f8
   }
 
   const disabled = () =>
@@ -71,8 +70,8 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
         `
       case 'm':
         return css`
-          height: 56px;
-          padding: 0 24px;
+          height: 30px;
+          padding: 0 16px;
         `
       case 'l':
         return css`
@@ -88,7 +87,8 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     z-index: ${props.zIndex || zIndex.low};
 
     .custom-rs__control {
-      border: 2px solid ${palette.base3};
+      min-width: 213px;
+      border: 1px solid ${palette.main21};
       border-radius: ${BORDER_RADIUS};
       background-color: ${backgroundColor || palette.base3};
       width: ${width ? '100%' : 'fit-content'};
@@ -96,20 +96,30 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
       transition-duration: ${TRANSITION_DURATION};
       transition-timing-function: linear;
       outline: none;
+      min-height: auto;
       ${sizeControl()}
       ${fontControll}
       ${error && `border-color: ${palette.main7} !important;`}
 
       &:hover {
         cursor: pointer;
-        border-color: ${palette.main11};
+        border-color: ${palette.main2};
+        .custom-rs__indicator {
+          svg path {
+            fill: ${palette.main2};
+          }
+        }
       }
 
       .custom-rs__indicator {
+        padding: 0;
         svg path {
-          fill: ${palette.main11};
+          fill: ${palette.main5};
         }
-        ${getIconSize(size)}
+        svg {
+          width: 16px;
+          height: 16px;
+        }
       }
 
       .custom-rs__input-container {
@@ -130,8 +140,9 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     }
 
     .custom-rs__single-value {
-      color: ${palette.main8};
+      color: ${palette.main5};
       ${disabled}
+      ${theme.fonts.f8}
     }
 
     .custom-rs__value-container {
@@ -139,7 +150,8 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     }
 
     .custom-rs__placeholder {
-      color: ${palette.main11};
+      color: ${palette.main22};
+      ${theme.fonts.f8}
     }
 
     .custom-rs__menu {
@@ -169,22 +181,22 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
       cursor: pointer;
       font-family: inherit;
       align-items: center;
-      height: 44px;
-      padding: 0 32px;
+      height: 38px;
+      padding: 0 16px;
       white-space: nowrap;
-      color: ${palette.main8};
+      color: ${palette.main5};
 
       &--is-focused {
-        background-color: ${palette.main15};
+        background-color: ${palette.base4};
       }
 
       &:hover {
-        background-color: ${palette.main15};
+        background-color: ${palette.base4};
       }
 
       &--is-selected {
         cursor: default !important;
-        background-color: ${palette.main15};
+        background-color: ${palette.base4};
         color: ${palette.main2};
         pointer-events: none;
       }

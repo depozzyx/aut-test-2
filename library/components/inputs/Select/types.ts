@@ -29,6 +29,15 @@ export type TSelectProps = {
    * */
   placeholder?: string
   /**
+   * Specify the menuContent of the input select
+   *
+   * Use it if you need to add additional content or actions to select menu
+   * */
+  menuContent?: {
+    place: 'prepend' | 'append'
+    element: ReactElement
+  }
+  /**
    * Specify the options of the input select
    *
    * Each option is object with two properties:
