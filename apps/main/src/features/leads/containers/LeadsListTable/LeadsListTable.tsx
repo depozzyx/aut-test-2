@@ -5,36 +5,29 @@ import { Table } from '@peiko/components/Table'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
-import { Select } from '@peiko/components/inputs/Select/Select'
-import { ROUTES } from '@/constants/routes'
-import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { useRedux } from '@/hooks/use-redux'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
-import { Text } from '@peiko/components/Text'
-import { Flex } from '@/components/Flex'
 import { StatusChip } from '../../components/StatusChip'
 import { InfoColumn } from '../../components/InfoColumn'
-import {
-  selectIsLoading,
-  selectLeadsGroup,
-  selectLeadsGroups,
-  selectLeadsList,
-  setLeadsGroup,
-} from '../../store/campaigns-list'
-import { TLeadsGroup } from '../../mocks/leadsListMock'
-import { Link } from './LeadsListTable.styled'
+import { selectIsLoading, selectLeadsList } from '../../store/leads'
+import { LeadsSelect } from '../LeadsSelect'
 
-type TLeadsRowKeys = 'id' | 'name' | 'phone' | 'timezone' | 'status' | 'source' | 'empty'
+type TLeadsRowKeys =
+  | 'id'
+  | 'name'
+  | 'phone'
+  | 'timezone'
+  | 'status'
+  | 'source'
+  | 'selectLeads'
 
 export const LeadsListTable = memo((): JSX.Element => {
   const { t } = useTranslation('leads-list')
-  const { select, dispatch } = useRedux()
+  const { select } = useRedux()
 
-  const { leadsGroup, leadsGroups, data, isLoading } = select(
+  const { data, isLoading } = select(
     createStructuredSelector({
-      leadsGroup: selectLeadsGroup,
-      leadsGroups: selectLeadsGroups,
       data: selectLeadsList,
       isLoading: selectIsLoading,
     }),
@@ -48,38 +41,7 @@ export const LeadsListTable = memo((): JSX.Element => {
     { label: t('headers.lead-timezone'), value: 'timezone' },
     { label: t('headers.lead-status'), value: 'status' },
     { label: t('headers.lead-source'), value: 'source' },
-    {
-      label: (
-        <>
-          <Select
-            name="leads-group"
-            options={leadsGroups}
-            value={leadsGroup !== undefined ? leadsGroup : ''}
-            onChange={(data) => {
-              if (data) dispatch(setLeadsGroup(data.value as TLeadsGroup['value']))
-            }}
-            placeholder={t('headers.select')}
-            menuContent={{
-              place: 'append',
-              element: (
-                <Link href={ROUTES.CABINET_DASHBOARD}>
-                  <Flex
-                    padding="7px 16px"
-                    align="center"
-                    justify="space-between"
-                    cursor="pointer"
-                  >
-                    <Text variant="f8">{t('headers.createNewList')}</Text>
-                    <PlusIcon width="16px" height="16px" />
-                  </Flex>
-                </Link>
-              ),
-            }}
-          />
-        </>
-      ),
-      value: 'empty',
-    },
+    { label: <LeadsSelect />, value: 'selectLeads' },
   ]
 
   const rows = data.map((campaign) => ({
@@ -90,7 +52,7 @@ export const LeadsListTable = memo((): JSX.Element => {
       timezone: <InfoColumn title={campaign.timezone} />,
       status: <StatusChip status={campaign.status} />,
       source: <InfoColumn title={campaign.source} />,
-      empty: <></>,
+      selectLeads: <></>,
     },
   }))
 

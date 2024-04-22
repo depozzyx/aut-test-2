@@ -4,13 +4,15 @@ import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import { Pagination } from '@peiko/components/Pagination'
 import { Box } from '@peiko/components/Box'
+import { useUnmount } from 'react-use'
 import { LeadsListTable } from './containers/LeadsListTable'
 import {
   getLeadList,
   getLeadsGroups,
+  reset,
   selectLeadsGroup,
   selectLeadsPagination,
-} from './store/campaigns-list'
+} from './store/leads'
 
 export const LeadsList: FC = () => {
   const { select, dispatch } = useRedux()
@@ -27,12 +29,16 @@ export const LeadsList: FC = () => {
   )
 
   useEffect(() => {
-    dispatch(getLeadsGroups())
+    dispatch(getLeadsGroups(true))
   }, [])
 
   useEffect(() => {
     dispatch(getLeadList(leadsGroup))
   }, [leadsGroup])
+
+  useUnmount(() => {
+    dispatch(reset())
+  })
 
   return (
     <>
