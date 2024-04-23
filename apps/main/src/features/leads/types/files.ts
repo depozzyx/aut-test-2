@@ -7,5 +7,27 @@ export type TPreparedFiles = {
   duplicate?: boolean
   startImporting?: boolean
   imported?: boolean
-  error?: string
+  error?: string[]
+  canceled?: boolean
+}
+
+export type TImportError = {
+  code: string
+  errors: {
+    validationErrors: {
+      target: {
+        LeadName: string
+        LeadPhone: string
+        LeadTimezone: string
+        LeadStatus: string
+        Source: string
+      }
+      value: string
+      property: string
+      children: []
+      constraints: {
+        [key in string]: string
+      }
+    }[]
+  }
 }

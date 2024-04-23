@@ -3,8 +3,11 @@ import { TAsyncAction, TSelector } from '@/store'
 import { TPagination } from '@/types/entities/pagination'
 import { TLeadsList } from '@/types/leads/leads-list'
 import { handleRestError } from '@/features/common/error'
-import { TLeadsGroup, leadsGroups, leadsMock } from '../mocks/leadsListMock'
-import { TPreparedFiles } from '../types/files'
+import { leadsApi } from '@/api-rest/leads'
+import { TLeadsListReq } from '@/api-rest/leads/types'
+import { TLeadsGroup, leadsGroups } from '../mocks/leadsListMock'
+import { TImportError, TPreparedFiles } from '../types/files'
+import { dataURIToBlob } from '../utils/dataURIToBlob'
 
 export type TInit = {
   leadsList: TLeadsList[]
@@ -20,7 +23,7 @@ const init: TInit = {
   pagination: {
     page: 1,
     limit: 10,
-    total: 10,
+    total: 1,
   },
   isLoading: true,
   leadsGroups: [],
@@ -111,22 +114,14 @@ export const selectFilesForImport = createSelector(
 export default leads.reducer
 
 export const getLeadList =
-  (list?: TLeadsGroup['value']): TAsyncAction =>
+  (params: TLeadsListReq): TAsyncAction =>
   async (dispatch) => {
-    if (!list) return
     try {
       dispatch(setIsLoading(true))
-      const data = await new Promise<TLeadsList[]>((resolve, reject) => {
-        setTimeout(() => {
-          const leads = leadsMock[list]
-          if (leads) {
-            resolve(leads)
-          } else {
-            reject(new Error('Leads not found'))
-          }
-        }, 1000)
-      })
-      dispatch(setLeadsList(data))
+      const { data } = await leadsApi.leadsList(params)
+
+      dispatch(setLeadsList(data.data))
+      dispatch(setPagination(data.pagination))
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
@@ -151,62 +146,64 @@ export const getLeadsGroups =
   }
 
 export const importFilesAsync =
-  (files: TInit['filesForImport']): TAsyncAction =>
+  (fileId: string, setController: (controller: AbortController) => void): TAsyncAction =>
   async (dispatch, _store) => {
-    const importFilesAsync = async (files: TInit['filesForImport'], index = 0) => {
-      if (index >= files.length) {
-        // Base case: if all files have been processed, end the recursion
-        return
-      }
-      const { filesForImport } = _store().leads
+    const { filesForImport } = _store().leads
 
-      const file = files[index]
-      try {
-        dispatch(
-          updateImportFiles(
-            filesForImport.map((item) => {
-              if (item.duplicate) return item
-              if (item.id === file.id) return { ...file, startImporting: true }
-              return item
-            }),
-          ),
-        )
-        const data = await new Promise<TInit['filesForImport'][0]>((resolve, reject) => {
-          setTimeout(() => {
-            if (Math.random() < 0.3)
-              reject('Error. For more detailed error connect the backend part')
-            else resolve(file)
-          }, 1000)
-        })
+    const file = filesForImport.find((item) => item.id === fileId)
+    if (!file) return
 
-        dispatch(
-          updateImportFiles(
-            filesForImport.map((item) => {
-              if (item.duplicate) return item
-              if (item.id === data.id) return { ...data, imported: true }
-              return item
-            }),
-          ),
-        )
-      } catch (e) {
-        dispatch(
-          updateImportFiles(
-            filesForImport.map((item) => {
-              if (item.duplicate) return item
-              if (item.id === file.id) return { ...file, error: e as string }
-              return item
-            }),
-          ),
-        )
-        handleRestError({ e, dispatch })
-      } finally {
-        // Recursive call to process the next file
-        await importFilesAsync(files, index + 1)
-      }
-    }
+    const controller = new AbortController()
+    setController(controller)
+
     try {
-      await importFilesAsync(files)
+      dispatch(
+        updateImportFiles(
+          filesForImport.map((item) => {
+            if (item.duplicate) return item
+            if (item.id === file.id) return { ...file, startImporting: true }
+            return item
+          }),
+        ),
+      )
+
+      const formData = new FormData()
+
+      if (typeof file.data === 'string')
+        formData.append('file', dataURIToBlob(file.data), file.name)
+
+      await leadsApi.importLeads(formData, controller)
+
+      dispatch(
+        updateImportFiles(
+          filesForImport.map((item) => {
+            if (item.duplicate) return item
+            if (item.id === file.id) return { ...file, imported: true }
+            return item
+          }),
+        ),
+      )
     } catch (e) {
-      handleRestError({ e, dispatch })
+      handleRestError<TImportError>({
+        e,
+        dispatch,
+        custom: (_, data) => {
+          const typedData = data as unknown as TImportError
+          const messages = Object.values(
+            typedData.errors.validationErrors[0]?.constraints,
+          )
+
+          dispatch(
+            updateImportFiles(
+              filesForImport.map((item) => {
+                if (item.duplicate) return item
+                if (item.id === file.id) return { ...file, error: messages }
+                return item
+              }),
+            ),
+          )
+          return true
+        },
+      })
     }
   }

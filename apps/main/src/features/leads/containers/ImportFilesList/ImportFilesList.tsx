@@ -2,7 +2,7 @@ import { useRedux } from '@/hooks/use-redux'
 import React, { FC } from 'react'
 import { Flex } from '@/components/Flex'
 import { deleteImportFile, selectFilesForImport } from '../../store/leads'
-import { FileItem } from '../../components/FileItem/FileItem'
+import { FileItem } from '../FileItem/FileItem'
 
 export const ImportFilesList: FC = () => {
   const { select, dispatch } = useRedux()

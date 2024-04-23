@@ -18,7 +18,7 @@ export const LeadsList: FC = () => {
   const { select, dispatch } = useRedux()
 
   const {
-    pagination: { total, page },
+    pagination: { total, page, limit },
     leadsGroup,
   } = select(
     createStructuredSelector({
@@ -33,12 +33,15 @@ export const LeadsList: FC = () => {
   }, [])
 
   useEffect(() => {
-    dispatch(getLeadList(leadsGroup))
+    dispatch(getLeadList({ page, limit, orderBy: 'ASC' }))
   }, [leadsGroup])
 
   useUnmount(() => {
     dispatch(reset())
   })
+
+  const onChangePage = (page: number) =>
+    dispatch(getLeadList({ page, limit, orderBy: 'ASC' }))
 
   return (
     <>
@@ -46,7 +49,11 @@ export const LeadsList: FC = () => {
         <LeadsListTable />
       </Box>
       <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
-        <Pagination lastPage={total} currentPage={page} />
+        <Pagination
+          lastPage={Math.ceil(total / (limit ?? 15))}
+          currentPage={page}
+          onChange={onChangePage}
+        />
       </Box>
     </>
   )

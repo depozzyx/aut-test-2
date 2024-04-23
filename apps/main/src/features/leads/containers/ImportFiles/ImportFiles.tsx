@@ -13,12 +13,7 @@ import { ROUTES } from '@/constants/routes'
 import Trans from 'next-translate/Trans'
 import { LeadsSelect } from '../LeadsSelect'
 import { BottomText } from './ImportFiles.styled'
-import {
-  importFilesAsync,
-  selectFilesForImport,
-  selectLeadsGroup,
-  setImportFiles,
-} from '../../store/leads'
+import { selectFilesForImport, selectLeadsGroup, setImportFiles } from '../../store/leads'
 import { TPreparedFiles } from '../../types/files'
 import { ImportFilesList } from '../ImportFilesList'
 
@@ -50,7 +45,6 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     const preparedFiles = await Promise.all(preparedFilesPromises)
 
     dispatch(setImportFiles(preparedFiles))
-    dispatch(importFilesAsync(preparedFiles))
   }
 
   return (
