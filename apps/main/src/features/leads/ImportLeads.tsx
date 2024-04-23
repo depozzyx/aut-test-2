@@ -21,8 +21,7 @@ export const ImportLeads: FC = () => {
   const [step, setStep] = useState<'import' | 'list'>('import')
 
   const {
-    pagination: { total, page },
-    leadsGroup,
+    pagination: { total, page, limit },
   } = select(
     createStructuredSelector({
       pagination: selectLeadsPagination,
@@ -37,16 +36,17 @@ export const ImportLeads: FC = () => {
 
   useUnmount(() => dispatch(reset()))
 
+  const onImportSubmit = () => {
+    setStep('list')
+    dispatch(getLeadList({ page, limit, orderBy: 'ASC' }))
+  }
+
+  const onChangePage = (page: number) =>
+    dispatch(getLeadList({ page, limit, orderBy: 'ASC' }))
+
   return (
     <>
-      {step === 'import' && (
-        <ImportFiles
-          onSubmit={() => {
-            setStep('list')
-            dispatch(getLeadList(leadsGroup))
-          }}
-        />
-      )}
+      {step === 'import' && <ImportFiles onSubmit={onImportSubmit} />}
       {step === 'list' && (
         <>
           <Box styles={{ marginLeft: 'auto', marginTop: '16px' }}>
@@ -56,7 +56,11 @@ export const ImportLeads: FC = () => {
             <LeadsListTable />
           </Box>
           <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
-            <Pagination lastPage={total} currentPage={page} />
+            <Pagination
+              lastPage={Math.ceil(total / (limit ?? 15))}
+              currentPage={page}
+              onChange={onChangePage}
+            />
           </Box>
         </>
       )}
