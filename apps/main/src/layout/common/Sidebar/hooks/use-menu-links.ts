@@ -22,7 +22,7 @@ export const useMenuLinks = (): TMenuItem[] => {
       disabled: false,
     },
     {
-      title: t('campaigns-list'),
+      title: t('campaign-list'),
       link: ROUTES.CABINET_CAMPAIGNS_LIST,
       disabled: false,
     },
