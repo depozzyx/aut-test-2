@@ -84,11 +84,6 @@ export const InputContainer = styled.div<TInputCont>((props) => {
     ${props.error &&
     css`
       border-color: ${palette.main13} !important;
-
-      svg path {
-        fill: ${palette.main13} !important;
-        stroke: ${palette.main13} !important;
-      }
     `}
 
     &:hover {

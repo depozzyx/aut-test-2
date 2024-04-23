@@ -29,7 +29,7 @@ export const Eye: FC<Eye> = ({ open = false, disabled = false, onClick, size = '
       tabIndex={disabled ? -1 : 0}
       ref={buttonRef}
     >
-      {open ? <EyeIcon size={iconSize} /> : <ClosedEyeIcon size={iconSize} />}
+      {open ? <ClosedEyeIcon size={iconSize} /> : <EyeIcon size={iconSize} />}
     </Container>
   )
 }
