@@ -7,5 +7,6 @@
   "campaigns-list": "Campaigns List",
   "agents-list": "Agents List",
   "leads-list": "Leads List",
+  "import-leads": "Import Leads",
   "create-agent": "Create new Agent"
 }
