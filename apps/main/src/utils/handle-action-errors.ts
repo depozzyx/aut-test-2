@@ -38,8 +38,8 @@ export function handleActionErrors<M = string>({
     return
   }
 
-  if (formik && status === ERROR_STATUS.VALIDATION && typeof data.errors === 'object') {
-    formik.setErrors(data.errors as any)
+  if (formik && status === ERROR_STATUS.VALIDATION && typeof data.message === 'object') {
+    formik.setErrors(data.message as any)
     return
   }
 
