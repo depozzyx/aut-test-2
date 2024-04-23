@@ -9,7 +9,7 @@ const CampaignsListPage: NextPage = () => {
 
   return (
     <Permissions>
-      <CabinetLayout title={t('campaigns-list')}>
+      <CabinetLayout title={t('campaign-list')}>
         <CampaignsList />
       </CabinetLayout>
     </Permissions>
