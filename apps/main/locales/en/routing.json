@@ -8,5 +8,6 @@
   "agents-list": "Agents List",
   "leads-list": "Leads List",
   "import-leads": "Import Leads",
-  "create-agent": "Create new Agent"
+  "create-agent": "Create new Agent",
+  "account-management": "Account management"
 }

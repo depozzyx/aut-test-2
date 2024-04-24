@@ -11,5 +11,5 @@ export const ROUTES = {
   CABINET_LEADS_LIST: '/cabinet/leads-list',
   CABINET_IMPORT_LEADS: '/cabinet/import-leads',
   CABINET_CREATE_AGENT: '/cabinet/create-agent',
-  SETTINGS: '/settings',
+  SETTINGS: '/cabinet/settings',
 }
