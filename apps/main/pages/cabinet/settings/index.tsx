@@ -3,6 +3,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
 import { UserData } from '@/features/settings/UserData'
+import { ChangePassword } from '@/features/settings/ChangePassword'
 
 const SettingsPage: NextPage = () => {
   const { t } = useTranslation('routing')
@@ -11,6 +12,7 @@ const SettingsPage: NextPage = () => {
     <Permissions>
       <CabinetLayout title={t('account-management')}>
         <UserData />
+        <ChangePassword />
       </CabinetLayout>
     </Permissions>
   )
