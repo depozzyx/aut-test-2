@@ -38,7 +38,6 @@ export const Wrapper = styled.div<{
     position: relative;
     flex-direction: ${getLabelPlacement(labelPlacement)};
     gap: 8px;
-    background-color: ${theme.palette.overlay};
     width: 100%;
     height: 100vh;
 

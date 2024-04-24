@@ -11,6 +11,7 @@ export const Button = styled.button<TIconButton>(
     justify-content: center;
     align-items: center;
     position: relative;
+    cursor: pointer;
     transition-property: background-color, border-color, color, box-shadow;
     transition-duration: ${BUTTON_TRANSITION_DURATION};
     transition-timing-function: ${BUTTON_TRANSITION_TIMING_FUNCTION};
@@ -23,6 +24,9 @@ export const Button = styled.button<TIconButton>(
 
     &:hover {
       cursor: pointer;
+    }
+    &:disabled {
+      cursor: none;
     }
 
     ${(props.active || props.disabled || props.isLoading) && `pointer-events: none;`}

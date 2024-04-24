@@ -41,5 +41,10 @@ export const useMenuLinks = (): TMenuItem[] => {
       link: ROUTES.CABINET_IMPORT_LEADS,
       disabled: false,
     },
+    {
+      title: t('settings'),
+      link: ROUTES.SETTINGS,
+      disabled: false,
+    },
   ]
 }
