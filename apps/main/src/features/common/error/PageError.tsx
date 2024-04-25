@@ -45,7 +45,7 @@ export const ErrorPage: FC<TErrorPageProps> = ({ status }) => {
         </Text>
       </Flex>
       <Flex gap={24} align="center" justify="center" width={496}>
-        <FilledButton width="100%" size="l" link={{ href: ROUTES.HOME }}>
+        <FilledButton width="100%" size="l" link={{ href: ROUTES.SIGN_IN }}>
           {t('routing:home')}
         </FilledButton>
         <FilledButton size="l" width="100%" onClick={handleGoBack}>
