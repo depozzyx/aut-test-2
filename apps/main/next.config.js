@@ -24,7 +24,7 @@ module.exports = () =>
         return [
           {
             source: '/',
-            destination: '/cabinet/dashboard',
+            destination: '/dashboard/active-campaigns',
             permanent: true,
           },
         ]
