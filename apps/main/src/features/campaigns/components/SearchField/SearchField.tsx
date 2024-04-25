@@ -9,7 +9,7 @@ export const SearchField = (): JSX.Element => {
     <Input
       width={374}
       name="search"
-      placeholder={t('placeholder.search')}
+      placeholder={t('placeholder.search-campaign')}
       startAdornment={<StyledSearchIcon />}
       startAdornmentStyles={{ paddingRight: '0 !important' }}
     />

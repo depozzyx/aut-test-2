@@ -10,7 +10,7 @@ module.exports = {
     '/auth/sign-in': ['error', 'validation', 'inputs', 'auth'],
     '/auth/forgot-password': ['error', 'validation', 'inputs', 'auth'],
     '/auth/reset-password': ['error', 'validation', 'inputs', 'auth'],
-    '/cabinet/dashboard': ['user', 'routing'],
+    '/cabinet/dashboard': ['user', 'routing', 'campaigns', 'agents'],
     '/cabinet/calls': ['user', 'routing'],
     '/cabinet/campaigns-list': ['user', 'routing', 'campaigns'],
     '/cabinet/agents-list': ['user', 'routing', 'agents'],

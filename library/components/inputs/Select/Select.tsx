@@ -102,7 +102,7 @@ export const Select: React.FC<TSelectProps> = ({
   // handle case when options changed on the fly
   const selectKey = options ? options.map((item) => item.value).join('-') : id
 
-  // handle cas when options changed and selected value not in options
+  // handle case when options changed and selected value not in options
   useUpdateEffect(() => {
     if (!options) return
 

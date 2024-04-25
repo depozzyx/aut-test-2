@@ -1,0 +1,1 @@
+export { DahsboardTabs } from './DashboardTabs'

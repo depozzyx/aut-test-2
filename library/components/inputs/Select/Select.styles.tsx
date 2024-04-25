@@ -3,6 +3,7 @@ import ReactSelect, { GroupBase, Props } from 'react-select'
 import { CSSProperties } from 'react'
 import { TStylesProps, formatCssProperty, styleToCss } from '@peiko/styles'
 import { TSelectOption, TSelectProps } from './types'
+import { getIconSize } from './utils/get-icon-size'
 
 type TRSProps = {
   disabled?: boolean
@@ -124,6 +125,28 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
           width: 16px;
           height: 16px;
         }
+
+        ${getIconSize(size)}
+        padding: 2px;
+
+        svg {
+          width: 16px !important;
+          height: 16px !important;
+        }
+
+        &.custom-rs__clear-indicator {
+          width: 20px !important;
+          height: 20px !important;
+          padding: 2px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          svg path {
+            &:hover {
+              fill: ${palette.main};
+            }
+          }
+        }
       }
 
       .custom-rs__input-container {
@@ -213,6 +236,17 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
 
     .custom-rs__indicator-separator {
       display: none;
+    }
+
+    .custom-rs__multi-value {
+      margin: 0 2px 0 0;
+
+      &__remove:hover {
+        background-color: ${palette.main21};
+        svg path {
+          fill: ${palette.main};
+        }
+      }
     }
 
     ${styles && styleToCss(styles, theme)}
