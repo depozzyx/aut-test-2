@@ -43,6 +43,7 @@ export const ChangePassword: FC = () => {
           }}
         >
           <FormikInput
+            type="password"
             size="s"
             formik={formik}
             name="currentPassword"
@@ -52,6 +53,7 @@ export const ChangePassword: FC = () => {
           <span />
           <span />
           <FormikInput
+            type="password"
             size="s"
             formik={formik}
             name="password"
@@ -59,6 +61,7 @@ export const ChangePassword: FC = () => {
             placeholder={t('changePassword.newPasswordPlaceholder')}
           />
           <FormikInput
+            type="password"
             size="s"
             formik={formik}
             name="confirmPassword"
