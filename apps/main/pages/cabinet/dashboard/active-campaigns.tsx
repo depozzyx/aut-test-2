@@ -4,7 +4,7 @@ import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
 import { Dashboard } from '@/layout/pages/Dashboard'
 
-const ActiveAgentsPage: NextPage = () => {
+const ActiveCampaignsPage: NextPage = () => {
   const { t } = useTranslation('routing')
 
   return (
@@ -16,4 +16,4 @@ const ActiveAgentsPage: NextPage = () => {
   )
 }
 
-export default ActiveAgentsPage
+export default ActiveCampaignsPage

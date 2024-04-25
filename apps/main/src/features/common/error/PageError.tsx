@@ -1,7 +1,6 @@
 import React, { FC } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
-import { NextLink } from '@peiko/components/links/NextLink'
 import { ROUTES } from '@/constants/routes'
 import { NotFoundIcon } from '@peiko/components/icons/NotFoundIcon'
 import { ServerErrorIcon } from '@peiko/components/icons/ServerErrorIcon'
@@ -46,11 +45,9 @@ export const ErrorPage: FC<TErrorPageProps> = ({ status }) => {
         </Text>
       </Flex>
       <Flex gap={24} align="center" justify="center" width={496}>
-        <NextLink href={ROUTES.HOME}>
-          <FilledButton width="100%" size="l">
-            {t('routing:home')}
-          </FilledButton>
-        </NextLink>
+        <FilledButton width="100%" size="l" link={{ href: ROUTES.SIGN_IN }}>
+          {t('routing:home')}
+        </FilledButton>
         <FilledButton size="l" width="100%" onClick={handleGoBack}>
           {t('routing:go-back')}
         </FilledButton>

@@ -25,7 +25,7 @@ export const Dashboard = (): JSX.Element => {
     if (activeTab === 'active-campaign') {
       setModal({ modalName: MODAL_NAMES.CREATE_CAMPAIGN, isOpen: true })
     } else {
-      router.push(ROUTES.CABINET_CREATE_AGENT)
+      router.push(ROUTES.CREATE_AGENT)
     }
   }
 

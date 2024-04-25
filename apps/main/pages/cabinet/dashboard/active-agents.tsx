@@ -3,7 +3,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
 
-const ActiveCampaignsPage: NextPage = () => {
+const ActiveAgentsPage: NextPage = () => {
   const { t } = useTranslation('routing')
 
   return (
@@ -13,4 +13,4 @@ const ActiveCampaignsPage: NextPage = () => {
   )
 }
 
-export default ActiveCampaignsPage
+export default ActiveAgentsPage
