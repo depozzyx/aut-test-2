@@ -1,27 +1,24 @@
-import { managerApi } from '@/api-rest/manager'
-import { TUpdateManagerReq } from '@/api-rest/manager/types'
+import { apiAuth } from '@/api-rest/auth'
+import { TResetPasswordReq } from '@/api-rest/auth/types'
 import { handleRestError } from '@/features/common/error'
 import useNotifications from '@/features/common/notifications/hooks/use-notifications'
-import { useAuth } from '@/features/common/user'
 import { useRedux } from '@/hooks/use-redux'
 import { TFormik } from '@peiko/types/formik'
 
-type TUpdateProfileArgs = {
-  updateProfileAsync: (data: { formik: TFormik; formData: TUpdateManagerReq }) => void
+type TChangePasswordArgs = {
+  changePasswordAsync: (data: { formik: TFormik; formData: TResetPasswordReq }) => void
 }
 
-export const useUpdateProfile = (): TUpdateProfileArgs => {
+export const useChangePassword = (): TChangePasswordArgs => {
   const { dispatch } = useRedux()
-  const { getProfile } = useAuth()
   const { setNotification } = useNotifications()
 
-  const updateProfileAsync: TUpdateProfileArgs['updateProfileAsync'] = async ({
+  const changePasswordAsync: TChangePasswordArgs['changePasswordAsync'] = async ({
     formData,
     formik,
   }) => {
     try {
-      await managerApi.updateManager(formData)
-      getProfile()
+      await apiAuth.resetPassword(formData)
       setNotification({
         key: 'notifications:settings.user-data-changed',
         status: 'success',
@@ -34,5 +31,5 @@ export const useUpdateProfile = (): TUpdateProfileArgs => {
     }
   }
 
-  return { updateProfileAsync }
+  return { changePasswordAsync }
 }

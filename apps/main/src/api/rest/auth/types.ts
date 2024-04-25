@@ -34,7 +34,8 @@ export type TForgotPasswordRes = {
 }
 
 export type TResetPasswordReq = {
-  token: string
+  token?: string
+  currentPassword?: string
   password: string
   confirmPassword: string
 }
