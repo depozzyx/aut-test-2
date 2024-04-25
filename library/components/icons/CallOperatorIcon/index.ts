@@ -1,0 +1,1 @@
+export { CallOperatorIcon } from './CallOperatorIcon'

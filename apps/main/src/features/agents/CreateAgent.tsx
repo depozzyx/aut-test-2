@@ -4,7 +4,6 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
-import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 
 export const CreateAgent = (): JSX.Element => {
   const { t } = useTranslation('agents')
@@ -13,8 +12,6 @@ export const CreateAgent = (): JSX.Element => {
     initialValues: {
       name: 'Lebron James',
       email: 'lakers@gmail.com',
-      role: 'Manager',
-      assignedCampaigns: 'Campaign 10',
     },
     validationSchema: yup.object().shape({}),
     onSubmit: (formData) => {
@@ -47,31 +44,11 @@ export const CreateAgent = (): JSX.Element => {
                 width={326}
                 styles={{ padding: '0 14px' }}
               />
-              <FormikSelect
-                formik={formik}
-                name="role"
-                label={{ label: t('edit-agent.role') }}
-                width={326}
-                options={[
-                  { value: 'Agent', label: 'Agent' },
-                  { value: 'Manager', label: 'Manager' },
-                ]}
-              />
-              <FormikSelect
-                formik={formik}
-                name="assignedCampaigns"
-                label={{ label: t('edit-agent.assigned-campaigns') }}
-                width={326}
-                options={[
-                  { value: 'Campaign 10', label: 'Campaign 10' },
-                  { value: 'Campaign 11', label: 'Campaign 11' },
-                ]}
-              />
             </Flex>
           </Flex>
           <Flex align="center" justify="center" gap={24}>
-            <FilledButton type="submit" disabled={!formik.dirty} width="236px">
-              {t('create-agent:action')}
+            <FilledButton type="submit" width="236px">
+              {t('create-agent.action')}
             </FilledButton>
           </Flex>
         </Flex>

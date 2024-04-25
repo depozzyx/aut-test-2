@@ -47,15 +47,15 @@ export const CampaignListTable = memo(
     }, [])
 
     const headers: THeader<TCampaignRowKeys>[] = [
-      { label: t('headers.campaign-name'), value: 'name' },
-      { label: t('headers.creation-date'), value: 'date' },
-      { label: t('headers.status'), value: 'status' },
-      { label: t('headers.leads'), value: 'leads' },
-      { label: t('headers.agents'), value: 'agents' },
-      { label: t('headers.view'), value: 'view' },
-      { label: t('headers.action'), value: 'action' },
-      { label: t('headers.edit'), value: 'edit' },
-      { label: t('headers.delete'), value: 'delete' },
+      { label: t('campaign-list-headers.campaign-name'), value: 'name' },
+      { label: t('campaign-list-headers.creation-date'), value: 'date' },
+      { label: t('campaign-list-headers.status'), value: 'status' },
+      { label: t('campaign-list-headers.leads'), value: 'leads' },
+      { label: t('campaign-list-headers.agents'), value: 'agents' },
+      { label: t('campaign-list-headers.view'), value: 'view' },
+      { label: t('campaign-list-headers.action'), value: 'action' },
+      { label: t('campaign-list-headers.edit'), value: 'edit' },
+      { label: t('campaign-list-headers.delete'), value: 'delete' },
     ]
 
     const rows = data.map((campaign) => ({

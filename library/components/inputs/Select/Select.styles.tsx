@@ -3,6 +3,7 @@ import ReactSelect, { GroupBase, Props } from 'react-select'
 import { CSSProperties } from 'react'
 import { TStylesProps, formatCssProperty, styleToCss } from '@peiko/styles'
 import { TSelectOption, TSelectProps } from './types'
+import { getIconSize } from './utils/get-icon-size'
 
 type TRSProps = {
   disabled?: boolean
@@ -68,6 +69,11 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
           height: 30px;
           padding: 0 16px;
         `
+      case 'sm':
+        return css`
+          height: 32px;
+          padding: 0 8px;
+        `
       case 'm':
         return css`
           height: 30px;
@@ -88,7 +94,6 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     /* z-index: ${props.zIndex || zIndex.low}; */
 
     .custom-rs__control {
-      min-width: 213px;
       display: flex;
       position: relative;
       align-items: center;
@@ -123,6 +128,28 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
         svg {
           width: 16px;
           height: 16px;
+        }
+
+        ${getIconSize(size)}
+        padding: 2px;
+
+        svg {
+          width: 16px !important;
+          height: 16px !important;
+        }
+
+        &.custom-rs__clear-indicator {
+          width: 20px !important;
+          height: 20px !important;
+          padding: 2px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          svg path {
+            &:hover {
+              fill: ${palette.main};
+            }
+          }
         }
       }
 
@@ -213,6 +240,17 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
 
     .custom-rs__indicator-separator {
       display: none;
+    }
+
+    .custom-rs__multi-value {
+      margin: 0 2px 0 0;
+
+      &__remove:hover {
+        background-color: ${palette.main21};
+        svg path {
+          fill: ${palette.main};
+        }
+      }
     }
 
     ${styles && styleToCss(styles, theme)}

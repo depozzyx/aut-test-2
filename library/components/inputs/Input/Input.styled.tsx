@@ -23,6 +23,8 @@ const BORDER_RADIUS = 4
 
 const inputFont = (size: TInputSizes['size'], theme: DefaultTheme) => {
   switch (size) {
+    case 'xs':
+      return theme.fonts.f8
     case 'm':
       return theme.fonts.f8
     default:
@@ -32,6 +34,10 @@ const inputFont = (size: TInputSizes['size'], theme: DefaultTheme) => {
 
 const containerSize = (size?: TInputSizes['size']) => {
   switch (size) {
+    case 'xs':
+      return css`
+        height: 28px;
+      `
     case 's':
       return css`
         height: 30px;

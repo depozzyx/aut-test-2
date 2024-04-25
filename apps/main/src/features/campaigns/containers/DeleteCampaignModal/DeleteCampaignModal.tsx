@@ -9,7 +9,7 @@ import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useRedux } from '@/hooks/use-redux'
 import useNotification from '@/features/common/notifications/hooks/use-notifications'
-import { selectSelectedCampaign, deleteCampaign } from '../../store/campaigns-list'
+import { selectSelectedCampaign, deleteCampaign } from '../../store/campaigns'
 
 export const DeleteCampaignModal = (): JSX.Element => {
   const { t } = useTranslation('common')

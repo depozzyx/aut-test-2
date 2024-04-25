@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useUnmount } from 'react-use'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
@@ -23,7 +24,8 @@ import {
   selectCampaignsList,
   setSelectedId,
   setCampaignStatus,
-} from './store/campaigns-list'
+  reset,
+} from './store/campaigns'
 import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
 import { CreateCampaignModal } from './containers/CreateCampaignModal'
 import { EditCampaignModal } from './containers/EditCampaignModal'
@@ -33,6 +35,10 @@ export const CampaignsList = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
   const { select, dispatch } = useRedux()
   const { setModal } = useModals()
+
+  useUnmount(() => {
+    dispatch(reset())
+  })
 
   const {
     pagination: { total, page },
@@ -66,7 +72,7 @@ export const CampaignsList = (): JSX.Element => {
     <>
       <Container>
         <Panel>
-          <Flex gap={16}>
+          <Flex gap={16} align="center">
             <SearchField />
             <CustomFilterBtn />
           </Flex>

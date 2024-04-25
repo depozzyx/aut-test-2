@@ -5,7 +5,7 @@
         "pause": "Paused",
         "complete": "Completed"
     },
-    "headers": {
+    "campaign-list-headers": {
         "campaign-name": "Campaign Name",
         "creation-date": "Creation Date",
         "status": "Status",
@@ -39,5 +39,17 @@
     },
     "review-campaign": {
         "title": "Review New Campaign"
-    }
+    },
+    "active-campaigns": "Active Campaigns",
+    "eampaign-effectiveness": "Campaign Effectiveness",
+    "active-campaigns-headers": {
+        "campaign-name": "Campaign Name",
+        "creation-date": "Creation Date",
+        "call-volume": "Call Volume",
+        "response-rate": "Response Rate",
+        "conversion-rate": "Conversion Rate",
+        "edit": "Edit",
+        "delete": "Delete"
+    },
+    "campaign-select-placeholder": "Campaign name"
 }
