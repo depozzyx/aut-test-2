@@ -27,7 +27,6 @@ export const UserData: FC = () => {
       name: validation.required,
     }),
     onSubmit: ({ name }) => {
-      // eslint-disable-next-line no-console
       if (name) updateProfileAsync({ formData: { name }, formik })
     },
   })
@@ -46,7 +45,6 @@ export const UserData: FC = () => {
             display: 'grid',
             gap: '24px',
             gridTemplateColumns: 'repeat(2, 1fr) 158px',
-            alignItems: 'flex-end',
           }}
         >
           <FormikInput
@@ -67,7 +65,7 @@ export const UserData: FC = () => {
           />
           <FilledButton
             size="s"
-            styles={{ marginLeft: '24px' }}
+            styles={{ marginLeft: '24px', marginTop: '22px' }}
             width="134px"
             type="submit"
             isLoading={formik.isSubmitting}
