@@ -17,10 +17,10 @@ import useModals from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { InfoColumn } from '../../components/InfoColumn'
 import {
-  selectCampaigns,
+  selectActiveCampaigns,
   selectCampaignsPagination,
   setSelectedId,
-} from '../../store/active-campaigns'
+} from '../../store/campaigns'
 
 type TActiveCampaignsRowKeys =
   | 'name'
@@ -39,11 +39,11 @@ export const ActiveCampaignsTable = memo((): JSX.Element => {
 
   const {
     pagination: { total, page },
-    campaigns,
+    activeCampaigns,
   } = select(
     createStructuredSelector({
       pagination: selectCampaignsPagination,
-      campaigns: selectCampaigns,
+      activeCampaigns: selectActiveCampaigns,
     }),
     shallowEqual,
   )
@@ -68,7 +68,7 @@ export const ActiveCampaignsTable = memo((): JSX.Element => {
     { label: t('active-campaigns-headers.delete'), value: 'delete' },
   ]
 
-  const rows = campaigns.map((campaign) => ({
+  const rows = activeCampaigns.map((campaign) => ({
     row: {
       name: <InfoColumn title={campaign.name} />,
       date: <InfoColumn title={campaign.date} />,

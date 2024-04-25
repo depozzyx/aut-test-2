@@ -50,5 +50,6 @@
         "conversion-rate": "Conversion Rate",
         "edit": "Edit",
         "delete": "Delete"
-    }
+    },
+    "campaign-select-placeholder": "Campaign name"
 }

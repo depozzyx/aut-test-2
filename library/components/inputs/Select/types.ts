@@ -23,7 +23,7 @@ export type TSelectProps = {
   /**
    * The size of the select
    */
-  size?: 's' | 'm' | 'l'
+  size?: 's' | 'sm' | 'm' | 'l'
   /**
    * Specify the placeholder of the inlut select
    * */

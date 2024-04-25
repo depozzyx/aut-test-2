@@ -9,6 +9,7 @@ import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { ROUTES } from '@/constants/routes'
 import { SearchField } from '@/features/campaigns/components/SearchField'
 import { ActiveCampaignsTable } from '@/features/campaigns/containers/ActiveCampaignsTable'
+import { CampaignsSelect } from '@/features/campaigns/containers/CampaignSelect'
 import { DashboardTabs } from './components/DashboardTabs'
 
 export const Dashboard = (): JSX.Element => {
@@ -31,10 +32,12 @@ export const Dashboard = (): JSX.Element => {
   return (
     <Flex direction="column" padding="12px 0 0 0">
       <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      <Flex padding="16px 0 0 0" justify="space-between">
-        <Flex gap="">
+      <Flex padding="12px 0 0 0" justify="space-between">
+        <Flex gap={16} align="center">
           <SearchField />
-          <Flex />
+          <Flex>
+            <CampaignsSelect />
+          </Flex>
         </Flex>
         <FilledButton
           size="m"

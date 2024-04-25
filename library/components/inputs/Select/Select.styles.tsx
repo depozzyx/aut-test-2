@@ -69,6 +69,11 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
           height: 30px;
           padding: 0 16px;
         `
+      case 'sm':
+        return css`
+          height: 32px;
+          padding: 0 8px;
+        `
       case 'm':
         return css`
           height: 30px;
@@ -89,7 +94,6 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     /* z-index: ${props.zIndex || zIndex.low}; */
 
     .custom-rs__control {
-      min-width: 213px;
       display: flex;
       position: relative;
       align-items: center;

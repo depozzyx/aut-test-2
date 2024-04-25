@@ -25,7 +25,7 @@ import {
   setSelectedId,
   setCampaignStatus,
   reset,
-} from './store/campaigns-list'
+} from './store/campaigns'
 import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
 import { CreateCampaignModal } from './containers/CreateCampaignModal'
 import { EditCampaignModal } from './containers/EditCampaignModal'
@@ -72,7 +72,7 @@ export const CampaignsList = (): JSX.Element => {
     <>
       <Container>
         <Panel>
-          <Flex gap={16}>
+          <Flex gap={16} align="center">
             <SearchField />
             <CustomFilterBtn />
           </Flex>
