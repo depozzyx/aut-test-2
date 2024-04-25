@@ -19,12 +19,12 @@ export const OutlinedAccordion: React.FC<TAccordionProps> = ({
       isOpen={isOpened}
       disabled={disabled}
       onMouseLeave={setBlure}
-      onClick={handleClick}
       tabIndex={disabled ? -1 : 0}
-      ref={ref}
       {...props}
     >
-      <Header>{header({ isOpen: isOpened })}</Header>
+      <Header ref={ref} onClick={handleClick}>
+        {header({ isOpen: isOpened })}
+      </Header>
       <Collapse>
         <ReactCollapse theme={{ collapse: 'collapse' }} isOpened={isOpened}>
           {children}

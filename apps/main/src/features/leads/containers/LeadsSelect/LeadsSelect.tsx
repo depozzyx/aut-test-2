@@ -39,7 +39,7 @@ export const LeadsSelect: FC<
       menuContent={{
         place: 'append',
         element: (
-          <Link href={ROUTES.CABINET_DASHBOARD}>
+          <Link href={ROUTES.DASHBOARD_ACTIVE_CAMPAIGNS}>
             <Flex
               padding="7px 16px"
               align="center"

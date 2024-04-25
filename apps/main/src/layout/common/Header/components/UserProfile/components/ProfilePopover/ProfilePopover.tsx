@@ -56,7 +56,7 @@ export const ProfilePopover = ({
   }
 
   const handleGoToSettings = () => {
-    router.push(ROUTES.SETTINGS)
+    router.push(ROUTES.SETTINGS_ACCOUNT_MANAGEMENT)
   }
 
   return (

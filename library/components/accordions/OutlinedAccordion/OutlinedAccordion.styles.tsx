@@ -7,28 +7,31 @@ import {
   baseContainer,
   colors,
 } from '@peiko/components/accordions'
+import { styleToCss } from '@peiko/styles'
 
-export const Container = styled.button<Pick<TAccordionProps, 'disabled'> & TContainer>(
-  ({ theme: { palette }, isOpen, disabled }) => css`
+export const Container = styled.div<
+  Pick<TAccordionProps, 'disabled' | 'styles'> & TContainer
+>(
+  ({ theme, isOpen, disabled, styles }) => css`
     ${baseContainer}
     border-width: 0;
     border-bottom-width: 1px;
-    padding: ${isOpen ? '0 0 24px' : '0'};
 
     ${colors({
-      border: palette.main8,
-      borderOpen: palette.main2,
-      borderHover: palette.main2,
-      borderFocus: palette.main2,
-      borderDisabled: hexToRGBA(palette.main8, 0.3),
+      border: theme.palette.main8,
+      borderOpen: theme.palette.main2,
+      borderHover: theme.palette.main2,
+      borderFocus: theme.palette.main2,
+      borderDisabled: hexToRGBA(theme.palette.main8, 0.3),
       isOpen,
       disabled,
     })}
+    ${styles && styleToCss(styles, theme)}
   `,
 )
 
-export const Header = styled.div`
-  padding: 24px 0;
+export const Header = styled.button`
+  width: 100%;
 `
 
 export const Collapse = styled.div`

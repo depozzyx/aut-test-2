@@ -3,7 +3,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
 
-const DashboardPage: NextPage = () => {
+const CampaignsEffectivenessPage: NextPage = () => {
   const { t } = useTranslation('routing')
 
   return (
@@ -13,4 +13,4 @@ const DashboardPage: NextPage = () => {
   )
 }
 
-export default DashboardPage
+export default CampaignsEffectivenessPage

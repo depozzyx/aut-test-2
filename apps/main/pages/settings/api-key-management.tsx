@@ -2,18 +2,15 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
-import { AgentsList } from '@/features/agents/AgentsList'
 
-const AgentListPage: NextPage = () => {
+const ApiKeyManagementPage: NextPage = () => {
   const { t } = useTranslation('routing')
 
   return (
     <Permissions>
-      <CabinetLayout title={t('agents-list')}>
-        <AgentsList />
-      </CabinetLayout>
+      <CabinetLayout title={t('settings_account_management')} />
     </Permissions>
   )
 }
 
-export default AgentListPage
+export default ApiKeyManagementPage

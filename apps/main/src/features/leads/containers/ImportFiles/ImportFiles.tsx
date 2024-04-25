@@ -109,7 +109,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
           </Flex>
         </UploadFiles>
         <Flex justify="space-between" gap="24px" margin="48px 0 0">
-          <OutlinedButton link={{ href: ROUTES.CABINET_DASHBOARD }} width="100%">
+          <OutlinedButton link={{ href: ROUTES.DASHBOARD_ACTIVE_CAMPAIGNS }} width="100%">
             {t('cancel')}
           </OutlinedButton>
           <FilledButton
