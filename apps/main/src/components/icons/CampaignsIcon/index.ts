@@ -1,0 +1,1 @@
+export { CampaignsIcon } from './CampaignsIcon'

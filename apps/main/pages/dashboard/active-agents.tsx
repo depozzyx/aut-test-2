@@ -2,18 +2,18 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
-import { LeadsList } from '@/features/leads/LeadsList'
+import { Dashboard } from '@/layout/pages/Dashboard'
 
-const LeadsListPage: NextPage = () => {
+const ActiveAgentsPage: NextPage = () => {
   const { t } = useTranslation('routing')
 
   return (
     <Permissions>
-      <CabinetLayout title={t('leads-list')}>
-        <LeadsList />
+      <CabinetLayout title={t('dashboard')}>
+        <Dashboard />
       </CabinetLayout>
     </Permissions>
   )
 }
 
-export default LeadsListPage
+export default ActiveAgentsPage

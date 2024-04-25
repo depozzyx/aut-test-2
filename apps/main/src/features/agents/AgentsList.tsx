@@ -52,7 +52,7 @@ export const AgentsList = (): JSX.Element => {
   }, [])
 
   const goToCreateAgentPage = () => {
-    router.push(ROUTES.CABINET_CREATE_AGENT)
+    router.push(ROUTES.CREATE_AGENT)
   }
 
   return (

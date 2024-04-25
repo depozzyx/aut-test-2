@@ -33,7 +33,7 @@ export const LeadsList: FC = () => {
   }, [])
 
   useEffect(() => {
-    dispatch(getLeadList({ page, limit, orderBy: 'ASC' }))
+    if (leadsGroup) dispatch(getLeadList({ page, limit, orderBy: 'ASC' }))
   }, [leadsGroup])
 
   useUnmount(() => {

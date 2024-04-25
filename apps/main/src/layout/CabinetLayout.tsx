@@ -25,7 +25,8 @@ const BodyColor = createGlobalStyle`
 
 const ContentWrapper = styled.div<TCabinetLayoutProps>(
   (props) => css`
-    display: flex;
+    display: grid;
+    grid-template-columns: 212px 1fr;
     margin: 0 auto;
     background-color: ${props.theme.palette.base};
     min-height: ${props.minHeight || 'calc(100vh - var(--header-height))'};

@@ -2,20 +2,18 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
-import { UserData } from '@/features/settings/UserData'
-import { ChangePassword } from '@/features/settings/ChangePassword'
+import { ImportLeads } from '@/features/leads/ImportLeads'
 
-const SettingsPage: NextPage = () => {
+const ImportLeadsPage: NextPage = () => {
   const { t } = useTranslation('routing')
 
   return (
     <Permissions>
-      <CabinetLayout title={t('account-management')}>
-        <UserData />
-        <ChangePassword />
+      <CabinetLayout title={t('import_leads')}>
+        <ImportLeads />
       </CabinetLayout>
     </Permissions>
   )
 }
 
-export default SettingsPage
+export default ImportLeadsPage
