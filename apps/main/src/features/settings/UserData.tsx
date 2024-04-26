@@ -59,7 +59,7 @@ export const UserData: FC = () => {
           <FormikInput
             size="s"
             formik={formik}
-            name="name"
+            name="username"
             label={{ label: t('changeName.username') }}
             placeholder={t('changeName.username')}
           />
