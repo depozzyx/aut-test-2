@@ -11,14 +11,13 @@ import { EditIcon } from '@peiko/components/icons/EditIcon'
 import { TrashIcon } from '@peiko/components/icons/TrashIcon'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
-import { Pagination } from '@peiko/components/Pagination'
 import { THeader } from '@peiko/components/Table/types'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { InfoColumn } from '../../components/InfoColumn'
 import {
   selectActiveCampaigns,
-  selectCampaignsPagination,
+  selectIsLoading,
   setSelectedId,
 } from '../../store/campaigns'
 
@@ -37,13 +36,10 @@ export const ActiveCampaignsTable = memo((): JSX.Element => {
 
   const { setModal } = useModals()
 
-  const {
-    pagination: { total, page },
-    activeCampaigns,
-  } = select(
+  const { isLoading, data } = select(
     createStructuredSelector({
-      pagination: selectCampaignsPagination,
-      activeCampaigns: selectActiveCampaigns,
+      isLoading: selectIsLoading,
+      data: selectActiveCampaigns,
     }),
     shallowEqual,
   )
@@ -68,7 +64,7 @@ export const ActiveCampaignsTable = memo((): JSX.Element => {
     { label: t('active-campaigns-headers.delete'), value: 'delete' },
   ]
 
-  const rows = activeCampaigns.map((campaign) => ({
+  const rows = data.map((campaign) => ({
     row: {
       name: <InfoColumn title={campaign.name} />,
       date: <InfoColumn title={campaign.date} />,
@@ -91,14 +87,12 @@ export const ActiveCampaignsTable = memo((): JSX.Element => {
   return (
     <Flex padding="12px 0 0 0" direction="column" align="center">
       <Table
+        loading={isLoading}
         headerData={headers}
         rowsData={rows}
         bodyCell={(props) => <BodyCell {...props} whiteSpace="nowrap" />}
         headerCell={(props) => <HeaderCell {...props} whiteSpace="nowrap" />}
       />
-      <Flex padding="40px 0 0 0">
-        <Pagination lastPage={total} currentPage={page} />
-      </Flex>
     </Flex>
   )
 }, deepEqual)

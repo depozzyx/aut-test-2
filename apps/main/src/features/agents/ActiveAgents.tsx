@@ -3,9 +3,9 @@ import { useRouter } from 'next/router'
 import { Flex } from '@/components/Flex'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
-import { CampaignsSelect } from '@/features/campaigns/containers/CampaignSelect'
 import { DashboardTabs } from '@/components/DashboardTabs'
 import { ROUTES } from '@/constants/routes'
+import { StatusFilter } from '@/components/StatusFilter'
 import { AgentSearchField } from './components/AgentSearchField'
 import { ActiveAgentsTable } from './containers/ActiveAgentsTable'
 
@@ -24,7 +24,7 @@ export const ActiveAgents = (): JSX.Element => {
         <Flex gap={16} align="center">
           <AgentSearchField />
           <Flex>
-            <CampaignsSelect />
+            <StatusFilter />
           </Flex>
         </Flex>
         <FilledButton
