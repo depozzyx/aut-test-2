@@ -41,7 +41,7 @@ export const LeadsListTable = memo((): JSX.Element => {
     { label: t('headers.lead-timezone'), value: 'timezone' },
     { label: t('headers.lead-status'), value: 'status' },
     { label: t('headers.lead-source'), value: 'source' },
-    { label: <LeadsSelect />, value: 'selectLeads' },
+    { label: <LeadsSelect maxMenuHeight={200} width="213px" />, value: 'selectLeads' },
   ]
 
   const rows = data.map((campaign) => ({
@@ -58,6 +58,7 @@ export const LeadsListTable = memo((): JSX.Element => {
 
   return (
     <Table
+      minHeight={isLoading ? undefined : '300px'}
       loading={isLoading}
       headerData={headers}
       rowsData={rows}

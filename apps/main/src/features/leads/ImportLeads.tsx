@@ -11,10 +11,12 @@ import {
   getLeadsGroups,
   reset,
   selectLeadsGroup,
+  selectLeadsGroupPagination,
   selectLeadsPagination,
 } from './store/leads'
 import { ImportFiles } from './containers/ImportFiles'
 import { CreateLeads } from './containers/CreateLeads'
+import { CreateLeadsGroup } from './containers/CreateLeadsGroup'
 
 export const ImportLeads: FC = () => {
   const { select, dispatch } = useRedux()
@@ -22,27 +24,37 @@ export const ImportLeads: FC = () => {
 
   const {
     pagination: { total, page, limit },
+    groupsPagination,
+    leadsGroup,
   } = select(
     createStructuredSelector({
       pagination: selectLeadsPagination,
+      groupsPagination: selectLeadsGroupPagination,
       leadsGroup: selectLeadsGroup,
     }),
     shallowEqual,
   )
 
   useEffect(() => {
-    dispatch(getLeadsGroups(true))
+    dispatch(
+      getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy: 'ASC' }, true),
+    )
   }, [])
 
   useUnmount(() => dispatch(reset()))
 
   const onImportSubmit = () => {
     setStep('list')
-    dispatch(getLeadList({ page, limit, orderBy: 'ASC' }))
+    dispatch(getLeadList({ page, limit, orderBy: 'ASC', leadListId: leadsGroup }))
   }
 
   const onChangePage = (page: number) =>
-    dispatch(getLeadList({ page, limit, orderBy: 'ASC' }))
+    dispatch(getLeadList({ page, limit, orderBy: 'ASC', leadListId: leadsGroup }))
+
+  useEffect(() => {
+    if (leadsGroup && step === 'list')
+      dispatch(getLeadList({ page, limit, orderBy: 'ASC', leadListId: leadsGroup }))
+  }, [leadsGroup])
 
   return (
     <>
@@ -57,13 +69,14 @@ export const ImportLeads: FC = () => {
           </Box>
           <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
             <Pagination
-              lastPage={Math.ceil(total / (limit ?? 15))}
+              lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
               currentPage={page}
               onChange={onChangePage}
             />
           </Box>
         </>
       )}
+      <CreateLeadsGroup />
     </>
   )
 }

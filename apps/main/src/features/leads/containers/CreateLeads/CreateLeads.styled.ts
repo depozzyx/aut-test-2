@@ -9,8 +9,8 @@ export const Button = styled(FilledButton)`
     gap: 8px;
   }
   svg {
-    width: 14px !important;
-    height: 14px !important;
+    width: 24px !important;
+    height: 24px !important;
   }
 `
 

@@ -12,5 +12,12 @@
   "statuses": {
     "active": "ACTIVE",
     "inactive": "INACTIVE"
+  },
+  "createLeadsGroup": {
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "title": "Create new Lead List",
+    "label": "Lead List Name",
+    "placeholder": "Enter Lead List Name"
   }
 }
