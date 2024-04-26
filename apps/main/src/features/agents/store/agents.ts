@@ -2,10 +2,12 @@ import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit'
 import { TSelector } from '@/store'
 import { TPagination } from '@/types/entities/pagination'
 import { TAgent, agentsMock } from '../mocks/agentsMock'
+import { TActiveAgent, activeAgentsMock } from '../mocks/acitveAgentsMock'
 
 export type TInit = {
-  agentsList: TAgent[]
   selectedId: null | number
+  agentsList: TAgent[]
+  activeAgents: TActiveAgent[]
   meta: unknown
   pagination: TPagination
 }
@@ -13,6 +15,7 @@ export type TInit = {
 const init: TInit = {
   selectedId: null,
   agentsList: agentsMock,
+  activeAgents: activeAgentsMock,
   meta: {},
   pagination: {
     page: 1,
@@ -33,6 +36,9 @@ const agents = createSlice({
     },
     setAgentsList(state, action: PayloadAction<TAgent[]>) {
       state.agentsList = action.payload
+    },
+    setActiveAgents(state, action: PayloadAction<TActiveAgent[]>) {
+      state.activeAgents = action.payload
     },
     deleteAgent(state, action: PayloadAction<TInit['selectedId']>) {
       state.agentsList = state.agentsList.filter(({ id }) => id !== action.payload)
@@ -61,6 +67,11 @@ export const selectAgentsList = createSelector(
 export const selectSelectedAgent = createSelector(
   selectAgents,
   ({ selectedId, agentsList }) => agentsList.find(({ id }) => id === selectedId),
+)
+
+export const selectActiveAgents = createSelector(
+  selectAgents,
+  ({ activeAgents }) => activeAgents,
 )
 
 export default agents.reducer

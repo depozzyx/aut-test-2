@@ -30,11 +30,6 @@ export const ReviewFields = (): JSX.Element => {
           label={t('create-campaign.lead-selection')}
           value={formData.leadSelection}
         />
-        <Field label={t('create-campaign.creation-date')} value={formData.creationDate} />
-        <Field
-          label={t('create-campaign.scenario-setup')}
-          value={formData.scenarioSetup}
-        />
         <Field
           label={t('create-campaign.call-frequency')}
           value={formData.callFrequency}

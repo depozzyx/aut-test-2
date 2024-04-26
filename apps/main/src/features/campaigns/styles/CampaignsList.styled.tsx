@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import useTranslation from 'next-translate/useTranslation'
 import { FilledIconButton } from '@peiko/components/buttons/FilledIconButton'
 import { FiltersIcon } from '@peiko/components/icons/FiltersIcon'
 
@@ -16,17 +17,27 @@ export const Panel = styled.div`
   justify-content: space-between;
 `
 
-export const CustomFilterBtn = styled((props) => (
-  <FilledIconButton size="ml" iconColor="main3" {...props}>
-    <FiltersIcon />
-  </FilledIconButton>
-))(
+export const CustomFilterBtn = styled((props) => {
+  const { t } = useTranslation('common')
+
+  return (
+    <FilledIconButton size="m" iconColor="main3" {...props}>
+      {t('status')}
+      <FiltersIcon />
+    </FilledIconButton>
+  )
+})(
   ({ theme }) => css`
     border-radius: 4px !important;
     background-color: ${theme.palette.base};
 
     &:hover {
       background-color: ${theme.palette.main20};
+    }
+
+    svg {
+      width: 24px !important;
+      height: 24px !important;
     }
   `,
 )

@@ -3,7 +3,7 @@ import { CSSProperties, DefaultTheme } from 'styled-components'
 import { LinkProps } from 'next/link'
 import { TStylesProps, TMediaQueries } from '@peiko/styles'
 
-export type TSize = 'xs' | 's' | 'sm' | 'm' | 'ml' | 'l'
+export type TSize = 's' | 'm' | 'ml' | 'l' | 'xl'
 
 type TButtonSizeProps = {
   /** The size of the button */

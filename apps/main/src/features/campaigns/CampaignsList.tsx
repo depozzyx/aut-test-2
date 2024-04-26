@@ -10,7 +10,7 @@ import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
 import { useRedux } from '@/hooks/use-redux'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { SearchField } from './components/SearchField'
+import { CampaignSearchField } from './components/CampaignSearchField'
 import {
   Container,
   Panel,
@@ -73,7 +73,7 @@ export const CampaignsList = (): JSX.Element => {
       <Container>
         <Panel>
           <Flex gap={16} align="center">
-            <SearchField />
+            <CampaignSearchField />
             <CustomFilterBtn />
           </Flex>
           <FilledButton

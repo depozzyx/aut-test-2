@@ -7,10 +7,10 @@ import resetPasswordReducer from '@/features/auth/store/reset-password'
 import notificationsReducer from '@/features/common/notifications/store'
 import modalsReducer from '@/features/common/modals/store'
 import campaignsReducer from '@/features/campaigns/store/campaigns'
-import agentsReducer from '@/features/agents/store/agents-list'
 import createCampaignReducer from '@/features/campaigns/store/create-campaign'
 import leadsReducer from '@/features/leads/store/leads'
 import editCampaignReducer from '@/features/campaigns/store/edit-campaign'
+import agentsReducer from '../features/agents/store/agents'
 
 const store = configureStore({
   reducer: {

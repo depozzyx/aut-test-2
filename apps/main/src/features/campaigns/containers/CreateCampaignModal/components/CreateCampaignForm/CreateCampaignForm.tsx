@@ -7,7 +7,6 @@ import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
-import { FormikDayPickerInput } from '@peiko/components/inputs/formik-adapters/FormikDayPickerInput'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { createCampaignAsync } from '@/features/campaigns/store/create-campaign'
 
@@ -15,8 +14,6 @@ export interface IinitialValues {
   name: string
   assignedAgentIds: string
   leadSelection: string
-  creationDate: string
-  scenarioSetup: string
   callFrequency: string
   callTime: string
 }
@@ -32,8 +29,6 @@ const initialValues: IinitialValues = {
   name: 'Campaign Name 123',
   assignedAgentIds: '',
   leadSelection: 'Lead List 1',
-  creationDate: '',
-  scenarioSetup: 'Direct',
   callFrequency: 'Every hour',
   callTime: '10 AM - 6 PM',
 }
@@ -84,27 +79,8 @@ export const CreateCampaignForm = (): JSX.Element => {
                 { value: 'Lead List 2', label: 'Lead List 2' },
               ]}
             />
-            <FormikDayPickerInput
-              formik={formik}
-              name="creationDate"
-              label={{ label: t('create-campaign.creation-date') }}
-              width={326}
-              size="s"
-              styles={{ padding: '0 6px 0 16px' }}
-              disabled
-            />
           </Flex>
           <Flex direction="column" gap={16} maxWidth="326px" width="100%">
-            <FormikSelect
-              formik={formik}
-              name="scenarioSetup"
-              label={{ label: t('create-campaign.scenario-setup') }}
-              width={326}
-              options={[
-                { value: 'Direct', label: 'Direct' },
-                { value: 'Scenario 2', label: 'Scenario 2' },
-              ]}
-            />
             <FormikSelect
               formik={formik}
               name="callFrequency"

@@ -11,6 +11,7 @@ module.exports = {
     '/auth/forgot-password': ['error', 'validation', 'inputs', 'auth'],
     '/auth/reset-password': ['error', 'validation', 'inputs', 'auth'],
     '/cabinet/dashboard/active-campaigns': ['user', 'routing', 'campaigns', 'agents'],
+    '/cabinet/dashboard/active-agents': ['user', 'routing', 'agents', 'campaigns'],
     '/cabinet/campaigns/list': ['user', 'routing', 'campaigns'],
     '/cabinet/agents/list': ['user', 'routing', 'agents'],
     '/cabinet/leads/list': ['user', 'routing', 'leads-list'],
