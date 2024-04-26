@@ -21,13 +21,13 @@ export const UserData: FC = () => {
   const formik = useFormik({
     initialValues: {
       id: user?.id,
-      name: user?.name,
+      username: user?.username,
     },
     validationSchema: yup.object().shape({
-      name: validation.required,
+      username: validation.required,
     }),
-    onSubmit: ({ name }) => {
-      if (name) updateProfileAsync({ formData: { name }, formik })
+    onSubmit: ({ username }) => {
+      if (username) updateProfileAsync({ formData: { username }, formik })
     },
   })
 

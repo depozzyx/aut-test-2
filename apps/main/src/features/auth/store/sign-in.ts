@@ -53,7 +53,7 @@ export const signInAsync =
         userActions.setUserData({
           id: 0,
           email: '',
-          name: '',
+          username: '',
           ...profileData,
         }),
       )
