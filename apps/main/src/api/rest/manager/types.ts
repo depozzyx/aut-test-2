@@ -1,7 +1,7 @@
 import { TGeneratedSuccessStatuses } from '@/constants/success-status'
 
 export type TUpdateManagerReq = {
-  name: string
+  username: string
 }
 
 export type TUpdateManagerRes = {
@@ -9,6 +9,6 @@ export type TUpdateManagerRes = {
   data: {
     id: number
     email: string
-    name: string
+    username: string
   }
 }

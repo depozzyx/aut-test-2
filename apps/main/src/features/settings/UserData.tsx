@@ -21,13 +21,13 @@ export const UserData: FC = () => {
   const formik = useFormik({
     initialValues: {
       id: user?.id,
-      name: user?.name,
+      username: user?.username,
     },
     validationSchema: yup.object().shape({
-      name: validation.required,
+      username: validation.required,
     }),
-    onSubmit: ({ name }) => {
-      if (name) updateProfileAsync({ formData: { name }, formik })
+    onSubmit: ({ username }) => {
+      if (username) updateProfileAsync({ formData: { username }, formik })
     },
   })
 
@@ -59,7 +59,7 @@ export const UserData: FC = () => {
           <FormikInput
             size="s"
             formik={formik}
-            name="name"
+            name="username"
             label={{ label: t('changeName.username') }}
             placeholder={t('changeName.username')}
           />

@@ -29,7 +29,7 @@ export const UserProfile = (): JSX.Element => {
     newValue: 'block',
   })
 
-  const shortName = shortenName(user?.name || '')
+  const shortName = shortenName(user?.username || '')
 
   return (
     <ContextMenu
@@ -39,7 +39,7 @@ export const UserProfile = (): JSX.Element => {
         <ProfilePopover
           userRole={user?.role}
           email={user?.email}
-          name={user?.name ?? ''}
+          name={user?.username ?? ''}
         />
       )}
       trigger={<Trigger userRole={user?.role} name={shortName} />}
