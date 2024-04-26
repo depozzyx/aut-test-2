@@ -11,8 +11,10 @@ import {
   getLeadsGroups,
   reset,
   selectLeadsGroup,
+  selectLeadsGroupPagination,
   selectLeadsPagination,
 } from './store/leads'
+import { CreateLeadsGroup } from './containers/CreateLeadsGroup'
 
 export const LeadsList: FC = () => {
   const { select, dispatch } = useRedux()
@@ -20,20 +22,25 @@ export const LeadsList: FC = () => {
   const {
     pagination: { total, page, limit },
     leadsGroup,
+    groupsPagination,
   } = select(
     createStructuredSelector({
       pagination: selectLeadsPagination,
+      groupsPagination: selectLeadsGroupPagination,
       leadsGroup: selectLeadsGroup,
     }),
     shallowEqual,
   )
 
   useEffect(() => {
-    dispatch(getLeadsGroups(true))
+    dispatch(
+      getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy: 'ASC' }, true),
+    )
   }, [])
 
   useEffect(() => {
-    if (leadsGroup) dispatch(getLeadList({ page, limit, orderBy: 'ASC' }))
+    if (leadsGroup)
+      dispatch(getLeadList({ page, limit, orderBy: 'ASC', leadListId: leadsGroup }))
   }, [leadsGroup])
 
   useUnmount(() => {
@@ -41,7 +48,7 @@ export const LeadsList: FC = () => {
   })
 
   const onChangePage = (page: number) =>
-    dispatch(getLeadList({ page, limit, orderBy: 'ASC' }))
+    dispatch(getLeadList({ page, limit, orderBy: 'ASC', leadListId: leadsGroup }))
 
   return (
     <>
@@ -50,11 +57,12 @@ export const LeadsList: FC = () => {
       </Box>
       <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
         <Pagination
-          lastPage={Math.ceil(total / (limit ?? 15))}
+          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
           currentPage={page}
           onChange={onChangePage}
         />
       </Box>
+      <CreateLeadsGroup />
     </>
   )
 }

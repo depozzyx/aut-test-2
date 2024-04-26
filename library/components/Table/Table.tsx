@@ -21,6 +21,7 @@ export function Table<R extends TRow, H extends THeader<keyof R['row']>>({
   collapseCell,
   buttonCollapse,
   emptyComponent,
+  minHeight,
 }: TTableProps<R, H>): JSX.Element | null {
   const [open, setOpen] = useState<(string | number)[]>([])
 
@@ -146,7 +147,7 @@ export function Table<R extends TRow, H extends THeader<keyof R['row']>>({
     <HorizontalScroll hideScrollbars={Boolean(loading)}>
       <Box styles={{ width: '100%' }}>
         <InlineLoader loading={loading} borderRadius={4} />
-        <S.Table gridTemplateColumns={gridTemplateColumns}>
+        <S.Table gridTemplateColumns={gridTemplateColumns} minHeight={minHeight}>
           {renderHeader()}
           {!isFallback && renderRows()}
           {isFallback && emptyComponent}

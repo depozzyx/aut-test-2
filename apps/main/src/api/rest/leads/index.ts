@@ -1,6 +1,15 @@
 import { api } from '../instance'
 import { TAxiosResponse } from '../types'
-import { TImportReq, TImportLeadsRes, TLeadsListReq, TLeadsListRes } from './types'
+import {
+  TImportReq,
+  TImportLeadsRes,
+  TLeadsListReq,
+  TLeadsListRes,
+  TLeadsGroupRes,
+  TLeadsGroupReq,
+  TCreateLeadGroupReq,
+  TCreateLeadGroupRes,
+} from './types'
 
 const importLeads = (
   body: TImportReq,
@@ -16,7 +25,16 @@ const importLeads = (
 const leadsList = (params: TLeadsListReq): TAxiosResponse<TLeadsListRes> =>
   api.get('/leads', { params })
 
+const leadsGroup = (params: TLeadsGroupReq): TAxiosResponse<TLeadsGroupRes> =>
+  api.get('/lead-list', { params })
+
+const createLeadGroup = (
+  body: TCreateLeadGroupReq,
+): TAxiosResponse<TCreateLeadGroupRes> => api.post('/lead-list', body)
+
 export const leadsApi = {
   importLeads,
   leadsList,
+  leadsGroup,
+  createLeadGroup,
 }

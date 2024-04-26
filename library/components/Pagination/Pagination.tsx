@@ -108,6 +108,7 @@ export const Pagination: React.FC<TPagination> = ({
       </PaginationBtn>
     )
   }
+  if (lastPage === 1) return <></>
 
   return (
     <Container>

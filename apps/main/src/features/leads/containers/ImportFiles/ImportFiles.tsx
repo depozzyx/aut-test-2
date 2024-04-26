@@ -67,6 +67,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             width="calc(50% - 12px)"
             label={{ label: t('selectLabel') }}
             placeholder={t('selectPlaceholder')}
+            maxMenuHeight={200}
           />
         </Flex>
         <ImportFilesList />

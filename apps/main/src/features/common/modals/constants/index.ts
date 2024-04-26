@@ -8,6 +8,7 @@ export const MODAL_NAMES = {
   EDIT_AGENT: 'EDIT_AGENT',
   DELETE_AGENT: 'DELETE_AGENT',
   REVIEW_CAMPAIGN: 'REVIEW_CAMPAIGN',
+  CREATE_LEADS_GROUP: 'CREATE_LEADS_GROUP',
 } as const
 
 export type TModalNames = typeof MODAL_NAMES[keyof typeof MODAL_NAMES]

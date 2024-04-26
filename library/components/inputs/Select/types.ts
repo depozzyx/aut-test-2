@@ -116,4 +116,5 @@ export type TSelectProps = {
    * Use pixels number or string
    * */
   zIndex?: CSSProperties['zIndex']
+  onMenuScrollToBottom?: () => void
 } & TStylesProps

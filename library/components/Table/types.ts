@@ -126,4 +126,5 @@ export type TTableProps<R, H> = {
    * @type (props: TButtonCollapseProps) => ReactElement
    * */
   buttonCollapse?: TRenderElement<TButtonCollapseProps>
+  minHeight?: string
 }
