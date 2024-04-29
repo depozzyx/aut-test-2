@@ -14,5 +14,12 @@
   "downloadTemplate": "Download now",
   "duplicate": "Duplicate",
   "error": "Error",
-  "createNewList": "Create new list"
+  "createNewList": "Create new list",
+  "instructions": {
+    "title": "Import parameters",
+    "fileFormat": "File format:",
+    "fileSize": "File size:",
+    "fileData": "File data:",
+    "importLink": "Import leads"
+  }
 }
