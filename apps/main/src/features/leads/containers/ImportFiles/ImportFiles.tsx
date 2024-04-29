@@ -47,6 +47,20 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     dispatch(setImportFiles(preparedFiles))
   }
 
+  const onButtonClick = () => {
+    fetch('files/sample_leads.csv').then((response) => {
+      response.blob().then((blob) => {
+        if (typeof window !== 'undefined') {
+          const fileURL = window.URL.createObjectURL(blob)
+          let alink = document.createElement('a')
+          alink.href = fileURL
+          alink.download = 'sample_leads.csv'
+          alink.click()
+        }
+      })
+    })
+  }
+
   return (
     <Flex
       justify="center"
@@ -74,7 +88,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
         <UploadFiles
           styles={{ maxWidth: '552px', width: '100%', textAlign: 'center' }}
           maxFiles={20}
-          maxSize={5242880}
+          maxSize={1024 * 1024 * 20}
           disabled={!leadsGroup}
           onDropAccepted={onDrop}
         >
@@ -90,7 +104,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
               <Trans
                 i18nKey="import-leads:maxSize"
                 components={[<Text tag="span" styles={{ fontWeight: '600' }} key="0" />]}
-                values={{ value: '5 Mb' }}
+                values={{ value: '20 Mb' }}
               />
             </Text>
             <Text color="main23" variant="f10">
@@ -126,7 +140,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
         <BottomText color="main3" variant="f8">
           {t('downloadTemplateText')}
         </BottomText>
-        <OutlinedButton>{t('downloadTemplate')}</OutlinedButton>
+        <OutlinedButton onClick={onButtonClick}>{t('downloadTemplate')}</OutlinedButton>
       </Flex>
     </Flex>
   )

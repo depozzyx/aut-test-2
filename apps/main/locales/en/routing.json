@@ -16,6 +16,7 @@
   "leads_list": "Lead list",
   "import_leads": "Import leads",
   "import_leads_instructions": "API import instructions",
+  "import_leads_instructions_title": "Import Leads Instruction",
   "settings": "Settings",
   "settings_account_management": "Account management",
   "settings_api_key_management": "API key management",
