@@ -1,40 +1,28 @@
-import { useRouter } from 'next/router'
+import { useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
-import { Flex } from '@/components/Flex'
-import { LoudSpeakerIcon } from '@peiko/components/icons/LoudSpeakerIcon'
+import { Tabs } from '@/components/Tabs'
 import { CallOperatorIcon } from '@peiko/components/icons/CallOperatorIcon'
-import { ROUTES } from '@/constants/routes'
-import { DashboardTabStyled } from './DashboardTabs.styled'
+import { LoudSpeakerIcon } from '@peiko/components/icons/LoudSpeakerIcon'
+import { TTabsProps } from '@/components/Tabs/Tabs'
 
 export const DashboardTabs = (): JSX.Element => {
   const { t } = useTranslation('common')
-  const router = useRouter()
 
-  const tabs = [
-    { label: t('campaigns:active-campaigns'), value: ROUTES.DASHBOARD_ACTIVE_CAMPAIGNS },
-    { label: t('agents:active-agents'), value: ROUTES.DASHBOARD_ACTIVE_AGENTS },
+  const tabs: TTabsProps['tabs'] = [
+    {
+      label: t('campaigns:active-campaigns'),
+      value: 'active-campaign',
+      icon: (color) => <LoudSpeakerIcon color={color} />,
+    },
+    {
+      label: t('agents:active-agents'),
+      value: 'active-agents',
+      icon: (color) => <CallOperatorIcon color={color} />,
+      disabled: true,
+    },
   ]
 
-  const handleSetActiveTab = (tab: string) => {
-    router.push(tab)
-  }
+  const [activeTab, setActiveTab] = useState(tabs[0].value)
 
-  return (
-    <Flex>
-      <DashboardTabStyled
-        isActive={router.pathname === ROUTES.DASHBOARD_ACTIVE_CAMPAIGNS}
-        onClick={() => handleSetActiveTab(tabs[0].value)}
-      >
-        {tabs[0].label}
-        <LoudSpeakerIcon width="24px" height="24px" />
-      </DashboardTabStyled>
-      <DashboardTabStyled
-        isActive={router.pathname === ROUTES.DASHBOARD_ACTIVE_AGENTS}
-        onClick={() => handleSetActiveTab(tabs[1].value)}
-      >
-        {tabs[1].label}
-        <CallOperatorIcon width="24px" height="24px" />
-      </DashboardTabStyled>
-    </Flex>
-  )
+  return <Tabs tabs={tabs} setActiveTab={setActiveTab} activeTab={activeTab} />
 }

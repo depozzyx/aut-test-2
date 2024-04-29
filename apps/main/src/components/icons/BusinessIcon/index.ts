@@ -1,0 +1,1 @@
+export { BusinessIcon } from './BusinessIcon'

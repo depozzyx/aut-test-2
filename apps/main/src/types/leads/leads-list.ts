@@ -8,3 +8,8 @@ export type TLeadsList = {
   phone: string
   source: string
 }
+
+export type TLeadsGroup = {
+  id: number
+  name: string
+}
