@@ -22,6 +22,12 @@ module.exports = {
       'import-leads',
       'leads-list',
     ],
+    '/cabinet/leads/import-instructions': [
+      'user',
+      'routing',
+      'validation',
+      'import-leads',
+    ],
     '/cabinet/agents/create': ['user', 'routing', 'agents'],
     '/cabinet/settings/account-management': ['user', 'routing', 'settings', 'validation'],
     '/cabinet/settings/activity-log': ['user', 'routing', 'activity-log', 'validation'],

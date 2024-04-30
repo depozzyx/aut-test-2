@@ -13,7 +13,7 @@ import {
 } from '../constants'
 
 const Cell = styled.div<TBodyCellProps>(
-  ({ isFirstCell, isEndCell, isLastRow, hasCollapseRow, theme, ...props }) => {
+  ({ isFirstCell, isEndCell, isLastRow, hasCollapseRow, theme, bg, ...props }) => {
     const BORDER = `${BORDER_WIDTH} solid ${theme.palette.main11}`
 
     const marginBottom =
@@ -55,7 +55,7 @@ const Cell = styled.div<TBodyCellProps>(
       /* border-bottom: ${hasCollapseRow ? '0' : BORDER};
       border-top: ${BORDER}; */
       white-space: ${props.whiteSpace};
-      background-color: ${theme.palette.base3};
+      background-color: ${theme.palette[bg ?? 'base3']};
       height: 46px;
     `
   },
