@@ -35,7 +35,7 @@ export const SignIn: FC = () => {
   })
 
   return (
-    <AuthFormCard maxWidth={332}>
+    <AuthFormCard maxWidth={356} padding="32px 40px">
       <form onSubmit={formik.handleSubmit} autoComplete="off">
         <Flex direction="column" align="center" justify="center" gap={24} fullWidth>
           <Text tag="h4" variant="f4">
@@ -50,7 +50,7 @@ export const SignIn: FC = () => {
                 placeholder={t('inputs:placeholder.email')}
                 id="email"
                 formik={formik}
-                width={246}
+                width={256}
                 startAdornment={<EmailIcon width="24px" height="24px" />}
               />
               {!formik.errors.email && (
@@ -67,7 +67,7 @@ export const SignIn: FC = () => {
               placeholder={t('inputs:placeholder.password')}
               id="password"
               formik={formik}
-              width={246}
+              width={256}
               startAdornment={<LockIcon width="24px" height="24px" />}
             />
           </Flex>
