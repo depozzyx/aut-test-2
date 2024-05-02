@@ -27,6 +27,7 @@ export type TInit = {
   campaignList: TCampaign[] | []
   meta: unknown
   pagination: TPagination
+  searchTerm?: string
 }
 
 const init: TInit = {
@@ -40,6 +41,7 @@ const init: TInit = {
     limit: 10,
     total: 1,
   },
+  searchTerm: '',
 }
 
 const campaigns = createSlice({
@@ -61,6 +63,9 @@ const campaigns = createSlice({
     setActiveCampaigns(state, action: PayloadAction<TInit['activeCampaigns']>) {
       state.activeCampaigns = action.payload
     },
+    setSearchTerm(state, action: PayloadAction<TInit['searchTerm']>) {
+      state.searchTerm = action.payload
+    },
     reset: () => init,
   },
 })
@@ -72,6 +77,7 @@ export const {
   setSelectedId,
   setActiveCampaigns,
   setCampaignList,
+  setSearchTerm,
   reset,
 } = campaigns.actions
 
@@ -145,6 +151,11 @@ export const selectCampaignsNames = createSelector(
       label: name,
       value: id.toString(),
     })),
+)
+
+export const selectSearchTerm = createSelector(
+  selectCampaigns,
+  ({ searchTerm }) => searchTerm,
 )
 
 export default campaigns.reducer

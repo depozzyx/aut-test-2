@@ -24,6 +24,8 @@ import {
   selectCampaignsPagination,
   reset,
   asyncGetCampaignsList,
+  selectSearchTerm,
+  asyncGetActiveCampaigns,
 } from './store/campaigns'
 import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
 import { CreateCampaignModal } from './containers/CreateCampaignModal'
@@ -36,16 +38,18 @@ export const CampaignsList = (): JSX.Element => {
   const { modalState, setModal } = useModals()
   const {
     pagination: { total, page, limit },
+    searchTerm,
   } = select(
     createStructuredSelector({
       pagination: selectCampaignsPagination,
+      searchTerm: selectSearchTerm,
     }),
     shallowEqual,
   )
 
   useEffect(() => {
-    dispatch(asyncGetCampaignsList({ page, limit, orderBy: 'ASC' }))
-  }, [page])
+    dispatch(asyncGetCampaignsList({ page, limit, orderBy: 'ASC', search: searchTerm }))
+  }, [page, searchTerm])
 
   useUnmount(() => {
     dispatch(reset())
@@ -59,6 +63,10 @@ export const CampaignsList = (): JSX.Element => {
     modalState?.modalName === MODAL_NAMES.REVIEW_CAMPAIGN && modalState.isOpen
   const createModalIsOpen =
     modalState?.modalName === MODAL_NAMES.CREATE_CAMPAIGN && modalState.isOpen
+
+  const changePageHandler = useCallback((page: number) => {
+    dispatch(asyncGetActiveCampaigns({ page, limit, orderBy: 'ASC', search: searchTerm }))
+  }, [])
 
   return (
     <>
@@ -85,6 +93,7 @@ export const CampaignsList = (): JSX.Element => {
           <Pagination
             lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
             currentPage={page}
+            onChange={changePageHandler}
           />
         </PaginationContainer>
       </Container>

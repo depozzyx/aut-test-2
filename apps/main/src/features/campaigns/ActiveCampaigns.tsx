@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
@@ -21,6 +21,7 @@ import {
   reset,
   selectCampaignsPagination,
   asyncGetActiveCampaigns,
+  selectSearchTerm,
 } from './store/campaigns'
 import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
 
@@ -31,16 +32,18 @@ export const ActiveCampaigns = (): JSX.Element => {
 
   const {
     pagination: { total, page, limit },
+    searchTerm,
   } = select(
     createStructuredSelector({
       pagination: selectCampaignsPagination,
+      searchTerm: selectSearchTerm,
     }),
     shallowEqual,
   )
 
   useEffect(() => {
-    dispatch(asyncGetActiveCampaigns({ page, limit, orderBy: 'ASC' }))
-  }, [page])
+    dispatch(asyncGetActiveCampaigns({ page, limit, orderBy: 'ASC', search: searchTerm }))
+  }, [page, searchTerm])
 
   useUnmount(() => {
     dispatch(reset())
@@ -54,6 +57,10 @@ export const ActiveCampaigns = (): JSX.Element => {
   const createCampaignHandler = () => {
     setModal({ modalName: MODAL_NAMES.CREATE_CAMPAIGN, isOpen: true })
   }
+
+  const changePageHandler = useCallback((page: number) => {
+    dispatch(asyncGetActiveCampaigns({ page, limit, orderBy: 'ASC', search: searchTerm }))
+  }, [])
 
   return (
     <>
@@ -81,6 +88,7 @@ export const ActiveCampaigns = (): JSX.Element => {
           <Pagination
             lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
             currentPage={page}
+            onChange={changePageHandler}
           />
         </Flex>
       </Flex>
