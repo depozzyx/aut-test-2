@@ -14,4 +14,5 @@ export type TModalMessage = {
   disableCloseSubmit?: boolean
   cardProps?: TCardProps
   submitStyles?: TStylesProps['styles']
+  children?: React.ReactNode
 } & TModalProps

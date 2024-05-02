@@ -207,7 +207,7 @@ export const Input: React.FC<TInputProps> = ({
   )
 
   return (
-    <S.Wrapper width={props.width}>
+    <S.Wrapper width={props.width} maxWidth={props.maxWidth}>
       <Label
         {...label}
         error={error}

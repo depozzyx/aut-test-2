@@ -47,8 +47,8 @@ export const ForgotPassword: FC = () => {
   return (
     <Flex direction="column" align="center" maxWidth={552} gap={12}>
       <AuthFormCard>
-        <form onSubmit={formik.handleSubmit} autoComplete="off">
-          <Flex direction="column" align="center" justify="center" gap={24}>
+        <form onSubmit={formik.handleSubmit} autoComplete="off" style={{ width: '100%' }}>
+          <Flex direction="column" align="center" justify="center" gap={24} fullWidth>
             <Text tag="h4" variant="f4">
               {t('forgot-password.title')}
             </Text>
@@ -62,7 +62,7 @@ export const ForgotPassword: FC = () => {
               placeholder={t('inputs:placeholder.email')}
               id="email"
               formik={formik}
-              width={246}
+              maxWidth="248px"
               startAdornment={<EmailIcon width="24px" height="24px" />}
             />
             <FilledButton
@@ -70,7 +70,7 @@ export const ForgotPassword: FC = () => {
               size="s"
               width="100%"
               disabled={!formik.isValid || !formik.dirty}
-              styles={{ marginTop: '24px', maxWidth: '246px' }}
+              styles={{ marginTop: '24px', maxWidth: '248px' }}
             >
               {t('forgot-password.action')}
             </FilledButton>

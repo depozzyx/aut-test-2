@@ -5,47 +5,76 @@ import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { selectCreateCampaignFormData } from '@/features/campaigns/store/create-campaign'
+import {
+  selectFormDataForReview,
+  reset,
+  asyncCreateCampaign,
+} from '@/features/campaigns/store/create-campaign'
+import { useCallTime } from '@/features/campaigns/hooks/use-callTime'
+import { useCallFrequency } from '@/features/campaigns/hooks/use-callFrequency'
+import { TGeneratedCallTime } from '@/features/campaigns/constants'
+import { TCampaignTableType } from '@/features/campaigns/types'
 import { Field } from './ReviewFields.styled'
 
-export const ReviewFields = (): JSX.Element => {
+type TProps = {
+  type: TCampaignTableType
+}
+
+const getLabelsSting = (labels: string[]): string => labels.join(', ')
+
+export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
   const { t } = useTranslation('campaigns')
-  const { resetModals, setModal } = useModals()
-  const { select } = useRedux()
-  const formData = select(selectCreateCampaignFormData)
+  const { setModal } = useModals()
+  const { select, dispatch } = useRedux()
+  const formDataForReview = select(selectFormDataForReview)
+
+  const { getCallTimeLabel } = useCallTime()
+  const { getCallFrequencyLabel } = useCallFrequency()
 
   const handleBack = () => {
+    dispatch(reset())
     setModal({ modalName: MODAL_NAMES.CREATE_CAMPAIGN, isOpen: true })
+  }
+
+  const handleCreateCampaign = () => {
+    dispatch(asyncCreateCampaign(type))
+  }
+
+  if (!formDataForReview) {
+    return null
   }
 
   return (
     <Flex direction="column" align="center" gap={48} margin="40px 0 0 0">
       <Flex gap={24} direction="column" width="326px">
-        <Field label={t('create-campaign.campaign-name')} value={formData.name} />
+        <Field
+          label={t('create-campaign.campaign-name')}
+          value={formDataForReview.name}
+        />
         <Field
           label={t('create-campaign.agent-assignment')}
-          value={formData.assignedAgentIds}
+          value={formDataForReview.assignedAgentIds}
         />
         <Field
           label={t('create-campaign.lead-selection')}
-          value={formData.leadSelection}
-        />
-        <Field label={t('create-campaign.creation-date')} value={formData.creationDate} />
-        <Field
-          label={t('create-campaign.scenario-setup')}
-          value={formData.scenarioSetup}
+          value={getLabelsSting(formDataForReview?.leadListIdsLabel)}
         />
         <Field
           label={t('create-campaign.call-frequency')}
-          value={formData.callFrequency}
+          value={getCallFrequencyLabel(formDataForReview.intensity)}
         />
-        <Field label={t('create-campaign.time-for-calls')} value={formData.callTime} />
+        <Field
+          label={t('create-campaign.time-for-calls')}
+          value={getCallTimeLabel(
+            formDataForReview.preferredCallTime as TGeneratedCallTime,
+          )}
+        />
       </Flex>
       <Flex align="center" justify="center" gap={24}>
-        <OutlinedButton onClick={handleBack} width="236px">
+        <OutlinedButton onClick={handleCreateCampaign} width="236px">
           {t('common:submit')}
         </OutlinedButton>
-        <FilledButton onClick={resetModals} width="236px">
+        <FilledButton onClick={handleBack} width="236px">
           {t('common:back')}
         </FilledButton>
       </Flex>

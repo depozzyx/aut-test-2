@@ -1,45 +1,65 @@
 import { Flex } from '@/components/Flex'
 import { useFormik } from 'formik'
 import { useRedux } from '@/hooks/use-redux'
-import * as yup from 'yup'
 import useTranslation from 'next-translate/useTranslation'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
-import { FormikDayPickerInput } from '@peiko/components/inputs/formik-adapters/FormikDayPickerInput'
 import useModals from '@/features/common/modals/hooks/use-modals'
-import { setFormData } from '@/features/campaigns/store/edit-campaign'
+import { asyncEditCampaign } from '@/features/campaigns/store/edit-campaign'
+import { TCampaignTableType } from '@/features/campaigns/types'
+import { TGeneratedCallTime } from '@/features/campaigns/constants'
+import { useCallTime } from '@/features/campaigns/hooks/use-callTime'
+import { useCallFrequency } from '@/features/campaigns/hooks/use-callFrequency'
+import { createCampaignValidationSchema } from '@/features/campaigns/containers/CreateCampaignModal/components/CreateCampaignForm/validationSchema'
+import { FormikMultiSelect } from '@/components/formik-wrappers/FormikMultiSelect'
+import { createStructuredSelector } from 'reselect'
+import {
+  asyncGetLeadListCatalog,
+  selectLeadListCatalogAsOptions,
+  selectLeadListPagination,
+} from '@/features/leads/store/lead-list'
+import { shallowEqual } from 'react-redux'
+import { useEffect } from 'react'
 
-interface IinitialValues {
-  name: string
-  creationDate: string
-  callFrequency: string
-  responseRate: string
-  status: string
-  conversionRate: string
+type TProps = {
+  type: TCampaignTableType
 }
 
-const initialValues: IinitialValues = {
-  name: 'Campaign Name 123',
-  creationDate: '',
-  callFrequency: 'Every hour',
-  responseRate: '20%',
-  status: 'Paused',
-  conversionRate: '20%',
-}
-
-export const EditCampaignForm = (): JSX.Element => {
+export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
   const { t } = useTranslation('campaigns')
   const { resetModals } = useModals()
-  const { dispatch } = useRedux()
+  const { dispatch, select } = useRedux()
+
+  const {
+    pagination: { page, limit },
+    leadListOptions,
+  } = select(
+    createStructuredSelector({
+      pagination: selectLeadListPagination,
+      leadListOptions: selectLeadListCatalogAsOptions,
+    }),
+    shallowEqual,
+  )
+
+  useEffect(() => {
+    dispatch(asyncGetLeadListCatalog({ page, limit, orderBy: 'ASC' }))
+  }, [])
+
+  const { callTimeOptions } = useCallTime()
+  const { callFrequencyOptions } = useCallFrequency()
 
   const formik = useFormik({
-    initialValues,
-    validationSchema: yup.object().shape({}),
+    initialValues: {
+      name: '',
+      intensity: callFrequencyOptions[0].value,
+      intensityPerAgent: callFrequencyOptions[0].value,
+      preferredCallTime: callTimeOptions[0].value as TGeneratedCallTime,
+    },
+    validationSchema: createCampaignValidationSchema,
     onSubmit: (formData) => {
-      dispatch(setFormData({ formData, formik }))
-      resetModals()
+      dispatch(asyncEditCampaign(formData, type))
     },
   })
 
@@ -57,55 +77,42 @@ export const EditCampaignForm = (): JSX.Element => {
               width={326}
               styles={{ padding: '0 14px' }}
             />
-            <FormikDayPickerInput
+            <FormikMultiSelect
               formik={formik}
-              name="creationDate"
-              label={{ label: t('edit-campaign.creation-date') }}
+              name="assignedAgentIds"
+              label={{ label: t('edit-campaign.agent-assignment') }}
               width={326}
               size="s"
-              styles={{ padding: '0 6px 0 16px' }}
+              options={[]}
             />
-            <FormikSelect
+            <FormikMultiSelect
               formik={formik}
-              name="callFrequency"
-              label={{ label: t('edit-campaign.call-frequency') }}
+              name="leadListIds"
+              label={{ label: t('edit-campaign.lead-selection') }}
+              size="s"
               width={326}
-              options={[
-                { value: 'Every hour', label: 'Every hour' },
-                { value: 'Every day', label: 'Every day' },
-              ]}
+              options={leadListOptions}
             />
           </Flex>
           <Flex direction="column" gap={16} maxWidth="326px" width="100%">
             <FormikSelect
               formik={formik}
-              name="responseRate"
-              label={{ label: t('edit-campaign.response-rate') }}
+              name="intensity"
+              label={{ label: t('edit-campaign.call-frequency') }}
               width={326}
-              options={[
-                { value: '20%', label: '20%' },
-                { value: '30%', label: '30%' },
-              ]}
+              options={callFrequencyOptions}
+              onChange={(option) => {
+                if (!option) return
+                formik.setFieldValue('intensity', option.value)
+                formik.setFieldValue('intensityPerAgent', option.value)
+              }}
             />
             <FormikSelect
               formik={formik}
-              name="status"
-              label={{ label: t('edit-campaign.status') }}
+              name="preferredCallTime"
+              label={{ label: t('create-campaign.time-for-calls') }}
               width={326}
-              options={[
-                { value: 'Paused', label: 'Paused' },
-                { value: 'Active', label: 'Active' },
-              ]}
-            />
-            <FormikSelect
-              formik={formik}
-              name="conversionRate"
-              label={{ label: t('edit-campaign.conversion-rate') }}
-              width={326}
-              options={[
-                { value: '20%', label: '20%' },
-                { value: '30%', label: '30%' },
-              ]}
+              options={callTimeOptions}
             />
           </Flex>
         </Flex>

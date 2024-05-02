@@ -1,0 +1,1 @@
+export { FormikMultiSelect } from './FormikMultiSelect'

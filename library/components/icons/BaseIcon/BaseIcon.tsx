@@ -21,11 +21,11 @@ const TRANSITION_DURATION = '200ms'
 const DEFAULT_SIZE: TDimensions['size'] = 'm'
 
 export const getSize = (size: TDimensions['size']): string => {
-  if (size === 'xs') return '12px'
-  if (size === 's') return '20px'
+  if (size === 's') return '16px'
   if (size === 'm') return '24px'
   if (size === 'ml') return '32px'
-  if (size === 'l') return '40px'
+  if (size === 'l') return '36px'
+  if (size === 'xl') return '40px'
   return '20px'
 }
 

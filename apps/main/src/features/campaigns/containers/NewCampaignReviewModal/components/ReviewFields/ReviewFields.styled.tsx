@@ -3,6 +3,7 @@ import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
 
 const FieldWrapper = styled(Flex)`
+  height: 48px;
   border-bottom: 1px solid ${({ theme }) => theme.palette.main21};
 `
 

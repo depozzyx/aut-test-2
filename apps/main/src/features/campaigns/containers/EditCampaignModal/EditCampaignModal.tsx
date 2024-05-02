@@ -3,9 +3,14 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
 import { Text } from '@peiko/components/Text'
+import { TCampaignTableType } from '@/features/campaigns/types'
 import { EditCampaignForm } from './components/EditCampaignForm'
 
-export const EditCampaignModal = (): JSX.Element => {
+type TProps = {
+  type: TCampaignTableType
+}
+
+export const EditCampaignModal = ({ type }: TProps): JSX.Element => {
   const { t } = useTranslation('campaigns')
   const { modalState, resetModals } = useModals()
 
@@ -22,7 +27,7 @@ export const EditCampaignModal = (): JSX.Element => {
       maxWidth="756px"
       containerWidth="100%"
     >
-      <EditCampaignForm />
+      <EditCampaignForm type={type} />
     </ModalMessage>
   )
 }
