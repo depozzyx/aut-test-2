@@ -1,11 +1,11 @@
+import { TPaginatedRes } from '@/types/entities/pagination'
+import { TLeadsGroup, TLeadsList } from '@/types/leads/leads-list'
 import { api } from '../instance'
 import { TAxiosResponse } from '../types'
 import {
   TImportReq,
   TImportLeadsRes,
   TLeadsListReq,
-  TLeadsListRes,
-  TLeadsGroupRes,
   TLeadsGroupReq,
   TCreateLeadGroupReq,
   TCreateLeadGroupRes,
@@ -22,10 +22,10 @@ const importLeads = (
     },
   })
 
-const leadsList = (params: TLeadsListReq): TAxiosResponse<TLeadsListRes> =>
+const leadsList = (params: TLeadsListReq): TAxiosResponse<TPaginatedRes<TLeadsList>> =>
   api.get('/leads', { params })
 
-const leadsGroup = (params: TLeadsGroupReq): TAxiosResponse<TLeadsGroupRes> =>
+const leadsGroup = (params: TLeadsGroupReq): TAxiosResponse<TPaginatedRes<TLeadsGroup>> =>
   api.get('/lead-list', { params })
 
 const createLeadGroup = (
