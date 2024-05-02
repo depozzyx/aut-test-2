@@ -3,7 +3,7 @@ import { TActivityLogsReq } from '@/api-rest/activity-logs/types'
 import { handleRestError } from '@/features/common/error'
 import { useRedux } from '@/hooks/use-redux'
 import { TPagination } from '@/types/entities/pagination'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { groupLogsByDate } from '../utils/groupLogsByDate'
 import { GroupedLogs } from '../types/activity-log'
 
@@ -11,7 +11,7 @@ export const useActivityLogs = (): {
   getActivityLogsAsync: (params: TActivityLogsReq) => void
   logs: GroupedLogs[]
   pagination: TPagination
-  loading: boolean | undefined
+  loading: boolean
 } => {
   const { dispatch } = useRedux()
   const [logs, setLogs] = useState<GroupedLogs[]>([])
@@ -36,14 +36,6 @@ export const useActivityLogs = (): {
       setLoading(false)
     }
   }
-
-  useEffect(() => {
-    getActivityLogsAsync({
-      page: pagination.page,
-      limit: pagination.limit,
-      orderBy: 'DESC',
-    })
-  }, [])
 
   return { getActivityLogsAsync, logs, pagination, loading }
 }

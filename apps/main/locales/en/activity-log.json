@@ -1,3 +1,51 @@
 {
-  "tabs": { "general": "General", "business": "Business" }
+  "tabs": { "general": "General", "business": "Business" },
+  "admin": "Admin",
+  "noLogs": "No logs to display",
+  "logs": {
+    "user": {
+      "create": "{{value1}} has created an account for {{value2}}",
+      "update": "{{value1}} has updated an account for {{value2}}",
+      "delete": "{{value1}} has deleted an account for {{value2}}",
+      "create-api-key": "{{value1}} created api key",
+      "delete-api-key": "{{value1}} deleted api key"
+    },
+    "campaign": {
+      "campaign-start": "{{value1}} has started an campaign: {{value2}}",
+      "campaign-stop": "{{value1}} has stopped an campaign: {{value2}}",
+      "create": "{{value1}} has created an campaign: {{value2}}",
+      "update": "{{value1}} has updated an campaign: {{value2}}",
+      "delete": "{{value1}} has deleted an campaign: {{value2}}"
+    },
+    "activity-log": {
+      "export-activity-log": "{{value1}} exported activity log"
+    },
+    "api-key": {
+      "create-api-key": "{{value1}} created api key",
+      "delete-api-key": "{{value1}} deleted api key"
+    },
+    "lead": {
+      "import-lead": "{{value1}} imported leads"
+    },
+    "default": "Unknown message"
+  },
+  "filters": {
+    "sort_by": "Sort by",
+    "filter": "Filters",
+    "users": "Users",
+    "reset": "Reset all filters"
+  },
+  "filterNames": {
+    "create": "Creation",
+    "update": "Modification",
+    "delete": "Deletion",
+    "campaign-start": "Campaign start",
+    "campaign-stop": "Campaign stop",
+    "export-activity-log": "Export Activity Log",
+    "create-api-key": "Creation of the API key",
+    "delete-api-key": "Deletion of the API key",
+    "import-lead": "Import lead",
+    "DESC": "Newest",
+    "ASC": "Oldest"
+  }
 }
