@@ -7,6 +7,7 @@ export type TActiveCampaignsReq = {
   status?: 'active' | 'pause' | 'complete'
   search?: string
   sortBy?: 'createdAt' | 'workStatus' | 'name'
+  name?: string
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TActiveCampaignsRes = any

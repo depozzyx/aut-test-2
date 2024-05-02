@@ -22,6 +22,7 @@ import {
   selectCampaignsPagination,
   asyncGetActiveCampaigns,
   selectSearchTerm,
+  selectFilterCampaignName,
 } from './store/campaigns'
 import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
 
@@ -33,17 +34,27 @@ export const ActiveCampaigns = (): JSX.Element => {
   const {
     pagination: { total, page, limit },
     searchTerm,
+    filterCampaignName,
   } = select(
     createStructuredSelector({
       pagination: selectCampaignsPagination,
       searchTerm: selectSearchTerm,
+      filterCampaignName: selectFilterCampaignName,
     }),
     shallowEqual,
   )
 
   useEffect(() => {
-    dispatch(asyncGetActiveCampaigns({ page, limit, orderBy: 'ASC', search: searchTerm }))
-  }, [page, searchTerm])
+    dispatch(
+      asyncGetActiveCampaigns({
+        page,
+        limit,
+        orderBy: 'ASC',
+        search: searchTerm,
+        name: filterCampaignName,
+      }),
+    )
+  }, [page, searchTerm, filterCampaignName])
 
   useUnmount(() => {
     dispatch(reset())
@@ -70,7 +81,7 @@ export const ActiveCampaigns = (): JSX.Element => {
           <Flex gap={16} align="center" width="100%">
             <CampaignSearchField />
             <Flex>
-              <CampaignsSelect />
+              <CampaignsSelect type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
             </Flex>
           </Flex>
           <FilledButton

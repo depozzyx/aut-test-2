@@ -28,6 +28,7 @@ export type TInit = {
   meta: unknown
   pagination: TPagination
   searchTerm?: string
+  filterCampaignName?: string
 }
 
 const init: TInit = {
@@ -42,6 +43,7 @@ const init: TInit = {
     total: 1,
   },
   searchTerm: '',
+  filterCampaignName: '',
 }
 
 const campaigns = createSlice({
@@ -66,6 +68,9 @@ const campaigns = createSlice({
     setSearchTerm(state, action: PayloadAction<TInit['searchTerm']>) {
       state.searchTerm = action.payload
     },
+    setFilterCampaignName(state, action: PayloadAction<TInit['filterCampaignName']>) {
+      state.filterCampaignName = action.payload
+    },
     reset: () => init,
   },
 })
@@ -78,6 +83,7 @@ export const {
   setActiveCampaigns,
   setCampaignList,
   setSearchTerm,
+  setFilterCampaignName,
   reset,
 } = campaigns.actions
 
@@ -144,18 +150,35 @@ export const selectCampaignsListForView = createSelector(
   (campaignList) => campaignList,
 )
 
-export const selectCampaignsNames = createSelector(
-  selectActiveCampaigns,
-  (activeCampaigns) =>
-    activeCampaigns.map(({ name, id }) => ({
-      label: name,
-      value: id.toString(),
-    })),
-)
+type TCampaignName = {
+  label: string
+  value: string
+}
+
+export const selectCampaignsNames = (
+  type: TCampaignTableType,
+): TSelector<TCampaignName[]> =>
+  createSelector([selectCampaigns], ({ activeCampaigns, campaignList }) => {
+    if (type === CAMPAIGN_TABLE_TYPES.ACTIVE) {
+      return activeCampaigns.map((campaign) => ({
+        label: campaign.name,
+        value: campaign.name,
+      }))
+    }
+    return campaignList.map((campaign) => ({
+      label: campaign.name,
+      value: campaign.name,
+    }))
+  })
 
 export const selectSearchTerm = createSelector(
   selectCampaigns,
   ({ searchTerm }) => searchTerm,
+)
+
+export const selectFilterCampaignName = createSelector(
+  selectCampaigns,
+  ({ filterCampaignName }) => filterCampaignName,
 )
 
 export default campaigns.reducer

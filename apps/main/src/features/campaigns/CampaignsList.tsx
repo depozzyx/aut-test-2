@@ -12,6 +12,7 @@ import { useRedux } from '@/hooks/use-redux'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { StatusFilter } from '@/components/StatusFilter'
 import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
+import { CampaignsSelect } from '@/features/campaigns/containers/CampaignSelect'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import {
   Container,
@@ -26,6 +27,7 @@ import {
   asyncGetCampaignsList,
   selectSearchTerm,
   asyncGetActiveCampaigns,
+  selectFilterCampaignName,
 } from './store/campaigns'
 import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
 import { CreateCampaignModal } from './containers/CreateCampaignModal'
@@ -39,17 +41,27 @@ export const CampaignsList = (): JSX.Element => {
   const {
     pagination: { total, page, limit },
     searchTerm,
+    filterCampaignName,
   } = select(
     createStructuredSelector({
       pagination: selectCampaignsPagination,
       searchTerm: selectSearchTerm,
+      filterCampaignName: selectFilterCampaignName,
     }),
     shallowEqual,
   )
 
   useEffect(() => {
-    dispatch(asyncGetCampaignsList({ page, limit, orderBy: 'ASC', search: searchTerm }))
-  }, [page, searchTerm])
+    dispatch(
+      asyncGetCampaignsList({
+        page,
+        limit,
+        orderBy: 'ASC',
+        search: searchTerm,
+        name: filterCampaignName,
+      }),
+    )
+  }, [page, searchTerm, filterCampaignName])
 
   useUnmount(() => {
     dispatch(reset())
@@ -74,6 +86,7 @@ export const CampaignsList = (): JSX.Element => {
         <Panel>
           <Flex gap={16} align="center" width="100%">
             <CampaignSearchField />
+            <CampaignsSelect type={CAMPAIGN_TABLE_TYPES.LIST} />
             <StatusFilter />
           </Flex>
           <FilledButton
