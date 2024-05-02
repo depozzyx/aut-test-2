@@ -41,7 +41,7 @@ export const useActivityLogs = (): {
     getActivityLogsAsync({
       page: pagination.page,
       limit: pagination.limit,
-      orderBy: 'ASC',
+      orderBy: 'DESC',
     })
   }, [])
 
