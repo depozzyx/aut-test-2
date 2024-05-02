@@ -77,9 +77,13 @@ const iconSize = (size?: TInputSizes['size']) => {
   }
 }
 
-export const Wrapper = styled.div<{ width: CSSProperties['width'] }>`
+export const Wrapper = styled.div<{
+  width: CSSProperties['width']
+  maxWidth: CSSProperties['maxWidth']
+}>`
   position: relative;
   width: ${({ width }) => (width ? formatCssProperty(width) : '100%')};
+  max-width: ${({ maxWidth }) => maxWidth};
 `
 
 export const InputContainer = styled.div<TInputCont>((props) => {

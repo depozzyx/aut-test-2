@@ -10,7 +10,7 @@ import { normalizePage } from './utils/normalize-page'
 
 export const Pagination: React.FC<TPagination> = ({
   ssr = false,
-  size = 'sm',
+  size = 'm',
   currentPage = 0,
   lastPage = 0,
   onChange,

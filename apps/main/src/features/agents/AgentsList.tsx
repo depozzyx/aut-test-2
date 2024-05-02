@@ -16,11 +16,7 @@ import {
   TableContainer,
   PaginationContainer,
 } from './styles/AgentsList.styled'
-import {
-  selectAgentsPagination,
-  selectAgentsList,
-  setSelectedId,
-} from './store/agents-list'
+import { selectAgentsPagination, selectAgentsList, setSelectedId } from './store/agents'
 import { AgentsListTable } from './containers/AgentsListTable'
 import { DeleteAgentModal } from './containers/DeleteAgentModal'
 import { EditAgentModal } from './containers/EditAgentModal'

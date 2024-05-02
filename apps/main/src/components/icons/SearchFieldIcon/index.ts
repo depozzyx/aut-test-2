@@ -1,0 +1,1 @@
+export { SearchFieldIcon } from './SearchFieldIcon'

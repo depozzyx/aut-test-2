@@ -17,6 +17,7 @@ export const AuthFormCard: FC<IAuthCardProps> = ({ children, maxWidth, padding }
       maxWidth={maxWidth}
       bgColor="base"
       boxShadow={theme.shadow.table}
+      fullWidth
       styles={{
         display: 'flex',
         flexDirection: 'column',

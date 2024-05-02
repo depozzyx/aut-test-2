@@ -48,7 +48,7 @@ export const ResetPasswordForm: FC = () => {
             label={{ label: t('inputs:new-password') }}
             placeholder={t('inputs:placeholder.new-password')}
             formik={formik}
-            width={246}
+            maxWidth="248px"
             startAdornment={<LockIcon width="24px" height="24px" />}
           />
           <FormikInput
@@ -59,14 +59,14 @@ export const ResetPasswordForm: FC = () => {
             label={{ label: t('inputs:repeat-password') }}
             placeholder={t('inputs:placeholder.repeat-password')}
             formik={formik}
-            width={246}
+            maxWidth="248px"
             startAdornment={<LockIcon width="24px" height="24px" />}
           />
           <FilledButton
             type="submit"
             size="s"
             width="100%"
-            styles={{ marginTop: '24px', maxWidth: '246px' }}
+            styles={{ marginTop: '24px', maxWidth: '248px' }}
             disabled={!formik.isValid || !formik.dirty}
           >
             {t('common:confirm')}

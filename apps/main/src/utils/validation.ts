@@ -22,6 +22,19 @@ const singleCheckbox = yup
   .isTrue('validation:required')
   .required('validation:required')
 
+const requiredNumber = yup.number().required('validation:required')
+
+// const requiredStringOrNumber = yup
+//   .mixed()
+//   .test(
+//     'is-string-or-number',
+//     'validation:required',
+//     (value) =>
+//       (typeof value === 'string' && value.trim() !== '') ||
+//       (typeof value === 'number' && !Number.isNaN(value)),
+//   )
+//   .required('validation:required')
+
 export const validation = {
   string,
   number,
@@ -31,4 +44,5 @@ export const validation = {
   password,
   repeatPassword,
   singleCheckbox,
+  requiredNumber,
 }

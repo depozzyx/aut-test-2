@@ -1,6 +1,4 @@
-import styled, { css } from 'styled-components'
-import { FilledIconButton } from '@peiko/components/buttons/FilledIconButton'
-import { FiltersIcon } from '@peiko/components/icons/FiltersIcon'
+import styled from 'styled-components'
 
 export const Container = styled.div`
   width: 100%;
@@ -15,21 +13,6 @@ export const Panel = styled.div`
   display: flex;
   justify-content: space-between;
 `
-
-export const CustomFilterBtn = styled((props) => (
-  <FilledIconButton size="ml" iconColor="main3" {...props}>
-    <FiltersIcon />
-  </FilledIconButton>
-))(
-  ({ theme }) => css`
-    border-radius: 4px !important;
-    background-color: ${theme.palette.base};
-
-    &:hover {
-      background-color: ${theme.palette.main20};
-    }
-  `,
-)
 
 export const TableContainer = styled.div`
   display: flex;

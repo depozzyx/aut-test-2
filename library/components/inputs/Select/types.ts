@@ -8,7 +8,7 @@ export type TSelectOption = {
   /**
    * The value of the option.
    */
-  readonly value: string
+  readonly value: string | number
   /**
    * The label of the option.
    */
