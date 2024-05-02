@@ -7,7 +7,7 @@
     "library/*"
   ],
   "scripts": {
-    "dev-main": "ts-node scripts/combine-lcales/main && yarn workspace main dev -p 3001",
+    "dev-main": "ts-node scripts/combine-locales/main && yarn workspace main dev -p 3001",
     "build-main": "ts-node scripts/combine-locales/main && yarn workspace main build",
     "start-main": "yarn workspace main next start -p 3100",
     "storybook-main": "yarn workspace main storybook dev -p 6006",

@@ -14,6 +14,7 @@ import {
   asyncGetActiveCampaigns,
   asyncGetCampaignsList,
 } from '@/features/campaigns/store/campaigns'
+import { notificationActions } from '@/features/common/notifications/store'
 
 export type TInit = {
   isLoading: boolean
@@ -103,6 +104,14 @@ export const asyncCreateCampaign =
       } else {
         dispatch(asyncGetCampaignsList({ page, limit, orderBy: 'ASC' }))
       }
+
+      dispatch(
+        notificationActions.setNotification({
+          key: 'notifications:campaign.create-success',
+          status: 'success',
+          values: { campaignName: formData?.name },
+        }),
+      )
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {

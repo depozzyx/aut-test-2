@@ -63,7 +63,8 @@ export const CampaignListTable = (): JSX.Element => {
     dispatch(asyncUpdateCampaignStatus(id, currentStatus))
   }, [])
 
-  const handleEditCampaign = useCallback(() => {
+  const handleEditCampaign = useCallback((id: number) => {
+    dispatch(setSelectedId(id))
     setModal({ modalName: MODAL_NAMES.EDIT_CAMPAIGN, isOpen: true })
   }, [])
 
@@ -98,7 +99,10 @@ export const CampaignListTable = (): JSX.Element => {
         />
       ),
       edit: (
-        <IconButton onClick={() => handleEditCampaign()} iconColor="transparent">
+        <IconButton
+          onClick={() => handleEditCampaign(campaign.id)}
+          iconColor="transparent"
+        >
           <EditIcon width="24px" height="24px" />
         </IconButton>
       ),

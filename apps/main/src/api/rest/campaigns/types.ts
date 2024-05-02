@@ -23,4 +23,4 @@ export type TCreateCampaignReq = {
 
 export type TCreateCampaignRes = any
 
-export type TEditCampaignReq = TCreateCampaignReq
+export type TEditCampaignReq = TCreateCampaignReq & { id: number }

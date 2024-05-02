@@ -88,7 +88,7 @@ export const CampaignsList = (): JSX.Element => {
           />
         </PaginationContainer>
       </Container>
-      <EditCampaignModal />
+      <EditCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
       <DeleteCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
       {createModalIsOpen && <CreateCampaignModal />}
       {reviewModalIsOpen && <NewCampaignReviewModal type={CAMPAIGN_TABLE_TYPES.LIST} />}
