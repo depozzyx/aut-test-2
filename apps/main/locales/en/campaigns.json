@@ -41,7 +41,7 @@
         "title": "Review New Campaign"
     },
     "active-campaigns": "Active Campaigns",
-    "eampaign-effectiveness": "Campaign Effectiveness",
+    "campaign-effectiveness": "Campaign Effectiveness",
     "active-campaigns-headers": {
         "campaign-name": "Campaign Name",
         "creation-date": "Creation Date",

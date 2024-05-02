@@ -13,11 +13,12 @@ import { handleRestError } from '@/features/common/error'
 import {
   TActiveCampaign,
   TCampaign,
+  TCampaignStatus,
   TCampaignTableType,
 } from '@/features/campaigns/types'
 import { notificationActions } from '@/features/common/notifications/store'
 import { modalsActions } from '@/features/common/modals/store'
-import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
+import { CAMPAIGN_STATUSES, CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 
 export type TInit = {
   isLoading: boolean
@@ -60,17 +61,6 @@ const campaigns = createSlice({
     setActiveCampaigns(state, action: PayloadAction<TInit['activeCampaigns']>) {
       state.activeCampaigns = action.payload
     },
-    setCampaignStatus(state, action: PayloadAction<TInit['selectedId']>) {
-      state.campaignList = state.campaignList.map((campaign) => {
-        if (campaign.id === action.payload) {
-          if (campaign.status === 'active') {
-            return { ...campaign, status: 'pause' } // Change "paused" to "pause"
-          }
-          return { ...campaign, status: 'active' }
-        }
-        return campaign
-      })
-    },
     reset: () => init,
   },
 })
@@ -80,7 +70,6 @@ export const {
   setIsLoading,
   setPagination,
   setSelectedId,
-  setCampaignStatus,
   setActiveCampaigns,
   setCampaignList,
   reset,
@@ -252,5 +241,51 @@ export const asyncRemoveCampaign =
     } finally {
       dispatch(setIsLoading(false))
       dispatch(modalsActions.resetModalsState())
+    }
+  }
+
+export const asyncUpdateCampaignStatus =
+  (campaignId: number, currentStatus: TCampaignStatus): TAsyncAction =>
+  async (dispatch, getState) => {
+    try {
+      dispatch(setIsLoading(true))
+      const { campaignList, pagination } = getState().campaigns
+      const { name } = campaignList.find(({ id }) => id === campaignId) as TCampaign
+
+      if (currentStatus === CAMPAIGN_STATUSES.ACTIVE) {
+        await apiCampaigns.stopCampaign({ id: campaignId.toString() })
+        dispatch(
+          notificationActions.setNotification({
+            key: 'notifications:campaign.paused',
+            status: 'success',
+            values: { campaignName: name },
+          }),
+        )
+      } else {
+        await apiCampaigns.startCampaign({ id: campaignId.toString() })
+        dispatch(
+          notificationActions.setNotification({
+            key: 'notifications:campaign.active',
+            status: 'success',
+            values: { campaignName: name },
+          }),
+        )
+      }
+
+      const params = {
+        page: pagination.page,
+        limit: pagination.limit,
+        orderBy: 'ASC',
+      }
+
+      getCurrentCampaigns({
+        type: CAMPAIGN_TABLE_TYPES.LIST,
+        dispatch,
+        params: params as TActiveCampaignsReq,
+      })
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    } finally {
+      dispatch(setIsLoading(false))
     }
   }

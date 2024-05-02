@@ -13,6 +13,7 @@ import { THeader } from '@peiko/components/Table/types'
 import { useRedux } from '@/hooks/use-redux'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { TCampaignStatus } from '@/features/campaigns/types'
 import { InfoColumn } from '../../components/InfoColumn'
 import { StatusChip } from '../../components/StatusChip'
 import { ActionBtn } from '../../components/ActionBtn'
@@ -20,7 +21,7 @@ import {
   selectIsLoading,
   selectCampaignsListForView,
   setSelectedId,
-  setCampaignStatus,
+  asyncUpdateCampaignStatus,
 } from '../../store/campaigns'
 import { formatCreatedAt } from '../../utils/formatCreateAt'
 
@@ -58,8 +59,8 @@ export const CampaignListTable = (): JSX.Element => {
     setModal({ modalName: MODAL_NAMES.DELETE_CAMPAIGN, isOpen: true })
   }, [])
 
-  const handleAction = useCallback((id: number) => {
-    dispatch(setCampaignStatus(id))
+  const handleAction = useCallback((id: number, currentStatus: TCampaignStatus) => {
+    dispatch(asyncUpdateCampaignStatus(id, currentStatus))
   }, [])
 
   const handleEditCampaign = useCallback(() => {
@@ -91,7 +92,10 @@ export const CampaignListTable = (): JSX.Element => {
         </IconButton>
       ),
       action: (
-        <ActionBtn status={campaign.status} onClick={() => handleAction(campaign.id)} />
+        <ActionBtn
+          status={campaign.status}
+          onClick={() => handleAction(campaign.id, campaign.status)}
+        />
       ),
       edit: (
         <IconButton onClick={() => handleEditCampaign()} iconColor="transparent">
