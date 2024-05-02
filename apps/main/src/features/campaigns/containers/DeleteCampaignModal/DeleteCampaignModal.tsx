@@ -8,31 +8,34 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useRedux } from '@/hooks/use-redux'
-import useNotification from '@/features/common/notifications/hooks/use-notifications'
-import { selectSelectedCampaign, deleteCampaign } from '../../store/campaigns'
+import { TCampaignTableType } from '../../types'
+import {
+  asyncRemoveCampaign,
+  selectCampaignForDelete,
+  setSelectedId,
+} from '../../store/campaigns'
 
-export const DeleteCampaignModal = (): JSX.Element => {
+type TProps = {
+  type: TCampaignTableType
+}
+
+export const DeleteCampaignModal = ({ type }: TProps): JSX.Element => {
   const { t } = useTranslation('common')
-  const { select, dispatch } = useRedux()
+  const { dispatch, select } = useRedux()
   const { modalState, resetModals } = useModals()
-  const { setNotification } = useNotification()
 
-  const selectedCampaign = select(selectSelectedCampaign)
+  const campaign = select(selectCampaignForDelete(type))
 
   const showModal =
     modalState?.modalName === MODAL_NAMES.DELETE_CAMPAIGN && modalState.isOpen
 
-  const campaignName = 'Campaign name 1'
-
   const handleDelete = () => {
-    if (!selectedCampaign) return
-    dispatch(deleteCampaign(selectedCampaign.id))
+    dispatch(asyncRemoveCampaign(type))
+  }
+
+  const handleClose = () => {
     resetModals()
-    setNotification({
-      key: 'notifications:campaign.success-delete',
-      status: 'success',
-      values: { campaignName: selectedCampaign.name },
-    })
+    dispatch(setSelectedId(null))
   }
 
   const title = (
@@ -44,7 +47,7 @@ export const DeleteCampaignModal = (): JSX.Element => {
           value: <Text tag="span" variant="f2" color="main2" />,
         }}
         values={{
-          campaignName: selectedCampaign?.name || campaignName,
+          campaignName: campaign?.name || '',
         }}
       />
     </Flex>
@@ -55,7 +58,7 @@ export const DeleteCampaignModal = (): JSX.Element => {
       <FilledButton onClick={handleDelete} width="100%">
         {t('delete')}
       </FilledButton>
-      <OutlinedButton onClick={resetModals} width="100%">
+      <OutlinedButton onClick={handleClose} width="100%">
         {t('cancel')}
       </OutlinedButton>
     </Flex>
@@ -65,7 +68,7 @@ export const DeleteCampaignModal = (): JSX.Element => {
     <ModalMessage
       title={title}
       open={showModal}
-      onClose={resetModals}
+      onClose={handleClose}
       status="info"
       containerWidth="100%"
     >

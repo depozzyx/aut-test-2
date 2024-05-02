@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
-import { deepEqual } from '@/utils/deep-equal'
+import { deepEqual } from '@peiko/utils/deep-equal'
 import { Table } from '@peiko/components/Table'
 import { IconButton } from '@peiko/components/buttons/IconButton'
 import { EditIcon } from '@peiko/components/icons/EditIcon'

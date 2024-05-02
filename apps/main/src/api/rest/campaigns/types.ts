@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TPagination } from '@/types/entities/pagination'
+import { TGeneratedCallTime } from '@/features/campaigns/constants'
 
 export type TActiveCampaignsReq = {
   orderBy: 'ASC' | 'DESC'
@@ -12,12 +13,12 @@ export type TActiveCampaignsRes = any
 
 export type TCreateCampaignReq = {
   name: string
-  intencity: number
-  intencityPerAgent: number
-  preferredCallTime: string
-  assignedAgentIds: number[]
-  reserveAgentIds: number[]
-  leadListIds: number[]
+  intensity: number | string
+  intensityPerAgent: number | string
+  preferredCallTime?: TGeneratedCallTime
+  assignedAgentIds?: number[] | []
+  reserveAgentIds?: number[] | []
+  leadListIds?: number[] | []
 }
 
 export type TCreateCampaignRes = any

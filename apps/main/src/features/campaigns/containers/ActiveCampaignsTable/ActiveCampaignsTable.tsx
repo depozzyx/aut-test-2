@@ -1,8 +1,7 @@
-import { useCallback, memo } from 'react'
+import { useCallback } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
-import { deepEqual } from '@/utils/deep-equal'
 import { Flex } from '@/components/Flex'
 import { useRedux } from '@/hooks/use-redux'
 import { Table } from '@peiko/components/Table'
@@ -16,21 +15,23 @@ import useModals from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { InfoColumn } from '../../components/InfoColumn'
 import {
-  selectActiveCampaigns,
+  selectActiveCampaignsForView,
   selectIsLoading,
   setSelectedId,
 } from '../../store/campaigns'
+import { formatCreatedAt } from '../../utils/formatCreateAt'
+import { useCallFrequency } from '../../hooks/use-callFrequency'
 
 type TActiveCampaignsRowKeys =
   | 'name'
   | 'date'
   | 'callVolume'
-  | 'responseRate'
+  | 'callAnswerRate'
   | 'conversionRate'
   | 'edit'
   | 'delete'
 
-export const ActiveCampaignsTable = memo((): JSX.Element => {
+export const ActiveCampaignsTable = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
   const { select, dispatch } = useRedux()
 
@@ -39,10 +40,12 @@ export const ActiveCampaignsTable = memo((): JSX.Element => {
   const { isLoading, data } = select(
     createStructuredSelector({
       isLoading: selectIsLoading,
-      data: selectActiveCampaigns,
+      data: selectActiveCampaignsForView,
     }),
     shallowEqual,
   )
+
+  const { getCallFrequencyLabel } = useCallFrequency()
 
   const handleDelete = useCallback((id: number) => {
     dispatch(setSelectedId(id))
@@ -58,7 +61,7 @@ export const ActiveCampaignsTable = memo((): JSX.Element => {
     { label: t('active-campaigns-headers.campaign-name'), value: 'name' },
     { label: t('active-campaigns-headers.creation-date'), value: 'date' },
     { label: t('active-campaigns-headers.call-volume'), value: 'callVolume' },
-    { label: t('active-campaigns-headers.response-rate'), value: 'responseRate' },
+    { label: t('active-campaigns-headers.response-rate'), value: 'callAnswerRate' },
     { label: t('active-campaigns-headers.conversion-rate'), value: 'conversionRate' },
     { label: t('active-campaigns-headers.edit'), value: 'edit' },
     { label: t('active-campaigns-headers.delete'), value: 'delete' },
@@ -67,9 +70,9 @@ export const ActiveCampaignsTable = memo((): JSX.Element => {
   const rows = data.map((campaign) => ({
     row: {
       name: <InfoColumn title={campaign.name} />,
-      date: <InfoColumn title={campaign.date} />,
-      callVolume: <InfoColumn title={campaign.callVolume} />,
-      responseRate: <InfoColumn title={`${campaign.responseRate}%`} />,
+      date: <InfoColumn title={formatCreatedAt(campaign.createdAt)} />,
+      callVolume: <InfoColumn title={getCallFrequencyLabel(campaign.intensity)} />,
+      callAnswerRate: <InfoColumn title={`${campaign.callAnswerRate}%`} />,
       conversionRate: <InfoColumn title={`${campaign.conversionRate}%`} />,
       edit: (
         <IconButton onClick={() => handleEdit(campaign.id)} iconColor="transparent">
@@ -95,6 +98,4 @@ export const ActiveCampaignsTable = memo((): JSX.Element => {
       />
     </Flex>
   )
-}, deepEqual)
-
-ActiveCampaignsTable.displayName = 'ActiveCampaignsTable'
+}

@@ -19,7 +19,7 @@ const getCampaignList = (
 const editCampaign = (data: TEditCampaignReq): TAxiosResponse<any> =>
   api.post('/campaign', data)
 
-const deleteCampaign = (id: string): TAxiosResponse<any> => api.delete(`/campaign/${id}`)
+const deleteCampaign = (id: number): TAxiosResponse<any> => api.delete(`/campaign/${id}`)
 
 const createCampaign = (data: TCreateCampaignReq): TAxiosResponse<any> =>
   api.post('/campaign', data)

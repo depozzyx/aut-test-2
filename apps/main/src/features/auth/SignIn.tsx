@@ -42,7 +42,7 @@ export const SignIn: FC = () => {
             {t('sign-in.title')}
           </Text>
           <Flex direction="column" align="center" justify="center" gap={16} fullWidth>
-            <Flex direction="column" gap={4} fullWidth>
+            <Flex direction="column" gap={4} maxWidth="248px" fullWidth>
               <FormikInput
                 size="s"
                 name="email"

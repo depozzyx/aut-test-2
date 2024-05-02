@@ -207,6 +207,7 @@ export type TInputProps = {
    * @default 0
    * */
   decimals?: number
+  maxWidth?: string
   startAdornmentStyles?: TStyle
   endAdornmentStyles?: TStyle
 } & TInputSizes &

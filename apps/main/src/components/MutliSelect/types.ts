@@ -1,8 +1,8 @@
 import { ReactElement } from 'react'
-import { SingleValue } from 'react-select'
+import { MultiValue, SingleValue } from 'react-select'
 import { CSSProperties, DefaultTheme } from 'styled-components'
 import { TStylesProps } from '@peiko/styles'
-import { TLabelProps } from '../types'
+import { TLabelProps } from '@peiko/components/inputs/types'
 
 export type TSelectOption = {
   /**
@@ -17,26 +17,17 @@ export type TSelectOption = {
 
 export type TSelectOptions = readonly TSelectOption[]
 
-export type TSelectEvent = SingleValue<TSelectOption>
+export type TSelectEvent = SingleValue<TSelectOption> | MultiValue<TSelectOption>
 
-export type TSelectProps = {
+export type TMultiSelectProps = {
   /**
    * The size of the select
    */
   size?: 's' | 'sm' | 'm' | 'l'
   /**
-   * Specify the placeholder of the inlut select
+   * Specify the placeholder of the input select
    * */
   placeholder?: string
-  /**
-   * Specify the menuContent of the input select
-   *
-   * Use it if you need to add additional content or actions to select menu
-   * */
-  menuContent?: {
-    place: 'prepend' | 'append'
-    element: ReactElement
-  }
   /**
    * Specify the options of the input select
    *
@@ -57,7 +48,7 @@ export type TSelectProps = {
   /**
    * Select is controlled component, so you need to specify the value of the input select if you need to change it.
    * */
-  value?: TSelectOption['value']
+  value?: Array<TSelectOption['value']>
   /**
    * Specify if the select is searchable. It allows to search for options by typing.
    * */
@@ -117,4 +108,5 @@ export type TSelectProps = {
    * */
   zIndex?: CSSProperties['zIndex']
   onMenuScrollToBottom?: () => void
+  defaultValue?: TSelectOption[]
 } & TStylesProps

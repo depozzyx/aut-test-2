@@ -7,7 +7,8 @@ export const CampaignSearchField = (): JSX.Element => {
 
   return (
     <Input
-      width={374}
+      width="100%"
+      maxWidth="374px"
       size="xs"
       name="search-campaign"
       placeholder={t('placeholder.search-campaign')}

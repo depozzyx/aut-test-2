@@ -242,17 +242,6 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
       display: none;
     }
 
-    .custom-rs__multi-value {
-      margin: 0 2px 0 0;
-
-      &__remove:hover {
-        background-color: ${palette.main21};
-        svg path {
-          fill: ${palette.main};
-        }
-      }
-    }
-
     ${styles && styleToCss(styles, theme)}
   `
 })

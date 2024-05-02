@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
-import { deepEqual } from '@/utils/deep-equal'
+import { deepEqual } from '@peiko/utils/deep-equal'
 import { Table } from '@peiko/components/Table'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'

@@ -1,17 +1,29 @@
-import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit'
-import { TSelector, TAsyncAction } from '@/store'
+import {
+  createSlice,
+  PayloadAction,
+  createSelector,
+  ThunkDispatch,
+  Action,
+} from '@reduxjs/toolkit'
 import { apiCampaigns } from '@/api-rest/campaigns'
+import { TSelector, TAsyncAction, TRootState } from '@/store'
 import { TActiveCampaignsReq } from '@/api-rest/campaigns/types'
 import { TPagination } from '@/types/entities/pagination'
 import { handleRestError } from '@/features/common/error'
-import { TActiveCampaign, activeCampaignsMock } from '../mocks/activeCampaignsMock'
-import { TCampaign, campaignsMock } from '../mocks/campaignsMock'
+import {
+  TActiveCampaign,
+  TCampaign,
+  TCampaignTableType,
+} from '@/features/campaigns/types'
+import { notificationActions } from '@/features/common/notifications/store'
+import { modalsActions } from '@/features/common/modals/store'
+import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 
 export type TInit = {
   isLoading: boolean
   selectedId: null | number | string
-  activeCampaigns: TActiveCampaign[]
-  campaignList: TCampaign[]
+  activeCampaigns: TActiveCampaign[] | []
+  campaignList: TCampaign[] | []
   meta: unknown
   pagination: TPagination
 }
@@ -19,8 +31,8 @@ export type TInit = {
 const init: TInit = {
   isLoading: false,
   selectedId: null,
-  activeCampaigns: activeCampaignsMock,
-  campaignList: campaignsMock,
+  activeCampaigns: [],
+  campaignList: [],
   meta: {},
   pagination: {
     page: 1,
@@ -42,21 +54,11 @@ const campaigns = createSlice({
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
       state.pagination = action.payload
     },
-    setCampaignList(state, action: PayloadAction<TCampaign[]>) {
+    setCampaignList(state, action: PayloadAction<TInit['campaignList']>) {
       state.campaignList = action.payload
     },
-    deleteCampaign(state, action: PayloadAction<TInit['selectedId']>) {
-      state.campaignList = state.campaignList.filter(({ id }) => id !== action.payload)
-      state.selectedId = null
-    },
-    setActiveCampaigns(state, action: PayloadAction<TActiveCampaign[]>) {
+    setActiveCampaigns(state, action: PayloadAction<TInit['activeCampaigns']>) {
       state.activeCampaigns = action.payload
-    },
-    deleteActiveCampaigns(state, action: PayloadAction<TInit['selectedId']>) {
-      state.activeCampaigns = state.activeCampaigns.filter(
-        ({ id }) => id !== action.payload,
-      )
-      state.selectedId = null
     },
     setCampaignStatus(state, action: PayloadAction<TInit['selectedId']>) {
       state.campaignList = state.campaignList.map((campaign) => {
@@ -78,10 +80,9 @@ export const {
   setIsLoading,
   setPagination,
   setSelectedId,
-  deleteCampaign,
   setCampaignStatus,
-  deleteActiveCampaigns,
   setActiveCampaigns,
+  setCampaignList,
   reset,
 } = campaigns.actions
 
@@ -103,14 +104,49 @@ export const selectCampaignsList = createSelector(
   ({ campaignList }) => campaignList,
 )
 
-export const selectSelectedCampaign = createSelector(
+export const selectActiveCampaigns = createSelector(
+  selectCampaigns,
+  ({ activeCampaigns }) => activeCampaigns,
+)
+
+export const selectSelectedCampaignFromList = createSelector(
   selectCampaigns,
   ({ selectedId, campaignList }) => campaignList.find(({ id }) => id === selectedId),
 )
 
-export const selectActiveCampaigns = createSelector(
+export const selectSelectedCampaignFromActive = createSelector(
   selectCampaigns,
-  ({ activeCampaigns }) => activeCampaigns,
+  ({ selectedId, activeCampaigns }) =>
+    activeCampaigns.find(({ id }) => id === selectedId),
+)
+
+export const selectCampaignForDelete = (
+  type: TCampaignTableType,
+): TSelector<TCampaign | TActiveCampaign> =>
+  createSelector(selectCampaigns, ({ selectedId, activeCampaigns, campaignList }) => {
+    let selectedCampaign = null
+
+    if (type === CAMPAIGN_TABLE_TYPES.ACTIVE) {
+      selectedCampaign = activeCampaigns.find(
+        ({ id }) => id === selectedId,
+      ) as TActiveCampaign
+    } else {
+      selectedCampaign = campaignList.find(({ id }) => id === selectedId) as TCampaign
+    }
+
+    return selectedCampaign
+  })
+
+// ToDo: change to correct format for user view
+export const selectActiveCampaignsForView = createSelector(
+  [selectActiveCampaigns],
+  (activeCampaigns) => activeCampaigns,
+)
+
+// ToDo: change to correct format for user view
+export const selectCampaignsListForView = createSelector(
+  [selectCampaignsList],
+  (campaignList) => campaignList,
 )
 
 export const selectCampaignsNames = createSelector(
@@ -131,10 +167,7 @@ export const asyncGetActiveCampaigns =
       dispatch(setIsLoading(true))
       const { data } = await apiCampaigns.getActiveCampaigns(params)
 
-      // ToDo: Remove mock
-      dispatch(
-        setActiveCampaigns(data.data.length !== 0 ? data.data : activeCampaignsMock),
-      )
+      dispatch(setActiveCampaigns(data.data))
       dispatch(setPagination(data.pagination))
     } catch (e) {
       handleRestError({
@@ -143,5 +176,81 @@ export const asyncGetActiveCampaigns =
       })
     } finally {
       dispatch(setIsLoading(false))
+    }
+  }
+
+export const asyncGetCampaignsList =
+  (params: TActiveCampaignsReq): TAsyncAction =>
+  async (dispatch) => {
+    try {
+      dispatch(setIsLoading(true))
+      const { data } = await apiCampaigns.getCampaignList(params)
+
+      dispatch(setCampaignList(data.data))
+    } catch (e) {
+      handleRestError({
+        e,
+        dispatch,
+      })
+    } finally {
+      dispatch(setIsLoading(false))
+    }
+  }
+
+const getCurrentCampaigns = ({
+  type,
+  dispatch,
+  params,
+}: {
+  type: TCampaignTableType
+  dispatch: ThunkDispatch<TRootState, unknown, Action>
+  params: TActiveCampaignsReq
+}) => {
+  const getCampaigns =
+    type === CAMPAIGN_TABLE_TYPES.ACTIVE ? asyncGetActiveCampaigns : asyncGetCampaignsList
+  dispatch(getCampaigns(params))
+}
+
+export const asyncRemoveCampaign =
+  (type: TCampaignTableType): TAsyncAction =>
+  async (dispatch, getState) => {
+    try {
+      dispatch(setIsLoading(true))
+      const { selectedId, campaignList, activeCampaigns, pagination } =
+        getState().campaigns
+
+      let campaignName = ''
+
+      if (type === CAMPAIGN_TABLE_TYPES.ACTIVE) {
+        campaignName = activeCampaigns.find((campaign) => campaign.id === selectedId)
+          ?.name as string
+      } else {
+        campaignName = campaignList.find((campaign) => campaign.id === selectedId)
+          ?.name as string
+      }
+
+      await apiCampaigns.deleteCampaign(selectedId as number)
+
+      dispatch(modalsActions.resetModalsState())
+
+      dispatch(
+        notificationActions.setNotification({
+          key: 'notifications:campaign.success-delete',
+          status: 'success',
+          values: { campaignName },
+        }),
+      )
+
+      const params = {
+        page: pagination.page,
+        limit: pagination.limit,
+        orderBy: 'ASC',
+      }
+      getCurrentCampaigns({ type, dispatch, params: params as TActiveCampaignsReq })
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    } finally {
+      dispatch(setIsLoading(false))
+      dispatch(modalsActions.resetModalsState())
     }
   }
