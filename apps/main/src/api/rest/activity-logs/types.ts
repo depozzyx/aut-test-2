@@ -3,7 +3,7 @@ import { TPagination } from '@/types/entities/pagination'
 
 export type TActivityLogsReq = {
   orderBy: 'ASC' | 'DESC'
-  userId?: number
+  userId?: string
   targetCampaignId?: number
   targetUserId?: number
   entityType?: TEntityType
