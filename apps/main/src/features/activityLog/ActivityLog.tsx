@@ -13,11 +13,11 @@ import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { RangeDayPicker } from '@/components/RangeDayPicker'
 import { useRedux } from '@/hooks/use-redux'
-import { format } from 'date-fns'
 import { Input } from '@peiko/components/inputs/Input'
 import { SearchFieldIcon } from '@/icons/SearchFieldIcon'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
+import { dateToString } from '@/utils/date-to-string'
 import { useFilters } from './hooks/useFilters'
 import { ActivityLogs } from './containers/ActivityLogs'
 import {
@@ -95,15 +95,12 @@ export const ActivityLog: FC = () => {
 
   const onDateChange = useCallback(
     (date) => {
-      const fromDate = date?.from
-        ? format(date.from, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-        : undefined
-      const toDate = date?.to
-        ? format(date.to, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-        : undefined
+      const fromDate = date?.from ? dateToString(date.from) : undefined
+      const toDate = date?.to ? dateToString(date.to) : undefined
       const copyFilters = { ...filters, fromDate, toDate }
       if (!copyFilters.fromDate) delete copyFilters.fromDate
       if (!copyFilters.toDate) delete copyFilters.toDate
+
       if (Object.keys(copyFilters).length === 0) return
 
       dispatch(setFilters({ ...copyFilters }))
@@ -188,7 +185,13 @@ export const ActivityLog: FC = () => {
             options={managers}
             onChange={(selectedEl) => setSelectedFilter('userId', selectedEl[0].value)}
           />
-          <RangeDayPicker onChange={onDateChange} />
+          <RangeDayPicker
+            dateValue={{
+              from: filters.fromDate ? new Date(filters.fromDate) : undefined,
+              to: filters.toDate ? new Date(filters.toDate) : undefined,
+            }}
+            onChange={onDateChange}
+          />
         </Flex>
       </Flex>
       <Flex
