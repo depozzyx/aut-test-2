@@ -29,6 +29,10 @@ export type TInit = {
   pagination: TPagination
   searchTerm?: string
   filterCampaignName?: string
+  filterDate: {
+    from?: Date
+    to?: Date
+  }
 }
 
 const init: TInit = {
@@ -44,6 +48,10 @@ const init: TInit = {
   },
   searchTerm: '',
   filterCampaignName: '',
+  filterDate: {
+    from: undefined,
+    to: undefined,
+  },
 }
 
 const campaigns = createSlice({
@@ -71,6 +79,9 @@ const campaigns = createSlice({
     setFilterCampaignName(state, action: PayloadAction<TInit['filterCampaignName']>) {
       state.filterCampaignName = action.payload
     },
+    setFilterDate(state, action: PayloadAction<TInit['filterDate']>) {
+      state.filterDate = action.payload
+    },
     reset: () => init,
   },
 })
@@ -84,6 +95,7 @@ export const {
   setCampaignList,
   setSearchTerm,
   setFilterCampaignName,
+  setFilterDate,
   reset,
 } = campaigns.actions
 
@@ -121,6 +133,11 @@ export const selectSelectedCampaignFromActive = createSelector(
     activeCampaigns.find(({ id }) => id === selectedId),
 )
 
+export const selectFilterDate = createSelector(
+  selectCampaigns,
+  ({ filterDate }) => filterDate,
+)
+
 export const selectCampaignForDelete = (
   type: TCampaignTableType,
 ): TSelector<TCampaign | TActiveCampaign> =>
@@ -150,14 +167,14 @@ export const selectCampaignsListForView = createSelector(
   (campaignList) => campaignList,
 )
 
-type TCampaignName = {
+type TCampaignNameOption = {
   label: string
   value: string
 }
 
 export const selectCampaignsNames = (
   type: TCampaignTableType,
-): TSelector<TCampaignName[]> =>
+): TSelector<TCampaignNameOption[]> =>
   createSelector([selectCampaigns], ({ activeCampaigns, campaignList }) => {
     if (type === CAMPAIGN_TABLE_TYPES.ACTIVE) {
       return activeCampaigns.map((campaign) => ({
@@ -210,6 +227,7 @@ export const asyncGetCampaignsList =
       const { data } = await apiCampaigns.getCampaignList(params)
 
       dispatch(setCampaignList(data.data))
+      dispatch(setPagination(data.pagination))
     } catch (e) {
       handleRestError({
         e,
@@ -239,8 +257,14 @@ export const asyncRemoveCampaign =
   async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
-      const { selectedId, campaignList, activeCampaigns, pagination } =
-        getState().campaigns
+      const {
+        selectedId,
+        campaignList,
+        activeCampaigns,
+        pagination,
+        searchTerm,
+        filterCampaignName,
+      } = getState().campaigns
 
       let campaignName = ''
 
@@ -268,6 +292,8 @@ export const asyncRemoveCampaign =
         page: pagination.page,
         limit: pagination.limit,
         orderBy: 'ASC',
+        search: searchTerm,
+        name: filterCampaignName,
       }
       getCurrentCampaigns({ type, dispatch, params: params as TActiveCampaignsReq })
     } catch (e) {
