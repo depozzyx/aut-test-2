@@ -11,7 +11,7 @@ export const StyledPopup = styled(Popup)`
   }
 `
 
-export const Container = styled.div`
+export const Container = styled.div<{ containerStyles?: string }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -20,4 +20,6 @@ export const Container = styled.div`
   &:focus-visible {
     outline: none;
   }
+
+  ${(props) => props.containerStyles}
 `

@@ -8,6 +8,8 @@ export type TActiveCampaignsReq = {
   search?: string
   sortBy?: 'createdAt' | 'workStatus' | 'name'
   name?: string
+  fromDate?: string
+  toDate?: string
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TActiveCampaignsRes = any

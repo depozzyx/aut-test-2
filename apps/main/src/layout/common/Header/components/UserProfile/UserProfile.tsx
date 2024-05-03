@@ -20,6 +20,12 @@ const shortenName = (fullName: string) => {
   return `${firstName} ${lastName?.charAt(0) ?? ''}${lastName ? '.' : ''}`
 }
 
+const containerStyles = `
+  border-radius: 8px;
+  background-color: #fefefe;
+  padding: 24px;
+`
+
 export const UserProfile = (): JSX.Element => {
   const { user } = useAuth()
 
@@ -49,6 +55,7 @@ export const UserProfile = (): JSX.Element => {
       withArrow
       customCloseHandler={resetStyle}
       customOpenHandler={applyStyle}
+      containerStyles={containerStyles}
     />
   )
 }

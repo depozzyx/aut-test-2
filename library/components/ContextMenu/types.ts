@@ -48,4 +48,6 @@ export type TContextMenu = Omit<PopupProps, 'children'> & {
    * Custom close handler.
    */
   customCloseHandler?: () => void
+
+  containerStyles?: string
 }

@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
+import { startOfDay, endOfDay } from 'date-fns'
 import { useRedux } from '@/hooks/use-redux'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
@@ -14,6 +15,7 @@ import { DashboardTabs } from '@/components/DashboardTabs'
 import { useUnmount } from 'react-use'
 import { Pagination } from '@peiko/components/Pagination'
 import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
+import { RangeDayPicker } from '@/components/RangeDayPicker'
 import { CreateCampaignModal } from './containers/CreateCampaignModal'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import { NewCampaignReviewModal } from './containers/NewCampaignReviewModal'
@@ -23,6 +25,8 @@ import {
   asyncGetActiveCampaigns,
   selectSearchTerm,
   selectFilterCampaignName,
+  setFilterDate,
+  selectFilterDate,
 } from './store/campaigns'
 import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
 
@@ -35,11 +39,13 @@ export const ActiveCampaigns = (): JSX.Element => {
     pagination: { total, page, limit },
     searchTerm,
     filterCampaignName,
+    filterDate,
   } = select(
     createStructuredSelector({
       pagination: selectCampaignsPagination,
       searchTerm: selectSearchTerm,
       filterCampaignName: selectFilterCampaignName,
+      filterDate: selectFilterDate,
     }),
     shallowEqual,
   )
@@ -52,6 +58,8 @@ export const ActiveCampaigns = (): JSX.Element => {
         orderBy: 'ASC',
         search: searchTerm,
         name: filterCampaignName,
+        ...(filterDate?.from && { fromDate: startOfDay(filterDate?.from).toISOString() }),
+        ...(filterDate?.to && { toDate: endOfDay(filterDate?.to).toISOString() }),
       }),
     )
   }, [page, searchTerm, filterCampaignName])
@@ -73,6 +81,10 @@ export const ActiveCampaigns = (): JSX.Element => {
     dispatch(asyncGetActiveCampaigns({ page, limit, orderBy: 'ASC', search: searchTerm }))
   }, [])
 
+  const onDateChange = useCallback((date) => {
+    dispatch(setFilterDate(date))
+  }, [])
+
   return (
     <>
       <Flex direction="column" padding="12px 0 0 0">
@@ -80,9 +92,8 @@ export const ActiveCampaigns = (): JSX.Element => {
         <Flex padding="12px 0 0 0" justify="space-between">
           <Flex gap={16} align="center" width="100%">
             <CampaignSearchField />
-            <Flex>
-              <CampaignsSelect type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
-            </Flex>
+            <CampaignsSelect type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
+            <RangeDayPicker onChange={onDateChange} />
           </Flex>
           <FilledButton
             size="m"

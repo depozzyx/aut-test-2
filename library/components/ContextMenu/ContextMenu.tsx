@@ -27,6 +27,7 @@ export const ContextMenu: React.FC<TContextMenu> = ({
   arrowStyle,
   customOpenHandler,
   customCloseHandler,
+  containerStyles,
   ...props
 }) => {
   const [client, setClient] = useState(false)
@@ -100,16 +101,22 @@ export const ContextMenu: React.FC<TContextMenu> = ({
     >
       <>
         {customMenu && (
-          <div ref={containerRef} style={{ display: show ? 'flex' : 'none' }}>
+          <div
+            className="custom-menu"
+            ref={containerRef}
+            style={{ display: show ? 'flex' : 'none' }}
+          >
             {renderMenu({ onClose: () => setOpen(false), open })}
           </div>
         )}
 
         {!customMenu && (
           <Container
+            containerStyles={containerStyles}
             ref={containerRef}
             tabIndex={0}
             style={{ display: show ? 'flex' : 'none' }}
+            className="context-menu-container"
           >
             {renderMenu({ onClose: () => setOpen(false), open })}
           </Container>
