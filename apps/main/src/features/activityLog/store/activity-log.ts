@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { TAsyncAction, TSelector } from '@/store'
 import { TPagination } from '@/types/entities/pagination'
 import { handleRestError } from '@/features/common/error'
@@ -66,6 +66,23 @@ export const {
 // selectors
 
 export const selectActivityLogs: TSelector<TInit> = (state) => state.activityLog
+
+export const selectIsLoading = createSelector(
+  selectActivityLogs,
+  ({ isLoading }) => isLoading,
+)
+
+export const selectLogs = createSelector(
+  selectActivityLogs,
+  ({ activityLogs }) => activityLogs,
+)
+
+export const selectPagination = createSelector(
+  selectActivityLogs,
+  ({ pagination }) => pagination,
+)
+
+export const selectFilters = createSelector(selectActivityLogs, ({ filters }) => filters)
 
 export default activityLog.reducer
 

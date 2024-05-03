@@ -17,7 +17,7 @@ export const ActivityLogs: FC<{
   onChangePage: (page: number) => void
 }> = ({ logs, loading, pagination: { total, limit, page }, onChangePage }) => {
   const { createLogMessage } = useCreateLogMessage()
-  const { t } = useTranslation('activity-logs')
+  const { t } = useTranslation('activity-log')
 
   return (
     <>
