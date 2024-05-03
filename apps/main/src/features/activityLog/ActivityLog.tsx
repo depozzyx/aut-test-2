@@ -4,33 +4,38 @@ import { ActivityIcon } from '@/icons/ActivityIcon'
 import { BusinessIcon } from '@/icons/BusinessIcon'
 import { Box } from '@peiko/components/Box'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import { Flex } from '@/components/Flex'
 import { DropdownMenu } from '@/components/DropdownMenu'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { BaseTrigger } from '@/components/dropdown-triggers/BaseTrigger'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
-import { TValue } from '@/components/DropdownMenu/DropdownMenu'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
-import { TActivityLogsReq } from '@/api-rest/activity-logs/types'
-import { useActivityLogs } from './hooks/useActivityLogs'
+import { RangeDayPicker } from '@/components/RangeDayPicker'
+import { useRedux } from '@/hooks/use-redux'
+import { format } from 'date-fns'
 import { useFilters } from './hooks/useFilters'
 import { ActivityLogs } from './containers/ActivityLogs'
+import {
+  deleteFilter,
+  getActivityLogsAsync,
+  resetFilters,
+  selectActivityLogs,
+  setFilters,
+} from './store/activity-log'
 
 export const ActivityLog: FC = () => {
   const { t } = useTranslation('activity-log')
+  const { select, dispatch } = useRedux()
+
   const {
-    getActivityLogsAsync,
-    logs,
-    pagination: { total, limit, page },
-    loading,
-  } = useActivityLogs()
+    activityLogs,
+    pagination: { limit, page, total },
+    filters,
+    isLoading,
+  } = select(selectActivityLogs)
+
   const { actionTypes, orderBy, managers } = useFilters()
-  const [selectedFilters, setSelectedFilters] = useState<{
-    actionType?: TValue[]
-    orderBy?: TValue[]
-    manager?: TValue[]
-  }>({})
 
   const tabs: TTabsProps['tabs'] = [
     {
@@ -48,40 +53,38 @@ export const ActivityLog: FC = () => {
 
   const [activeTab, setActiveTab] = useState(tabs[0].value)
 
-  const onChangePage = (page: number) =>
-    getActivityLogsAsync({
-      page,
-      limit,
-      orderBy:
-        (selectedFilters.orderBy?.[0].value as TActivityLogsReq['orderBy']) ?? 'DESC',
-      entityAction: selectedFilters.actionType?.[0]
-        .value as TActivityLogsReq['entityAction'],
-      userId: selectedFilters.manager?.[0].value,
-    })
+  const setSelectedFilter = (filterName: keyof typeof filters, value?: string) =>
+    dispatch(setFilters({ ...filters, [filterName]: value }))
 
-  const setSelectedFilter = (
-    filterName: keyof typeof selectedFilters,
-    value?: TValue[],
-  ) => setSelectedFilters({ ...selectedFilters, [filterName]: value })
-
-  const deleteSelectedFilter = (filterName: keyof typeof selectedFilters) =>
-    setSelectedFilters((prev) => {
-      const copyPrev = { ...prev }
-      delete copyPrev[filterName]
-      return copyPrev
-    })
+  const deleteSelectedFilter = (filterName: keyof typeof filters) =>
+    dispatch(deleteFilter(filterName))
 
   useEffect(() => {
-    getActivityLogsAsync({
-      page,
-      limit,
-      orderBy:
-        (selectedFilters.orderBy?.[0].value as TActivityLogsReq['orderBy']) ?? 'DESC',
-      entityAction: selectedFilters.actionType?.[0]
-        .value as TActivityLogsReq['entityAction'],
-      userId: selectedFilters.manager?.[0].value,
-    })
-  }, [selectedFilters])
+    dispatch(
+      getActivityLogsAsync({
+        page,
+        limit,
+        ...filters,
+      }),
+    )
+  }, [filters])
+
+  const onChangePage = (page: number) =>
+    dispatch(
+      getActivityLogsAsync({
+        page,
+        limit,
+        ...filters,
+      }),
+    )
+
+  const onDateChange = useCallback((date) => {
+    const fromDate = date?.from
+      ? format(date.from, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+      : undefined
+    const toDate = date?.to ? format(date.to, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX") : undefined
+    dispatch(setFilters({ ...filters, fromDate, toDate }))
+  }, [])
 
   return (
     <Box styles={{ marginTop: '10px' }}>
@@ -101,10 +104,14 @@ export const ActivityLog: FC = () => {
                 <ArrowIcon color="main5" size="s" direction={isOpen ? 'up' : 'down'} />
               </BaseTrigger>
             )}
-            selectedOptions={selectedFilters.actionType}
+            selectedOptions={actionTypes.filter(
+              (item) => filters.entityAction === item.value,
+            )}
             minWidth="210px"
             options={actionTypes}
-            onChange={(selectedEl) => setSelectedFilter('actionType', selectedEl)}
+            onChange={(selectedEl) =>
+              setSelectedFilter('entityAction', selectedEl[0].value)
+            }
           />
           <DropdownMenu
             maxHeight="350px"
@@ -114,10 +121,10 @@ export const ActivityLog: FC = () => {
                 <ArrowIcon color="main5" size="s" direction={isOpen ? 'up' : 'down'} />
               </BaseTrigger>
             )}
-            selectedOptions={selectedFilters.orderBy}
+            selectedOptions={orderBy.filter((item) => filters.orderBy === item.value)}
             minWidth="210px"
             options={orderBy}
-            onChange={(selectedEl) => setSelectedFilter('orderBy', selectedEl)}
+            onChange={(selectedEl) => setSelectedFilter('orderBy', selectedEl[0].value)}
           />
           <DropdownMenu
             maxHeight="350px"
@@ -127,46 +134,49 @@ export const ActivityLog: FC = () => {
                 <ArrowIcon color="main5" size="s" direction={isOpen ? 'up' : 'down'} />
               </BaseTrigger>
             )}
-            selectedOptions={selectedFilters.manager}
+            selectedOptions={managers.filter(
+              (item) => filters.entityAction === item.value,
+            )}
             minWidth="210px"
             options={managers}
-            onChange={(selectedEl) => setSelectedFilter('manager', selectedEl)}
+            onChange={(selectedEl) => setSelectedFilter('userId', selectedEl[0].value)}
           />
+          <RangeDayPicker onChange={onDateChange} />
         </Flex>
       </Flex>
       <Flex
         gap="48px"
         align="center"
         styles={{
-          display: Object.keys(selectedFilters).length === 0 ? 'none' : 'flex',
+          display: Object.keys(filters).length === 0 ? 'none' : 'flex',
           marginTop: '24px',
         }}
       >
         <Flex gap="16px" align="center">
-          {selectedFilters.actionType && (
-            <PikedFilter onClose={() => deleteSelectedFilter('actionType')}>
-              {selectedFilters.actionType[0].label}
+          {filters.entityAction && (
+            <PikedFilter onClose={() => deleteSelectedFilter('entityAction')}>
+              {actionTypes.find(({ value }) => filters.entityAction === value)?.label}
             </PikedFilter>
           )}
-          {selectedFilters.orderBy && (
+          {filters.orderBy && (
             <PikedFilter onClose={() => deleteSelectedFilter('orderBy')}>
-              {selectedFilters.orderBy[0].label}
+              {orderBy.find(({ value }) => filters.orderBy === value)?.label}
             </PikedFilter>
           )}
-          {selectedFilters.manager && (
-            <PikedFilter onClose={() => deleteSelectedFilter('manager')}>
-              {selectedFilters.manager[0].label}
+          {filters.userId && (
+            <PikedFilter onClose={() => deleteSelectedFilter('userId')}>
+              {managers.find(({ value }) => filters.userId === value)?.label}
             </PikedFilter>
           )}
         </Flex>
-        <OutlinedButton size="s" onClick={() => setSelectedFilters({})}>
+        <OutlinedButton size="s" onClick={() => dispatch(resetFilters())}>
           {t('filters.reset')}
         </OutlinedButton>
       </Flex>
       <ActivityLogs
         pagination={{ total, limit, page }}
-        logs={logs}
-        loading={loading}
+        logs={activityLogs}
+        loading={isLoading}
         onChangePage={onChangePage}
       />
     </Box>

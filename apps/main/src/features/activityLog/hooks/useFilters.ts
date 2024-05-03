@@ -1,9 +1,9 @@
-import { TActivityLogsReq } from '@/api-rest/activity-logs/types'
 import { managerApi } from '@/api-rest/manager'
 import { TManagersReq } from '@/api-rest/manager/types'
 import { handleRestError } from '@/features/common/error'
 import { useRedux } from '@/hooks/use-redux'
 import { TEntityActions } from '@/types/activity-logs'
+import { TOrderBy } from '@/types/entities/orderBy'
 import { TPagination } from '@/types/entities/pagination'
 import useTranslation from 'next-translate/useTranslation'
 import { useEffect, useState } from 'react'
@@ -15,7 +15,7 @@ type TValue<T = string> = {
 
 type TFilters = {
   actionTypes: TValue<TEntityActions>[]
-  orderBy: TValue<TActivityLogsReq['orderBy']>[]
+  orderBy: TValue<TOrderBy>[]
   getManagers: (params: TManagersReq) => void
   managers: TValue[]
   managerPagination: TPagination

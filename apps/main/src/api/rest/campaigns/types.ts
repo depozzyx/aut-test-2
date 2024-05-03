@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TPagination } from '@/types/entities/pagination'
 import { TGeneratedCallTime } from '@/features/campaigns/constants'
+import { TOrderBy } from '@/types/entities/orderBy'
 
 export type TActiveCampaignsReq = {
-  orderBy: 'ASC' | 'DESC'
+  orderBy: TOrderBy
   status?: 'active' | 'pause' | 'complete'
   search?: string
   sortBy?: 'createdAt' | 'workStatus' | 'name'

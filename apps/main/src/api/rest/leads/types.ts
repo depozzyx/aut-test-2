@@ -1,4 +1,5 @@
 import { TGeneratedSuccessStatuses } from '@/constants/success-status'
+import { TOrderBy } from '@/types/entities/orderBy'
 import { TPagination } from '@/types/entities/pagination'
 import { TLeadsGroup } from '@/types/leads/leads-list'
 
@@ -9,12 +10,12 @@ export type TImportLeadsRes = {
 }
 
 export type TLeadsListReq = {
-  orderBy: 'ASC' | 'DESC'
+  orderBy: TOrderBy
   leadListId?: number
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TLeadsGroupReq = {
-  orderBy: 'ASC' | 'DESC'
+  orderBy: TOrderBy
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TCreateLeadGroupReq = {

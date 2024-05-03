@@ -74,6 +74,8 @@ export const RangeDayPicker = memo<TRangeDayPickerProps>(
             onSelect={handleSelect}
             selected={selectedDate as DateRange}
             numberOfMonths={2}
+            fromMonth={new Date(2024, 4)}
+            toMonth={new Date(2024, 9)}
             {...otherProps}
           />
         </Flex>

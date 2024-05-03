@@ -1,8 +1,9 @@
 import { TEntityActions, TEntityType, TSortBy } from '@/types/activity-logs'
+import { TOrderBy } from '@/types/entities/orderBy'
 import { TPagination } from '@/types/entities/pagination'
 
 export type TActivityLogsReq = {
-  orderBy: 'ASC' | 'DESC'
+  orderBy?: TOrderBy
   userId?: string
   targetCampaignId?: number
   targetUserId?: number

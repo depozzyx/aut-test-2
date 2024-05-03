@@ -9,6 +9,7 @@ import modalsReducer from '@/features/common/modals/store'
 import campaignsReducer from '@/features/campaigns/store/campaigns'
 import createCampaignReducer from '@/features/campaigns/store/create-campaign'
 import leadsReducer from '@/features/leads/store/leads'
+import activityLogReducer from '@/features/activityLog/store/activity-log'
 import editCampaignReducer from '@/features/campaigns/store/edit-campaign'
 import leadListReducer from '@/features/leads/store/lead-list'
 import agentsReducer from '../features/agents/store/agents'
@@ -28,6 +29,7 @@ const store = configureStore({
     editCampaign: editCampaignReducer,
     leads: leadsReducer,
     leadList: leadListReducer,
+    activityLog: activityLogReducer,
   },
 })
 
