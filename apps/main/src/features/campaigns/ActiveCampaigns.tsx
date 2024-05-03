@@ -16,6 +16,7 @@ import { useUnmount } from 'react-use'
 import { Pagination } from '@peiko/components/Pagination'
 import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 import { RangeDayPicker } from '@/components/RangeDayPicker'
+import { dateToString } from '@/utils/date-to-string'
 import { CreateCampaignModal } from './containers/CreateCampaignModal'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import { NewCampaignReviewModal } from './containers/NewCampaignReviewModal'
@@ -58,8 +59,8 @@ export const ActiveCampaigns = (): JSX.Element => {
         orderBy: 'ASC',
         search: searchTerm,
         name: filterCampaignName,
-        ...(filterDate?.from && { fromDate: startOfDay(filterDate?.from).toISOString() }),
-        ...(filterDate?.to && { toDate: endOfDay(filterDate?.to).toISOString() }),
+        ...(filterDate?.from && { fromDate: filterDate?.from }),
+        ...(filterDate?.to && { toDate: filterDate?.to }),
       }),
     )
   }, [page, searchTerm, filterCampaignName])
@@ -82,7 +83,11 @@ export const ActiveCampaigns = (): JSX.Element => {
   }, [])
 
   const onDateChange = useCallback((date) => {
-    dispatch(setFilterDate(date))
+    const newDate = {
+      from: date?.from ? dateToString(startOfDay(date.from)) : undefined,
+      to: date?.to ? dateToString(endOfDay(date.to)) : undefined,
+    }
+    dispatch(setFilterDate(newDate))
   }, [])
 
   return (

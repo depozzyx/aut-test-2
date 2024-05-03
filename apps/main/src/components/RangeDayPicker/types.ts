@@ -1,18 +1,15 @@
 import { DayPickerRangeProps } from 'react-day-picker'
 
+type TDateVale = {
+  from?: Date
+  to?: Date
+}
+
 export type TRangeDayPickerProps = {
+  dateValue?: TDateVale
   /**
-   * The value of the date picker.
-   * Valid any Date object.
-   * */
-  initialValue?: {
-    from?: Date
-    to?: Date
-  }
-  /**
-   * The on change hadler of the date picker.
-   *
+   * The on change handler of the date picker.
    * Triggers when user selects a date in calendar.
    * */
-  onChange?: (date: Date | undefined) => void
+  onChange?: (date: TDateVale) => void
 } & Omit<DayPickerRangeProps, 'mode' | 'onSelect' | 'selected'>

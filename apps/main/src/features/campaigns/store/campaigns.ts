@@ -30,8 +30,8 @@ export type TInit = {
   searchTerm?: string
   filterCampaignName?: string
   filterDate: {
-    from?: Date
-    to?: Date
+    from?: string
+    to?: string
   }
 }
 
