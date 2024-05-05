@@ -3,6 +3,7 @@ import ReactSelect, { GroupBase, Props } from 'react-select'
 import { CSSProperties } from 'react'
 import { TStylesProps, formatCssProperty, styleToCss } from '@peiko/styles'
 import { getIconSize } from '@peiko/components/inputs/Select/utils/get-icon-size'
+import { hexToRGBA } from '@peiko/utils/hex-to-rgba'
 import { TSelectOption, TMultiSelectProps } from './types'
 
 type TStyledMultiSelectProps = {
@@ -235,6 +236,11 @@ export const StyledMultiSelect = styled(CustomMultiSelect)<TStyledMultiSelectPro
           background-color: ${palette.base4};
           color: ${palette.main2};
         }
+
+        :not(:last-of-type) {
+          border-bottom: 1px solid;
+          border-color: ${({ theme }) => theme.palette.main3};
+        }
       }
 
       .multi-rs__indicator-separator {
@@ -255,4 +261,31 @@ export const StyledMultiSelect = styled(CustomMultiSelect)<TStyledMultiSelectPro
       ${styles && styleToCss(styles, theme)}
     `
   },
+)
+
+export const CustomLabel = styled.div<{ isSelected?: boolean }>(
+  ({ isSelected, theme }) => css`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: 0.3s;
+    background-color: ${isSelected
+      ? theme.palette.base4
+      : hexToRGBA(theme.palette.base4, 0)};
+
+    input[type='checkbox'] {
+      display: none;
+
+      & + p + div {
+        opacity: 0;
+        transition: 0.3s;
+      }
+
+      &:checked + p + div {
+        opacity: 1;
+      }
+    }
+  `,
 )
