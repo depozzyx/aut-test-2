@@ -97,7 +97,7 @@ export const MultiSelect = ({
   )
 
   const Option = useCallback(
-    (props: OptionProps<TSelectOption, boolean, GroupBase<TSelectOption>>) => {
+    (props: OptionProps<TSelectOption, true, GroupBase<TSelectOption>>) => {
       const { isSelected, label } = props
       return (
         <components.Option {...props}>

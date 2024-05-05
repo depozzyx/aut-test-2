@@ -1,9 +1,4 @@
-import { useCallback, useEffect } from 'react'
 import useTranslation from 'next-translate/useTranslation'
-import { createStructuredSelector } from 'reselect'
-import { shallowEqual } from 'react-redux'
-import { startOfDay, endOfDay } from 'date-fns'
-import { useRedux } from '@/hooks/use-redux'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { Flex } from '@/components/Flex'
@@ -12,83 +7,31 @@ import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { ActiveCampaignsTable } from '@/features/campaigns/containers/ActiveCampaignsTable'
 import { CampaignsSelect } from '@/features/campaigns/containers/CampaignSelect'
 import { DashboardTabs } from '@/components/DashboardTabs'
-import { useUnmount } from 'react-use'
 import { Pagination } from '@peiko/components/Pagination'
 import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 import { RangeDayPicker } from '@/components/RangeDayPicker'
-import { dateToString } from '@/utils/date-to-string'
+import { useCampaignsManager } from '@/features/campaigns/hooks/use-campaignsManager'
 import { CreateCampaignModal } from './containers/CreateCampaignModal'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import { NewCampaignReviewModal } from './containers/NewCampaignReviewModal'
-import {
-  reset,
-  selectCampaignsPagination,
-  asyncGetActiveCampaigns,
-  selectSearchTerm,
-  selectFilterCampaignName,
-  setFilterDate,
-  selectFilterDate,
-} from './store/campaigns'
+import { asyncGetActiveCampaigns } from './store/campaigns'
 import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
 
 export const ActiveCampaigns = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
-  const { modalState, setModal } = useModals()
-  const { select, dispatch } = useRedux()
+  const { modalState } = useModals()
 
   const {
-    pagination: { total, page, limit },
-    searchTerm,
-    filterCampaignName,
-    filterDate,
-  } = select(
-    createStructuredSelector({
-      pagination: selectCampaignsPagination,
-      searchTerm: selectSearchTerm,
-      filterCampaignName: selectFilterCampaignName,
-      filterDate: selectFilterDate,
-    }),
-    shallowEqual,
-  )
-
-  useEffect(() => {
-    dispatch(
-      asyncGetActiveCampaigns({
-        page,
-        limit,
-        orderBy: 'ASC',
-        search: searchTerm,
-        name: filterCampaignName,
-        ...(filterDate?.from && { fromDate: filterDate?.from }),
-        ...(filterDate?.to && { toDate: filterDate?.to }),
-      }),
-    )
-  }, [page, searchTerm, filterCampaignName])
-
-  useUnmount(() => {
-    dispatch(reset())
-  })
+    handleCreateCampaign,
+    handleChangePage,
+    handleChangeDate,
+    pagination: { page, total, limit },
+  } = useCampaignsManager(asyncGetActiveCampaigns)
 
   const reviewModalIsOpen =
     modalState?.modalName === MODAL_NAMES.REVIEW_CAMPAIGN && modalState.isOpen
   const createModalIsOpen =
     modalState?.modalName === MODAL_NAMES.CREATE_CAMPAIGN && modalState.isOpen
-
-  const createCampaignHandler = () => {
-    setModal({ modalName: MODAL_NAMES.CREATE_CAMPAIGN, isOpen: true })
-  }
-
-  const changePageHandler = useCallback((page: number) => {
-    dispatch(asyncGetActiveCampaigns({ page, limit, orderBy: 'ASC', search: searchTerm }))
-  }, [])
-
-  const onDateChange = useCallback((date) => {
-    const newDate = {
-      from: date?.from ? dateToString(startOfDay(date.from)) : undefined,
-      to: date?.to ? dateToString(endOfDay(date.to)) : undefined,
-    }
-    dispatch(setFilterDate(newDate))
-  }, [])
 
   return (
     <>
@@ -98,14 +41,14 @@ export const ActiveCampaigns = (): JSX.Element => {
           <Flex gap={16} align="center" width="100%">
             <CampaignSearchField />
             <CampaignsSelect type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
-            <RangeDayPicker onChange={onDateChange} />
+            <RangeDayPicker onChange={handleChangeDate} />
           </Flex>
           <FilledButton
             size="m"
             maxWidth="236px"
             width="100%"
             startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
-            onClick={createCampaignHandler}
+            onClick={handleCreateCampaign}
           >
             {t('add-campaign')}
           </FilledButton>
@@ -115,7 +58,7 @@ export const ActiveCampaigns = (): JSX.Element => {
           <Pagination
             lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
             currentPage={page}
-            onChange={changePageHandler}
+            onChange={handleChangePage}
           />
         </Flex>
       </Flex>
