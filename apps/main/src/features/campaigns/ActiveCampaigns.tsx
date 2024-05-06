@@ -11,7 +11,6 @@ import { CAMPAIGN_TABLE_TYPES, FILTER_TYPE } from '@/features/campaigns/constant
 import { RangeDayPicker } from '@/components/RangeDayPicker'
 import { useCampaignsManager } from '@/features/campaigns/hooks/use-campaignsManager'
 import { CampaignNameFilter } from '@/features/campaigns/containers/filters/CampaignNameFilter'
-import { StatusFilter } from '@/features/campaigns/containers/filters/StatusFilter'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { CreateCampaignModal } from './containers/modals/CreateCampaignModal'
@@ -46,7 +45,6 @@ export const ActiveCampaigns = (): JSX.Element => {
           <Flex gap={16} align="center" width="100%">
             <CampaignSearchField />
             <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
-            <StatusFilter />
             <RangeDayPicker onChange={handleChangeDate} />
           </Flex>
           <FilledButton
@@ -76,11 +74,6 @@ export const ActiveCampaigns = (): JSX.Element => {
                   onClose={() => handlerResetFilters(FILTER_TYPE.CAMPAIGN_NAME)}
                 >
                   {filters.filterCampaignName}
-                </PikedFilter>
-              )}
-              {filters.filterStatus && (
-                <PikedFilter onClose={() => handlerResetFilters(FILTER_TYPE.STATUS)}>
-                  {t(`statuses.${filters.filterStatus}`)}
                 </PikedFilter>
               )}
             </Flex>
