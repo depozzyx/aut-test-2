@@ -4,6 +4,7 @@ import { TAxiosResponse } from '../types'
 import {
   TActiveCampaignsReq,
   TActiveCampaignsRes,
+  TCampaignListReq,
   TCreateCampaignReq,
   TEditCampaignReq,
 } from './types'
@@ -12,9 +13,8 @@ const getActiveCampaigns = (
   params: TActiveCampaignsReq,
 ): TAxiosResponse<TActiveCampaignsRes> => api.get('/campaign/dashboard', { params })
 
-const getCampaignList = (
-  params: TActiveCampaignsReq,
-): TAxiosResponse<TActiveCampaignsRes> => api.get('/campaign', { params })
+const getCampaignList = (params: TCampaignListReq): TAxiosResponse<TActiveCampaignsRes> =>
+  api.get('/campaign', { params })
 
 const editCampaign = (data: TEditCampaignReq): TAxiosResponse<any> =>
   api.put('/campaign', data)

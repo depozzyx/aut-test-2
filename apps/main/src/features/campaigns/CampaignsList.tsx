@@ -1,21 +1,18 @@
-import { useCallback, useEffect } from 'react'
-import { useUnmount } from 'react-use'
 import useTranslation from 'next-translate/useTranslation'
-import { createStructuredSelector } from 'reselect'
-import { shallowEqual } from 'react-redux'
-import { endOfDay, startOfDay } from 'date-fns'
 import { Flex } from '@/components/Flex'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
-import { useRedux } from '@/hooks/use-redux'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { StatusFilter } from '@/components/StatusFilter'
-import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
-import { CampaignsSelect } from '@/features/campaigns/containers/CampaignSelect'
+import { CAMPAIGN_TABLE_TYPES, FILTER_TYPE } from '@/features/campaigns/constants'
 import { RangeDayPicker } from '@/components/RangeDayPicker'
-import { dateToString } from '@/utils/date-to-string'
+import { useCampaignsManager } from '@/features/campaigns/hooks/use-campaignsManager'
+import { CampaignListTable } from '@/features/campaigns/containers/tables/CampaignListTable/CampaignListTable'
+import { CampaignNameFilter } from '@/features/campaigns/containers/filters/CampaignNameFilter'
+import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
+import { PikedFilter } from '@/components/piked-filters/PikedFilter'
+import { StatusFilter } from '@/features/campaigns/containers/filters/StatusFilter'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import {
   Container,
@@ -23,79 +20,28 @@ import {
   TableContainer,
   PaginationContainer,
 } from './styles/CampaignsList.styled'
-import { CampaignListTable } from './containers/CampaignListTable/CampaignListTable'
-import {
-  selectCampaignsPagination,
-  reset,
-  asyncGetCampaignsList,
-  selectSearchTerm,
-  asyncGetActiveCampaigns,
-  selectFilterCampaignName,
-  selectFilterDate,
-  setFilterDate,
-} from './store/campaigns'
-import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
-import { CreateCampaignModal } from './containers/CreateCampaignModal'
-import { EditCampaignModal } from './containers/EditCampaignModal'
-import { NewCampaignReviewModal } from './containers/NewCampaignReviewModal'
+import { asyncGetCampaignsList } from './store/campaigns'
+import { DeleteCampaignModal } from './containers/modals/DeleteCampaignModal'
+import { CreateCampaignModal } from './containers/modals/CreateCampaignModal'
+import { EditCampaignModal } from './containers/modals/EditCampaignModal'
+import { NewCampaignReviewModal } from './containers/modals/NewCampaignReviewModal'
 
 export const CampaignsList = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
-  const { select, dispatch } = useRedux()
-  const { modalState, setModal } = useModals()
+  const { modalState } = useModals()
   const {
-    pagination: { total, page, limit },
-    searchTerm,
-    filterCampaignName,
-    filterDate,
-  } = select(
-    createStructuredSelector({
-      pagination: selectCampaignsPagination,
-      searchTerm: selectSearchTerm,
-      filterCampaignName: selectFilterCampaignName,
-      filterDate: selectFilterDate,
-    }),
-    shallowEqual,
-  )
-
-  useEffect(() => {
-    dispatch(
-      asyncGetCampaignsList({
-        page,
-        limit,
-        orderBy: 'ASC',
-        search: searchTerm,
-        name: filterCampaignName,
-        ...(filterDate?.from && { fromDate: filterDate?.from }),
-        ...(filterDate?.to && { toDate: filterDate?.to }),
-      }),
-    )
-  }, [page, searchTerm, filterCampaignName, filterDate])
-
-  useUnmount(() => {
-    dispatch(reset())
-  })
-
-  const handleCreateCampaign = useCallback(() => {
-    setModal({ modalName: MODAL_NAMES.CREATE_CAMPAIGN, isOpen: true })
-  }, [])
+    handleCreateCampaign,
+    handleChangePage,
+    handleChangeDate,
+    pagination: { page, total, limit },
+    filters,
+    handlerResetFilters,
+  } = useCampaignsManager(asyncGetCampaignsList)
 
   const reviewModalIsOpen =
     modalState?.modalName === MODAL_NAMES.REVIEW_CAMPAIGN && modalState.isOpen
   const createModalIsOpen =
     modalState?.modalName === MODAL_NAMES.CREATE_CAMPAIGN && modalState.isOpen
-
-  const changePageHandler = useCallback((page: number) => {
-    dispatch(asyncGetActiveCampaigns({ page, limit, orderBy: 'ASC', search: searchTerm }))
-  }, [])
-
-  const onDateChange = useCallback((date) => {
-    const newDate = {
-      from: date?.from ? dateToString(startOfDay(date.from)) : undefined,
-      to: date?.to ? dateToString(endOfDay(date.to)) : undefined,
-    }
-    dispatch(setFilterDate(newDate))
-  }, [])
 
   return (
     <>
@@ -103,9 +49,9 @@ export const CampaignsList = (): JSX.Element => {
         <Panel>
           <Flex gap={16} align="center" width="100%">
             <CampaignSearchField />
-            <CampaignsSelect type={CAMPAIGN_TABLE_TYPES.LIST} />
+            <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.LIST} />
             <StatusFilter />
-            <RangeDayPicker onChange={onDateChange} />
+            <RangeDayPicker onChange={handleChangeDate} />
           </Flex>
           <FilledButton
             size="m"
@@ -117,6 +63,36 @@ export const CampaignsList = (): JSX.Element => {
             {t('add-campaign')}
           </FilledButton>
         </Panel>
+        <Flex
+          gap={16}
+          align="center"
+          styles={{
+            display: Object.keys(filters).length === 0 ? 'none' : 'flex',
+            marginTop: '12px',
+          }}
+        >
+          {(filters.filterCampaignName ||
+            filters.filterStatus ||
+            (filters.filterDate?.from && filters.filterDate?.to)) && (
+            <Flex gap="16px" align="center">
+              {filters.filterCampaignName && (
+                <PikedFilter
+                  onClose={() => handlerResetFilters(FILTER_TYPE.CAMPAIGN_NAME)}
+                >
+                  {filters.filterCampaignName}
+                </PikedFilter>
+              )}
+              {filters.filterStatus && (
+                <PikedFilter onClose={() => handlerResetFilters(FILTER_TYPE.STATUS)}>
+                  {t(`statuses.${filters.filterStatus}`)}
+                </PikedFilter>
+              )}
+            </Flex>
+          )}
+          <OutlinedButton size="s" onClick={() => handlerResetFilters(FILTER_TYPE.ALL)}>
+            {t('reset-filters')}
+          </OutlinedButton>
+        </Flex>
         <TableContainer>
           <CampaignListTable />
         </TableContainer>
@@ -124,7 +100,7 @@ export const CampaignsList = (): JSX.Element => {
           <Pagination
             lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
             currentPage={page}
-            onChange={changePageHandler}
+            onChange={handleChangePage}
           />
         </PaginationContainer>
       </Container>

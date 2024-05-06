@@ -60,5 +60,8 @@
         "every-day": "Every day",
         "every-10-minutes": "Every 10 minutes",
         "every-half": "Every half hour"
-    }
+    },
+    "campaigns-filter": "Campaign name",
+    "reset-filters": "Reset filters",
+    "filter-by-status": "Filter by status"
 }

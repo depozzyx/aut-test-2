@@ -9,11 +9,11 @@ import {
   MenuProps,
 } from 'react-select'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
-import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
 import { Label } from '@peiko/components/inputs/Label'
+import { CheckIcon } from '@/icons/CheckIcon'
 import { TSelectOption, TMultiSelectProps, TSelectEvent } from './types'
-import { Container, StyledMultiSelect } from './MutliSelect.styled'
+import { Container, CustomLabel, StyledMultiSelect } from './MutliSelect.styled'
 
 export const MultiSelect = ({
   options,
@@ -99,25 +99,16 @@ export const MultiSelect = ({
   const Option = useCallback(
     (props: OptionProps<TSelectOption, boolean, GroupBase<TSelectOption>>) => {
       const { isSelected, label } = props
+
       return (
         <components.Option {...props}>
-          <Flex
-            align="center"
-            gap={10}
-            onClick={() => null}
-            styles={{ cursor: 'pointer' }}
-          >
-            <input
-              id="option"
-              type="checkbox"
-              checked={isSelected}
-              onChange={() => null}
-              style={{ cursor: 'pointer' }}
-            />
-            <Text variant="f8" color="main5" styles={{ cursor: 'pointer' }}>
+          <CustomLabel key={label} isSelected={isSelected}>
+            <input id="option" type="checkbox" checked={isSelected} />
+            <Text variant="f8" color="main5">
               {label}
             </Text>
-          </Flex>
+            {isSelected && <CheckIcon color="main4" />}
+          </CustomLabel>
         </components.Option>
       )
     },

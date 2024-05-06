@@ -1,12 +1,13 @@
 import { useState, memo, useCallback, useEffect, useMemo } from 'react'
+import { DateRange } from 'react-day-picker'
 import useTranslation from 'next-translate/useTranslation'
-import { format, startOfDay, addMonths, subMonths } from 'date-fns'
+import { startOfDay, addMonths, subMonths } from 'date-fns'
 import { deepEqual } from '@peiko/utils/deep-equal'
 import { ContextMenu } from '@peiko/components/ContextMenu'
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
-import { DateRange } from 'react-day-picker'
 import { TextButton } from '@peiko/components/buttons/TextButton'
+import { getDateButtonLabel } from '@/components/RangeDayPicker/utils'
 import { CustomFilledBtn, StyledRangeDayPicker } from './RangeDayPicker.styled'
 import { TRangeDayPickerProps } from './types'
 
@@ -17,7 +18,7 @@ const containerStyles = `
   padding: 16px 24px;
 `
 
-const initialDate = {
+const initialDate: TRangeDayPickerProps['dateValue'] = {
   from: undefined,
   to: undefined,
 }
@@ -50,20 +51,8 @@ export const RangeDayPicker = memo<TRangeDayPickerProps>(
     }, [])
 
     const dateToShow = useMemo(
-      () =>
-        // eslint-disable-next-line no-nested-ternary
-        selectedDate?.from && selectedDate?.to
-          ? `${format(selectedDate?.from, 'dd/MM/yyyy')} - ${format(
-              selectedDate?.to,
-              'dd/MM/yyyy',
-            )}`
-          : // eslint-disable-next-line no-nested-ternary
-          selectedDate?.from
-          ? `${format(selectedDate?.from, 'dd/MM/yyyy')} -`
-          : selectedDate?.to
-          ? `- ${format(selectedDate?.to, 'dd/MM/yyyy')}`
-          : t('common:date'),
-      [selectedDate?.from, selectedDate?.to],
+      () => getDateButtonLabel({ from: selectedDate?.from, to: selectedDate?.to, t }),
+      [selectedDate?.from, selectedDate?.to, t],
     )
 
     const modifiers = {
@@ -79,31 +68,20 @@ export const RangeDayPicker = memo<TRangeDayPickerProps>(
         const newDayTime = newDay.getTime()
 
         if (!selectedDate?.from || (selectedDate.from && selectedDate.to)) {
-          setSelectedDate({
-            from: newDay,
-            to: undefined,
-          })
-        } else if (selectedDate?.from) {
-          const fromTime = selectedDate?.from.getTime()
+          setSelectedDate({ from: newDay, to: undefined })
+          return
+        }
 
-          if (newDayTime < fromTime) {
-            setSelectedDate({
-              from: newDay,
-              to: selectedDate.from,
-            })
-          } else {
-            setSelectedDate({
-              from: selectedDate.from,
-              to: newDay,
-            })
-          }
+        const fromTime = selectedDate.from.getTime()
 
-          if (onChange && selectedDate?.from && newDay !== selectedDate.from) {
-            onChange({
-              from: newDayTime < fromTime ? newDay : selectedDate.from,
-              to: newDayTime < fromTime ? selectedDate.from : newDay,
-            })
-          }
+        const isFromEarlier = newDayTime < fromTime
+        const newFromDate = isFromEarlier ? newDay : selectedDate.from
+        const newToDate = isFromEarlier ? selectedDate.from : newDay
+
+        setSelectedDate({ from: newFromDate, to: newToDate })
+
+        if (onChange && newDay !== selectedDate.from) {
+          onChange({ from: newFromDate, to: newToDate })
         }
       },
       [onChange, selectedDate],
@@ -114,7 +92,7 @@ export const RangeDayPicker = memo<TRangeDayPickerProps>(
       onChange?.(initialDate)
     }
 
-    const Calendar = () => (
+    const Calendar = (): JSX.Element => (
       <Flex align="start" direction="column">
         <Flex gap={50} width="100%">
           <Flex width="100%" direction="column" align="center" gap={12}>
