@@ -3,6 +3,10 @@ import useTranslation from 'next-translate/useTranslation'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import { Table } from '@peiko/components/Table'
+import { useRedux } from '@/hooks/use-redux'
+import useModals from '@/features/common/modals/hooks/use-modals'
+import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { TCampaignStatus } from '@/features/campaigns/types'
 import { IconButton } from '@peiko/components/buttons/IconButton'
 import { ViewIcon } from '@peiko/components/icons/ViewIcon'
 import { EditIcon } from '@peiko/components/icons/EditIcon'
@@ -10,20 +14,16 @@ import { TrashIcon } from '@peiko/components/icons/TrashIcon'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
-import { useRedux } from '@/hooks/use-redux'
-import useModals from '@/features/common/modals/hooks/use-modals'
-import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { TCampaignStatus } from '@/features/campaigns/types'
-import { InfoColumn } from '../../components/InfoColumn'
-import { StatusChip } from '../../components/StatusChip'
-import { ActionBtn } from '../../components/ActionBtn'
+import { InfoColumn } from '../../../components/InfoColumn'
+import { StatusChip } from '../../../components/StatusChip'
+import { ActionBtn } from '../../../components/ActionBtn'
 import {
   selectIsLoading,
   selectCampaignsListForView,
   setSelectedId,
   asyncUpdateCampaignStatus,
-} from '../../store/campaigns'
-import { formatCreatedAt } from '../../utils/formatCreateAt'
+} from '../../../store/campaigns'
+import { formatCreatedAt } from '../../../utils/formatCreateAt'
 
 type TCampaignRowKeys =
   | 'view'

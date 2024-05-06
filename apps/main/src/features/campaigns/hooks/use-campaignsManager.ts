@@ -10,7 +10,12 @@ import {
   selectFilterDate,
   selectSearchTerm,
   reset,
+  resetFilters,
   setFilterDate,
+  setFilterCampaignName,
+  setSearchTerm,
+  setFilterStatus,
+  selectFilterStatus,
 } from '@/features/campaigns/store/campaigns'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import useModals from '@/features/common/modals/hooks/use-modals'
@@ -18,12 +23,21 @@ import { dateToString } from '@/utils/date-to-string'
 import { TActiveCampaignsReq } from '@/api-rest/campaigns/types'
 import { AnyAction, ThunkAction } from '@reduxjs/toolkit'
 import { TRootState } from '@/store'
+import { TCampaignStatus, TFilterType } from '@/features/campaigns/types'
+import { FILTER_TYPE } from '@/features/campaigns/constants'
 
 type TReturn = {
   handleCreateCampaign: () => void
   handleChangePage: (newPage: number) => void
   handleChangeDate: (date: { from?: Date; to?: Date }) => void
   pagination: { total: number; page: number; limit?: number }
+  filters: {
+    searchTerm?: string
+    filterCampaignName?: string
+    filterStatus?: TCampaignStatus
+    filterDate?: { from?: string | Date; to?: string | Date }
+  }
+  handlerResetFilters: (filterType: TFilterType) => void
 }
 
 type TCampaignThunk = (
@@ -39,12 +53,14 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
     searchTerm,
     filterCampaignName,
     filterDate,
+    filterStatus,
   } = select(
     createStructuredSelector({
       pagination: selectCampaignsPagination,
       searchTerm: selectSearchTerm,
       filterCampaignName: selectFilterCampaignName,
       filterDate: selectFilterDate,
+      filterStatus: selectFilterStatus,
     }),
     shallowEqual,
   )
@@ -55,13 +71,14 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
         page,
         limit,
         orderBy: 'ASC',
-        search: searchTerm,
-        name: filterCampaignName,
+        ...(searchTerm && { search: searchTerm }),
+        ...(filterCampaignName && { name: filterCampaignName }),
+        ...(filterStatus && { status: filterStatus }),
         ...(filterDate?.from && { fromDate: filterDate?.from }),
         ...(filterDate?.to && { toDate: filterDate?.to }),
       }),
     )
-  }, [dispatch, page, limit, searchTerm, filterCampaignName, filterDate])
+  }, [dispatch, page, limit, searchTerm, filterCampaignName, filterStatus, filterDate])
 
   useUnmount(() => {
     dispatch(reset())
@@ -78,14 +95,15 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
           page: newPage,
           limit,
           orderBy: 'ASC',
-          search: searchTerm,
-          name: filterCampaignName,
+          ...(searchTerm && { search: searchTerm }),
+          ...(filterCampaignName && { name: filterCampaignName }),
+          ...(filterStatus && { status: filterStatus }),
           ...(filterDate?.from && { fromDate: filterDate?.from }),
           ...(filterDate?.to && { toDate: filterDate?.to }),
         }),
       )
     },
-    [dispatch, limit, searchTerm, filterCampaignName, filterDate],
+    [dispatch, limit, searchTerm, filterCampaignName, filterStatus, filterDate],
   )
 
   const handleChangeDate = useCallback((date) => {
@@ -96,10 +114,38 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
     dispatch(setFilterDate(newDate))
   }, [])
 
+  const filters = {
+    ...(searchTerm && { searchTerm }),
+    ...(filterCampaignName && { filterCampaignName }),
+    ...(filterStatus && { filterStatus }),
+    ...(filterDate?.from && filterDate?.to && { filterDate }),
+  }
+
+  const handlerResetFilters = useCallback((filterType: TFilterType) => {
+    if (filterType === FILTER_TYPE.CAMPAIGN_NAME) {
+      dispatch(setFilterCampaignName(''))
+    } else if (filterType === FILTER_TYPE.DATE) {
+      dispatch(
+        setFilterDate({
+          from: undefined,
+          to: undefined,
+        }),
+      )
+    } else if (filterType === FILTER_TYPE.SEARCH) {
+      dispatch(setSearchTerm(''))
+    } else if (filterType === FILTER_TYPE.STATUS) {
+      dispatch(setFilterStatus(undefined))
+    } else {
+      dispatch(resetFilters())
+    }
+  }, [])
+
   return {
     handleCreateCampaign,
     handleChangePage,
     handleChangeDate,
     pagination: { total, page, limit },
+    filters,
+    handlerResetFilters,
   }
 }

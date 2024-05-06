@@ -12,7 +12,7 @@ import { TCampaignTableType } from '@/features/campaigns/types'
 import { TGeneratedCallTime } from '@/features/campaigns/constants'
 import { useCallTime } from '@/features/campaigns/hooks/use-callTime'
 import { useCallFrequency } from '@/features/campaigns/hooks/use-callFrequency'
-import { createCampaignValidationSchema } from '@/features/campaigns/containers/CreateCampaignModal/components/CreateCampaignForm/validationSchema'
+import { createCampaignValidationSchema } from '@/features/campaigns/containers/modals/CreateCampaignModal/components/CreateCampaignForm/validationSchema'
 import { FormikMultiSelect } from '@/components/formik-wrappers/FormikMultiSelect'
 import { createStructuredSelector } from 'reselect'
 import {

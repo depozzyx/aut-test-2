@@ -4,18 +4,21 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { Flex } from '@/components/Flex'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
-import { ActiveCampaignsTable } from '@/features/campaigns/containers/ActiveCampaignsTable'
-import { CampaignsSelect } from '@/features/campaigns/containers/CampaignSelect'
+import { ActiveCampaignsTable } from 'features/campaigns/containers/tables/ActiveCampaignsTable'
 import { DashboardTabs } from '@/components/DashboardTabs'
 import { Pagination } from '@peiko/components/Pagination'
-import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
+import { CAMPAIGN_TABLE_TYPES, FILTER_TYPE } from '@/features/campaigns/constants'
 import { RangeDayPicker } from '@/components/RangeDayPicker'
 import { useCampaignsManager } from '@/features/campaigns/hooks/use-campaignsManager'
-import { CreateCampaignModal } from './containers/CreateCampaignModal'
+import { CampaignNameFilter } from '@/features/campaigns/containers/filters/CampaignNameFilter'
+import { StatusFilter } from '@/features/campaigns/containers/filters/StatusFilter'
+import { PikedFilter } from '@/components/piked-filters/PikedFilter'
+import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
+import { CreateCampaignModal } from './containers/modals/CreateCampaignModal'
 import { CampaignSearchField } from './components/CampaignSearchField'
-import { NewCampaignReviewModal } from './containers/NewCampaignReviewModal'
+import { NewCampaignReviewModal } from './containers/modals/NewCampaignReviewModal'
 import { asyncGetActiveCampaigns } from './store/campaigns'
-import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
+import { DeleteCampaignModal } from './containers/modals/DeleteCampaignModal'
 
 export const ActiveCampaigns = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
@@ -26,6 +29,8 @@ export const ActiveCampaigns = (): JSX.Element => {
     handleChangePage,
     handleChangeDate,
     pagination: { page, total, limit },
+    filters,
+    handlerResetFilters,
   } = useCampaignsManager(asyncGetActiveCampaigns)
 
   const reviewModalIsOpen =
@@ -40,7 +45,8 @@ export const ActiveCampaigns = (): JSX.Element => {
         <Flex padding="12px 0 0 0" justify="space-between">
           <Flex gap={16} align="center" width="100%">
             <CampaignSearchField />
-            <CampaignsSelect type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
+            <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
+            <StatusFilter />
             <RangeDayPicker onChange={handleChangeDate} />
           </Flex>
           <FilledButton
@@ -52,6 +58,36 @@ export const ActiveCampaigns = (): JSX.Element => {
           >
             {t('add-campaign')}
           </FilledButton>
+        </Flex>
+        <Flex
+          gap={16}
+          align="center"
+          styles={{
+            display: Object.keys(filters).length === 0 ? 'none' : 'flex',
+            marginTop: '12px',
+          }}
+        >
+          {(filters.filterCampaignName ||
+            filters.filterStatus ||
+            (filters.filterDate?.from && filters.filterDate?.to)) && (
+            <Flex gap="16px" align="center">
+              {filters.filterCampaignName && (
+                <PikedFilter
+                  onClose={() => handlerResetFilters(FILTER_TYPE.CAMPAIGN_NAME)}
+                >
+                  {filters.filterCampaignName}
+                </PikedFilter>
+              )}
+              {filters.filterStatus && (
+                <PikedFilter onClose={() => handlerResetFilters(FILTER_TYPE.STATUS)}>
+                  {t(`statuses.${filters.filterStatus}`)}
+                </PikedFilter>
+              )}
+            </Flex>
+          )}
+          <OutlinedButton size="s" onClick={() => handlerResetFilters(FILTER_TYPE.ALL)}>
+            {t('reset-filters')}
+          </OutlinedButton>
         </Flex>
         <ActiveCampaignsTable />
         <Flex padding="40px 0 0 0" justify="center">

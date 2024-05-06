@@ -29,3 +29,11 @@ export const CAMPAIGN_TABLE_TYPES = {
   ACTIVE: 'active',
   LIST: 'list',
 } as const
+
+export const FILTER_TYPE = {
+  SEARCH: 'searchTerm',
+  CAMPAIGN_NAME: 'filterCampaignName',
+  STATUS: 'status',
+  DATE: 'filterDate',
+  ALL: 'all',
+} as const

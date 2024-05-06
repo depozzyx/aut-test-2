@@ -5,11 +5,14 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { StatusFilter } from '@/components/StatusFilter'
-import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
-import { CampaignsSelect } from '@/features/campaigns/containers/CampaignSelect'
+import { CAMPAIGN_TABLE_TYPES, FILTER_TYPE } from '@/features/campaigns/constants'
 import { RangeDayPicker } from '@/components/RangeDayPicker'
 import { useCampaignsManager } from '@/features/campaigns/hooks/use-campaignsManager'
+import { CampaignListTable } from '@/features/campaigns/containers/tables/CampaignListTable/CampaignListTable'
+import { CampaignNameFilter } from '@/features/campaigns/containers/filters/CampaignNameFilter'
+import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
+import { PikedFilter } from '@/components/piked-filters/PikedFilter'
+import { StatusFilter } from '@/features/campaigns/containers/filters/StatusFilter'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import {
   Container,
@@ -17,12 +20,11 @@ import {
   TableContainer,
   PaginationContainer,
 } from './styles/CampaignsList.styled'
-import { CampaignListTable } from './containers/CampaignListTable/CampaignListTable'
 import { asyncGetCampaignsList } from './store/campaigns'
-import { DeleteCampaignModal } from './containers/DeleteCampaignModal'
-import { CreateCampaignModal } from './containers/CreateCampaignModal'
-import { EditCampaignModal } from './containers/EditCampaignModal'
-import { NewCampaignReviewModal } from './containers/NewCampaignReviewModal'
+import { DeleteCampaignModal } from './containers/modals/DeleteCampaignModal'
+import { CreateCampaignModal } from './containers/modals/CreateCampaignModal'
+import { EditCampaignModal } from './containers/modals/EditCampaignModal'
+import { NewCampaignReviewModal } from './containers/modals/NewCampaignReviewModal'
 
 export const CampaignsList = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
@@ -32,6 +34,8 @@ export const CampaignsList = (): JSX.Element => {
     handleChangePage,
     handleChangeDate,
     pagination: { page, total, limit },
+    filters,
+    handlerResetFilters,
   } = useCampaignsManager(asyncGetCampaignsList)
 
   const reviewModalIsOpen =
@@ -45,7 +49,7 @@ export const CampaignsList = (): JSX.Element => {
         <Panel>
           <Flex gap={16} align="center" width="100%">
             <CampaignSearchField />
-            <CampaignsSelect type={CAMPAIGN_TABLE_TYPES.LIST} />
+            <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.LIST} />
             <StatusFilter />
             <RangeDayPicker onChange={handleChangeDate} />
           </Flex>
@@ -59,6 +63,36 @@ export const CampaignsList = (): JSX.Element => {
             {t('add-campaign')}
           </FilledButton>
         </Panel>
+        <Flex
+          gap={16}
+          align="center"
+          styles={{
+            display: Object.keys(filters).length === 0 ? 'none' : 'flex',
+            marginTop: '12px',
+          }}
+        >
+          {(filters.filterCampaignName ||
+            filters.filterStatus ||
+            (filters.filterDate?.from && filters.filterDate?.to)) && (
+            <Flex gap="16px" align="center">
+              {filters.filterCampaignName && (
+                <PikedFilter
+                  onClose={() => handlerResetFilters(FILTER_TYPE.CAMPAIGN_NAME)}
+                >
+                  {filters.filterCampaignName}
+                </PikedFilter>
+              )}
+              {filters.filterStatus && (
+                <PikedFilter onClose={() => handlerResetFilters(FILTER_TYPE.STATUS)}>
+                  {t(`statuses.${filters.filterStatus}`)}
+                </PikedFilter>
+              )}
+            </Flex>
+          )}
+          <OutlinedButton size="s" onClick={() => handlerResetFilters(FILTER_TYPE.ALL)}>
+            {t('reset-filters')}
+          </OutlinedButton>
+        </Flex>
         <TableContainer>
           <CampaignListTable />
         </TableContainer>

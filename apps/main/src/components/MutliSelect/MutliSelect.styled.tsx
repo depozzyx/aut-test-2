@@ -237,10 +237,10 @@ export const StyledMultiSelect = styled(CustomMultiSelect)<TStyledMultiSelectPro
           color: ${palette.main2};
         }
 
-        :not(:last-of-type) {
-          border-bottom: 1px solid;
-          border-color: ${({ theme }) => theme.palette.main3};
-        }
+        // :not(:last-of-type) {
+        //   border-bottom: 1px solid;
+        //   border-color: ${({ theme }) => theme.palette.main3};
+        // }
       }
 
       .multi-rs__indicator-separator {

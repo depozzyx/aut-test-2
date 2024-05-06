@@ -8,12 +8,12 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useRedux } from '@/hooks/use-redux'
-import { TCampaignTableType } from '../../types'
+import { TCampaignTableType } from '../../../types'
 import {
   asyncRemoveCampaign,
   selectCampaignForDelete,
   setSelectedId,
-} from '../../store/campaigns'
+} from '../../../store/campaigns'
 
 type TProps = {
   type: TCampaignTableType

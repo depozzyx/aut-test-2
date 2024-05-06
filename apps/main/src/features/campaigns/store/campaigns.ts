@@ -33,6 +33,7 @@ export type TInit = {
     from?: string
     to?: string
   }
+  filterStatus?: TCampaignStatus
 }
 
 const init: TInit = {
@@ -52,6 +53,7 @@ const init: TInit = {
     from: undefined,
     to: undefined,
   },
+  filterStatus: undefined,
 }
 
 const campaigns = createSlice({
@@ -82,11 +84,22 @@ const campaigns = createSlice({
     setFilterDate(state, action: PayloadAction<TInit['filterDate']>) {
       state.filterDate = action.payload
     },
+    setFilterStatus(state, action: PayloadAction<TInit['filterStatus']>) {
+      state.filterStatus = action.payload
+    },
+    resetFilters(state) {
+      state.searchTerm = ''
+      state.filterCampaignName = ''
+      state.filterStatus = undefined
+      state.filterDate = {
+        from: undefined,
+        to: undefined,
+      }
+    },
     reset: () => init,
   },
 })
 
-// actions
 export const {
   setIsLoading,
   setPagination,
@@ -96,10 +109,11 @@ export const {
   setSearchTerm,
   setFilterCampaignName,
   setFilterDate,
+  setFilterStatus,
+  resetFilters,
   reset,
 } = campaigns.actions
 
-// selectors
 export const selectCampaigns: TSelector<TInit> = (state) => state.campaigns
 
 export const selectIsLoading = createSelector(
@@ -120,17 +134,6 @@ export const selectCampaignsList = createSelector(
 export const selectActiveCampaigns = createSelector(
   selectCampaigns,
   ({ activeCampaigns }) => activeCampaigns,
-)
-
-export const selectSelectedCampaignFromList = createSelector(
-  selectCampaigns,
-  ({ selectedId, campaignList }) => campaignList.find(({ id }) => id === selectedId),
-)
-
-export const selectSelectedCampaignFromActive = createSelector(
-  selectCampaigns,
-  ({ selectedId, activeCampaigns }) =>
-    activeCampaigns.find(({ id }) => id === selectedId),
 )
 
 export const selectFilterDate = createSelector(
@@ -167,27 +170,6 @@ export const selectCampaignsListForView = createSelector(
   (campaignList) => campaignList,
 )
 
-type TCampaignNameOption = {
-  label: string
-  value: string
-}
-
-export const selectCampaignsNames = (
-  type: TCampaignTableType,
-): TSelector<TCampaignNameOption[]> =>
-  createSelector([selectCampaigns], ({ activeCampaigns, campaignList }) => {
-    if (type === CAMPAIGN_TABLE_TYPES.ACTIVE) {
-      return activeCampaigns.map((campaign) => ({
-        label: campaign.name,
-        value: campaign.name,
-      }))
-    }
-    return campaignList.map((campaign) => ({
-      label: campaign.name,
-      value: campaign.name,
-    }))
-  })
-
 export const selectSearchTerm = createSelector(
   selectCampaigns,
   ({ searchTerm }) => searchTerm,
@@ -196,6 +178,11 @@ export const selectSearchTerm = createSelector(
 export const selectFilterCampaignName = createSelector(
   selectCampaigns,
   ({ filterCampaignName }) => filterCampaignName,
+)
+
+export const selectFilterStatus = createSelector(
+  selectCampaigns,
+  ({ filterStatus }) => filterStatus,
 )
 
 export default campaigns.reducer

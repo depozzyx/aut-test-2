@@ -13,14 +13,14 @@ import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { InfoColumn } from '../../components/InfoColumn'
+import { InfoColumn } from '../../../components/InfoColumn'
 import {
   selectActiveCampaignsForView,
   selectIsLoading,
   setSelectedId,
-} from '../../store/campaigns'
-import { formatCreatedAt } from '../../utils/formatCreateAt'
-import { useCallFrequency } from '../../hooks/use-callFrequency'
+} from '../../../store/campaigns'
+import { formatCreatedAt } from '../../../utils/formatCreateAt'
+import { useCallFrequency } from '../../../hooks/use-callFrequency'
 
 type TActiveCampaignsRowKeys =
   | 'name'
