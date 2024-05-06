@@ -16,6 +16,7 @@ import {
   setSearchTerm,
   setFilterStatus,
   selectFilterStatus,
+  selectSort,
 } from '@/features/campaigns/store/campaigns'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import useModals from '@/features/common/modals/hooks/use-modals'
@@ -54,6 +55,7 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
     filterCampaignName,
     filterDate,
     filterStatus,
+    sort: { sortBy, orderBy },
   } = select(
     createStructuredSelector({
       pagination: selectCampaignsPagination,
@@ -61,6 +63,7 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
       filterCampaignName: selectFilterCampaignName,
       filterDate: selectFilterDate,
       filterStatus: selectFilterStatus,
+      sort: selectSort,
     }),
     shallowEqual,
   )
@@ -70,15 +73,26 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
       fetcher({
         page,
         limit,
-        orderBy: 'ASC',
+        orderBy,
         ...(searchTerm && { search: searchTerm }),
         ...(filterCampaignName && { name: filterCampaignName }),
         ...(filterStatus && { status: filterStatus }),
         ...(filterDate?.from && { fromDate: filterDate?.from }),
         ...(filterDate?.to && { toDate: filterDate?.to }),
+        ...(sortBy && { sortBy }),
       }),
     )
-  }, [dispatch, page, limit, searchTerm, filterCampaignName, filterStatus, filterDate])
+  }, [
+    dispatch,
+    page,
+    limit,
+    searchTerm,
+    filterCampaignName,
+    filterStatus,
+    filterDate,
+    sortBy,
+    orderBy,
+  ])
 
   useUnmount(() => {
     dispatch(reset())
@@ -94,16 +108,26 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
         fetcher({
           page: newPage,
           limit,
-          orderBy: 'ASC',
+          orderBy,
           ...(searchTerm && { search: searchTerm }),
           ...(filterCampaignName && { name: filterCampaignName }),
           ...(filterStatus && { status: filterStatus }),
           ...(filterDate?.from && { fromDate: filterDate?.from }),
           ...(filterDate?.to && { toDate: filterDate?.to }),
+          ...(sortBy && { sortBy }),
         }),
       )
     },
-    [dispatch, limit, searchTerm, filterCampaignName, filterStatus, filterDate],
+    [
+      dispatch,
+      limit,
+      searchTerm,
+      filterCampaignName,
+      filterStatus,
+      filterDate,
+      sortBy,
+      orderBy,
+    ],
   )
 
   const handleChangeDate = useCallback((date) => {

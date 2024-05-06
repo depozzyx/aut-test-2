@@ -14,6 +14,9 @@ import { TrashIcon } from '@peiko/components/icons/TrashIcon'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
+import { HeaderWithSort } from '@/features/campaigns/components/HeaderWithSort'
+import { SORT_BY } from '@/features/campaigns/constants'
+import { useCampaignSort } from '@/features/campaigns/hooks/use-campaignSort'
 import { InfoColumn } from '../../../components/InfoColumn'
 import { StatusChip } from '../../../components/StatusChip'
 import { ActionBtn } from '../../../components/ActionBtn'
@@ -49,6 +52,8 @@ export const CampaignListTable = (): JSX.Element => {
     shallowEqual,
   )
 
+  const { handleSort } = useCampaignSort()
+
   const handleView = useCallback((id: number) => {
     // eslint-disable-next-line no-console
     console.log(`View ${id}`)
@@ -69,9 +74,33 @@ export const CampaignListTable = (): JSX.Element => {
   }, [])
 
   const headers: THeader<TCampaignRowKeys>[] = [
-    { label: t('campaign-list-headers.campaign-name'), value: 'name' },
-    { label: t('campaign-list-headers.creation-date'), value: 'date' },
-    { label: t('campaign-list-headers.status'), value: 'status' },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('active-campaigns-headers.campaign-name')}
+          onClick={() => handleSort(SORT_BY.NAME)}
+        />
+      ),
+      value: 'name',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('active-campaigns-headers.creation-date')}
+          onClick={() => handleSort(SORT_BY.CREATED_AT)}
+        />
+      ),
+      value: 'date',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('campaign-list-headers.status')}
+          onClick={() => handleSort(SORT_BY.WORK_STATUS)}
+        />
+      ),
+      value: 'status',
+    },
     { label: t('campaign-list-headers.leads'), value: 'leads' },
     { label: t('campaign-list-headers.agents'), value: 'agents' },
     { label: t('campaign-list-headers.view'), value: 'view' },

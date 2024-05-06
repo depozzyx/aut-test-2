@@ -37,3 +37,14 @@ export const FILTER_TYPE = {
   DATE: 'filterDate',
   ALL: 'all',
 } as const
+
+export const SORT_BY = {
+  CREATED_AT: 'createdAt',
+  WORK_STATUS: 'workStatus',
+  NAME: 'name',
+} as const
+
+export const ORDER_BY = {
+  ASC: 'ASC',
+  DESC: 'DESC',
+} as const

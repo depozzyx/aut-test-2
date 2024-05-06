@@ -7,7 +7,7 @@ import {
 } from '@reduxjs/toolkit'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { TSelector, TAsyncAction, TRootState } from '@/store'
-import { TActiveCampaignsReq } from '@/api-rest/campaigns/types'
+import { TActiveCampaignsReq, TSortBy } from '@/api-rest/campaigns/types'
 import { TPagination } from '@/types/entities/pagination'
 import { handleRestError } from '@/features/common/error'
 import {
@@ -19,6 +19,7 @@ import {
 import { notificationActions } from '@/features/common/notifications/store'
 import { modalsActions } from '@/features/common/modals/store'
 import { CAMPAIGN_STATUSES, CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
+import { TOrderBy } from '@/types/entities/orderBy'
 
 export type TInit = {
   isLoading: boolean
@@ -34,6 +35,7 @@ export type TInit = {
     to?: string
   }
   filterStatus?: TCampaignStatus
+  sort: { sortBy?: TSortBy; orderBy: TOrderBy }
 }
 
 const init: TInit = {
@@ -54,6 +56,7 @@ const init: TInit = {
     to: undefined,
   },
   filterStatus: undefined,
+  sort: { sortBy: undefined, orderBy: 'ASC' },
 }
 
 const campaigns = createSlice({
@@ -87,6 +90,9 @@ const campaigns = createSlice({
     setFilterStatus(state, action: PayloadAction<TInit['filterStatus']>) {
       state.filterStatus = action.payload
     },
+    setSort(state, action: PayloadAction<TInit['sort']>) {
+      state.sort = action.payload
+    },
     resetFilters(state) {
       state.searchTerm = ''
       state.filterCampaignName = ''
@@ -110,6 +116,7 @@ export const {
   setFilterCampaignName,
   setFilterDate,
   setFilterStatus,
+  setSort,
   resetFilters,
   reset,
 } = campaigns.actions
@@ -184,6 +191,8 @@ export const selectFilterStatus = createSelector(
   selectCampaigns,
   ({ filterStatus }) => filterStatus,
 )
+
+export const selectSort = createSelector(selectCampaigns, ({ sort }) => sort)
 
 export default campaigns.reducer
 
