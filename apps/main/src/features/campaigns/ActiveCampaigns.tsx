@@ -13,6 +13,7 @@ import { useCampaignsManager } from '@/features/campaigns/hooks/use-campaignsMan
 import { CampaignNameFilter } from '@/features/campaigns/containers/filters/CampaignNameFilter'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
+import { EditCampaignModal } from '@/features/campaigns/containers/modals/EditCampaignModal'
 import { CreateCampaignModal } from './containers/modals/CreateCampaignModal'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import { NewCampaignReviewModal } from './containers/modals/NewCampaignReviewModal'
@@ -91,6 +92,7 @@ export const ActiveCampaigns = (): JSX.Element => {
           />
         </Flex>
       </Flex>
+      <EditCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
       <DeleteCampaignModal type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
       {createModalIsOpen && <CreateCampaignModal />}
       {reviewModalIsOpen && <NewCampaignReviewModal type={CAMPAIGN_TABLE_TYPES.ACTIVE} />}
