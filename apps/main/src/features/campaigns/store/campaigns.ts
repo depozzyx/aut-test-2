@@ -201,7 +201,10 @@ export const asyncGetActiveCampaigns =
   async (dispatch) => {
     try {
       dispatch(setIsLoading(true))
-      const { data } = await apiCampaigns.getActiveCampaigns(params)
+      const { data } = await apiCampaigns.getActiveCampaigns({
+        status: CAMPAIGN_STATUSES.ACTIVE,
+        ...params,
+      })
 
       dispatch(setActiveCampaigns(data.data))
       dispatch(setPagination(data.pagination))

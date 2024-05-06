@@ -11,9 +11,9 @@ import { CAMPAIGN_TABLE_TYPES, FILTER_TYPE } from '@/features/campaigns/constant
 import { RangeDayPicker } from '@/components/RangeDayPicker'
 import { useCampaignsManager } from '@/features/campaigns/hooks/use-campaignsManager'
 import { CampaignNameFilter } from '@/features/campaigns/containers/filters/CampaignNameFilter'
-import { StatusFilter } from '@/features/campaigns/containers/filters/StatusFilter'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
+import { EditCampaignModal } from '@/features/campaigns/containers/modals/EditCampaignModal'
 import { CreateCampaignModal } from './containers/modals/CreateCampaignModal'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import { NewCampaignReviewModal } from './containers/modals/NewCampaignReviewModal'
@@ -46,7 +46,6 @@ export const ActiveCampaigns = (): JSX.Element => {
           <Flex gap={16} align="center" width="100%">
             <CampaignSearchField />
             <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
-            <StatusFilter />
             <RangeDayPicker onChange={handleChangeDate} />
           </Flex>
           <FilledButton
@@ -78,11 +77,6 @@ export const ActiveCampaigns = (): JSX.Element => {
                   {filters.filterCampaignName}
                 </PikedFilter>
               )}
-              {filters.filterStatus && (
-                <PikedFilter onClose={() => handlerResetFilters(FILTER_TYPE.STATUS)}>
-                  {t(`statuses.${filters.filterStatus}`)}
-                </PikedFilter>
-              )}
             </Flex>
           )}
           <OutlinedButton size="s" onClick={() => handlerResetFilters(FILTER_TYPE.ALL)}>
@@ -98,6 +92,7 @@ export const ActiveCampaigns = (): JSX.Element => {
           />
         </Flex>
       </Flex>
+      <EditCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
       <DeleteCampaignModal type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
       {createModalIsOpen && <CreateCampaignModal />}
       {reviewModalIsOpen && <NewCampaignReviewModal type={CAMPAIGN_TABLE_TYPES.ACTIVE} />}

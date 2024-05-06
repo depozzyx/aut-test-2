@@ -56,9 +56,9 @@ export const ActiveCampaignsTable = (): JSX.Element => {
     setModal({ modalName: MODAL_NAMES.DELETE_CAMPAIGN, isOpen: true })
   }, [])
 
-  const handleEdit = useCallback((id: number) => {
-    // eslint-disable-next-line no-console
-    console.log(`Edit ${id}`)
+  const handleEditCampaign = useCallback((id: number) => {
+    dispatch(setSelectedId(id))
+    setModal({ modalName: MODAL_NAMES.EDIT_CAMPAIGN, isOpen: true })
   }, [])
 
   const headers: THeader<TActiveCampaignsRowKeys>[] = [
@@ -95,7 +95,10 @@ export const ActiveCampaignsTable = (): JSX.Element => {
       callAnswerRate: <InfoColumn title={`${campaign.callAnswerRate}%`} />,
       conversionRate: <InfoColumn title={`${campaign.conversionRate}%`} />,
       edit: (
-        <IconButton onClick={() => handleEdit(campaign.id)} iconColor="transparent">
+        <IconButton
+          onClick={() => handleEditCampaign(campaign.id)}
+          iconColor="transparent"
+        >
           <EditIcon width="24px" height="24px" />
         </IconButton>
       ),
