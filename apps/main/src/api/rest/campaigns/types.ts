@@ -4,7 +4,7 @@ import { TGeneratedCallTime } from '@/features/campaigns/constants'
 import { TCampaignStatus } from '@/features/campaigns/types'
 import { TOrderBy } from '@/types/entities/orderBy'
 
-export type TSortBy = 'createdAt' | 'workStatus' | 'name'
+export type TSortBy = 'createdAt' | 'status' | 'name'
 
 export type TActiveCampaignsReq = {
   orderBy: TOrderBy
