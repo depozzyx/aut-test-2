@@ -17,10 +17,10 @@ export const MenuContainer = styled.div<{ minWidth?: string; maxHeight?: string 
 `
 
 export const MenuItem = styled.label<{ checked?: boolean }>`
+  width: 100%;
   cursor: pointer;
   padding: 0 12px;
   min-height: 36px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -5,7 +5,6 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { DashboardTabs } from '@/components/DashboardTabs'
 import { ROUTES } from '@/constants/routes'
-import { StatusFilter } from '@/components/StatusFilter'
 import { AgentSearchField } from './components/AgentSearchField'
 import { ActiveAgentsTable } from './containers/ActiveAgentsTable'
 
@@ -23,9 +22,6 @@ export const ActiveAgents = (): JSX.Element => {
       <Flex padding="12px 0 0 0" justify="space-between">
         <Flex gap={16} align="center">
           <AgentSearchField />
-          <Flex>
-            <StatusFilter />
-          </Flex>
         </Flex>
         <FilledButton
           size="m"

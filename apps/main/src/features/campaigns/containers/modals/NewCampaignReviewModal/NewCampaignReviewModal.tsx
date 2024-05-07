@@ -4,8 +4,8 @@ import useModals from '@/features/common/modals/hooks/use-modals'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
 import { Text } from '@peiko/components/Text'
 import { ReviewFields } from './components/ReviewFields'
-import { reset } from '../../store/create-campaign'
-import { TCampaignTableType } from '../../types'
+import { reset } from '../../../store/create-campaign'
+import { TCampaignTableType } from '../../../types'
 
 type TProps = {
   type: TCampaignTableType

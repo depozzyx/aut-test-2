@@ -32,3 +32,10 @@ export type TCampaign = {
   status: TCampaignStatus
   preferredCallTime: TGeneratedCallTime
 }
+
+export type TFilterType =
+  | 'searchTerm'
+  | 'filterCampaignName'
+  | 'status'
+  | 'filterDate'
+  | 'all'

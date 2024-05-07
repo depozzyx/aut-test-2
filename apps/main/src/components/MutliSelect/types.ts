@@ -15,8 +15,6 @@ export type TSelectOption = {
   readonly label: string | ReactElement
 }
 
-export type TSelectOptions = readonly TSelectOption[]
-
 export type TSelectEvent = SingleValue<TSelectOption> | MultiValue<TSelectOption>
 
 export type TMultiSelectProps = {
@@ -78,6 +76,9 @@ export type TMultiSelectProps = {
    * @type string
    * */
   error?: string
+  /**
+   * Specify the label of the input select
+   * */
   label?: TLabelProps
   /**
    * Specify the max height of the input select dropdown
@@ -107,6 +108,12 @@ export type TMultiSelectProps = {
    * Use pixels number or string
    * */
   zIndex?: CSSProperties['zIndex']
+  /**
+   * Callback function that is fired when the scroll reaches the bottom of the menu
+   */
   onMenuScrollToBottom?: () => void
+  /**
+   * Specify the default value of the input select
+   */
   defaultValue?: TSelectOption[]
 } & TStylesProps

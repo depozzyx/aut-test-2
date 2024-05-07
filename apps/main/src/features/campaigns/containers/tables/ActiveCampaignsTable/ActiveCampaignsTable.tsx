@@ -13,14 +13,17 @@ import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import useModals from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { InfoColumn } from '../../components/InfoColumn'
+import { useCampaignSort } from '@/features/campaigns/hooks/use-campaignSort'
+import { SORT_BY } from '@/features/campaigns/constants'
+import { HeaderWithSort } from '@/features/campaigns/components/HeaderWithSort'
+import { InfoColumn } from '../../../components/InfoColumn'
 import {
   selectActiveCampaignsForView,
   selectIsLoading,
   setSelectedId,
-} from '../../store/campaigns'
-import { formatCreatedAt } from '../../utils/formatCreateAt'
-import { useCallFrequency } from '../../hooks/use-callFrequency'
+} from '../../../store/campaigns'
+import { formatCreatedAt } from '../../../utils/formatCreateAt'
+import { useCallFrequency } from '../../../hooks/use-callFrequency'
 
 type TActiveCampaignsRowKeys =
   | 'name'
@@ -45,6 +48,7 @@ export const ActiveCampaignsTable = (): JSX.Element => {
     shallowEqual,
   )
 
+  const { handleSort } = useCampaignSort()
   const { getCallFrequencyLabel } = useCallFrequency()
 
   const handleDelete = useCallback((id: number) => {
@@ -52,14 +56,30 @@ export const ActiveCampaignsTable = (): JSX.Element => {
     setModal({ modalName: MODAL_NAMES.DELETE_CAMPAIGN, isOpen: true })
   }, [])
 
-  const handleEdit = useCallback((id: number) => {
-    // eslint-disable-next-line no-console
-    console.log(`Edit ${id}`)
+  const handleEditCampaign = useCallback((id: number) => {
+    dispatch(setSelectedId(id))
+    setModal({ modalName: MODAL_NAMES.EDIT_CAMPAIGN, isOpen: true })
   }, [])
 
   const headers: THeader<TActiveCampaignsRowKeys>[] = [
-    { label: t('active-campaigns-headers.campaign-name'), value: 'name' },
-    { label: t('active-campaigns-headers.creation-date'), value: 'date' },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('active-campaigns-headers.campaign-name')}
+          onClick={() => handleSort(SORT_BY.NAME)}
+        />
+      ),
+      value: 'name',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('active-campaigns-headers.creation-date')}
+          onClick={() => handleSort(SORT_BY.CREATED_AT)}
+        />
+      ),
+      value: 'date',
+    },
     { label: t('active-campaigns-headers.call-volume'), value: 'callVolume' },
     { label: t('active-campaigns-headers.response-rate'), value: 'callAnswerRate' },
     { label: t('active-campaigns-headers.conversion-rate'), value: 'conversionRate' },
@@ -75,7 +95,10 @@ export const ActiveCampaignsTable = (): JSX.Element => {
       callAnswerRate: <InfoColumn title={`${campaign.callAnswerRate}%`} />,
       conversionRate: <InfoColumn title={`${campaign.conversionRate}%`} />,
       edit: (
-        <IconButton onClick={() => handleEdit(campaign.id)} iconColor="transparent">
+        <IconButton
+          onClick={() => handleEditCampaign(campaign.id)}
+          iconColor="transparent"
+        >
           <EditIcon width="24px" height="24px" />
         </IconButton>
       ),

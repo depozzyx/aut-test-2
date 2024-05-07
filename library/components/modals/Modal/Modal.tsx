@@ -8,7 +8,7 @@ import { TModalProps } from './types'
 
 /** Modal component is basic Popup
  *
- * Modal doesnt responsible for content of the modal
+ * Modal doesn't responsible for content of the modal
  *
  * You may pass any children you want to show in the modal
  *
@@ -31,8 +31,10 @@ export const Modal = memo(
 
     useEffect(() => setIsClient(true), [])
 
-    useClickAway(containerRef, () => {
-      if (disableCloseOutside) return
+    useClickAway(containerRef, (event) => {
+      const targetElement = event.target as HTMLElement
+      if (disableCloseOutside || targetElement.closest('.multi-rs__clear-indicator'))
+        return
       onClose?.()
     })
 
