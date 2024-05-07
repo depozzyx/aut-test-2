@@ -2,7 +2,7 @@ export const ROUTES = {
   HOME: '/',
   SIGN_IN: '/auth/sign-in',
   FORGOT_PASSWORD: '/auth/forgot-password',
-  LOGOUT: 'auth/logout',
+  LOGOUT: '/auth/logout',
   RESET_PASSWORD: '/auth/reset-password',
   DASHBOARD_ACTIVE_CAMPAIGNS: '/cabinet/dashboard/active-campaigns',
   DASHBOARD_ACTIVE_AGENTS: '/cabinet/dashboard/active-agents',
