@@ -12,11 +12,15 @@ import { CustomFilledBtn, StyledRangeDayPicker } from './RangeDayPicker.styled'
 import { TRangeDayPickerProps } from './types'
 
 const containerStyles = `
-  box-shadow: '0 0 12px 0 rgba(40, 63, 123, 0.25)';
   border-radius: 8px;
   background-color: #fefefe;
   padding: 16px 24px;
 `
+
+const contentStyle = {
+  boxShadow: '0px 0px 12px 0px rgba(40, 63, 123, 0.25)',
+  borderRadius: '8px',
+}
 
 const initialDate: TRangeDayPickerProps['dateValue'] = {
   from: undefined,
@@ -143,6 +147,7 @@ export const RangeDayPicker = memo<TRangeDayPickerProps>(
         on="click"
         position="bottom center"
         offsetY={12}
+        contentStyle={contentStyle}
         containerStyles={containerStyles}
         trigger={<CustomFilledBtn title={dateToShow} />}
         renderMenu={() => <Calendar />}
