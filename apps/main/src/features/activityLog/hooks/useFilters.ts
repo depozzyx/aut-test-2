@@ -6,14 +6,14 @@ import { TEntityActions } from '@/types/activity-logs'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { TPagination } from '@/types/entities/pagination'
 import useTranslation from 'next-translate/useTranslation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 type TValue<T = string> = {
   label: string
   value: T
 }
 
-type TFilters = {
+export type TFilters = {
   actionTypes: TValue<TEntityActions>[]
   orderBy: TValue<TOrderBy>[]
   getManagers: (params: TManagersReq) => void
@@ -67,11 +67,6 @@ export const useFilters = (): TFilters => {
     { label: t('filterNames.delete-api-key'), value: 'delete-api-key' },
     { label: t('filterNames.import-lead'), value: 'import-lead' },
   ]
-
-  useEffect(() => {
-    const { page, limit } = managerPagination
-    getManagers({ page, limit, orderBy: 'DESC' })
-  }, [])
 
   return { actionTypes, orderBy, getManagers, managers, managerPagination }
 }
