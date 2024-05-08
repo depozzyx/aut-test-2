@@ -1,6 +1,6 @@
 import { DropdownMenu } from '@/components/DropdownMenu'
 import { Flex } from '@/components/Flex'
-import { RangeDayPicker } from '@/components/RangeDayPicker'
+import { RangeDayPicker } from '@/inputs/RangeDayPicker'
 import { BaseTrigger } from '@/components/dropdown-triggers/BaseTrigger'
 import { useRedux } from '@/hooks/use-redux'
 import { Input } from '@peiko/components/inputs/Input'
@@ -9,6 +9,7 @@ import React, { FC, useCallback } from 'react'
 import { dateToString } from '@/utils/date-to-string'
 import { SearchFieldIcon } from '@/icons/SearchFieldIcon'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
+import { TDateValue } from '@/inputs/RangeDayPicker/types'
 import { selectFilters, setFilters } from '../../store/activity-log'
 import { TFilters, useFilters } from '../../hooks/useFilters'
 
@@ -26,7 +27,7 @@ export const Filters: FC<
     dispatch(setFilters({ ...filters, [filterName]: value }))
 
   const onDateChange = useCallback(
-    (date) => {
+    (date: TDateValue) => {
       const fromDate = date?.from ? dateToString(date.from) : undefined
       const toDate = date?.to ? dateToString(date.to) : undefined
       const copyFilters = { ...filters, fromDate, toDate }

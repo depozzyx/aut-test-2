@@ -50,7 +50,7 @@ const defaultFonts: TDefaultFonts = {
     letter-spacing: 0;
   `,
   f9: `
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 300;
     line-height: 20px;
     letter-spacing: 0;

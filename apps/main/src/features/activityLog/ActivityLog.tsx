@@ -106,7 +106,7 @@ export const ActivityLog: FC = () => {
           managerPagination={managerPagination}
         />
         <FilledButton onClick={onExport} width="236px">
-          {t('exportLogs')}
+          {t('export')}
         </FilledButton>
       </Flex>
       <SelectedFilters managers={managers} />
@@ -116,7 +116,7 @@ export const ActivityLog: FC = () => {
         loading={loading}
         onChangePage={onChangePage}
       />
-      <ExportLogs />
+      <ExportLogs managers={managers} />
     </Box>
   )
 }
