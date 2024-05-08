@@ -103,8 +103,8 @@ export const CampaignListTable = (): JSX.Element => {
     },
     { label: t('campaign-list-headers.leads'), value: 'leads' },
     { label: t('campaign-list-headers.agents'), value: 'agents' },
-    { label: t('campaign-list-headers.view'), value: 'view' },
     { label: t('campaign-list-headers.action'), value: 'action' },
+    { label: t('campaign-list-headers.view'), value: 'view' },
     { label: t('campaign-list-headers.edit'), value: 'edit' },
     { label: t('campaign-list-headers.delete'), value: 'delete' },
   ]
@@ -116,16 +116,16 @@ export const CampaignListTable = (): JSX.Element => {
       status: <StatusChip status={campaign.status} />,
       leads: <InfoColumn title={campaign.leadCount} />,
       agents: <InfoColumn title={campaign.agentCount} />,
-      view: (
-        <IconButton onClick={() => handleView(campaign.id)} iconColor="main3">
-          <ViewIcon width="24px" height="24px" />
-        </IconButton>
-      ),
       action: (
         <ActionBtn
           status={campaign.status}
           onClick={() => handleAction(campaign.id, campaign.status)}
         />
+      ),
+      view: (
+        <IconButton onClick={() => handleView(campaign.id)} iconColor="main3">
+          <ViewIcon width="24px" height="24px" />
+        </IconButton>
       ),
       edit: (
         <IconButton

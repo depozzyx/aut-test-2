@@ -117,9 +117,9 @@ export const ContextMenu: React.FC<TContextMenu> = ({
 
         {!customMenu && (
           <Container
-            containerStyles={containerStyles}
             ref={containerRef}
             tabIndex={0}
+            containerStyles={containerStyles}
             style={{ display: show ? 'flex' : 'none' }}
             className="context-menu-container"
           >

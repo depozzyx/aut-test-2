@@ -18,6 +18,11 @@ const containerStyles = `
   padding: 0;
 `
 
+const contentStyle = {
+  boxShadow: '0px 0px 12px 0px rgba(40, 63, 123, 0.25)',
+  borderRadius: '8px',
+}
+
 const initialDate: TRangeDayPickerProps['dateValue'] = {
   from: undefined,
   to: undefined,
@@ -153,6 +158,7 @@ export const RangeDayPicker = memo<TRangeDayPickerProps>(
         on="click"
         position="bottom center"
         offsetY={12}
+        contentStyle={contentStyle}
         containerStyles={containerStyles}
         open={isOpen}
         customCloseHandler={customCloseHandler}

@@ -40,7 +40,7 @@ export const FILTER_TYPE = {
 
 export const SORT_BY = {
   CREATED_AT: 'createdAt',
-  WORK_STATUS: 'workStatus',
+  WORK_STATUS: 'status',
   NAME: 'name',
 } as const
 
