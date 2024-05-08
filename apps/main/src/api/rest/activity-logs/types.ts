@@ -2,7 +2,7 @@ import { TEntityActions, TEntityType, TSortBy } from '@/types/activity-logs'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { TPagination } from '@/types/entities/pagination'
 
-export type TActivityLogsReq = {
+type TActivityLogParams = {
   orderBy?: TOrderBy
   userId?: string
   targetCampaignId?: number
@@ -13,4 +13,7 @@ export type TActivityLogsReq = {
   sortBy?: TSortBy
   fromDate?: string
   toDate?: string
-} & Pick<TPagination, 'page' | 'limit'>
+}
+
+export type TActivityLogsReq = TActivityLogParams & Pick<TPagination, 'page' | 'limit'>
+export type TExportLogsReq = TActivityLogParams

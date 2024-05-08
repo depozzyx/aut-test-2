@@ -7,14 +7,15 @@ import { ContextMenu } from '@peiko/components/ContextMenu'
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
 import { TextButton } from '@peiko/components/buttons/TextButton'
-import { getDateButtonLabel } from '@/components/RangeDayPicker/utils'
+import { getDateButtonLabel } from '@/inputs/RangeDayPicker/utils'
 import { CustomFilledBtn, StyledRangeDayPicker } from './RangeDayPicker.styled'
 import { TRangeDayPickerProps } from './types'
 
 const containerStyles = `
+  box-shadow: 0 0 12px 0 rgba(40, 63, 123, 0.25);
   border-radius: 8px;
   background-color: #fefefe;
-  padding: 16px 24px;
+  padding: 0;
 `
 
 const contentStyle = {
@@ -30,7 +31,17 @@ const initialDate: TRangeDayPickerProps['dateValue'] = {
 const today = new Date()
 
 export const RangeDayPicker = memo<TRangeDayPickerProps>(
-  ({ dateValue, onChange, ...otherProps }): JSX.Element => {
+  ({
+    dateValue,
+    onChange,
+    isOpen,
+    trigger,
+    zIndex,
+    menuClassName,
+    customCloseHandler,
+    customOpenHandler,
+    ...otherProps
+  }): JSX.Element => {
     const { t } = useTranslation('datepicker')
     const [selectedDate, setSelectedDate] =
       useState<TRangeDayPickerProps['dateValue']>(initialDate)
@@ -97,7 +108,7 @@ export const RangeDayPicker = memo<TRangeDayPickerProps>(
     }
 
     const Calendar = (): JSX.Element => (
-      <Flex align="start" direction="column">
+      <Flex align="start" direction="column" styles={{ padding: '16px 24px' }}>
         <Flex gap={50} width="100%">
           <Flex width="100%" direction="column" align="center" gap={12}>
             <Text color="main3" variant="f6">
@@ -149,7 +160,12 @@ export const RangeDayPicker = memo<TRangeDayPickerProps>(
         offsetY={12}
         contentStyle={contentStyle}
         containerStyles={containerStyles}
-        trigger={<CustomFilledBtn title={dateToShow} />}
+        open={isOpen}
+        customCloseHandler={customCloseHandler}
+        customOpenHandler={customOpenHandler}
+        zIndex={zIndex}
+        className={menuClassName}
+        trigger={trigger ?? <CustomFilledBtn title={dateToShow} />}
         renderMenu={() => <Calendar />}
       />
     )

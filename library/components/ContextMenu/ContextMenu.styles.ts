@@ -9,6 +9,9 @@ export const StyledPopup = styled(Popup)`
     stroke-dashoffset: -54px;
     color: ${(props) => props.theme.palette.base};
   }
+  /* &-content {
+    z-index: 1000;
+  } */
 `
 
 export const Container = styled.div<{ containerStyles?: string }>`
