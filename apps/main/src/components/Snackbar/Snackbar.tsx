@@ -1,8 +1,8 @@
-import { FC } from 'react'
-
+import { FC, useEffect, useState } from 'react'
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
 import { TStatuses } from '@/features/common/notifications'
+import { useTimeoutFn } from 'react-use'
 import { StyledFilledChip } from './Snackbar.styled'
 
 export interface ISnackbarProps {
@@ -23,6 +23,18 @@ export const Snackbar: FC<ISnackbarProps> = ({
   withAnimation,
   children,
 }) => {
+  const [slideOut, setSlideOut] = useState(false)
+
+  const [, cancel, reset] = useTimeoutFn(() => {
+    setSlideOut(true)
+    setTimeout(onClose, 500)
+  }, 5000)
+
+  useEffect(() => {
+    reset()
+    return cancel
+  }, [children, status])
+
   const defaultContent = (
     <Flex direction="column">
       {title && (
@@ -45,6 +57,7 @@ export const Snackbar: FC<ISnackbarProps> = ({
       size="m"
       onDelete={onClose}
       withAnimation={withAnimation}
+      slideOut={slideOut}
     >
       {children || defaultContent}
     </StyledFilledChip>

@@ -9,7 +9,9 @@
     "export-error": "<translate>There is an error when exporting a custom report. Try again</translate>"
   },
   "agent": {
-    "success-delete": "<value>{{ agentName }}</value> <translate>was successfully deleted</translate>"
+    "success-delete": "<value>{{ agentName }}</value> <translate>was successfully deleted</translate>",
+    "create-success": "<translate>New agent</translate> <value>{{ agentName }}</value> <translate>was successfully added</translate>",
+    "update-success": "<translate>Agent`s info was successfully updated</translate>"
   },
   "settings": {
     "user-data-changed": "<translate>Changes saved</translate>"

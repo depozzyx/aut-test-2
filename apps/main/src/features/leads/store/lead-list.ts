@@ -38,9 +38,7 @@ const leadList = createSlice({
   },
 })
 
-// actions
 export const { setPagination, setLeadListCatalog, setIsLoading, reset } = leadList.actions
-// selectors
 
 export const selectLeadList: TSelector<TInit> = (state) => state.leadList
 
@@ -54,7 +52,7 @@ export const selectLeadListCatalog = createSelector(
   ({ leadListCatalog }) => leadListCatalog,
 )
 
-export const selectIsLoading = createSelector(
+export const selectIsLoadingLeadsGroups = createSelector(
   selectLeadList,
   ({ isLoading }) => isLoading,
 )

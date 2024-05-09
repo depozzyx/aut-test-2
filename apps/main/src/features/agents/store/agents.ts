@@ -1,58 +1,92 @@
 import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit'
-import { TSelector } from '@/store'
+import { TAsyncAction, TSelector } from '@/store'
 import { TPagination } from '@/types/entities/pagination'
-import { TAgent, agentsMock } from '../mocks/agentsMock'
-import { TActiveAgent, activeAgentsMock } from '../mocks/acitveAgentsMock'
+import { apiAgents } from '@/api-rest/agents'
+import { handleRestError } from '@/features/common/error'
+import { TAgent, TAgentsReq, TDeletedAgentData } from '@/api-rest/agents/types'
+import { TAgentSortBy, TAgentWorkStatus } from '@/features/agents/types'
+import { TOrderBy } from '@/types/entities/orderBy'
+import { notificationActions } from '@/features/common/notifications/store'
+import { modalsActions } from '@/features/common/modals/store'
 
 export type TInit = {
-  selectedId: null | number
+  selectedId: null | number | string
+  isLoading: boolean
   agentsList: TAgent[]
-  activeAgents: TActiveAgent[]
+  activeAgents: TAgent[]
   meta: unknown
   pagination: TPagination
+  sort: { sortBy?: TAgentSortBy; orderBy: TOrderBy }
+  statusFilter?: TAgentWorkStatus
+  deletedAgentData: null | TDeletedAgentData
 }
 
 const init: TInit = {
   selectedId: null,
-  agentsList: agentsMock,
-  activeAgents: activeAgentsMock,
+  isLoading: false,
+  agentsList: [],
+  activeAgents: [],
   meta: {},
   pagination: {
     page: 1,
     limit: 10,
     total: 10,
   },
+  sort: { sortBy: undefined, orderBy: 'ASC' },
+  statusFilter: undefined,
+  deletedAgentData: null,
 }
 
 const agents = createSlice({
   name: 'agents',
   initialState: init,
   reducers: {
+    setIsLoading(state, action: PayloadAction<TInit['isLoading']>) {
+      state.isLoading = action.payload
+    },
     setSelectedId(state, action: PayloadAction<TInit['selectedId']>) {
       state.selectedId = action.payload
     },
-    setPagination(state, action: PayloadAction<TPagination>) {
+    setPagination(state, action: PayloadAction<TInit['pagination']>) {
       state.pagination = action.payload
     },
-    setAgentsList(state, action: PayloadAction<TAgent[]>) {
+    setAgentsList(state, action: PayloadAction<TInit['agentsList']>) {
       state.agentsList = action.payload
     },
-    setActiveAgents(state, action: PayloadAction<TActiveAgent[]>) {
+    setActiveAgents(state, action: PayloadAction<TInit['activeAgents']>) {
       state.activeAgents = action.payload
     },
-    deleteAgent(state, action: PayloadAction<TInit['selectedId']>) {
-      state.agentsList = state.agentsList.filter(({ id }) => id !== action.payload)
-      state.selectedId = null
+    setSort(state, action: PayloadAction<TInit['sort']>) {
+      state.sort = action.payload
+    },
+    setStatusFilter(state, action: PayloadAction<TInit['statusFilter']>) {
+      state.statusFilter = action.payload
+    },
+    setDeletedAgentData(state, action: PayloadAction<TInit['deletedAgentData']>) {
+      state.deletedAgentData = action.payload
     },
     reset: () => init,
   },
 })
 
-// actions
-export const { setPagination, setSelectedId, deleteAgent, reset } = agents.actions
-// selectors
+export const {
+  setIsLoading,
+  setPagination,
+  setSelectedId,
+  setAgentsList,
+  setActiveAgents,
+  setSort,
+  setStatusFilter,
+  setDeletedAgentData,
+  reset,
+} = agents.actions
 
 export const selectAgents: TSelector<TInit> = (state) => state.agents
+
+export const selectIsLoadingAgents = createSelector(
+  selectAgents,
+  ({ isLoading }) => isLoading,
+)
 
 export const selectAgentsPagination = createSelector(
   selectAgents,
@@ -74,4 +108,77 @@ export const selectActiveAgents = createSelector(
   ({ activeAgents }) => activeAgents,
 )
 
+export const selectAgentsOptions = createSelector(selectAgentsList, (agentsList) =>
+  agentsList.map(({ id, username }) => ({ value: id, label: username })),
+)
+
+export const selectStatusFilter = createSelector(
+  selectAgents,
+  ({ statusFilter }) => statusFilter,
+)
+
+export const selectSort = createSelector(selectAgents, ({ sort }) => sort)
+
+export const selectSelectedId = createSelector(
+  selectAgents,
+  ({ selectedId }) => selectedId,
+)
+
 export default agents.reducer
+
+export const asyncGetAgentsList =
+  (params: TAgentsReq): TAsyncAction =>
+  async (dispatch) => {
+    try {
+      dispatch(setIsLoading(true))
+      const {
+        data: { data },
+      } = await apiAgents.getAgentsList(params)
+      dispatch(setAgentsList(data))
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    } finally {
+      dispatch(setIsLoading(false))
+    }
+  }
+
+export const asyncGetActiveAgents =
+  (params: TAgentsReq): TAsyncAction =>
+  async (dispatch) => {
+    try {
+      dispatch(setIsLoading(true))
+      const {
+        data: { data },
+      } = await apiAgents.getActiveAgents(params)
+      dispatch(setActiveAgents(data))
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    } finally {
+      dispatch(setIsLoading(false))
+    }
+  }
+
+export const asyncRemoveAgent =
+  (id: number): TAsyncAction =>
+  async (dispatch) => {
+    try {
+      dispatch(setIsLoading(true))
+      const {
+        data: { data },
+      } = await apiAgents.deleteAgent(id)
+      dispatch(setDeletedAgentData(data))
+      dispatch(modalsActions.resetModalsState())
+      dispatch(
+        notificationActions.setNotification({
+          key: 'notifications:agent.success-delete',
+          status: 'success',
+          values: { agentName: data.username ?? '' },
+        }),
+      )
+      dispatch(asyncGetAgentsList({ page: 1, limit: 10, orderBy: 'ASC' }))
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    } finally {
+      dispatch(setIsLoading(false))
+    }
+  }

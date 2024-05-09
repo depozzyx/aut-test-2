@@ -8,31 +8,21 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useRedux } from '@/hooks/use-redux'
-import useNotification from '@/features/common/notifications/hooks/use-notifications'
-import { selectSelectedAgent, deleteAgent } from '../../store/agents'
+import { asyncRemoveAgent, selectSelectedAgent } from '../../../store/agents'
 
 export const DeleteAgentModal = (): JSX.Element => {
   const { t } = useTranslation('common')
   const { select, dispatch } = useRedux()
   const { modalState, resetModals } = useModals()
-  const { setNotification } = useNotification()
 
   const selectedAgent = select(selectSelectedAgent)
 
   const showModal =
     modalState?.modalName === MODAL_NAMES.DELETE_AGENT && modalState.isOpen
 
-  const agentName = 'Esther Howard'
-
   const handleDelete = () => {
     if (!selectedAgent) return
-    dispatch(deleteAgent(selectedAgent.id))
-    resetModals()
-    setNotification({
-      key: 'notifications:agent.success-delete',
-      status: 'success',
-      values: { agentName: selectedAgent.name || agentName },
-    })
+    dispatch(asyncRemoveAgent(selectedAgent.id))
   }
 
   const title = (
@@ -44,7 +34,7 @@ export const DeleteAgentModal = (): JSX.Element => {
           value: <Text tag="span" variant="f2" color="main2" />,
         }}
         values={{
-          agentName: selectedAgent?.name || agentName,
+          agentName: selectedAgent?.username || '',
         }}
       />
     </Flex>

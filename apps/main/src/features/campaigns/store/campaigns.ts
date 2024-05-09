@@ -194,6 +194,11 @@ export const selectFilterStatus = createSelector(
 
 export const selectSort = createSelector(selectCampaigns, ({ sort }) => sort)
 
+export const selectSelectedCampaignId = createSelector(
+  selectCampaigns,
+  ({ selectedId }) => selectedId,
+)
+
 export default campaigns.reducer
 
 export const asyncGetActiveCampaigns =

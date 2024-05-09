@@ -4,19 +4,29 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
+import { validation } from '@/utils/validation'
+import { useRedux } from '@/hooks/use-redux'
+import {
+  asyncCreateAgent,
+  selectCreateAgentsIsLoading,
+} from '@/features/agents/store/create-agent'
 
 export const CreateAgent = (): JSX.Element => {
   const { t } = useTranslation('agents')
+  const { select, dispatch } = useRedux()
+  const isLoading = select(selectCreateAgentsIsLoading)
 
   const formik = useFormik({
     initialValues: {
-      name: 'Lebron James',
-      email: 'lakers@gmail.com',
+      username: '',
+      email: '',
     },
-    validationSchema: yup.object().shape({}),
+    validationSchema: yup.object().shape({
+      username: validation.required,
+      email: validation.email.required(),
+    }),
     onSubmit: (formData) => {
-      // eslint-disable-next-line no-console
-      console.log(formData)
+      dispatch(asyncCreateAgent({ formData, formik }))
     },
   })
 
@@ -28,7 +38,7 @@ export const CreateAgent = (): JSX.Element => {
             <Flex direction="column" gap={16} maxWidth="326px" width="100%">
               <FormikInput
                 size="s"
-                name="name"
+                name="username"
                 label={{ label: t('edit-agent.agent-name') }}
                 id="name"
                 formik={formik}
@@ -47,7 +57,12 @@ export const CreateAgent = (): JSX.Element => {
             </Flex>
           </Flex>
           <Flex align="center" justify="center" gap={24}>
-            <FilledButton type="submit" width="236px">
+            <FilledButton
+              type="submit"
+              width="236px"
+              isLoading={isLoading}
+              disabled={!formik.dirty || !formik.isValid || isLoading}
+            >
               {t('create-agent.action')}
             </FilledButton>
           </Flex>
