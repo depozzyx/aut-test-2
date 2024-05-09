@@ -2,6 +2,7 @@
   "tabs": { "general": "General", "business": "Business" },
   "admin": "Admin",
   "noLogs": "No logs to display",
+  "export": "Data Export",
   "logs": {
     "user": {
       "create": "{{value1}} has created an account for {{value2}}",
@@ -47,5 +48,14 @@
     "import-lead": "Import lead",
     "DESC": "Newest",
     "ASC": "Oldest"
+  },
+  "exportLogs": {
+    "title": "Data Export",
+    "selectedFilters": "Filters selected:",
+    "dateLabel": "Date",
+    "fileFormatLabel": "File format",
+    "fileFormatPlaceholder": "Select",
+    "cancel": "Cancel",
+    "submit": "Submit export"
   }
 }

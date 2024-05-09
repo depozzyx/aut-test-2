@@ -8,7 +8,7 @@ import { ActiveCampaignsTable } from 'features/campaigns/containers/tables/Activ
 import { DashboardTabs } from '@/components/DashboardTabs'
 import { Pagination } from '@peiko/components/Pagination'
 import { CAMPAIGN_TABLE_TYPES, FILTER_TYPE } from '@/features/campaigns/constants'
-import { RangeDayPicker } from '@/components/RangeDayPicker'
+import { RangeDayPicker } from '@/inputs/RangeDayPicker'
 import { useCampaignsManager } from '@/features/campaigns/hooks/use-campaignsManager'
 import { CampaignNameFilter } from '@/features/campaigns/containers/filters/CampaignNameFilter'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
