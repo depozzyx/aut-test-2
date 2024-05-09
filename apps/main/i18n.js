@@ -14,6 +14,7 @@ module.exports = {
       'notifications',
       'routing',
       'datepicker',
+      'validation',
     ],
     '/auth/sign-in': ['error', 'validation', 'inputs', 'auth'],
     '/auth/forgot-password': ['error', 'validation', 'inputs', 'auth'],

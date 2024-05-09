@@ -26,10 +26,22 @@ const slideInRight = keyframes`
   }
 `
 
+const slideOutRight = keyframes`
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+`
+
 export const StyledFilledChip = styled(FilledChip)<{
   status: TStatuses
   maxWidth: string
   withAnimation?: boolean
+  slideOut?: boolean
 }>`
   width: 100%;
   max-width: ${({ maxWidth }) => maxWidth};
@@ -49,11 +61,13 @@ export const StyledFilledChip = styled(FilledChip)<{
       theme.palette[borderColors[status]] || theme.palette.main5};
   }
 
-  ${({ withAnimation }) =>
+  ${({ withAnimation, slideOut }) =>
     withAnimation &&
-    css`
-      transform: translateX(100%);
-      opacity: 0;
-      animation: ${slideInRight} 0.5s forwards ease-out;
-    `}
+    (slideOut
+      ? css`
+          animation: ${slideOutRight} 0.5s forwards ease-out;
+        `
+      : css`
+          animation: ${slideInRight} 0.5s forwards ease-out;
+        `)}
 `

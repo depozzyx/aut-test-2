@@ -15,6 +15,7 @@ import {
   asyncGetCampaignsList,
 } from '@/features/campaigns/store/campaigns'
 import { notificationActions } from '@/features/common/notifications/store'
+import { selectAgentsOptions } from '@/features/agents/store/agents'
 
 export type TInit = {
   isLoading: boolean
@@ -52,8 +53,8 @@ export const selectCreateCampaignFormData: TSelector<TInit['formData']> = create
 )
 
 export const selectFormDataForReview = createSelector(
-  [selectCreateCampaignFormData, selectLeadListCatalogAsOptions],
-  (formData, leadListCatalog) => {
+  [selectCreateCampaignFormData, selectLeadListCatalogAsOptions, selectAgentsOptions],
+  (formData, leadListCatalog, agentsOptions) => {
     if (!formData) return null
 
     const leadsLabels =
@@ -64,9 +65,17 @@ export const selectFormDataForReview = createSelector(
         'label',
       ) || []
 
+    const agentsLabels =
+      map(
+        filter(agentsOptions, (assignedAgentIds) =>
+          includes(formData.assignedAgentIds, assignedAgentIds.value),
+        ),
+        'label',
+      ) || []
+
     return {
       ...formData,
-      assignedAgentIds: [],
+      assignedAgentIds: agentsLabels,
       leadListIdsLabel: leadsLabels,
     }
   },

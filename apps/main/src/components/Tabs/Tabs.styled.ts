@@ -16,7 +16,7 @@ export const Tab = styled.button<TTabProps>((props) => {
     max-width: ${tabSize ?? '242px'};
     width: 100%;
     height: 48px;
-    padding: 12px, 40px;
+    padding: 12px 40px;
     border-bottom: 2px solid ${theme.palette.main22};
     font-weight: 500;
     font-size: 16px;

@@ -1,12 +1,14 @@
+import { FC, ReactNode, useState, memo } from 'react'
 import { Flex } from '@/components/Flex'
-import { FC, ReactNode, useState } from 'react'
 import { TPalette } from '@peiko/styles/types/palette'
+import { deepEqual } from '@peiko/utils/deep-equal'
 import * as S from './Tabs.styled'
 
 type TTab = {
   value: string
   label: ReactNode
   icon: (color: keyof TPalette) => JSX.Element
+  route?: string
   disabled?: boolean
 }
 
@@ -29,7 +31,8 @@ const Tab: FC<TTabsProps<TTab>> = ({
   const iconColor = (): keyof TPalette => {
     if (isHovered || isFocused) return 'main20'
     if (disabled) return 'main22'
-    return 'main2'
+    if (activeTab === value) return 'main2'
+    return 'main22'
   }
 
   return (
@@ -50,8 +53,8 @@ const Tab: FC<TTabsProps<TTab>> = ({
   )
 }
 
-export const Tabs: FC<TTabsProps> = ({ activeTab, setActiveTab, tabs, tabSize }) => {
-  const handleSetActiveTab = (tab: string) => () => {
+export const Tabs: FC<TTabsProps> = memo(({ activeTab, setActiveTab, tabs, tabSize }) => {
+  const handleSetActiveTab = (tab: string) => {
     if (tab === activeTab) return
     setActiveTab(tab)
   }
@@ -69,4 +72,6 @@ export const Tabs: FC<TTabsProps> = ({ activeTab, setActiveTab, tabs, tabSize })
       ))}
     </Flex>
   )
-}
+}, deepEqual)
+
+Tabs.displayName = 'Tabs'

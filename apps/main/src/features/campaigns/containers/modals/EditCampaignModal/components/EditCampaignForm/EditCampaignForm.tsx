@@ -7,9 +7,11 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 import useModals from '@/features/common/modals/hooks/use-modals'
-import { asyncEditCampaign } from '@/features/campaigns/store/edit-campaign'
+import {
+  asyncEditCampaign,
+  selectInitialFormData,
+} from '@/features/campaigns/store/edit-campaign'
 import { TCampaignTableType } from '@/features/campaigns/types'
-import { TGeneratedCallTime } from '@/features/campaigns/constants'
 import { useCallTime } from '@/features/campaigns/hooks/use-callTime'
 import { useCallFrequency } from '@/features/campaigns/hooks/use-callFrequency'
 import { createCampaignValidationSchema } from '@/features/campaigns/containers/modals/CreateCampaignModal/components/CreateCampaignForm/validationSchema'
@@ -17,11 +19,18 @@ import { FormikMultiSelect } from '@/components/formik-wrappers/FormikMultiSelec
 import { createStructuredSelector } from 'reselect'
 import {
   asyncGetLeadListCatalog,
+  selectIsLoadingLeadsGroups,
   selectLeadListCatalogAsOptions,
   selectLeadListPagination,
 } from '@/features/leads/store/lead-list'
 import { shallowEqual } from 'react-redux'
 import { useEffect } from 'react'
+import {
+  asyncGetAgentsList,
+  selectAgentsOptions,
+  selectIsLoadingAgents,
+} from '@/features/agents/store/agents'
+import { Loader } from '@peiko/components/loaders/Loader'
 
 type TProps = {
   type: TCampaignTableType
@@ -35,10 +44,18 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
   const {
     pagination: { page, limit },
     leadListOptions,
+    agentsOptions,
+    isLoadingAgents,
+    isLoadingLeadsGroups,
+    initialFormData,
   } = select(
     createStructuredSelector({
       pagination: selectLeadListPagination,
       leadListOptions: selectLeadListCatalogAsOptions,
+      agentsOptions: selectAgentsOptions,
+      isLoadingAgents: selectIsLoadingAgents,
+      isLoadingLeadsGroups: selectIsLoadingLeadsGroups,
+      initialFormData: selectInitialFormData,
     }),
     shallowEqual,
   )
@@ -47,21 +64,30 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     dispatch(asyncGetLeadListCatalog({ page, limit, orderBy: 'ASC' }))
   }, [])
 
+  useEffect(() => {
+    dispatch(asyncGetAgentsList({ page, limit, orderBy: 'ASC' }))
+  }, [])
+
   const { callTimeOptions } = useCallTime()
   const { callFrequencyOptions } = useCallFrequency()
 
   const formik = useFormik({
     initialValues: {
-      name: '',
-      intensity: callFrequencyOptions[0].value,
-      intensityPerAgent: callFrequencyOptions[0].value,
-      preferredCallTime: callTimeOptions[0].value as TGeneratedCallTime,
+      name: initialFormData?.name || '',
+      intensity: initialFormData?.intensity || callFrequencyOptions[0].value,
+      intensityPerAgent: initialFormData?.intensity || callFrequencyOptions[0].value,
+      preferredCallTime: initialFormData?.preferredCallTime || callTimeOptions[0].value,
+      assignedAgentIds: initialFormData?.assignedAgentIds || [],
+      leadListIds: initialFormData?.leadListIds || [],
     },
     validationSchema: createCampaignValidationSchema,
     onSubmit: (formData) => {
       dispatch(asyncEditCampaign(formData, type))
     },
   })
+
+  if (isLoadingAgents || isLoadingLeadsGroups)
+    return <Loader styles={{ height: '278px', marginTop: '40px' }} />
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
@@ -83,7 +109,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
               label={{ label: t('edit-campaign.agent-assignment') }}
               width={326}
               size="s"
-              options={[]}
+              options={agentsOptions}
             />
             <FormikMultiSelect
               formik={formik}

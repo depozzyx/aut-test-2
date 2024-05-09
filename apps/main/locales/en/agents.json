@@ -3,7 +3,7 @@
     "headers": {
         "agent-name": "Agent Name",
         "email": "Email",
-        "role": "Role",
+        "creation-date": "Creation Date",
         "campaigns": "Campaigns",
         "edit": "Edit",
         "delete": "Delete"
@@ -29,7 +29,13 @@
         "calls-duration": "Calls Duration (avg)",
         "rating": "Rating",
         "time-online": "Time Online",
-        "sum-call-duration": "Sum Call Duration",
-        "active-session": "Active Session"
-    }
+        "sum-call-duration": "Sum Call Duration"
+    },
+    "statuses": {
+        "start": "Start",
+        "pause": "Pause",
+        "unpause": "Unpause",
+        "finish": "Finished"
+    },
+    "filter-by-status": "Agent status"
 }

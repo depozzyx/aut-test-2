@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit'
-import { TAsyncAction, TSelector } from '@/store'
+import { TAsyncAction } from '@/store'
 import { TCampaignTableType } from '@/features/campaigns/types'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 import {
   asyncGetActiveCampaigns,
   asyncGetCampaignsList,
+  selectCampaignsList,
+  selectSelectedCampaignId,
 } from '@/features/campaigns/store/campaigns'
 import { handleRestError } from '@/features/common/error'
 import { modalsActions } from '@/features/common/modals/store'
@@ -32,14 +34,38 @@ const editCampaign = createSlice({
   },
 })
 
-// actions
 export const { reset, setFormData } = editCampaign.actions
-// selectors
 
-export const selectEditCampaign: TSelector<TInit> = (state) => state.editCampaign
+type TAgent = {
+  id: number
+  name: string
+}
 
-export const selectEditCampaignFormData: TSelector<Record<string, unknown>> =
-  createSelector(selectEditCampaign, (state) => state.formData)
+type TLeadList = {
+  id: number
+  name: string
+  createdAt: string
+  updatedAt: string
+}
+
+export const selectInitialFormData = createSelector(
+  [selectSelectedCampaignId, selectCampaignsList],
+  (selectedId, campaignsList) => {
+    const campaign = campaignsList.find((campaign) => campaign.id === selectedId)
+
+    if (!campaign) return undefined
+    const { name, intensity, preferredCallTime, assignedAgents, leadLists } = campaign
+
+    return {
+      id: selectedId,
+      name,
+      intensity,
+      preferredCallTime,
+      assignedAgentIds: assignedAgents.map((agent: TAgent) => agent?.id),
+      leadListIds: leadLists.map((list: TLeadList) => list?.id),
+    }
+  },
+)
 
 export default editCampaign.reducer
 
@@ -56,8 +82,8 @@ export const asyncEditCampaign =
           id: selectedId as number,
           ...formData,
           leadListIds: formData.leadListIds || [],
-          assignedAgentIds: [],
-          reserveAgentIds: [],
+          assignedAgentIds: formData.assignedAgentIds || [],
+          reserveAgentIds: formData.assignedAgentIds || [],
         }
 
         await apiCampaigns.editCampaign(dataForRequest)

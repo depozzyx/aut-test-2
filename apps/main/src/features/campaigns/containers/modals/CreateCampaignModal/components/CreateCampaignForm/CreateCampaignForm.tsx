@@ -16,10 +16,17 @@ import {
   asyncGetLeadListCatalog,
   selectLeadListPagination,
   selectLeadListCatalogAsOptions,
+  selectIsLoadingLeadsGroups,
 } from '@/features/leads/store/lead-list'
+import { Loader } from '@peiko/components/loaders/Loader'
 import { TGeneratedCallTime } from '@/features/campaigns/constants'
 import { reviewFormData } from '@/features/campaigns/store/create-campaign'
 import { FormikMultiSelect } from '@/components/formik-wrappers/FormikMultiSelect'
+import {
+  asyncGetAgentsList,
+  selectAgentsOptions,
+  selectIsLoadingAgents,
+} from '@/features/agents/store/agents'
 import { createCampaignValidationSchema } from './validationSchema'
 
 export const CreateCampaignForm = (): JSX.Element => {
@@ -30,10 +37,16 @@ export const CreateCampaignForm = (): JSX.Element => {
   const {
     pagination: { page, limit },
     leadListOptions,
+    agentsOptions,
+    isLoadingAgents,
+    isLoadingLeadsGroups,
   } = select(
     createStructuredSelector({
       pagination: selectLeadListPagination,
       leadListOptions: selectLeadListCatalogAsOptions,
+      agentsOptions: selectAgentsOptions,
+      isLoadingAgents: selectIsLoadingAgents,
+      isLoadingLeadsGroups: selectIsLoadingLeadsGroups,
     }),
     shallowEqual,
   )
@@ -58,6 +71,13 @@ export const CreateCampaignForm = (): JSX.Element => {
     dispatch(asyncGetLeadListCatalog({ page, limit, orderBy: 'ASC' }))
   }, [])
 
+  useEffect(() => {
+    dispatch(asyncGetAgentsList({ page, limit, orderBy: 'ASC' }))
+  }, [])
+
+  if (isLoadingAgents || isLoadingLeadsGroups)
+    return <Loader styles={{ height: '278px', marginTop: '40px' }} />
+
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off" style={{ width: '100%' }}>
       <Flex width="100%" direction="column" align="center" gap={48} margin="40px 0 0 0">
@@ -79,7 +99,7 @@ export const CreateCampaignForm = (): JSX.Element => {
               label={{ label: t('create-campaign.agent-assignment') }}
               width={326}
               size="s"
-              options={[]}
+              options={agentsOptions}
             />
             <FormikMultiSelect
               formik={formik}

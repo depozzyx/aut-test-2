@@ -15,7 +15,7 @@ import useModals from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useCampaignSort } from '@/features/campaigns/hooks/use-campaignSort'
 import { SORT_BY } from '@/features/campaigns/constants'
-import { HeaderWithSort } from '@/features/campaigns/components/HeaderWithSort'
+import { HeaderWithSort } from 'components/HeaderWithSort'
 import { InfoColumn } from '../../../components/InfoColumn'
 import {
   selectActiveCampaignsForView,
