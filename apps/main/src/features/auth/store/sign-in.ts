@@ -57,6 +57,7 @@ export const signInAsync =
           ...profileData,
         }),
       )
+      dispatch(userActions.getProfile())
     } catch (e) {
       handleActionErrors({
         e,

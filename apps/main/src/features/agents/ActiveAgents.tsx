@@ -9,11 +9,11 @@ import { ROUTES } from '@/constants/routes'
 import { createStructuredSelector } from 'reselect'
 import {
   asyncGetActiveAgents,
-  asyncGetAgentsList,
   selectAgentsPagination,
   selectStatusFilter,
   selectSort,
   setStatusFilter,
+  selectSearchTerm,
 } from '@/features/agents/store/agents'
 import { shallowEqual } from 'react-redux'
 import { useRedux } from '@/hooks/use-redux'
@@ -33,11 +33,13 @@ export const ActiveAgents = (): JSX.Element => {
     pagination: { total, page, limit },
     sort: { orderBy, sortBy },
     statusFilter,
+    searchTerm,
   } = select(
     createStructuredSelector({
       pagination: selectAgentsPagination,
       sort: selectSort,
       statusFilter: selectStatusFilter,
+      searchTerm: selectSearchTerm,
     }),
     shallowEqual,
   )
@@ -47,12 +49,29 @@ export const ActiveAgents = (): JSX.Element => {
   }
 
   useEffect(() => {
-    dispatch(asyncGetActiveAgents({ page: 1, orderBy, ...(sortBy && { sortBy }) }))
-  }, [])
+    dispatch(
+      asyncGetActiveAgents({
+        page: 1,
+        orderBy,
+        ...(sortBy && { sortBy }),
+        ...(searchTerm && { search: searchTerm }),
+      }),
+    )
+  }, [searchTerm, sortBy, orderBy])
 
-  const handleChangePage = useCallback((newPage) => {
-    dispatch(asyncGetAgentsList({ page: newPage, orderBy, ...(sortBy && { sortBy }) }))
-  }, [])
+  const handleChangePage = useCallback(
+    (newPage) => {
+      dispatch(
+        asyncGetActiveAgents({
+          page: newPage,
+          orderBy,
+          ...(sortBy && { sortBy }),
+          ...(searchTerm && { search: searchTerm }),
+        }),
+      )
+    },
+    [searchTerm, sortBy, orderBy],
+  )
 
   const handleResetStatusFilter = useCallback(() => {
     dispatch(setStatusFilter(undefined))

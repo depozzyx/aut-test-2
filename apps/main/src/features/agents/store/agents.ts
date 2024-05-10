@@ -19,6 +19,7 @@ export type TInit = {
   sort: { sortBy?: TAgentSortBy; orderBy: TOrderBy }
   statusFilter?: TAgentWorkStatus
   deletedAgentData: null | TDeletedAgentData
+  searchTerm: string
 }
 
 const init: TInit = {
@@ -35,6 +36,7 @@ const init: TInit = {
   sort: { sortBy: undefined, orderBy: 'ASC' },
   statusFilter: undefined,
   deletedAgentData: null,
+  searchTerm: '',
 }
 
 const agents = createSlice({
@@ -65,6 +67,9 @@ const agents = createSlice({
     setDeletedAgentData(state, action: PayloadAction<TInit['deletedAgentData']>) {
       state.deletedAgentData = action.payload
     },
+    setSearchTerm(state, action: PayloadAction<TInit['searchTerm']>) {
+      state.searchTerm = action.payload
+    },
     reset: () => init,
   },
 })
@@ -78,6 +83,7 @@ export const {
   setSort,
   setStatusFilter,
   setDeletedAgentData,
+  setSearchTerm,
   reset,
 } = agents.actions
 
@@ -122,6 +128,11 @@ export const selectSort = createSelector(selectAgents, ({ sort }) => sort)
 export const selectSelectedId = createSelector(
   selectAgents,
   ({ selectedId }) => selectedId,
+)
+
+export const selectSearchTerm = createSelector(
+  selectAgents,
+  ({ searchTerm }) => searchTerm,
 )
 
 export default agents.reducer
