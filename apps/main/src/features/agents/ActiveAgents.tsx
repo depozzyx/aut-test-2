@@ -55,9 +55,10 @@ export const ActiveAgents = (): JSX.Element => {
         orderBy,
         ...(sortBy && { sortBy }),
         ...(searchTerm && { search: searchTerm }),
+        ...(statusFilter && { workStatus: statusFilter }),
       }),
     )
-  }, [searchTerm, sortBy, orderBy])
+  }, [searchTerm, sortBy, orderBy, statusFilter])
 
   const handleChangePage = useCallback(
     (newPage) => {
@@ -67,10 +68,11 @@ export const ActiveAgents = (): JSX.Element => {
           orderBy,
           ...(sortBy && { sortBy }),
           ...(searchTerm && { search: searchTerm }),
+          ...(statusFilter && { workStatus: statusFilter }),
         }),
       )
     },
-    [searchTerm, sortBy, orderBy],
+    [searchTerm, sortBy, orderBy, statusFilter],
   )
 
   const handleResetStatusFilter = useCallback(() => {

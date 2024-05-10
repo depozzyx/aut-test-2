@@ -37,5 +37,6 @@
         "unpause": "Unpause",
         "finish": "Finished"
     },
-    "filter-by-status": "Agent status"
+    "filter-by-status": "Agent status",
+    "reset-filters": "Reset filters"
 }
