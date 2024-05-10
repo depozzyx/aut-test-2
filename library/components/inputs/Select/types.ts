@@ -8,7 +8,7 @@ export type TSelectOption = {
   /**
    * The value of the option.
    */
-  readonly value: string
+  readonly value: string | number
   /**
    * The label of the option.
    */
@@ -23,11 +23,20 @@ export type TSelectProps = {
   /**
    * The size of the select
    */
-  size?: 's' | 'm' | 'l'
+  size?: 's' | 'sm' | 'm' | 'l'
   /**
    * Specify the placeholder of the inlut select
    * */
   placeholder?: string
+  /**
+   * Specify the menuContent of the input select
+   *
+   * Use it if you need to add additional content or actions to select menu
+   * */
+  menuContent?: {
+    place: 'prepend' | 'append'
+    element: ReactElement
+  }
   /**
    * Specify the options of the input select
    *
@@ -107,4 +116,5 @@ export type TSelectProps = {
    * Use pixels number or string
    * */
   zIndex?: CSSProperties['zIndex']
+  onMenuScrollToBottom?: () => void
 } & TStylesProps

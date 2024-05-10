@@ -1,0 +1,20 @@
+{
+  "changeName": {
+    "title": "Change Name",
+    "userId": "User ID",
+    "id": "ID",
+    "username": "Username",
+    "save": "Save changes"
+  },
+  "changePassword": {
+    "title": "Change Password",
+    "oldPasswordLabel": "Your current password",
+    "oldPasswordPlaceholder": "Enter your password here",
+    "newPasswordLabel": "New password",
+    "newPasswordPlaceholder": "Enter new password here",
+    "repeatNewPasswordLabel": "Repeat new password",
+    "repeatNewPasswordPlaceholder": "Enter new password here",
+    "save": "Save changes",
+    "passwordConditions": "Your new  password must contain 8 symbols (numbers and letters, with different capitalization with no space between them)"
+  }
+}

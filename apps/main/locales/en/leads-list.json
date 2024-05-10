@@ -1,0 +1,23 @@
+{
+  "headers": {
+    "lead-id": "№",
+    "lead-name": "Lead Name",
+    "lead-phone": "Lead Phone",
+    "lead-timezone": "Lead Timezone",
+    "lead-status": "Status",
+    "lead-source": "Source",
+    "createNewList": "Create new list",
+    "select": "Select lead list"
+  },
+  "statuses": {
+    "active": "ACTIVE",
+    "inactive": "INACTIVE"
+  },
+  "createLeadsGroup": {
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "title": "Create new Lead List",
+    "label": "Lead List Name",
+    "placeholder": "Enter Lead List Name"
+  }
+}

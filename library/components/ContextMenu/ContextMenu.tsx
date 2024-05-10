@@ -27,10 +27,12 @@ export const ContextMenu: React.FC<TContextMenu> = ({
   arrowStyle,
   customOpenHandler,
   customCloseHandler,
+  containerStyles,
+  open = false,
   ...props
 }) => {
   const [client, setClient] = useState(false)
-  const [open, setOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(open)
   const [show, setShow] = useState(!disableAutoFocus)
 
   const { breakpoint } = useResolution()
@@ -43,33 +45,37 @@ export const ContextMenu: React.FC<TContextMenu> = ({
   useEffect(() => {
     if (!fixScroll) return
 
-    if (!open) {
+    if (!isOpen) {
       stopScroll(false)
       return
     }
 
     stopScroll(true)
-  }, [open])
+  }, [isOpen])
 
   // disable autofocus menu
   useEffect(() => {
     if (!disableAutoFocus) return
 
-    if (open) {
+    if (isOpen) {
       setTimeout(() => setShow(true), 0)
       return
     }
 
     setShow(false)
-  }, [open])
+  }, [isOpen])
 
   useEffect(() => {
-    if (!open) return
-    setOpen(false)
+    if (!isOpen) return
+    if (!open) setIsOpen(false)
   }, [breakpoint])
 
+  useEffect(() => {
+    setIsOpen(open)
+  }, [open])
+
   useUnmount(() => {
-    if (!open) return
+    if (!isOpen) return
     stopScroll(false)
   })
 
@@ -79,19 +85,19 @@ export const ContextMenu: React.FC<TContextMenu> = ({
   }
 
   const handleOnOpen = () => {
-    setOpen(true)
+    setIsOpen(true)
     if (customOpenHandler) customOpenHandler()
   }
 
   const handleOnClose = () => {
-    setOpen(false)
+    setIsOpen(false)
     if (customCloseHandler) customCloseHandler()
   }
 
   return (
     <StyledPopup
       {...props}
-      open={open}
+      open={isOpen}
       onOpen={handleOnOpen}
       onClose={handleOnClose}
       contentStyle={{ ...contentStyle, zIndex }}
@@ -100,8 +106,12 @@ export const ContextMenu: React.FC<TContextMenu> = ({
     >
       <>
         {customMenu && (
-          <div ref={containerRef} style={{ display: show ? 'flex' : 'none' }}>
-            {renderMenu({ onClose: () => setOpen(false), open })}
+          <div
+            className="custom-menu"
+            ref={containerRef}
+            style={{ display: show ? 'flex' : 'none' }}
+          >
+            {renderMenu({ onClose: () => setIsOpen(false), open: isOpen })}
           </div>
         )}
 
@@ -109,9 +119,11 @@ export const ContextMenu: React.FC<TContextMenu> = ({
           <Container
             ref={containerRef}
             tabIndex={0}
+            containerStyles={containerStyles}
             style={{ display: show ? 'flex' : 'none' }}
+            className="context-menu-container"
           >
-            {renderMenu({ onClose: () => setOpen(false), open })}
+            {renderMenu({ onClose: () => setIsOpen(false), open: isOpen })}
           </Container>
         )}
       </>

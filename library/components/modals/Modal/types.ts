@@ -28,4 +28,6 @@ export type TModalProps = {
    * Specify the width of the modal. Otherwise it will be 100% of the screen width.
    */
   containerWidth?: CSSProperties['width']
+
+  children?: React.ReactNode
 }

@@ -11,7 +11,7 @@ export const PermissionAuth: React.FC = ({ children }) => {
   useEffect(() => {
     if (userFetching) return
     if (user) {
-      replace(ROUTES.HOME)
+      replace(ROUTES.DASHBOARD_ACTIVE_CAMPAIGNS)
     }
   })
 

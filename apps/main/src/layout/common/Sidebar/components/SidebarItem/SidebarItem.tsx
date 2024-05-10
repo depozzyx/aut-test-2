@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
-import { SidebarItemIcon } from '@peiko/components/icons/SidebarItemIcon'
 import { NextLink } from '@peiko/components/links/NextLink'
 import { Text } from '@peiko/components/Text'
+import { CheckIcon } from '@/icons/CheckIcon'
 import { ItemWrapper } from './SidebarItem.styled'
 
 interface ISidebarItemProps {
@@ -15,20 +15,17 @@ export const SidebarItem = ({ title, link, onClick }: ISidebarItemProps): JSX.El
 
   const content = (
     <ItemWrapper
-      height={74}
-      padding="8px 11px"
-      direction="column"
-      align="center"
-      justify="center"
+      padding="10px 16px 10px 36px"
       cursor="pointer"
-      gap={3}
       onClick={onClick}
       isSelected={pathname === link}
+      align="center"
+      justify="space-between"
     >
-      <SidebarItemIcon />
-      <Text variant="f10" color="base" styles={{ textAlign: 'center' }}>
+      <Text variant="f10" color="main4" styles={{ textAlign: 'center' }}>
         {title}
       </Text>
+      {pathname === link && <CheckIcon color="main4" />}
     </ItemWrapper>
   )
 

@@ -53,10 +53,11 @@ export const signInAsync =
         userActions.setUserData({
           id: 0,
           email: '',
-          name: '',
+          username: '',
           ...profileData,
         }),
       )
+      dispatch(userActions.getProfile())
     } catch (e) {
       handleActionErrors({
         e,

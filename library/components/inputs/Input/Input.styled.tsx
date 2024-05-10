@@ -23,6 +23,8 @@ const BORDER_RADIUS = 4
 
 const inputFont = (size: TInputSizes['size'], theme: DefaultTheme) => {
   switch (size) {
+    case 'xs':
+      return theme.fonts.f8
     case 'm':
       return theme.fonts.f8
     default:
@@ -32,6 +34,10 @@ const inputFont = (size: TInputSizes['size'], theme: DefaultTheme) => {
 
 const containerSize = (size?: TInputSizes['size']) => {
   switch (size) {
+    case 'xs':
+      return css`
+        height: 28px;
+      `
     case 's':
       return css`
         height: 30px;
@@ -71,9 +77,13 @@ const iconSize = (size?: TInputSizes['size']) => {
   }
 }
 
-export const Wrapper = styled.div<{ width: CSSProperties['width'] }>`
+export const Wrapper = styled.div<{
+  width: CSSProperties['width']
+  maxWidth: CSSProperties['maxWidth']
+}>`
   position: relative;
   width: ${({ width }) => (width ? formatCssProperty(width) : '100%')};
+  max-width: ${({ maxWidth }) => maxWidth};
 `
 
 export const InputContainer = styled.div<TInputCont>((props) => {
@@ -84,11 +94,6 @@ export const InputContainer = styled.div<TInputCont>((props) => {
     ${props.error &&
     css`
       border-color: ${palette.main13} !important;
-
-      svg path {
-        fill: ${palette.main13} !important;
-        stroke: ${palette.main13} !important;
-      }
     `}
 
     &:hover {

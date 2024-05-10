@@ -5,7 +5,7 @@ import { TStylesProps, TDefaultMediaQueries, TStyle } from '@peiko/styles'
 import { TLabelProps } from '../types'
 
 // input
-type TInputSize = 's' | 'm' | 'l'
+type TInputSize = 'xs' | 's' | 'm' | 'l'
 
 export type TInputSizes = {
   /**
@@ -207,6 +207,7 @@ export type TInputProps = {
    * @default 0
    * */
   decimals?: number
+  maxWidth?: string
   startAdornmentStyles?: TStyle
   endAdornmentStyles?: TStyle
 } & TInputSizes &

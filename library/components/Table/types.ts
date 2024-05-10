@@ -1,3 +1,4 @@
+import { TPalette } from '@peiko/styles/types/palette'
 import { CSSProperties, ReactNode } from 'react'
 
 type TElement = ReactNode
@@ -30,6 +31,7 @@ export type TBodyCellProps = {
   style: CSSProperties
   children?: TElement
   whiteSpace?: CSSProperties['whiteSpace']
+  bg?: keyof TPalette
 }
 
 export type TCollapseCellProps = {
@@ -126,4 +128,5 @@ export type TTableProps<R, H> = {
    * @type (props: TButtonCollapseProps) => ReactElement
    * */
   buttonCollapse?: TRenderElement<TButtonCollapseProps>
+  minHeight?: string
 }

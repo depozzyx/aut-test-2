@@ -6,3 +6,45 @@ export const CAMPAIGN_STATUSES = {
 
 export type TGeneratedCampaignStatuses =
   typeof CAMPAIGN_STATUSES[keyof typeof CAMPAIGN_STATUSES]
+
+export const CALL_TIME = {
+  MORNING: 'morning',
+  AFTERNOON: 'afternoon',
+  EVENING: 'evening',
+  ALL_DAY: 'all_day',
+} as const
+
+export type TGeneratedCallTime = typeof CALL_TIME[keyof typeof CALL_TIME]
+
+export const CALL_FREQUENCY = {
+  EVERY_HOUR: 3600000,
+  EVERY_DAY: 86400000,
+  EVERY_10_MINUTES: 600000,
+  EVERY_HALF_HOUR: 1800000,
+} as const
+
+export type TGeneratedCallFrequency = typeof CALL_FREQUENCY[keyof typeof CALL_FREQUENCY]
+
+export const CAMPAIGN_TABLE_TYPES = {
+  ACTIVE: 'active',
+  LIST: 'list',
+} as const
+
+export const FILTER_TYPE = {
+  SEARCH: 'searchTerm',
+  CAMPAIGN_NAME: 'filterCampaignName',
+  STATUS: 'status',
+  DATE: 'filterDate',
+  ALL: 'all',
+} as const
+
+export const SORT_BY = {
+  CREATED_AT: 'createdAt',
+  WORK_STATUS: 'status',
+  NAME: 'name',
+} as const
+
+export const ORDER_BY = {
+  ASC: 'ASC',
+  DESC: 'DESC',
+} as const

@@ -3,7 +3,7 @@
     "headers": {
         "agent-name": "Agent Name",
         "email": "Email",
-        "role": "Role",
+        "creation-date": "Creation Date",
         "campaigns": "Campaigns",
         "edit": "Edit",
         "delete": "Delete"
@@ -18,7 +18,25 @@
         "assigned-campaigns": "Assigned Campaigns"
     },
     "create-agent": {
-        "title": "Create new Agent",
+        "title": "Create new agent",
         "action": "Create agent"
-    }
+    },
+    "active-agents": "Active Agents",
+    "active-agents-headers": {
+        "agent-name": "Agent Name",
+        "agent-status": "Agent Status",
+        "calls-handled": "Calls Handled",
+        "calls-duration": "Calls Duration (avg)",
+        "rating": "Rating",
+        "time-online": "Time Online",
+        "sum-call-duration": "Sum Call Duration"
+    },
+    "statuses": {
+        "start": "Start",
+        "pause": "Pause",
+        "unpause": "Unpause",
+        "finish": "Finished"
+    },
+    "filter-by-status": "Agent status",
+    "reset-filters": "Reset filters"
 }

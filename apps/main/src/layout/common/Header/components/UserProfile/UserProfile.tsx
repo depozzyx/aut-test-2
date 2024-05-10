@@ -17,8 +17,14 @@ const contentStyles = {
 
 const shortenName = (fullName: string) => {
   const [firstName, lastName] = fullName.split(' ')
-  return `${firstName} ${lastName?.charAt(0)}.`
+  return `${firstName} ${lastName?.charAt(0) ?? ''}${lastName ? '.' : ''}`
 }
+
+const containerStyles = `
+  border-radius: 8px;
+  background-color: #fefefe;
+  padding: 24px;
+`
 
 export const UserProfile = (): JSX.Element => {
   const { user } = useAuth()
@@ -29,14 +35,18 @@ export const UserProfile = (): JSX.Element => {
     newValue: 'block',
   })
 
-  const shortName = shortenName(user?.name || '')
+  const shortName = shortenName(user?.username || '')
 
   return (
     <ContextMenu
       on="hover"
       position="bottom center"
       renderMenu={() => (
-        <ProfilePopover userRole={user?.role} email={user?.email} name={user?.name} />
+        <ProfilePopover
+          userRole={user?.role}
+          email={user?.email}
+          name={user?.username ?? ''}
+        />
       )}
       trigger={<Trigger userRole={user?.role} name={shortName} />}
       offsetY={18}
@@ -45,6 +55,7 @@ export const UserProfile = (): JSX.Element => {
       withArrow
       customCloseHandler={resetStyle}
       customOpenHandler={applyStyle}
+      containerStyles={containerStyles}
     />
   )
 }

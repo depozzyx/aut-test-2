@@ -34,7 +34,7 @@ export const Message: FC<IMessageProps> = ({
     <Container>
       {onClose && (
         <Close onClick={onClose} iconColor="main5" size="s">
-          <CloseIcon size="xs" />
+          <CloseIcon size="s" />
         </Close>
       )}
       <Flex direction="column" align="center">

@@ -5,11 +5,11 @@
         "pause": "Paused",
         "complete": "Completed"
     },
-    "headers": {
+    "campaign-list-headers": {
         "campaign-name": "Campaign Name",
         "creation-date": "Creation Date",
         "status": "Status",
-        "leads": "Leads",
+        "leads": "Leads for Calling",
         "agents": "Agents",
         "view": "View",
         "action": "Action",
@@ -22,8 +22,6 @@
             "campaign-name": "Campaign Name",
             "agent-assignment": "Agent Assignment",
             "lead-selection": "Lead Selection",
-            "creation-date": "Creation Date",
-            "scenario-setup": "Scenario Setup",
             "call-frequency": "Call Frequency",
             "time-for-calls": "Time for Call",
             "review": "Review"
@@ -31,13 +29,39 @@
     "edit-campaign": {
         "title": "Edit Campaign",
         "campaign-name": "Campaign Name",
-        "creation-date": "Creation Date",
+        "agent-assignment": "Agent Assignment",
+        "lead-selection": "Lead Selection",
         "call-frequency": "Call Frequency",
-        "response-rate": "Response Rate",
-        "status": "Status",
-        "conversion-rate": "Conversion Rate"
+        "time-for-calls": "Time for Call"
     },
     "review-campaign": {
         "title": "Review New Campaign"
-    }
+    },
+    "active-campaigns": "Active Campaigns",
+    "campaign-effectiveness": "Campaign Effectiveness",
+    "active-campaigns-headers": {
+        "campaign-name": "Campaign Name",
+        "creation-date": "Creation Date",
+        "call-volume": "Call Volume",
+        "response-rate": "Response Rate",
+        "conversion-rate": "Conversion Rate",
+        "edit": "Edit",
+        "delete": "Delete"
+    },
+    "campaign-select-placeholder": "Campaign name",
+    "preferredCallTime": {
+        "morning": "Morning",
+        "afternoon": "Afternoon",
+        "evening": "Evening",
+        "all-day": "All Day"
+    },
+    "callFrequency": {
+        "every-hour": "Every hour",
+        "every-day": "Every day",
+        "every-10-minutes": "Every 10 minutes",
+        "every-half": "Every half hour"
+    },
+    "campaigns-filter": "Campaign name",
+    "reset-filters": "Reset filters",
+    "filter-by-status": "Filter by status"
 }

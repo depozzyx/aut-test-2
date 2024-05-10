@@ -5,12 +5,14 @@
   "repeat-password": "Repeat password",
   "confirm-password": "Confirm new password",
   "placeholder": {
-    "email": "Enter your email here",
+    "email": "john@example.com",
     "password": "Enter your password here",
     "new-password": "Enter your new password",
     "repeat-password": "Repeat password",
     "confirm-password": "Repeat your new password",
-    "search": "Search by campaign name, lead name, agent name..."
+    "search": "Search by campaign name, lead name, agent name...",
+    "search-campaign": "Search by campaign name",
+    "search-agent": "Search by agent name"
   },
   "no-options": "No options"
 }

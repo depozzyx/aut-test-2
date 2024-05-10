@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { components, DropdownIndicatorProps, NoticeProps } from 'react-select'
+import { DropdownIndicatorProps, MenuProps, components, NoticeProps } from 'react-select'
 import { useUpdateEffect } from 'react-use'
 import useTranslation from 'next-translate/useTranslation'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
@@ -19,6 +19,7 @@ export const Select: React.FC<TSelectProps> = ({
   options,
   onChange,
   isSearchable = false,
+  menuContent,
   ...props
 }) => {
   const { t } = useTranslation('inputs')
@@ -41,9 +42,10 @@ export const Select: React.FC<TSelectProps> = ({
   useEffect(() => {
     if (value === selectValue?.value) return
     const selectOption = options?.find((item) => item.value === value)
+
     if (!selectOption) return
     setValue(selectOption)
-  }, [value])
+  }, [value, options])
 
   useUpdateEffect(() => {
     if (!value) {
@@ -68,17 +70,24 @@ export const Select: React.FC<TSelectProps> = ({
 
       return (
         <components.DropdownIndicator {...props}>
-          <ArrowIcon
-            direction={menuIsOpen ? 'down' : 'up'}
-            color="main5"
-            width="24px"
-            height="24px"
-          />
+          <ArrowIcon direction={menuIsOpen ? 'up' : 'down'} />
         </components.DropdownIndicator>
       )
     },
     [],
   )
+
+  const Menu = useCallback((props: MenuProps<TSelectOption, false>) => {
+    const { children } = props
+
+    return (
+      <components.Menu {...props}>
+        {menuContent?.place === 'prepend' && menuContent.element}
+        {children}
+        {menuContent?.place === 'append' && menuContent.element}
+      </components.Menu>
+    )
+  }, [])
 
   const NoOptionsMessage = (props: NoticeProps<TSelectOption, false>) => (
     <components.NoOptionsMessage {...props}>
@@ -118,7 +127,7 @@ export const Select: React.FC<TSelectProps> = ({
           instanceId={id}
           disabled={disabled}
           onChange={handleChange}
-          components={{ DropdownIndicator, NoOptionsMessage }}
+          components={{ DropdownIndicator, Menu, NoOptionsMessage }}
           menuShouldScrollIntoView
           menuIsOpen={open}
           hasScroll={hasScroll}

@@ -1,0 +1,25 @@
+{
+  "uploadFiles": "Upload file",
+  "preselectText": "Before initiating file upload, please select a leads list.",
+  "selectLabel": "Select lead list",
+  "selectPlaceholder": "Select",
+  "dragFiles": "Drag and drop your file or",
+  "browse": "browse",
+  "maxSize": "Max file size: <0>{{value}}</0>",
+  "supportedTypes": "Supported file types:<0>{{value}}</0>",
+  "limit": "Download limit: <0>{{value}} files</0>",
+  "cancel": "Cancel",
+  "submit": "Submit",
+  "downloadTemplateText": "For better data export please download our template",
+  "downloadTemplate": "Download now",
+  "duplicate": "Duplicate",
+  "error": "Error",
+  "createNewList": "Create new list",
+  "instructions": {
+    "title": "Import parameters",
+    "fileFormat": "File format:",
+    "fileSize": "File size:",
+    "fileData": "File data:",
+    "importLink": "Import leads"
+  }
+}

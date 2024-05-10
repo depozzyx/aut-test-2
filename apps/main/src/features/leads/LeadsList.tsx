@@ -1,0 +1,68 @@
+import React, { FC, useEffect } from 'react'
+import { useRedux } from '@/hooks/use-redux'
+import { createStructuredSelector } from 'reselect'
+import { shallowEqual } from 'react-redux'
+import { Pagination } from '@peiko/components/Pagination'
+import { Box } from '@peiko/components/Box'
+import { useUnmount } from 'react-use'
+import { LeadsListTable } from './containers/LeadsListTable'
+import {
+  getLeadList,
+  getLeadsGroups,
+  reset,
+  selectLeadsGroup,
+  selectLeadsGroupPagination,
+  selectLeadsPagination,
+} from './store/leads'
+import { CreateLeadsGroup } from './containers/CreateLeadsGroup'
+
+export const LeadsList: FC = () => {
+  const { select, dispatch } = useRedux()
+
+  const {
+    pagination: { total, page, limit },
+    leadsGroup,
+    groupsPagination,
+  } = select(
+    createStructuredSelector({
+      pagination: selectLeadsPagination,
+      groupsPagination: selectLeadsGroupPagination,
+      leadsGroup: selectLeadsGroup,
+    }),
+    shallowEqual,
+  )
+
+  useEffect(() => {
+    dispatch(
+      getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy: 'ASC' }, true),
+    )
+  }, [])
+
+  useEffect(() => {
+    if (leadsGroup)
+      dispatch(getLeadList({ page, limit, orderBy: 'ASC', leadListId: leadsGroup }))
+  }, [leadsGroup])
+
+  useUnmount(() => {
+    dispatch(reset())
+  })
+
+  const onChangePage = (page: number) =>
+    dispatch(getLeadList({ page, limit, orderBy: 'ASC', leadListId: leadsGroup }))
+
+  return (
+    <>
+      <Box styles={{ marginTop: '24px' }}>
+        <LeadsListTable />
+      </Box>
+      <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
+        <Pagination
+          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
+          currentPage={page}
+          onChange={onChangePage}
+        />
+      </Box>
+      <CreateLeadsGroup />
+    </>
+  )
+}

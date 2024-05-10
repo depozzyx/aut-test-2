@@ -6,10 +6,15 @@ import forgotPasswordReducer from '@/features/auth/store/forgot-password'
 import resetPasswordReducer from '@/features/auth/store/reset-password'
 import notificationsReducer from '@/features/common/notifications/store'
 import modalsReducer from '@/features/common/modals/store'
-import campaignsReducer from '@/features/campaigns/store/campaigns-list'
-import agentsReducer from '@/features/agents/store/agents-list'
+import campaignsReducer from '@/features/campaigns/store/campaigns'
 import createCampaignReducer from '@/features/campaigns/store/create-campaign'
+import leadsReducer from '@/features/leads/store/leads'
+import activityLogReducer from '@/features/activityLog/store/activity-log'
 import editCampaignReducer from '@/features/campaigns/store/edit-campaign'
+import leadListReducer from '@/features/leads/store/lead-list'
+import agentsReducer from '@/features/agents/store/agents'
+import createAgentReducer from '@/features/agents/store/create-agent'
+import editAgentReducer from '@/features/agents/store/edit-agent'
 
 const store = configureStore({
   reducer: {
@@ -20,10 +25,15 @@ const store = configureStore({
     resetPassword: resetPasswordReducer,
     notifications: notificationsReducer,
     modals: modalsReducer,
-    campaigns: campaignsReducer,
     agents: agentsReducer,
+    campaigns: campaignsReducer,
     createCampaign: createCampaignReducer,
     editCampaign: editCampaignReducer,
+    leads: leadsReducer,
+    leadList: leadListReducer,
+    activityLog: activityLogReducer,
+    createAgent: createAgentReducer,
+    editAgent: editAgentReducer,
   },
 })
 

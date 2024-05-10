@@ -69,10 +69,15 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
           height: 30px;
           padding: 0 16px;
         `
+      case 'sm':
+        return css`
+          height: 32px;
+          padding: 0 8px;
+        `
       case 'm':
         return css`
-          height: 56px;
-          padding: 0 24px;
+          height: 30px;
+          padding: 0 16px;
         `
       case 'l':
         return css`
@@ -107,16 +112,45 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
 
       &:hover {
         cursor: pointer;
-        border-color: ${palette.main3};
+        border-color: ${palette.main2};
+        .custom-rs__indicator {
+          svg path {
+            fill: ${palette.main2};
+          }
+        }
       }
 
       .custom-rs__indicator {
+        padding: 0;
         svg path {
           fill: ${palette.main5};
         }
-        width: 24px;
-        height: 24px;
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+
         ${getIconSize(size)}
+        padding: 2px;
+
+        svg {
+          width: 16px !important;
+          height: 16px !important;
+        }
+
+        &.custom-rs__clear-indicator {
+          width: 20px !important;
+          height: 20px !important;
+          padding: 2px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          svg path {
+            &:hover {
+              fill: ${palette.main};
+            }
+          }
+        }
       }
 
       .custom-rs__input-container {
@@ -139,6 +173,7 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
     .custom-rs__single-value {
       color: ${palette.main5};
       ${disabled}
+      ${theme.fonts.f8}
     }
 
     .custom-rs__value-container {
@@ -149,6 +184,7 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
 
     .custom-rs__placeholder {
       color: ${palette.main22};
+      ${theme.fonts.f8}
     }
 
     .custom-rs__menu {
@@ -182,22 +218,22 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
       font-family: inherit;
       align-items: center;
       height: 38px;
-      padding: 0 32px;
+      padding: 0 16px;
       white-space: nowrap;
       color: ${palette.main5};
 
       &--is-focused {
-        background-color: ${palette.main21};
+        background-color: ${palette.base4};
       }
 
       &:hover {
-        background-color: ${palette.main22};
+        background-color: ${palette.base4};
       }
 
       &--is-selected {
         cursor: default !important;
         background-color: ${palette.base4};
-        color: ${palette.main5};
+        color: ${palette.main2};
         pointer-events: none;
       }
     }

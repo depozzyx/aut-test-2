@@ -10,7 +10,7 @@ import { normalizePage } from './utils/normalize-page'
 
 export const Pagination: React.FC<TPagination> = ({
   ssr = false,
-  size = 'sm',
+  size = 'm',
   currentPage = 0,
   lastPage = 0,
   onChange,
@@ -108,6 +108,7 @@ export const Pagination: React.FC<TPagination> = ({
       </PaginationBtn>
     )
   }
+  if (lastPage === 1) return <></>
 
   return (
     <Container>

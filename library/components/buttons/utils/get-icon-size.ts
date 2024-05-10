@@ -7,8 +7,12 @@ export const getIconSize = (size: TButtonProps['size']): FlattenSimpleInterpolat
 
   if (size === 'l' || size === 'm') {
     iSize = getSize('m')
-  } else {
+  } else if (size === 's') {
     iSize = getSize('s')
+  } else if (size === 'ml') {
+    iSize = getSize('ml')
+  } else if (size === 'xl') {
+    iSize = getSize('xl')
   }
 
   return css`

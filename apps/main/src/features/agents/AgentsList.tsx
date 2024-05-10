@@ -1,15 +1,14 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { useRouter } from 'next/router'
 import { shallowEqual } from 'react-redux'
-import useModals from '@/features/common/modals/hooks/use-modals'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
 import { useRedux } from '@/hooks/use-redux'
 import { ROUTES } from '@/constants/routes'
-import { MODAL_NAMES } from '@/features/common/modals/constants'
+
 import {
   Container,
   Panel,
@@ -18,42 +17,60 @@ import {
 } from './styles/AgentsList.styled'
 import {
   selectAgentsPagination,
-  selectAgentsList,
-  setSelectedId,
-} from './store/agents-list'
-import { AgentsListTable } from './containers/AgentsListTable'
-import { DeleteAgentModal } from './containers/DeleteAgentModal'
-import { EditAgentModal } from './containers/EditAgentModal'
+  asyncGetAgentsList,
+  selectSort,
+  selectStatusFilter,
+} from './store/agents'
+import { AgentsListTable } from './containers/tables/AgentsListTable'
+import { DeleteAgentModal } from './containers/modals/DeleteAgentModal'
+import { EditAgentModal } from './containers/modals/EditAgentModal'
 
 export const AgentsList = (): JSX.Element => {
   const router = useRouter()
   const { t } = useTranslation('agents')
   const { select, dispatch } = useRedux()
-  const { setModal } = useModals()
 
   const {
-    pagination: { total, page },
-    agentsList,
+    pagination: { total, page, limit },
+    sort: { orderBy, sortBy },
+    statusFilter,
   } = select(
     createStructuredSelector({
       pagination: selectAgentsPagination,
-      agentsList: selectAgentsList,
+      sort: selectSort,
+      statusFilter: selectStatusFilter,
     }),
     shallowEqual,
   )
 
-  const handleDelete = useCallback((id: number) => {
-    dispatch(setSelectedId(id))
-    setModal({ modalName: MODAL_NAMES.DELETE_AGENT, isOpen: true })
-  }, [])
-
-  const handleEditAgent = useCallback(() => {
-    setModal({ modalName: MODAL_NAMES.EDIT_AGENT, isOpen: true })
-  }, [])
-
   const goToCreateAgentPage = () => {
-    router.push(ROUTES.CABINET_CREATE_AGENT)
+    router.push(ROUTES.CREATE_AGENT)
   }
+
+  useEffect(() => {
+    dispatch(
+      asyncGetAgentsList({
+        page: 1,
+        orderBy,
+        workStatus: statusFilter,
+        ...(sortBy && { sortBy }),
+      }),
+    )
+  }, [sortBy, orderBy, statusFilter])
+
+  const handleChangePage = useCallback(
+    (newPage) => {
+      dispatch(
+        asyncGetAgentsList({
+          page: newPage,
+          orderBy,
+          workStatus: statusFilter,
+          ...(sortBy && { sortBy }),
+        }),
+      )
+    },
+    [sortBy, orderBy, statusFilter],
+  )
 
   return (
     <>
@@ -70,14 +87,14 @@ export const AgentsList = (): JSX.Element => {
           </FilledButton>
         </Panel>
         <TableContainer>
-          <AgentsListTable
-            data={agentsList}
-            onDelete={handleDelete}
-            editAgent={handleEditAgent}
-          />
+          <AgentsListTable />
         </TableContainer>
         <PaginationContainer>
-          <Pagination lastPage={total} currentPage={page} />
+          <Pagination
+            lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
+            currentPage={page}
+            onChange={handleChangePage}
+          />
         </PaginationContainer>
       </Container>
       <DeleteAgentModal />
