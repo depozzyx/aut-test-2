@@ -36,9 +36,7 @@ export const ImportLeads: FC = () => {
   )
 
   useEffect(() => {
-    dispatch(
-      getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy: 'ASC' }, true),
-    )
+    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy: 'ASC' }))
   }, [])
 
   useUnmount(() => dispatch(reset()))
