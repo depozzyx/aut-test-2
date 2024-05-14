@@ -34,6 +34,7 @@
     "@types/react-syntax-highlighter": "^15.5.10",
     "axios": "^0.26.0",
     "axios-auth-refresh": "^3.3.4",
+    "b64-to-blob": "^1.2.19",
     "countries-and-timezones": "^3.5.2",
     "date-fns": "^2.28.0",
     "dotenv": "^16.3.1",
