@@ -11,6 +11,7 @@ export const ROUTES = {
   CAMPAIGNS_ANALYTICS: '/cabinet/campaigns/analytics',
   AGENTS_LIST: '/cabinet/agents/list',
   AGENTS_ANALYTICS: '/cabinet/agents/analytics',
+  AGENT_CALLS: '/cabinet/agents/calls',
   CREATE_AGENT: '/cabinet/agents/create',
   LEADS_LIST: '/cabinet/leads/list',
   IMPORT_LEADS: '/cabinet/leads/import',

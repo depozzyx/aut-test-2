@@ -76,6 +76,11 @@ export const useMenuLinks = (): TMenuItem[] => {
           link: ROUTES.CREATE_AGENT,
           disabled: false,
         },
+        {
+          title: t('agents_calls'),
+          link: ROUTES.AGENT_CALLS,
+          disabled: false,
+        },
       ],
     },
     {
