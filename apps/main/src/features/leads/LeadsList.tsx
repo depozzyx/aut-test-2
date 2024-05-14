@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useRedux } from '@/hooks/use-redux'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
@@ -18,6 +18,7 @@ import { CreateLeadsGroup } from './containers/CreateLeadsGroup'
 
 export const LeadsList: FC = () => {
   const { select, dispatch } = useRedux()
+  const [secondMount, setSecondMount] = useState(false)
 
   const {
     pagination: { total, page, limit },
@@ -33,19 +34,21 @@ export const LeadsList: FC = () => {
   )
 
   useEffect(() => {
-    dispatch(
-      getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy: 'ASC' }, true),
-    )
+    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy: 'ASC' }))
   }, [])
 
   useEffect(() => {
-    if (leadsGroup)
+    if (secondMount)
       dispatch(getLeadList({ page, limit, orderBy: 'ASC', leadListId: leadsGroup }))
-  }, [leadsGroup])
+  }, [leadsGroup, secondMount])
 
   useUnmount(() => {
     dispatch(reset())
   })
+
+  useEffect(() => {
+    if (!leadsGroup) setSecondMount(true)
+  }, [leadsGroup])
 
   const onChangePage = (page: number) =>
     dispatch(getLeadList({ page, limit, orderBy: 'ASC', leadListId: leadsGroup }))
