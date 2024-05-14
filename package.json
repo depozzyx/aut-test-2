@@ -64,6 +64,7 @@
     "react-simple-star-rating": "^5.1.7",
     "react-spinners": "^0.13.8",
     "react-syntax-highlighter": "^15.5.0",
+    "react-timer-hook": "^3.0.7",
     "react-toastify": "^9.1.2",
     "react-use": "^17.4.0",
     "react-verification-code-input": "^1.2.9",
