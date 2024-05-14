@@ -162,14 +162,12 @@ export const getLeadList =
   }
 
 export const getLeadsGroups =
-  (params: TLeadsGroupReq, withInitial?: boolean): TAsyncAction =>
+  (params: TLeadsGroupReq): TAsyncAction =>
   async (dispatch) => {
     try {
       const {
         data: { data, pagination },
       } = await leadsApi.leadsGroup(params)
-
-      if (withInitial && data.length > 0) dispatch(setLeadsGroup(data[0].id))
       dispatch(setLeadsGroups(data))
       dispatch(setLeadsGroupPagination(pagination))
     } catch (e) {
