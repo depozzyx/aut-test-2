@@ -30,8 +30,8 @@ const init: TInit = {
   meta: {},
   pagination: {
     page: 1,
-    limit: 10,
-    total: 10,
+    limit: 8,
+    total: 1,
   },
   sort: { sortBy: undefined, orderBy: 'ASC' },
   statusFilter: undefined,
@@ -143,9 +143,10 @@ export const asyncGetAgentsList =
     try {
       dispatch(setIsLoading(true))
       const {
-        data: { data },
+        data: { data, pagination },
       } = await apiAgents.getAgentsList(params)
       dispatch(setAgentsList(data))
+      dispatch(setPagination(pagination))
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
@@ -159,9 +160,10 @@ export const asyncGetActiveAgents =
     try {
       dispatch(setIsLoading(true))
       const {
-        data: { data },
+        data: { data, pagination },
       } = await apiAgents.getActiveAgents(params)
       dispatch(setActiveAgents(data))
+      dispatch(setPagination(pagination))
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {

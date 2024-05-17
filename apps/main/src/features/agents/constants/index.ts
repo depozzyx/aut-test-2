@@ -9,4 +9,5 @@ export const AGENT_WORK_STATUS = {
   PAUSE: 'pause',
   UNPAUSE: 'unpause',
   FINISH: 'finish',
+  ON_CALL: 'on-call',
 } as const

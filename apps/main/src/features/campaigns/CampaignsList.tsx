@@ -1,6 +1,6 @@
 import useTranslation from 'next-translate/useTranslation'
 import { Flex } from '@/components/Flex'
-import useModals from '@/features/common/modals/hooks/use-modals'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'

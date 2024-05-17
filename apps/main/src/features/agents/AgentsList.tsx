@@ -51,18 +51,20 @@ export const AgentsList = (): JSX.Element => {
     dispatch(
       asyncGetAgentsList({
         page: 1,
+        limit: limit ?? 8,
         orderBy,
         workStatus: statusFilter,
         ...(sortBy && { sortBy }),
       }),
     )
-  }, [sortBy, orderBy, statusFilter])
+  }, [limit, sortBy, orderBy, statusFilter])
 
   const handleChangePage = useCallback(
     (newPage) => {
       dispatch(
         asyncGetAgentsList({
           page: newPage,
+          limit: limit ?? 10,
           orderBy,
           workStatus: statusFilter,
           ...(sortBy && { sortBy }),
@@ -91,7 +93,7 @@ export const AgentsList = (): JSX.Element => {
         </TableContainer>
         <PaginationContainer>
           <Pagination
-            lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
+            lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 8))}
             currentPage={page}
             onChange={handleChangePage}
           />

@@ -21,7 +21,7 @@ import {
 } from './store/activity-log'
 import { Filters } from './containers/Filters'
 import { SelectedFilters } from './containers/SelectedFilters'
-import useModals from '../common/modals/hooks/use-modals'
+import { useModals } from '../common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '../common/modals/constants'
 import { ExportLogs } from './containers/ExportLogs'
 

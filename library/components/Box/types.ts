@@ -6,4 +6,5 @@ export type TBoxProps = {
    * @type React.ReactNode
    */
   children?: React.ReactNode
+  className?: string
 } & TStylesProps

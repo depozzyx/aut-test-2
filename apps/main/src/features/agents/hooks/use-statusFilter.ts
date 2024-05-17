@@ -19,6 +19,7 @@ export const useStatusFilter = (): TReturn => {
     { value: AGENT_WORK_STATUS.PAUSE, label: t('statuses.pause') },
     { value: AGENT_WORK_STATUS.UNPAUSE, label: t('statuses.unpause') },
     { value: AGENT_WORK_STATUS.FINISH, label: t('statuses.finish') },
+    { value: AGENT_WORK_STATUS.ON_CALL, label: t('statuses.on-call') },
   ]
 
   const handleOnChange = useCallback((value: TAgentWorkStatus) => {

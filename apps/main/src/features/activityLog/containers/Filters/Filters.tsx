@@ -23,7 +23,7 @@ export const Filters: FC<
 
   const { actionTypes, orderBy } = useFilters()
 
-  const setSelectedFilter = (filterName: keyof typeof filters, value?: string) =>
+  const setSelectedFilter = (filterName: keyof typeof filters, value?: string | number) =>
     dispatch(setFilters({ ...filters, [filterName]: value }))
 
   const onDateChange = useCallback(
