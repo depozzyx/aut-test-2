@@ -46,7 +46,7 @@ const init: TInit = {
   meta: {},
   pagination: {
     page: 1,
-    limit: 10,
+    limit: 8,
     total: 1,
   },
   searchTerm: '',

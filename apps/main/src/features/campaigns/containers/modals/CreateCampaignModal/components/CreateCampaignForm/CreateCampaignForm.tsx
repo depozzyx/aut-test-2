@@ -9,7 +9,7 @@ import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
-import useModals from '@/features/common/modals/hooks/use-modals'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { useCallTime } from '@/features/campaigns/hooks/use-callTime'
 import { useCallFrequency } from '@/features/campaigns/hooks/use-callFrequency'
 import {

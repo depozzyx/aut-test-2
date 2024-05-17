@@ -10,6 +10,7 @@ const bgColor: Record<TAgentWorkStatus, keyof TDefaultPalette> = {
   pause: 'main6',
   unpause: 'main7',
   finish: 'main10',
+  'on-call': 'main9',
 }
 
 export const StyledChip = styled(FilledChip)<{ status: TAgentWorkStatus }>((props) => {

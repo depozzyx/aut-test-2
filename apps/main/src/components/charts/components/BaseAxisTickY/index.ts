@@ -1,0 +1,1 @@
+export { BaseAxisTickY } from './BaseAxisTickY'

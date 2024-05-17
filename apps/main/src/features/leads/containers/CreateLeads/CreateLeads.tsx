@@ -1,6 +1,6 @@
 import useTranslation from 'next-translate/useTranslation'
 import React, { FC } from 'react'
-import useModals from '@/features/common/modals/hooks/use-modals'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { Button, Icon } from './CreateLeads.styled'
 

@@ -35,8 +35,14 @@
         "start": "Start",
         "pause": "Pause",
         "unpause": "Unpause",
-        "finish": "Finished"
+        "finish": "Finished",
+        "on-call": "On Call"
     },
     "filter-by-status": "Agent status",
-    "reset-filters": "Reset filters"
+    "reset-filters": "Reset filters",
+    "filter-agentName": "Agent name",
+    "average-call-duration": "Average call duration",
+    "time-online": "Time online",
+    "availability-online": "Availability online",
+    "call-success": "Call success"
 }

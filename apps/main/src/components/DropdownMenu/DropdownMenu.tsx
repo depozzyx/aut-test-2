@@ -6,7 +6,7 @@ import { MenuContainer, MenuItem } from './DropdownMenu.styled'
 import { CheckIcon } from '@/icons/CheckIcon'
 import { Text } from '@peiko/components/Text'
 
-export type TValue = { label: string; value: string }
+export type TValue = { label: string; value: string | number }
 
 export type TDropdownMenuProps = {
   triggerElement: JSX.Element | ((isOpen: boolean) => JSX.Element)

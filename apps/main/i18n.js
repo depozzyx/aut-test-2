@@ -15,6 +15,7 @@ module.exports = {
       'routing',
       'datepicker',
       'validation',
+      'page-titles',
     ],
     '/auth/sign-in': ['error', 'validation', 'inputs', 'auth'],
     '/auth/forgot-password': ['error', 'validation', 'inputs', 'auth'],
@@ -46,5 +47,6 @@ module.exports = {
     '/cabinet/agents/create': ['user', 'routing', 'agents'],
     '/cabinet/settings/account-management': ['user', 'routing', 'settings', 'validation'],
     '/cabinet/settings/activity-log': ['user', 'routing', 'activity-log', 'validation'],
+    '/cabinet/agents/analytics': ['user', 'routing', 'agents'],
   },
 }

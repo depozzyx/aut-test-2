@@ -19,7 +19,7 @@ import {
   selectSort,
 } from '@/features/campaigns/store/campaigns'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import useModals from '@/features/common/modals/hooks/use-modals'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { dateToString } from '@/utils/date-to-string'
 import { TActiveCampaignsReq } from '@/api-rest/campaigns/types'
 import { AnyAction, ThunkAction } from '@reduxjs/toolkit'

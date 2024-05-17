@@ -10,6 +10,8 @@ const Container = styled.div<TBoxProps>((props) => {
   `
 })
 
-export const Box: React.FC<TBoxProps> = ({ children, styles }) => (
-  <Container styles={styles}>{children}</Container>
+export const Box: React.FC<TBoxProps> = ({ children, styles, className }) => (
+  <Container styles={styles} className={className}>
+    {children}
+  </Container>
 )
