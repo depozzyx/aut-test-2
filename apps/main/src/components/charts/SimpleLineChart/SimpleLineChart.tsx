@@ -17,13 +17,13 @@ import { BaseTooltip } from '../components/BaseTooltip'
 
 type TSimpleLineChartProps = {
   data: TSimpleChartData[]
+  valueKey?: string
   XAxisCustom?: React.ElementType
   YAxisCustom?: React.ElementType
-  valueKey?: string
 }
 
 export const SimpleLineChart = memo(
-  ({ data, XAxisCustom, YAxisCustom, valueKey }: TSimpleLineChartProps) => {
+  ({ data, valueKey, XAxisCustom, YAxisCustom }: TSimpleLineChartProps) => {
     const theme = useTheme()
 
     const XAxisComponent = XAxisCustom || BaseXAxis

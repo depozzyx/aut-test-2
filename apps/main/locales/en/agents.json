@@ -42,7 +42,7 @@
     "reset-filters": "Reset filters",
     "filter-agentName": "Agent name",
     "average-call-duration": "Average call duration",
-    "time-online": "Time online",
+    "call-minutes": "Call minutes",
     "availability-online": "Availability online",
     "call-success": "Call success"
 }
