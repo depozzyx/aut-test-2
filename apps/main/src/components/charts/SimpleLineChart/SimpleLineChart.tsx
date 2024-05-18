@@ -45,11 +45,12 @@ export const SimpleLineChart = memo(
             stroke={theme.palette.main22}
             interval={xaxisInterval}
             tick={(props) => <XAxisComponent {...props} />}
+            padding={{ right: 14 }}
           />
           <YAxis
             stroke={theme.palette.main22}
             tick={(props) => <AxisTickYComponent {...props} />}
-            tickMargin={10}
+            tickMargin={30}
           />
           <Tooltip
             cursor={{ stroke: theme.palette.main5, strokeWidth: 1 }}
