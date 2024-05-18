@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import { ROUTES } from '@/routes'
 
 export const DashboardTabs = (): JSX.Element => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation()
   const router = useRouter()
 
   const tabs: TTabsProps['tabs'] = [
