@@ -69,7 +69,7 @@ export const ResetPasswordForm: FC = () => {
             styles={{ marginTop: '24px', maxWidth: '248px' }}
             disabled={!formik.isValid || !formik.dirty}
           >
-            {t('common:confirm')}
+            {t('reset-password.confirm')}
           </FilledButton>
         </Flex>
       </form>

@@ -148,10 +148,10 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
             disabled={!formik.isValid || !formik.dirty}
             width="236px"
           >
-            {t('common:save')}
+            {t('edit-campaign.save')}
           </FilledButton>
           <OutlinedButton onClick={resetModals} width="236px">
-            {t('common:cancel')}
+            {t('edit-campaign.cancel')}
           </OutlinedButton>
         </Flex>
       </Flex>

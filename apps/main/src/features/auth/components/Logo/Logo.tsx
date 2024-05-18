@@ -7,7 +7,7 @@ import { LogoWrapper } from './Logo.styled'
 const logo = '/images/logo.png'
 
 export const Logo: FC = () => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('app-general')
 
   return (
     <LogoWrapper>

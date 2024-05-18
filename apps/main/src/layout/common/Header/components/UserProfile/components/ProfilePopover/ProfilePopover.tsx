@@ -82,7 +82,7 @@ export const ProfilePopover = ({
         <Divider />
         <PopoverMenuItem
           icon={<LogoutIcon color="main5" />}
-          title={t('common:logout')}
+          title={t('auth:logout-btn')}
           onClick={handleLogout}
           cursor="pointer"
         />

@@ -23,7 +23,7 @@ export const Message: FC<IMessageProps> = ({
   buttonAction,
   onClose,
 }) => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('modal-message')
 
   const statusIcon =
     status === 'success' ? <SuccessIcon size="l" /> : <ErrorIcon size="l" />

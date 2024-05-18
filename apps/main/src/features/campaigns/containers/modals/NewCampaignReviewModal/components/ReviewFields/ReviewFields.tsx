@@ -72,10 +72,10 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
       </Flex>
       <Flex align="center" justify="center" gap={24}>
         <OutlinedButton onClick={handleCreateCampaign} width="236px">
-          {t('common:submit')}
+          {t('review-campaign.submit')}
         </OutlinedButton>
         <FilledButton onClick={handleBack} width="236px">
-          {t('common:back')}
+          {t('review-campaign.back')}
         </FilledButton>
       </Flex>
     </Flex>

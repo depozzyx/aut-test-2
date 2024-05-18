@@ -75,10 +75,10 @@ export const EditAgentForm = (): JSX.Element => {
             width="236px"
             isLoading={isLoading}
           >
-            {t('common:save')}
+            {t('edit-agent.save')}
           </FilledButton>
           <OutlinedButton onClick={resetModals} width="236px">
-            {t('common:cancel')}
+            {t('edit-agent.cancel')}
           </OutlinedButton>
         </Flex>
       </Flex>

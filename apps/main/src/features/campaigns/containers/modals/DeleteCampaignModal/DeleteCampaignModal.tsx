@@ -20,7 +20,7 @@ type TProps = {
 }
 
 export const DeleteCampaignModal = ({ type }: TProps): JSX.Element => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('campaigns')
   const { dispatch, select } = useRedux()
   const { modalState, resetModals } = useModals()
 
@@ -41,7 +41,7 @@ export const DeleteCampaignModal = ({ type }: TProps): JSX.Element => {
   const title = (
     <Flex align="center" justify="center" width="330px" styles={{ textAlign: 'center' }}>
       <Trans
-        i18nKey="campaigns:delete-campaign"
+        i18nKey="campaigns:delete-campaign.title"
         components={{
           translate: <Text tag="span" variant="f2" />,
           value: <Text tag="span" variant="f2" color="main2" />,
@@ -56,10 +56,10 @@ export const DeleteCampaignModal = ({ type }: TProps): JSX.Element => {
   const actions = (
     <Flex width="100%" gap={24} styles={{ paddingTop: '48px' }}>
       <FilledButton onClick={handleDelete} width="100%">
-        {t('delete')}
+        {t('delete-campaign.delete-btn')}
       </FilledButton>
       <OutlinedButton onClick={handleClose} width="100%">
-        {t('cancel')}
+        {t('delete-campaign.cancel-btn')}
       </OutlinedButton>
     </Flex>
   )
