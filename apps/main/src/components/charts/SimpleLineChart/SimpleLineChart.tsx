@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import {
   ResponsiveContainer,
   LineChart,
@@ -29,6 +29,13 @@ export const SimpleLineChart = memo(
     const XAxisComponent = XAxisCustom || BaseXAxis
     const AxisTickYComponent = YAxisCustom || BaseAxisTickY
 
+    const xaxisInterval = useMemo(() => {
+      if (data.length <= 8) {
+        return 0
+      }
+      return 'equidistantPreserveStart'
+    }, [data])
+
     return (
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} height={444}>
@@ -36,12 +43,13 @@ export const SimpleLineChart = memo(
           <XAxis
             dataKey="date"
             stroke={theme.palette.main22}
+            interval={xaxisInterval}
             tick={(props) => <XAxisComponent {...props} />}
           />
           <YAxis
             stroke={theme.palette.main22}
             tick={(props) => <AxisTickYComponent {...props} />}
-            tickMargin={30}
+            tickMargin={10}
           />
           <Tooltip
             cursor={{ stroke: theme.palette.main5, strokeWidth: 1 }}
