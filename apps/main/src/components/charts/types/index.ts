@@ -23,7 +23,12 @@ export type TAxisTickYProps = {
   }
 }
 
+type TCustomLabel = {
+  [key: string]: string
+}
+
 export type TTooltipProps = {
   payload: Payload<ValueType, NameType>[] | undefined
   active: boolean | undefined
+  customLabel?: TCustomLabel
 }

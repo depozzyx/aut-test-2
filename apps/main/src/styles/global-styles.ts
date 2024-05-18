@@ -65,4 +65,14 @@ export const GlobalStyles = createGlobalStyle`
   *::-webkit-scrollbar-button {
     display: none;
   }
+
+  // recharts styles override 
+  .recharts-legend-item {
+    align-items: center !important;
+    margin-right: 16px !important;
+    
+    svg {
+      margin-right: 10px !important;
+    }
+  }
 `

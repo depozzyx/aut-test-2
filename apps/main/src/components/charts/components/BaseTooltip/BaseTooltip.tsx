@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { memo } from 'react'
 import { useTheme } from 'styled-components'
 import { deepEqual } from '@peiko/utils/deep-equal'
@@ -7,8 +6,9 @@ import { Text } from '@peiko/components/Text'
 import { TTooltipProps } from '../../types'
 import { getXaxisDate } from '../../utils'
 
-export const BaseTooltip = memo<TTooltipProps>(({ payload, active, ...props }) => {
+export const BaseTooltip = memo<TTooltipProps>(({ payload, active, customLabel }) => {
   const theme = useTheme()
+
   return (
     <>
       {active && payload && payload.length && (
@@ -21,16 +21,15 @@ export const BaseTooltip = memo<TTooltipProps>(({ payload, active, ...props }) =
           }}
         >
           <Box className="tooltip__header">
-            <Text variant="f10">{getXaxisDate(payload[0].payload.date)}</Text>
+            <Text variant="f10">{getXaxisDate(payload[0].payload?.date)}</Text>
           </Box>
           <Box className="tooltip__body">
-            {payload.map((item, index) => (
-              <Box key={index} className="tooltip__item">
+            {payload.map((item) => (
+              <Box key={item.dataKey} className="tooltip__item">
                 <Box className="tooltip__item__value" styles={{ display: 'flex' }}>
-                  <Text
-                    variant="f10"
-                    color="main3"
-                  >{`${item.dataKey}: ${item.value}`}</Text>
+                  <Text variant="f10" color="main22" styles={{ color: item.color }}>{`${
+                    customLabel?.[item?.dataKey as string] || item?.dataKey
+                  }: ${item?.value || ''}`}</Text>
                 </Box>
               </Box>
             ))}

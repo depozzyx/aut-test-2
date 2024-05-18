@@ -17,7 +17,7 @@ export const SLCCustomYAxis = ({
           fill={theme.palette.main22}
           fontSize={12}
           fontWeight={400}
-          style={{ textAnchor: 'middle' }}
+          style={{ textAnchor: 'middle', dominantBaseline: 'middle' }}
         >
           {yaxisValue}
         </text>

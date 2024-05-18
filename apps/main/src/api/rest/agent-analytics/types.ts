@@ -5,18 +5,22 @@ export type TAgentAnalyticsReqParams = {
   toDate: string | Date
 }
 
-export type TAgentAnalyticsData = {
-  conversionRate: number
-  availability: number
-  averageCallDuration: number
-  callMinutes: number
+export type TAgentAnalytics = {
   successfulCalls: number
   unsuccessfulCalls: number
   undeterminedCalls: number
+  conversionRate: number
+  averageCallDuration: number
+  availability: number
+  callMinutes: number
+  dateStatistic: string
+}
+
+export type TAgentAnalyticsData = {
+  analytics: TAgentAnalytics
 }
 
 export type TAgentAnalyticsRes = {
   statusCode: TGeneratedSuccessStatuses
-  meta: unknown
-  data: TAgentAnalyticsData
+  data: TAgentAnalyticsData[]
 }
