@@ -9,7 +9,7 @@ import {
   Line,
 } from 'recharts'
 import { useTheme } from 'styled-components'
-import { TSimpleChartData } from '@/components/charts/types'
+import { TSimpleChartData, TTooltipProps } from '@/components/charts/types'
 import { deepEqual } from '@peiko/utils/deep-equal'
 import { BaseXAxis } from '../components/BaseXAxis'
 import { BaseAxisTickY } from '../components/BaseAxisTickY'
@@ -20,10 +20,11 @@ type TSimpleLineChartProps = {
   valueKey?: string
   XAxisCustom?: React.ElementType
   YAxisCustom?: React.ElementType
+  customLabel?: TTooltipProps['customLabel']
 }
 
 export const SimpleLineChart = memo(
-  ({ data, valueKey, XAxisCustom, YAxisCustom }: TSimpleLineChartProps) => {
+  ({ data, valueKey, XAxisCustom, YAxisCustom, customLabel }: TSimpleLineChartProps) => {
     const theme = useTheme()
 
     const XAxisComponent = XAxisCustom || BaseXAxis
@@ -55,7 +56,7 @@ export const SimpleLineChart = memo(
           <Tooltip
             cursor={{ stroke: theme.palette.main5, strokeWidth: 1 }}
             content={({ payload, active }) => (
-              <BaseTooltip payload={payload} active={active} />
+              <BaseTooltip payload={payload} active={active} customLabel={customLabel} />
             )}
           />
           <Line

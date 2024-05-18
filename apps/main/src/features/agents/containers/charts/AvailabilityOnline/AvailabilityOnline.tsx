@@ -50,6 +50,7 @@ export const AvailabilityOnline = (): JSX.Element => {
           data={isEveryValueNull ? mockAvailabilityOnline : data}
           YAxisCustom={SLCCustomYAxis}
           valueKey="availability"
+          customLabel={{ availability: t('availability-online') }}
         />
       )}
     </Flex>

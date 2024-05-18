@@ -51,6 +51,7 @@ export const CallMinutes = (): JSX.Element => {
           data={isEveryValueNull ? mockTimeOnline : data}
           YAxisCustom={SLCCustomYAxis}
           valueKey="callMinutes"
+          customLabel={{ callMinutes: t('call-minutes') }}
         />
       )}
     </Flex>

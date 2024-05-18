@@ -44,5 +44,10 @@
     "average-call-duration": "Average call duration",
     "call-minutes": "Call minutes",
     "availability-online": "Availability online",
-    "call-success": "Call success"
+    "call-success": "Call success",
+    "tooltip": {
+        "successful-calls": "Succesful calls",
+        "unsuccessful-calls": "Unsuccessful calls",
+        "undetermined-calls": "Undefined calls"
+    }
 }

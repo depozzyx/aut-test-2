@@ -1,4 +1,5 @@
 import { memo, useMemo } from 'react'
+import useTranslation from 'next-translate/useTranslation'
 import {
   ResponsiveContainer,
   LineChart,
@@ -21,6 +22,7 @@ type TChartProps = {
 }
 
 export const Chart = memo(({ data }: TChartProps) => {
+  const { t } = useTranslation('agents')
   const theme = useTheme()
 
   const xaxisInterval = useMemo(() => {
@@ -30,6 +32,11 @@ export const Chart = memo(({ data }: TChartProps) => {
     return 'equidistantPreserveStart'
   }, [data])
 
+  const labels = {
+    successfulCalls: t('tooltip.successful-calls'),
+    undeterminedCalls: t('tooltip.undetermined-calls'),
+    unsuccessfulCalls: t('tooltip.unsuccessful-calls'),
+  }
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={data} height={444}>
@@ -49,29 +56,35 @@ export const Chart = memo(({ data }: TChartProps) => {
         <Tooltip
           cursor={{ stroke: theme.palette.main5, strokeWidth: 1 }}
           content={({ payload, active }) => (
-            <BaseTooltip payload={payload} active={active} />
+            <BaseTooltip payload={payload} active={active} customLabel={labels} />
           )}
         />
         <Legend
           iconType="square"
+          iconSize={12}
           verticalAlign="top"
           align="left"
           height={46}
-          margin={{ left: 40 }}
+          wrapperStyle={{
+            paddingLeft: 50,
+          }}
         />
         <Line
+          name={t('tooltip.successful-calls')}
           type="linear"
           dataKey="successfulCalls"
           stroke={theme.palette.main11}
           dot={false}
         />
         <Line
+          name={t('tooltip.undetermined-calls')}
           type="linear"
           dataKey="undeterminedCalls"
           stroke={theme.palette.main22}
           dot={false}
         />
         <Line
+          name={t('tooltip.unsuccessful-calls')}
           type="linear"
           dataKey="unsuccessfulCalls"
           stroke={theme.palette.main13}

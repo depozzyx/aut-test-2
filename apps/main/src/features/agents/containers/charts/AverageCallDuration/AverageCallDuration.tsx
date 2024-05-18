@@ -51,6 +51,7 @@ export const AverageCallDuration = (): JSX.Element => {
           data={isEveryValueNull ? mockAverageCallDuration : data}
           YAxisCustom={SLCCustomYAxis}
           valueKey="averageCallDuration"
+          customLabel={{ averageCallDuration: t('average-call-duration') }}
         />
       )}
     </Flex>
