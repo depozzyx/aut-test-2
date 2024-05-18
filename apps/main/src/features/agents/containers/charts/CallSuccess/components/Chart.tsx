@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import {
   ResponsiveContainer,
   LineChart,
@@ -23,6 +23,13 @@ type TChartProps = {
 export const Chart = memo(({ data }: TChartProps) => {
   const theme = useTheme()
 
+  const xaxisInterval = useMemo(() => {
+    if (data.length <= 8) {
+      return 0
+    }
+    return 'equidistantPreserveStart'
+  }, [data])
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={data} height={444}>
@@ -31,6 +38,8 @@ export const Chart = memo(({ data }: TChartProps) => {
           dataKey="date"
           stroke={theme.palette.main22}
           tick={(props) => <BaseXAxis {...props} />}
+          interval={xaxisInterval}
+          padding={{ right: 14 }}
         />
         <YAxis
           stroke={theme.palette.main22}
