@@ -53,7 +53,9 @@
     "review-campaign": {
         "title": "Review New Campaign",
         "submit-btn": "Submit",
-        "back-btn": "Back"
+        "back-btn": "Back",
+        "leads": "{{ count }} leads",
+        "agents": "{{ count }} agents"
     },
     "active-campaigns": "Active Campaigns",
     "campaign-effectiveness": "Campaign Effectiveness",
