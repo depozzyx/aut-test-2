@@ -101,7 +101,7 @@ type TCustomFilledBtnProps = {
 
 export const CustomFilledBtn = forwardRef<HTMLButtonElement, TCustomFilledBtnProps>(
   (props, ref) => {
-    const { t } = useTranslation('common')
+    const { t } = useTranslation('datepicker')
     const { title, isActive, ...rest } = props
 
     return (

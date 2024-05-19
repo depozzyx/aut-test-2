@@ -134,7 +134,7 @@ export const CreateCampaignForm = (): JSX.Element => {
         </Flex>
         <Flex align="center" justify="center" gap={24}>
           <OutlinedButton onClick={resetModals} width="236px">
-            {t('common:cancel')}
+            {t('create-campaign.cancel')}
           </OutlinedButton>
           <FilledButton
             type="submit"

@@ -20,5 +20,5 @@ export const getDateButtonLabel = ({ from, to, t }: TGetDateBtnLabelParams): str
   if (to) {
     return `- ${formattedTo}`
   }
-  return t('common:date')
+  return t('datepicker:date')
 }

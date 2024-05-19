@@ -36,7 +36,7 @@ export const FormikRangeDayPicker: FC<TFormikRangeDayPicker> = ({
   label,
   ...props
 }) => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation()
 
   const field = formik.getFieldProps(name)
   const { touched, error } = formik.getFieldMeta(name)

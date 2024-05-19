@@ -10,7 +10,7 @@ type TProps = {
 } & TSelectProps
 
 export const FormikSelect: React.FC<TProps> = ({ formik, onChange, ...props }) => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation()
   const field = formik.getFieldProps(props.name)
   const { touched, error } = formik.getFieldMeta(props.name)
 
