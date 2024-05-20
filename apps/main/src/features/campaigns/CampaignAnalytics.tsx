@@ -26,7 +26,7 @@ export const CampaignAnalytics = (): JSX.Element => {
             <RangeDayPicker />
             <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.LIST} />
           </Flex>
-          <FilledButton>{t('custom-report')}</FilledButton>
+          <FilledButton width={236}>{t('custom-report')}</FilledButton>
         </Flex>
         <Flex className="charts-container" direction="column" gap={20} width="100%">
           <ConversionRate />
