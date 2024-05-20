@@ -2,33 +2,32 @@ import { useMemo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
-import {
-  selectIsLoading,
-  selectAverageCallDurationData,
-} from '@/features/agents/store/agent-analytics'
 import { useRedux } from '@/hooks/use-redux'
 import { Text } from '@peiko/components/Text'
 import { Flex } from '@/components/Flex'
 import { SimpleLineChart } from '@/components/charts/SimpleLineChart'
 import { Loader } from '@peiko/components/loaders/Loader'
-import { mockAverageCallDuration } from '@/features/agents/mocks/analytics'
-import { SLCCustomYAxis } from '@/components/charts/components/SLCCustomYAxis'
+import { mockConversionRate } from '@/features/campaigns/mocks/analytics'
+import {
+  selectConversionRateData,
+  selectIsLoading,
+} from '@/features/campaigns/store/campaign-analytics'
 
-export const AverageCallDuration = (): JSX.Element => {
-  const { t } = useTranslation('agents')
+export const ConversionRate = (): JSX.Element => {
+  const { t } = useTranslation('campaigns')
 
   const { select } = useRedux()
 
   const { isLoading, data } = select(
     createStructuredSelector({
       isLoading: selectIsLoading,
-      data: selectAverageCallDurationData,
+      data: selectConversionRateData,
     }),
     shallowEqual,
   )
 
   const isEveryValueNull = useMemo(
-    () => data.every((item) => item.averageCallDuration === 0),
+    () => data.every((item) => item.conversionRate === 0),
     [data],
   )
 
@@ -42,16 +41,15 @@ export const AverageCallDuration = (): JSX.Element => {
           textTransform: 'capitalize',
         }}
       >
-        {t('average-call-duration')}
+        {t('conversion-rate')}
       </Text>
       {isLoading ? (
         <Loader />
       ) : (
         <SimpleLineChart
-          data={isEveryValueNull ? mockAverageCallDuration : data}
-          YAxisCustom={SLCCustomYAxis}
-          valueKey="averageCallDuration"
-          customLabel={{ averageCallDuration: t('average-call-duration') }}
+          data={isEveryValueNull ? mockConversionRate : data}
+          valueKey="conversionRate"
+          customLabel={{ conversionRate: t('conversion-rate') }}
         />
       )}
     </Flex>

@@ -2,20 +2,20 @@ import { useMemo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
-import {
-  selectIsLoading,
-  selectAverageCallDurationData,
-} from '@/features/agents/store/agent-analytics'
 import { useRedux } from '@/hooks/use-redux'
 import { Text } from '@peiko/components/Text'
 import { Flex } from '@/components/Flex'
 import { SimpleLineChart } from '@/components/charts/SimpleLineChart'
 import { Loader } from '@peiko/components/loaders/Loader'
-import { mockAverageCallDuration } from '@/features/agents/mocks/analytics'
+import { mockAverageCallDuration } from '@/features/campaigns/mocks/analytics'
 import { SLCCustomYAxis } from '@/components/charts/components/SLCCustomYAxis'
+import {
+  selectAverageCallDurationData,
+  selectIsLoading,
+} from '@/features/campaigns/store/campaign-analytics'
 
 export const AverageCallDuration = (): JSX.Element => {
-  const { t } = useTranslation('agents')
+  const { t } = useTranslation('campaigns')
 
   const { select } = useRedux()
 
@@ -42,7 +42,7 @@ export const AverageCallDuration = (): JSX.Element => {
           textTransform: 'capitalize',
         }}
       >
-        {t('average-call-duration')}
+        {t('average-callDuration')}
       </Text>
       {isLoading ? (
         <Loader />
@@ -51,7 +51,7 @@ export const AverageCallDuration = (): JSX.Element => {
           data={isEveryValueNull ? mockAverageCallDuration : data}
           YAxisCustom={SLCCustomYAxis}
           valueKey="averageCallDuration"
-          customLabel={{ averageCallDuration: t('average-call-duration') }}
+          customLabel={{ averageCallDuration: t('average-callDuration') }}
         />
       )}
     </Flex>

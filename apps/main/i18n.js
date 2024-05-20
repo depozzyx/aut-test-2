@@ -49,5 +49,6 @@ module.exports = {
     '/cabinet/settings/account-management': ['user', 'routing', 'settings', 'validation'],
     '/cabinet/settings/activity-log': ['user', 'routing', 'activity-log', 'validation'],
     '/cabinet/agents/analytics': ['user', 'routing', 'agents'],
+    '/cabinet/campaigns/analytics': ['user', 'routing', 'campaigns'],
   },
 }
