@@ -18,7 +18,7 @@ export const CampaignNameFilter: FC<{
 }> = ({ type }) => {
   const { select, dispatch } = useRedux()
   const { t } = useTranslation('campaigns')
-  const { campaignsOptions, pagination, fetcher } = useCampaignNameFilter(type)
+  const { campaignsOptions, pagination, fetcher } = useCampaignNameFilter(type, true)
 
   const { filterCampaignName } = select(
     createStructuredSelector({

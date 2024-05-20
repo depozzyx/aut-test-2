@@ -16,6 +16,7 @@ import agentsReducer from '@/features/agents/store/agents'
 import createAgentReducer from '@/features/agents/store/create-agent'
 import editAgentReducer from '@/features/agents/store/edit-agent'
 import agentAnalyticsReducer from '@/features/agents/store/agent-analytics'
+import campaignAnalyticsReducer from '@/features/campaigns/store/campaign-analytics'
 
 const store = configureStore({
   reducer: {
@@ -36,6 +37,7 @@ const store = configureStore({
     createAgent: createAgentReducer,
     editAgent: editAgentReducer,
     agentAnalytics: agentAnalyticsReducer,
+    campaignAnalytics: campaignAnalyticsReducer,
   },
 })
 

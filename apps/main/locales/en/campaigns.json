@@ -74,5 +74,9 @@
     },
     "campaigns-filter": "Campaign name",
     "reset-filters": "Reset filters",
-    "filter-by-status": "Filter by status"
+    "filter-by-status": "Filter by status",
+    "custom-report": "Custom Report",
+    "conversion-rate": "Conversion rate",
+    "callAnswer-rate": "Answer rate",
+    "average-callDuration": "Average call duration"
 }

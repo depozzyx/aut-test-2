@@ -34,7 +34,7 @@ type TReturn = {
   pagination: { total: number; page: number; limit?: number }
   filters: {
     searchTerm?: string
-    filterCampaignName?: string
+    filterCampaignName?: string | number
     filterStatus?: TCampaignStatus
     filterDate?: { from?: string | Date; to?: string | Date }
   }
@@ -75,7 +75,7 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
         limit,
         orderBy,
         ...(searchTerm && { search: searchTerm }),
-        ...(filterCampaignName && { name: filterCampaignName }),
+        ...(filterCampaignName && { name: filterCampaignName as string }),
         ...(filterStatus && { status: filterStatus }),
         ...(filterDate?.from && { fromDate: filterDate?.from }),
         ...(filterDate?.to && { toDate: filterDate?.to }),
@@ -110,7 +110,7 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
           limit,
           orderBy,
           ...(searchTerm && { search: searchTerm }),
-          ...(filterCampaignName && { name: filterCampaignName }),
+          ...(filterCampaignName && { name: filterCampaignName as string }),
           ...(filterStatus && { status: filterStatus }),
           ...(filterDate?.from && { fromDate: filterDate?.from }),
           ...(filterDate?.to && { toDate: filterDate?.to }),

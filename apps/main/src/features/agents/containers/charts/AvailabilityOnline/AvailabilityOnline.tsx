@@ -12,7 +12,7 @@ import { useRedux } from '@/hooks/use-redux'
 import { SimpleLineChart } from '@/components/charts/SimpleLineChart'
 import { Loader } from '@peiko/components/loaders/Loader'
 import { mockAvailabilityOnline } from '@/features/agents/mocks/analytics'
-import { SLCCustomYAxis } from '../components/SLCCustomYAxis'
+import { SLCCustomYAxis } from '@/components/charts/components/SLCCustomYAxis'
 
 export const AvailabilityOnline = (): JSX.Element => {
   const { t } = useTranslation('agents')

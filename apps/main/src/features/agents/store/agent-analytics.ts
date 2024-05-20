@@ -51,25 +51,25 @@ export const {
   reset,
 } = agentAnalytics.actions
 
-export const selectCreateAgents: TSelector<TInit> = (state) => state.agentAnalytics
+export const selectAgentsAnalytics: TSelector<TInit> = (state) => state.agentAnalytics
 
 export const selectIsLoading = createSelector(
-  selectCreateAgents,
+  selectAgentsAnalytics,
   (state) => state.isLoading,
 )
 
 export const selectAgentNameFilter = createSelector(
-  selectCreateAgents,
+  selectAgentsAnalytics,
   (state) => state.agentNameFilter,
 )
 
 export const selectDateFilter = createSelector(
-  selectCreateAgents,
+  selectAgentsAnalytics,
   (state) => state.filterDate,
 )
 
 export const selectAnalyticsData = createSelector(
-  selectCreateAgents,
+  selectAgentsAnalytics,
   (state) => state.analyticsData,
 )
 

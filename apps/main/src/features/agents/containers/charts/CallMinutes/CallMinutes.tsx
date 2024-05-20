@@ -12,7 +12,7 @@ import { Flex } from '@/components/Flex'
 import { SimpleLineChart } from '@/components/charts/SimpleLineChart'
 import { Loader } from '@peiko/components/loaders/Loader'
 import { mockTimeOnline } from '@/features/agents/mocks/analytics'
-import { SLCCustomYAxis } from '../components/SLCCustomYAxis'
+import { SLCCustomYAxis } from '@/components/charts/components/SLCCustomYAxis'
 
 export const CallMinutes = (): JSX.Element => {
   const { t } = useTranslation('agents')
