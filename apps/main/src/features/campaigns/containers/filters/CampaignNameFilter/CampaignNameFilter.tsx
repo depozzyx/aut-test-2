@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useCallback } from 'react'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import useTranslation from 'next-translate/useTranslation'
@@ -44,12 +44,12 @@ export const CampaignNameFilter: FC<{
     dispatch(setFilterCampaignName(value as string))
   }
 
-  const onMenuScrollToBottom = () => {
+  const onMenuScrollToBottom = useCallback(() => {
     const lastPage =
       pagination.total === 0 ? 1 : Math.ceil(pagination.total / (pagination.limit ?? 15))
     if (pagination.page < lastPage)
       fetcher({ page: pagination.page + 1, limit: pagination.limit, orderBy: 'ASC' })
-  }
+  }, [pagination.limit, pagination.page, pagination.total, fetcher])
 
   return (
     <DropdownMenu
