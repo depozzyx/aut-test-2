@@ -16,7 +16,6 @@ import {
   asyncGetLeadListCatalog,
   selectLeadListPagination,
   selectLeadListCatalogAsOptions,
-  selectIsLoadingLeadsGroups,
 } from '@/features/leads/store/lead-list'
 import { Loader } from '@peiko/components/loaders/Loader'
 import { TGeneratedCallTime } from '@/features/campaigns/constants'
@@ -24,8 +23,8 @@ import { reviewFormData } from '@/features/campaigns/store/create-campaign'
 import { FormikMultiSelect } from '@/components/formik-wrappers/FormikMultiSelect'
 import {
   asyncGetAgentsList,
+  selectAgentsPagination,
   selectAgentsOptions,
-  selectIsLoadingAgents,
 } from '@/features/agents/store/agents'
 import { createCampaignValidationSchema } from './validationSchema'
 
@@ -35,18 +34,16 @@ export const CreateCampaignForm = (): JSX.Element => {
   const { select, dispatch } = useRedux()
 
   const {
-    pagination: { page, limit },
+    leadsPagination: { page: leadsPage, limit: leadsLimit, total: leadsTotal },
     leadListOptions,
+    agentsPagination: { page: agentsPage, limit: agentsLimit, total: agentsTotal },
     agentsOptions,
-    isLoadingAgents,
-    isLoadingLeadsGroups,
   } = select(
     createStructuredSelector({
-      pagination: selectLeadListPagination,
+      leadsPagination: selectLeadListPagination,
       leadListOptions: selectLeadListCatalogAsOptions,
+      agentsPagination: selectAgentsPagination,
       agentsOptions: selectAgentsOptions,
-      isLoadingAgents: selectIsLoadingAgents,
-      isLoadingLeadsGroups: selectIsLoadingLeadsGroups,
     }),
     shallowEqual,
   )
@@ -68,14 +65,43 @@ export const CreateCampaignForm = (): JSX.Element => {
   })
 
   useEffect(() => {
-    dispatch(asyncGetLeadListCatalog({ page, limit, orderBy: 'ASC' }))
+    dispatch(
+      asyncGetLeadListCatalog({ page: leadsPage, limit: leadsLimit, orderBy: 'ASC' }),
+    )
   }, [])
 
   useEffect(() => {
-    dispatch(asyncGetAgentsList({ page, limit, orderBy: 'ASC' }))
+    dispatch(asyncGetAgentsList({ page: agentsPage, limit: agentsLimit, orderBy: 'ASC' }))
   }, [])
 
-  if (isLoadingAgents || isLoadingLeadsGroups)
+  const onLeadsScrollToBottom = () => {
+    const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 15))
+    if (leadsPage < lastPage)
+      dispatch(
+        asyncGetLeadListCatalog({
+          page: leadsPage + 1,
+          limit: leadsLimit,
+          orderBy: 'ASC',
+        }),
+      )
+  }
+
+  const onAgentsScrollToBottom = () => {
+    const lastPage = agentsTotal === 0 ? 1 : Math.ceil(agentsTotal / (agentsLimit ?? 15))
+    if (agentsPage < lastPage)
+      dispatch(
+        asyncGetAgentsList(
+          {
+            page: agentsPage + 1,
+            limit: agentsLimit,
+            orderBy: 'ASC',
+          },
+          true,
+        ),
+      )
+  }
+
+  if (!leadListOptions.length || !agentsOptions.length)
     return <Loader styles={{ height: '278px', marginTop: '40px' }} />
 
   return (
@@ -100,6 +126,7 @@ export const CreateCampaignForm = (): JSX.Element => {
               width={326}
               size="s"
               options={agentsOptions}
+              onMenuScrollToBottom={onAgentsScrollToBottom}
             />
             <FormikMultiSelect
               formik={formik}
@@ -108,6 +135,7 @@ export const CreateCampaignForm = (): JSX.Element => {
               size="s"
               width={326}
               options={leadListOptions}
+              onMenuScrollToBottom={onLeadsScrollToBottom}
             />
           </Flex>
           <Flex direction="column" gap={16} maxWidth="326px" width="100%">

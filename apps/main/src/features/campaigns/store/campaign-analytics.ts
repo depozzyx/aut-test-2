@@ -1,7 +1,8 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { subDays } from 'date-fns'
-import { TSelector } from '@/store'
+import { TSelector, TAsyncAction } from '@/store'
 import { TCampaignAnalytics } from '@/api-rest/campaign-analytics/types'
+import { reset } from '@/features/campaigns/store/campaigns'
 
 export type TInit = {
   isLoading: boolean
@@ -34,11 +35,11 @@ const campaignAnalytics = createSlice({
     setAnalyticsData(state, action: PayloadAction<TInit['analyticsData']>) {
       state.analyticsData = action.payload
     },
-    reset: () => init,
+    resetAnalytics: () => init,
   },
 })
 
-export const { setIsLoading, setDateFilter, setAnalyticsData, reset } =
+export const { setIsLoading, setDateFilter, setAnalyticsData, resetAnalytics } =
   campaignAnalytics.actions
 
 export const selectCampaignAnalytics: TSelector<TInit> = (state) =>
@@ -81,3 +82,8 @@ export const selectAverageCallDurationData = createSelector(selectAnalyticsData,
 )
 
 export default campaignAnalytics.reducer
+
+export const resetStore = (): TAsyncAction => async (dispatch) => {
+  dispatch(resetAnalytics())
+  dispatch(reset())
+}
