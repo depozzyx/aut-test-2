@@ -41,8 +41,6 @@ const Menu: FC<
       const isEndReached = menu.scrollHeight - menu.scrollTop <= menu.clientHeight + threshold;
 
       if (isEndReached) {
-        console.log('end reached')
-
         onMenuScrollToBottom?.()
       }
     }

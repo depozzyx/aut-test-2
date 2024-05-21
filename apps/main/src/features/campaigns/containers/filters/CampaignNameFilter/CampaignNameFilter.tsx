@@ -1,6 +1,8 @@
-import { useRedux } from '@/hooks/use-redux'
-import React, { FC } from 'react'
+import { FC, useEffect, useCallback } from 'react'
+import { createStructuredSelector } from 'reselect'
+import { shallowEqual } from 'react-redux'
 import useTranslation from 'next-translate/useTranslation'
+import { useRedux } from '@/hooks/use-redux'
 import {
   selectFilterCampaignName,
   setFilterCampaignName,
@@ -9,16 +11,19 @@ import { TCampaignTableType } from '@/features/campaigns/types'
 import { DropdownMenu } from '@/components/DropdownMenu'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { useCampaignNameFilter } from '@/features/campaigns/hooks/use-campaignNameFilter'
-import { createStructuredSelector } from 'reselect'
-import { shallowEqual } from 'react-redux'
+
 import { StyledTrigger } from './CampaignNameFilter.styled'
 
 export const CampaignNameFilter: FC<{
   type: TCampaignTableType
-}> = ({ type }) => {
+  useIdForValue?: boolean
+}> = ({ type, useIdForValue = false }) => {
   const { select, dispatch } = useRedux()
   const { t } = useTranslation('campaigns')
-  const { campaignsOptions, pagination, fetcher } = useCampaignNameFilter(type, true)
+  const { campaignsOptions, pagination, fetcher } = useCampaignNameFilter(
+    type,
+    useIdForValue,
+  )
 
   const { filterCampaignName } = select(
     createStructuredSelector({
@@ -27,20 +32,28 @@ export const CampaignNameFilter: FC<{
     shallowEqual,
   )
 
+  useEffect(() => {
+    if (!useIdForValue || !campaignsOptions.length) return
+    const value = campaignsOptions[0]?.value
+    if (value) {
+      dispatch(setFilterCampaignName(value as number))
+    }
+  }, [useIdForValue, campaignsOptions, filterCampaignName])
+
   const handleOnChange = (value: string | number) => {
     dispatch(setFilterCampaignName(value as string))
   }
 
-  const onMenuScrollToBottom = () => {
+  const onMenuScrollToBottom = useCallback(() => {
     const lastPage =
       pagination.total === 0 ? 1 : Math.ceil(pagination.total / (pagination.limit ?? 15))
     if (pagination.page < lastPage)
       fetcher({ page: pagination.page + 1, limit: pagination.limit, orderBy: 'ASC' })
-  }
+  }, [pagination.limit, pagination.page, pagination.total, fetcher])
 
   return (
     <DropdownMenu
-      maxHeight="396px"
+      maxHeight="350px"
       triggerElement={(isOpen) => (
         <StyledTrigger>
           {t('campaigns-filter')}{' '}

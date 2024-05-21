@@ -52,8 +52,15 @@ const agents = createSlice({
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
       state.pagination = action.payload
     },
-    setAgentsList(state, action: PayloadAction<TInit['agentsList']>) {
-      state.agentsList = action.payload
+    setAgentsList(
+      state,
+      action: PayloadAction<{ data: TInit['agentsList']; append?: boolean }>,
+    ) {
+      if (action.payload.append) {
+        state.agentsList = [...state.agentsList, ...action.payload.data]
+      } else {
+        state.agentsList = action.payload.data
+      }
     },
     setActiveAgents(state, action: PayloadAction<TInit['activeAgents']>) {
       state.activeAgents = action.payload
@@ -138,14 +145,14 @@ export const selectSearchTerm = createSelector(
 export default agents.reducer
 
 export const asyncGetAgentsList =
-  (params: TAgentsReq): TAsyncAction =>
+  (params: TAgentsReq, append = false): TAsyncAction =>
   async (dispatch) => {
     try {
       dispatch(setIsLoading(true))
       const {
         data: { data, pagination },
       } = await apiAgents.getAgentsList(params)
-      dispatch(setAgentsList(data))
+      dispatch(setAgentsList({ data, append }))
       dispatch(setPagination(pagination))
     } catch (e) {
       handleRestError({ e, dispatch })

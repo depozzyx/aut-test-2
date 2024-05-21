@@ -9,7 +9,6 @@ import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { handleRestError } from '@/features/common/error'
 import { TCampaignListReq } from '@/api-rest/campaigns/types'
-import { setFilterCampaignName } from '@/features/campaigns/store/campaigns'
 
 type TCampaigns = TActiveCampaign[] | TCampaign[]
 
@@ -41,7 +40,7 @@ export const useCampaignNameFilter = (
   const fetcher = async (params: TCampaignListReq): Promise<void> => {
     try {
       const { data } = await apiRequest(params)
-      setCampaigns(data.data)
+      setCampaigns((prev) => [...prev, ...data.data])
       setPagination(data.pagination)
     } catch (e) {
       handleRestError({ e, dispatch })
@@ -56,12 +55,6 @@ export const useCampaignNameFilter = (
     label: campaign.name,
     value: useIdForValue ? campaign.id : campaign.name,
   }))
-
-  useEffect(() => {
-    if (!useIdForValue || !campaignsOptions.length) return
-    const value = campaignsOptions[0]?.value
-    dispatch(setFilterCampaignName(value as number))
-  }, [useIdForValue, campaignsOptions])
 
   return { campaignsOptions, pagination, fetcher }
 }
