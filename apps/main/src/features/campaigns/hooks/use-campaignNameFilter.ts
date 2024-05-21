@@ -40,7 +40,7 @@ export const useCampaignNameFilter = (
   const fetcher = async (params: TCampaignListReq): Promise<void> => {
     try {
       const { data } = await apiRequest(params)
-      setCampaigns(data.data)
+      setCampaigns((prev) => [...prev, ...data.data])
       setPagination(data.pagination)
     } catch (e) {
       handleRestError({ e, dispatch })

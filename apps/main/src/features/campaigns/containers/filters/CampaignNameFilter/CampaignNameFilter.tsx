@@ -53,7 +53,7 @@ export const CampaignNameFilter: FC<{
 
   return (
     <DropdownMenu
-      maxHeight="396px"
+      maxHeight="350px"
       triggerElement={(isOpen) => (
         <StyledTrigger>
           {t('campaigns-filter')}{' '}
