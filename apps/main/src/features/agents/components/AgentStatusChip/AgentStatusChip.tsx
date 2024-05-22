@@ -10,10 +10,10 @@ interface IStatusChipProps {
 
 export const statusColor: Record<TAgentWorkStatus, keyof DefaultTheme['palette']> = {
   start: 'main8-100',
-  'on-call': 'main8-100',
   pause: 'main6-100',
   unpause: 'main7-100',
   finish: 'main10-100',
+  'on-call': 'main9-100',
 }
 
 export const AgentStatusChip = ({ status }: IStatusChipProps): JSX.Element => {

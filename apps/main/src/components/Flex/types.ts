@@ -24,4 +24,5 @@ export type TFlexComponentProps = {
   fullHeight?: boolean
   fullWidth?: boolean
   children?: React.ReactNode
+  className?: string
 } & TStylesProps

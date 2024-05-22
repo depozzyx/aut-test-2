@@ -9,7 +9,7 @@ type TModalsReturn = {
   resetModals: () => void
 }
 
-function useModals(): TModalsReturn {
+export const useModals = (): TModalsReturn => {
   const { select, dispatch } = useRedux()
   const { modalState } = select(selectModal)
 
@@ -30,5 +30,3 @@ function useModals(): TModalsReturn {
     resetModals,
   }
 }
-
-export default useModals

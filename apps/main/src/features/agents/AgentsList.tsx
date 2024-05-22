@@ -3,12 +3,12 @@ import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { useRouter } from 'next/router'
 import { shallowEqual } from 'react-redux'
+import { useUnmount } from 'react-use'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
 import { useRedux } from '@/hooks/use-redux'
 import { ROUTES } from '@/constants/routes'
-
 import {
   Container,
   Panel,
@@ -20,6 +20,7 @@ import {
   asyncGetAgentsList,
   selectSort,
   selectStatusFilter,
+  reset,
 } from './store/agents'
 import { AgentsListTable } from './containers/tables/AgentsListTable'
 import { DeleteAgentModal } from './containers/modals/DeleteAgentModal'
@@ -51,18 +52,20 @@ export const AgentsList = (): JSX.Element => {
     dispatch(
       asyncGetAgentsList({
         page: 1,
+        limit: limit ?? 8,
         orderBy,
         workStatus: statusFilter,
         ...(sortBy && { sortBy }),
       }),
     )
-  }, [sortBy, orderBy, statusFilter])
+  }, [limit, sortBy, orderBy, statusFilter])
 
   const handleChangePage = useCallback(
     (newPage) => {
       dispatch(
         asyncGetAgentsList({
           page: newPage,
+          limit: limit ?? 10,
           orderBy,
           workStatus: statusFilter,
           ...(sortBy && { sortBy }),
@@ -71,6 +74,10 @@ export const AgentsList = (): JSX.Element => {
     },
     [sortBy, orderBy, statusFilter],
   )
+
+  useUnmount(() => {
+    dispatch(reset())
+  })
 
   return (
     <>
@@ -91,7 +98,7 @@ export const AgentsList = (): JSX.Element => {
         </TableContainer>
         <PaginationContainer>
           <Pagination
-            lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
+            lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 8))}
             currentPage={page}
             onChange={handleChangePage}
           />

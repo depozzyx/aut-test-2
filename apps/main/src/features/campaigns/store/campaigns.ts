@@ -29,7 +29,7 @@ export type TInit = {
   meta: unknown
   pagination: TPagination
   searchTerm?: string
-  filterCampaignName?: string
+  filterCampaignName?: string | number
   filterDate: {
     from?: string
     to?: string
@@ -46,7 +46,7 @@ const init: TInit = {
   meta: {},
   pagination: {
     page: 1,
-    limit: 10,
+    limit: 8,
     total: 1,
   },
   searchTerm: '',

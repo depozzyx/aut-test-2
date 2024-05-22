@@ -6,7 +6,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
-import useModals from '@/features/common/modals/hooks/use-modals'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import {
@@ -75,10 +75,10 @@ export const EditAgentForm = (): JSX.Element => {
             width="236px"
             isLoading={isLoading}
           >
-            {t('common:save')}
+            {t('edit-agent.save')}
           </FilledButton>
           <OutlinedButton onClick={resetModals} width="236px">
-            {t('common:cancel')}
+            {t('edit-agent.cancel')}
           </OutlinedButton>
         </Flex>
       </Flex>

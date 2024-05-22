@@ -8,20 +8,6 @@
         "edit": "Edit",
         "delete": "Delete"
     },
-    "delete-agent": "<translate>Are you sure you want to delete <value>{{ agentName }}</value>?</translate>",
-    "campaigns-amount": "{{ campaignsAmount }} campaigns",
-    "edit-agent": {
-        "title": "Edit agent`s info",
-        "agent-name": "Agent Name",
-        "email": "Email",
-        "role": "Role",
-        "assigned-campaigns": "Assigned Campaigns"
-    },
-    "create-agent": {
-        "title": "Create new agent",
-        "action": "Create agent"
-    },
-    "active-agents": "Active Agents",
     "active-agents-headers": {
         "agent-name": "Agent Name",
         "agent-status": "Agent Status",
@@ -31,12 +17,43 @@
         "time-online": "Time Online",
         "sum-call-duration": "Sum Call Duration"
     },
+    "create-agent": {
+        "title": "Create new agent",
+        "action": "Create agent"
+    },
+    "delete-agent": {
+        "title": "<translate>Are you sure you want to delete <value>{{ agentName }}</value>?</translate>",
+        "delete-btn": "Delete",
+        "cancel-btn": "Cancel"
+    },
+    "edit-agent": {
+        "title": "Edit agent`s info",
+        "agent-name": "Agent Name",
+        "email": "Email",
+        "role": "Role",
+        "assigned-campaigns": "Assigned Campaigns",
+        "save-btn": "Save",
+        "cancel-btn": "Cancel"
+    },
+    "campaigns-amount": "{{ campaignsAmount }} campaigns",
+    "active-agents": "Active Agents",
+    "filter-by-status": "Agent status",
+    "reset-filters": "Reset filters",
+    "filter-agentName": "Agent name",
+    "average-call-duration": "Average call duration",
+    "call-minutes": "Call minutes",
+    "availability-online": "Availability online",
+    "call-success": "Call success",
+    "tooltip": {
+        "successful-calls": "Succesful calls",
+        "unsuccessful-calls": "Unsuccessful calls",
+        "undetermined-calls": "Undefined calls"
+    },
     "statuses": {
         "start": "Start",
         "pause": "Pause",
         "unpause": "Unpause",
-        "finish": "Finished"
-    },
-    "filter-by-status": "Agent status",
-    "reset-filters": "Reset filters"
+        "finish": "Finished",
+        "on-call": "On Call"
+    }
 }

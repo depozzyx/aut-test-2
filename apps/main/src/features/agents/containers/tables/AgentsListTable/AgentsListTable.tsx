@@ -11,7 +11,7 @@ import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useRedux } from '@/hooks/use-redux'
-import useModals from '@/features/common/modals/hooks/use-modals'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import {
   selectAgentsList,
   selectIsLoadingAgents,

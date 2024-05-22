@@ -6,7 +6,7 @@ import { MenuContainer, MenuItem } from './DropdownMenu.styled'
 import { CheckIcon } from '@/icons/CheckIcon'
 import { Text } from '@peiko/components/Text'
 
-export type TValue = { label: string; value: string }
+export type TValue = { label: string; value: string | number }
 
 export type TDropdownMenuProps = {
   triggerElement: JSX.Element | ((isOpen: boolean) => JSX.Element)
@@ -37,7 +37,9 @@ const Menu: FC<
   const handleMenuScroll = () => {
     const menu = menuRef.current
     if (menu) {
-      const isEndReached = menu.scrollHeight - menu.scrollTop === menu.clientHeight
+      const threshold = 1; 
+      const isEndReached = menu.scrollHeight - menu.scrollTop <= menu.clientHeight + threshold;
+
       if (isEndReached) {
         onMenuScrollToBottom?.()
       }

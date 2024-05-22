@@ -13,12 +13,15 @@ import { TCampaignListReq } from '@/api-rest/campaigns/types'
 type TCampaigns = TActiveCampaign[] | TCampaign[]
 
 type TReturn = {
-  campaignsOptions: { label: string; value: string }[]
+  campaignsOptions: { label: string; value: string | number }[]
   pagination: { total: number; page: number; limit?: number }
   fetcher: (params: TCampaignListReq) => void
 }
 
-export const useCampaignNameFilter = (type: TCampaignTableType): TReturn => {
+export const useCampaignNameFilter = (
+  type: TCampaignTableType,
+  useIdForValue = false,
+): TReturn => {
   const [campaigns, setCampaigns] = useState<TCampaigns>([])
   const [pagination, setPagination] = useState({ total: 1, page: 1, limit: 10 })
   const { dispatch } = useRedux()
@@ -37,7 +40,7 @@ export const useCampaignNameFilter = (type: TCampaignTableType): TReturn => {
   const fetcher = async (params: TCampaignListReq): Promise<void> => {
     try {
       const { data } = await apiRequest(params)
-      setCampaigns(data.data)
+      setCampaigns((prev) => [...prev, ...data.data])
       setPagination(data.pagination)
     } catch (e) {
       handleRestError({ e, dispatch })
@@ -50,7 +53,7 @@ export const useCampaignNameFilter = (type: TCampaignTableType): TReturn => {
 
   const campaignsOptions = campaigns?.map((campaign) => ({
     label: campaign.name,
-    value: campaign.name,
+    value: useIdForValue ? campaign.id : campaign.name,
   }))
 
   return { campaignsOptions, pagination, fetcher }

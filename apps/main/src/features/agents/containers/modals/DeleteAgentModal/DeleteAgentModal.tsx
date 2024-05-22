@@ -1,7 +1,7 @@
 import useTranslation from 'next-translate/useTranslation'
 import Trans from 'next-translate/Trans'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
-import useModals from '@/features/common/modals/hooks/use-modals'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
@@ -11,7 +11,7 @@ import { useRedux } from '@/hooks/use-redux'
 import { asyncRemoveAgent, selectSelectedAgent } from '../../../store/agents'
 
 export const DeleteAgentModal = (): JSX.Element => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('agents')
   const { select, dispatch } = useRedux()
   const { modalState, resetModals } = useModals()
 
@@ -28,7 +28,7 @@ export const DeleteAgentModal = (): JSX.Element => {
   const title = (
     <Flex align="center" justify="center" width="330px" styles={{ textAlign: 'center' }}>
       <Trans
-        i18nKey="agents:delete-agent"
+        i18nKey="agents:delete-agent.title"
         components={{
           translate: <Text tag="span" variant="f2" />,
           value: <Text tag="span" variant="f2" color="main2" />,
@@ -43,10 +43,10 @@ export const DeleteAgentModal = (): JSX.Element => {
   const actions = (
     <Flex width="100%" gap={24} styles={{ paddingTop: '48px' }}>
       <FilledButton onClick={handleDelete} width="100%">
-        {t('delete')}
+        {t('delete-agent.delete-btn')}
       </FilledButton>
       <OutlinedButton onClick={resetModals} width="100%">
-        {t('cancel')}
+        {t('delete-agent.cancel-btn')}
       </OutlinedButton>
     </Flex>
   )

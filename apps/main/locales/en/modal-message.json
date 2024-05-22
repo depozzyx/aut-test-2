@@ -1,3 +1,7 @@
 {
-  "error": "Error"
+  "error": "Error",
+  "statuses": {
+    "success": "Success!",
+    "error": "Error!"
+  }
 }

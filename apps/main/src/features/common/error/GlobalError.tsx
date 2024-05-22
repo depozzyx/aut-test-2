@@ -23,7 +23,7 @@ export const GlobalError: React.FC = () => {
       description={description}
       onClose={onClose}
       status="error"
-      submitTitle={t('common:close')}
+      submitTitle={t('global-error-close')}
       submitStyles={{
         display: 'flex',
         justifyContent: 'center',
