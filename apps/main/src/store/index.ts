@@ -1,6 +1,7 @@
 import { configureStore, ThunkAction, AnyAction } from '@reduxjs/toolkit'
 import errorReducer from '@/features/common/error/store'
 import userReducer from '@/features/common/user/store'
+import agentStatusReducer from '@/features/common/agentStatus/store'
 import signInReducer from '@/features/auth/store/sign-in'
 import forgotPasswordReducer from '@/features/auth/store/forgot-password'
 import resetPasswordReducer from '@/features/auth/store/reset-password'
@@ -20,6 +21,7 @@ const store = configureStore({
   reducer: {
     error: errorReducer,
     user: userReducer,
+    agentStatus: agentStatusReducer,
     signIn: signInReducer,
     forgotPassword: forgotPasswordReducer,
     resetPassword: resetPasswordReducer,

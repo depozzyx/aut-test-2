@@ -44,6 +44,7 @@ module.exports = {
       'import-leads',
     ],
     '/cabinet/agents/create': ['user', 'routing', 'agents'],
+    '/cabinet/agents/calls': ['user', 'routing', 'agents'],
     '/cabinet/settings/account-management': ['user', 'routing', 'settings', 'validation'],
     '/cabinet/settings/activity-log': ['user', 'routing', 'activity-log', 'validation'],
   },

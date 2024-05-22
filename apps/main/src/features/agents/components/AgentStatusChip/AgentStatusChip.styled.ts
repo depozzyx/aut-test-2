@@ -7,6 +7,7 @@ import { TAgentWorkStatus } from '../../types'
 
 const bgColor: Record<TAgentWorkStatus, keyof TDefaultPalette> = {
   start: 'main8',
+  'on-call': 'main8',
   pause: 'main6',
   unpause: 'main7',
   finish: 'main10',

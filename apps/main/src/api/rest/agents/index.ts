@@ -27,6 +27,8 @@ const createAgent = (data: TCreateAgentReq): TAxiosResponse<TCreateAgentRes> =>
 const getAgentsList = (params: TAgentsReq): TAxiosResponse<TAgentsListRes> =>
   api.get('/agents', { params })
 
+const getPBXAuth = (): TAxiosResponse<TPbxAuthRes> => api.get('/agents/pbx-auth')
+
 const updateAgent = (data: TUpdateAgentReq): TAxiosResponse<TUpdateAgentRes> =>
   api.put('/agents', data)
 
@@ -44,6 +46,7 @@ export const apiAgents = {
   changeWorkStatus,
   createAgent,
   getAgentsList,
+  getPBXAuth,
   updateAgent,
   getActiveAgents,
   getAgentById,

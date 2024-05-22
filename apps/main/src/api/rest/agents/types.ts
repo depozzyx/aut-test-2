@@ -56,7 +56,11 @@ export type TActiveAgentsRes = TAgentsListRes
 export type TPbxAuthRes = {
   statusCode: TGeneratedSuccessStatuses
   meta: unknown
-  data: string
+  data: {
+    password: string
+    username: string
+    domain: string
+  }
 }
 
 export type TChangeWorkStatusReq = {
