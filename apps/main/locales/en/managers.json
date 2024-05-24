@@ -1,0 +1,14 @@
+{
+    "add-manager": "Add Manager",
+    "DESC": "Newest",
+    "ASC": "Oldest",
+    "list-headers": {
+        "id": "ID",
+        "username": "User Name",
+        "email": "Email",
+        "pbxName": "PBX Name",
+        "edit": "Edit",
+        "delete": "Delete"
+    },
+    "sort-by": "Sort By"
+}

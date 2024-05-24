@@ -5,6 +5,7 @@ import { CampaignsIcon } from '@/icons/CampaignsIcon'
 import { AgentsIcon } from '@/icons/AgentsIcon'
 import { LeadsIcon } from '@/icons/LeadsIcon'
 import { SettingsIcon } from '@/icons/SettingsIcon'
+import { UserWithTie } from '@peiko/components/icons/UserWithTie'
 
 type TMenuItem = {
   title: string
@@ -95,6 +96,22 @@ export const useMenuLinks = (): TMenuItem[] => {
         {
           title: t('import_leads_instructions'),
           link: ROUTES.IMPORT_LEADS_INSTRUCTIONS,
+          disabled: false,
+        },
+      ],
+    },
+    {
+      title: t('managers'),
+      icon: <UserWithTie color="base" />,
+      links: [
+        {
+          title: t('managers_list'),
+          link: ROUTES.MANAGERS_LIST,
+          disabled: false,
+        },
+        {
+          title: t('create_manager'),
+          link: ROUTES.CREATE_MANAGER,
           disabled: false,
         },
       ],
