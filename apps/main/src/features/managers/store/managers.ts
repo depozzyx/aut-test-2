@@ -18,7 +18,7 @@ const init: TInit = {
   sortFilter: ORDER_BY.ASC,
   pagination: {
     page: 1,
-    limit: 10,
+    limit: 8,
     total: 1,
   },
   managersList: [],

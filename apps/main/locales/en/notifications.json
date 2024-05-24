@@ -15,5 +15,10 @@
   },
   "settings": {
     "user-data-changed": "<translate>Changes saved</translate>"
+  },
+  "manager": {
+    "success-delete": "<value>{{ managerName }}</value> <translate>was successfully deleted</translate>",
+    "create-success": "<translate>New manager</translate> <value>{{ managerName }}</value> <translate>was successfully added</translate>",
+    "update-success": "<translate>Manager`s info was successfully updated</translate>"
   }
 }

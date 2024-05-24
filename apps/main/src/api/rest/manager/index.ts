@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { api } from '../instance'
 import { TAxiosResponse } from '../types'
-import { TManagersReq, TManagersRes, TUpdateManagerReq, TUpdateManagerRes, TPostManagerReq } from './types'
+import { TManagersReq, TManagersRes, TUpdateManagerReq, TUpdateManagerRes, TPostManagerReq, TPostManagerRes } from './types'
 
 const getManagerApiKeyById = (id: number): TAxiosResponse<any> =>
   api.get(`/manager/api-key/${id}`)
@@ -14,8 +14,8 @@ const getManagerApiKey = (params: TManagersReq): TAxiosResponse<any> =>
 
 const postManagerApiKey = (): TAxiosResponse<any> => api.post('/manager/api-key')
 
-const postManager = (data: TPostManagerReq): TAxiosResponse<TManagersRes> =>
-  api.post('/manager/',  data )
+const postManager = (data: TPostManagerReq): TAxiosResponse<TPostManagerRes> =>
+  api.post('/manager',  data )
 
 const updateManager = (data: TUpdateManagerReq): TAxiosResponse<TUpdateManagerRes> =>
   api.put('/manager', data)
