@@ -39,7 +39,6 @@ export const useAgentNameFilter = (): TReturn => {
         orderBy: 'ASC',
       }),
     {
-      revalidateOnFocus: false,
       onSuccess: (data) => {
         const formattedData = data.data.map((agent: TAgent) => ({
           label: agent.username,

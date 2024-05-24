@@ -1,5 +1,3 @@
-import { FC, useEffect, useCallback } from 'react'
-import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import useTranslation from 'next-translate/useTranslation'
 import { useRedux } from '@/hooks/use-redux'
@@ -14,42 +12,27 @@ import { useCampaignNameFilter } from '@/features/campaigns/hooks/use-campaignNa
 
 import { StyledTrigger } from './CampaignNameFilter.styled'
 
-export const CampaignNameFilter: FC<{
+type TProps = {
   type: TCampaignTableType
   useIdForValue?: boolean
-}> = ({ type, useIdForValue = false }) => {
+}
+
+export const CampaignNameFilter = ({
+  type,
+  useIdForValue = false,
+}: TProps): JSX.Element => {
   const { select, dispatch } = useRedux()
   const { t } = useTranslation('campaigns')
-  const { campaignsOptions, pagination, fetcher } = useCampaignNameFilter(
+  const { campaignOptions, loadMoreCampaigns } = useCampaignNameFilter(
     type,
     useIdForValue,
   )
 
-  const { filterCampaignName } = select(
-    createStructuredSelector({
-      filterCampaignName: selectFilterCampaignName,
-    }),
-    shallowEqual,
-  )
-
-  useEffect(() => {
-    if (!useIdForValue || !campaignsOptions.length) return
-    const value = campaignsOptions[0]?.value
-    if (value) {
-      dispatch(setFilterCampaignName(value as number))
-    }
-  }, [useIdForValue, campaignsOptions, filterCampaignName])
+  const filterCampaignName = select(selectFilterCampaignName, shallowEqual)
 
   const handleOnChange = (value: string | number) => {
     dispatch(setFilterCampaignName(value as string))
   }
-
-  const onMenuScrollToBottom = useCallback(() => {
-    const lastPage =
-      pagination.total === 0 ? 1 : Math.ceil(pagination.total / (pagination.limit ?? 15))
-    if (pagination.page < lastPage)
-      fetcher({ page: pagination.page + 1, limit: pagination.limit, orderBy: 'ASC' })
-  }, [pagination.limit, pagination.page, pagination.total, fetcher])
 
   return (
     <DropdownMenu
@@ -60,13 +43,13 @@ export const CampaignNameFilter: FC<{
           <ArrowIcon color="main5" size="s" direction={isOpen ? 'up' : 'down'} />
         </StyledTrigger>
       )}
-      selectedOptions={campaignsOptions.filter(
+      selectedOptions={campaignOptions.filter(
         (item) => filterCampaignName === item.value,
       )}
       minWidth="210px"
-      options={campaignsOptions}
+      options={campaignOptions}
       onChange={(selectedEl) => handleOnChange(selectedEl[0].value)}
-      onMenuScrollToBottom={onMenuScrollToBottom}
+      onMenuScrollToBottom={loadMoreCampaigns}
     />
   )
 }

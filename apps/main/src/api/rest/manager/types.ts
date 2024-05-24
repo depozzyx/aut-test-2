@@ -19,14 +19,22 @@ export type TManagersReq = {
   orderBy: TOrderBy
 } & Pick<TPagination, 'page' | 'limit'>
 
+export type TManager = {
+  id: number
+  email: string
+  username: string
+  pbxName: string
+  campaigns: string[]
+}
+
 export type TManagersRes = {
   statusCode: TGeneratedSuccessStatuses
-  data: {
-    id: number
-    email: string
-    username: string
-    pbxName: string
-    campaigns: string[]
-  }[]
+  data: TManager[]
   pagination: TPagination
+}
+
+export type TPostManagerReq = {
+  email: string
+  username: string
+  password: string
 }

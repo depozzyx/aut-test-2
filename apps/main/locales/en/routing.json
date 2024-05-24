@@ -20,5 +20,8 @@
   "settings": "Settings",
   "settings_account_management": "Account management",
   "settings_api_key_management": "API key management",
-  "settings_activity_log": "Activity log"
+  "settings_activity_log": "Activity log",
+  "managers": "Managers",
+  "managers_list": "Managers list",
+  "create_manager": "Create new Manager"
 }

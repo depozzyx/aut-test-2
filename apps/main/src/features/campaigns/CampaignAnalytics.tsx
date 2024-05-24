@@ -1,9 +1,7 @@
-import useTranslation from 'next-translate/useTranslation'
 import { useUnmount } from 'react-use'
 import { Flex } from '@/components/Flex'
 import { RangeDayPicker } from '@/inputs/RangeDayPicker'
 import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
-import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { useRedux } from '@/hooks/use-redux'
 import { resetStore } from '@/features/campaigns/store/campaign-analytics'
 import { CampaignNameFilter } from './containers/filters/CampaignNameFilter'
@@ -13,7 +11,6 @@ import { CallAnswerRate } from './containers/charts/CallAnswerRate'
 import { AverageCallDuration } from './containers/charts/AverageCallDuration/AverageCallDuration'
 
 export const CampaignAnalytics = (): JSX.Element => {
-  const { t } = useTranslation('campaigns')
   const { dispatch } = useRedux()
   useCampaignAnalytics()
 
@@ -24,17 +21,9 @@ export const CampaignAnalytics = (): JSX.Element => {
   return (
     <Flex padding="12px 0 0 0" width="100%">
       <Flex direction="column" gap={12} margin="0 auto" maxWidth={844} width="100%">
-        <Flex
-          className="configure-panel"
-          width="100%"
-          justify="space-between"
-          align="center"
-        >
-          <Flex gap={16}>
-            <RangeDayPicker />
-            <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.LIST} useIdForValue />
-          </Flex>
-          <FilledButton width={236}>{t('custom-report')}</FilledButton>
+        <Flex className="configure-panel" width="100%" align="center" gap={16}>
+          <RangeDayPicker />
+          <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.LIST} useIdForValue />
         </Flex>
         <Flex className="charts-container" direction="column" gap={20} width="100%">
           <ConversionRate />
