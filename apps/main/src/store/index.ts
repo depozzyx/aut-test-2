@@ -18,6 +18,8 @@ import editAgentReducer from '@/features/agents/store/edit-agent'
 import agentAnalyticsReducer from '@/features/agents/store/agent-analytics'
 import campaignAnalyticsReducer from '@/features/campaigns/store/campaign-analytics'
 import managersReducer from '@/features/managers/store/managers'
+import createManagerReducer from '@/features/managers/store/create-manager'
+import editManagerReducer from '@/features/managers/store/edit-manager'
 
 const store = configureStore({
   reducer: {
@@ -29,17 +31,19 @@ const store = configureStore({
     notifications: notificationsReducer,
     modals: modalsReducer,
     agents: agentsReducer,
+    editAgent: editAgentReducer,
+    createAgent: createAgentReducer,
+    agentAnalytics: agentAnalyticsReducer,
     campaigns: campaignsReducer,
-    createCampaign: createCampaignReducer,
     editCampaign: editCampaignReducer,
+    createCampaign: createCampaignReducer,
+    campaignAnalytics: campaignAnalyticsReducer,
     leads: leadsReducer,
     leadList: leadListReducer,
     activityLog: activityLogReducer,
-    createAgent: createAgentReducer,
-    editAgent: editAgentReducer,
-    agentAnalytics: agentAnalyticsReducer,
-    campaignAnalytics: campaignAnalyticsReducer,
     managers: managersReducer,
+    createManager: createManagerReducer,
+    editManager: editManagerReducer,
   },
 })
 
