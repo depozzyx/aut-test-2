@@ -55,5 +55,12 @@
         "unpause": "Unpause",
         "finish": "Finished",
         "on-call": "On Call"
+    },
+    "campaign-info": {
+        "title": "Campaign Info",
+        "campaign-id": "Campaign ID",
+        "campaign-name": "Campaign Name",
+        "call-frequency": "Call Frequency",
+        "close": "Close"
     }
 }
