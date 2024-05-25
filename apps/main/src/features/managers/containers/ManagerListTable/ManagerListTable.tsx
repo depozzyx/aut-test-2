@@ -14,7 +14,7 @@ import { useManagerList } from '../../hooks/use-managersList'
 import { InfoCell } from '../../components/InfoCell'
 import { selectManagersList, setSelectedId } from '../../store/managers'
 
-type TManagerRowKeys = 'id' | 'username' | 'email' | 'pbxName' | 'edit'
+type TManagerRowKeys = 'id' | 'username' | 'email' | 'pbxName' | 'edit' | 'managerId'
 export const ManagerListTable = (): JSX.Element => {
   const { t } = useTranslation('managers')
   const { select, dispatch } = useRedux()
@@ -29,7 +29,7 @@ export const ManagerListTable = (): JSX.Element => {
   }, [])
 
   const headers: THeader<TManagerRowKeys>[] = [
-    { label: t('list-headers.id'), value: 'id' },
+    { label: t('list-headers.id'), value: 'managerId' },
     { label: t('list-headers.username'), value: 'username' },
     { label: t('list-headers.email'), value: 'email' },
     { label: t('list-headers.pbxName'), value: 'pbxName' },
@@ -38,7 +38,8 @@ export const ManagerListTable = (): JSX.Element => {
 
   const rows = managersList.map((manager) => ({
     row: {
-      id: <InfoCell title={manager.id} />,
+      id: manager.id,
+      managerId: <InfoCell title={manager.id} />,
       username: <InfoCell title={manager.username || '-'} />,
       email: <InfoCell title={manager.email} />,
       pbxName: <InfoCell title={manager.pbxName || '-'} />,

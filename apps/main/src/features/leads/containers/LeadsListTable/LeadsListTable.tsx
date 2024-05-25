@@ -21,6 +21,7 @@ type TLeadsRowKeys =
   | 'status'
   | 'source'
   | 'selectLeads'
+  | 'leadId'
 
 export const LeadsListTable = memo((): JSX.Element => {
   const { t } = useTranslation('leads-list')
@@ -35,7 +36,7 @@ export const LeadsListTable = memo((): JSX.Element => {
   )
 
   const headers: THeader<TLeadsRowKeys>[] = [
-    { label: t('headers.lead-id'), value: 'id' },
+    { label: t('headers.lead-id'), value: 'leadId' },
     { label: t('headers.lead-name'), value: 'name' },
     { label: t('headers.lead-phone'), value: 'phone' },
     { label: t('headers.lead-timezone'), value: 'timezone' },
@@ -44,14 +45,15 @@ export const LeadsListTable = memo((): JSX.Element => {
     { label: <LeadsSelect maxMenuHeight={200} width="213px" />, value: 'selectLeads' },
   ]
 
-  const rows = data.map((campaign) => ({
+  const rows = data.map((lead) => ({
     row: {
-      id: <InfoColumn title={campaign.id} />,
-      name: <InfoColumn title={campaign.name} />,
-      phone: <InfoColumn title={campaign.phone} />,
-      timezone: <InfoColumn title={campaign.timezone} />,
-      status: <StatusChip status={campaign.status} />,
-      source: <InfoColumn title={campaign.source} />,
+      id: lead.id,
+      leadId: <InfoColumn title={lead.id} />,
+      name: <InfoColumn title={lead.name} />,
+      phone: <InfoColumn title={lead.phone} />,
+      timezone: <InfoColumn title={lead.timezone} />,
+      status: <StatusChip status={lead.status} />,
+      source: <InfoColumn title={lead.source} />,
       selectLeads: <></>,
     },
   }))
