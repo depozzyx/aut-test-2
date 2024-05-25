@@ -25,6 +25,7 @@ import {
 import { AgentsListTable } from './containers/tables/AgentsListTable'
 import { DeleteAgentModal } from './containers/modals/DeleteAgentModal'
 import { EditAgentModal } from './containers/modals/EditAgentModal'
+import { CampaignInfoModal } from './containers/modals/CampaignInfoModal'
 
 export const AgentsList = (): JSX.Element => {
   const router = useRouter()
@@ -106,6 +107,7 @@ export const AgentsList = (): JSX.Element => {
       </Container>
       <DeleteAgentModal />
       <EditAgentModal />
+      <CampaignInfoModal />
     </>
   )
 }

@@ -76,7 +76,7 @@ export const AgentsListTable = (): JSX.Element => {
   ]
 
   const rows = data.map((agent) => {
-    const assignedCampaigns = agent.assignedCampaigns.map((campaign) => campaign.name)
+    const { assignedCampaigns } = agent
 
     return {
       row: {
