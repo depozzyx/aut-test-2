@@ -111,6 +111,7 @@ export const CampaignListTable = (): JSX.Element => {
 
   const rows = data.map((campaign) => ({
     row: {
+      id: campaign.id,
       name: <InfoCell title={campaign.name} />,
       date: <InfoCell title={formatCreatedAt(campaign.createdAt)} />,
       status: <StatusChip status={campaign.status} />,

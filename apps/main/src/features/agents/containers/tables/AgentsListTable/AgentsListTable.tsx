@@ -80,6 +80,7 @@ export const AgentsListTable = (): JSX.Element => {
 
     return {
       row: {
+        id: agent.id,
         username: <InfoColumn title={agent.username} />,
         email: <InfoColumn title={agent.email} />,
         date: <InfoColumn title={formatCreatedAt(agent.createdAt)} />,
