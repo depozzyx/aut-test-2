@@ -8,7 +8,7 @@ export type TCreateAgentReq = {
   email: string
 }
 
-type TAssignedCampaign = {
+export type TAssignedCampaign = {
   id: number
   intensity: number
   intensityPerAgent: number

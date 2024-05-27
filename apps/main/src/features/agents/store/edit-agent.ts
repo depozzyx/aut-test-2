@@ -1,15 +1,16 @@
 import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit'
+import { FormikHelpers } from 'formik'
 import { TAsyncAction, TSelector } from '@/store'
 import { TAgent, TUpdateAgentReq } from '@/api-rest/agents/types'
 import { handleRestError } from '@/features/common/error'
 import { apiAgents } from '@/api-rest/agents'
-import { FormikHelpers } from 'formik'
 import { notificationActions } from '@/features/common/notifications/store'
 import {
   asyncGetAgentsList,
   selectAgentsList,
   selectSelectedId,
 } from '@/features/agents/store/agents'
+import { modalsActions } from '@/features/common/modals/store'
 
 export type TInit = {
   isLoading: boolean
@@ -37,10 +38,10 @@ const editAgent = createSlice({
 
 export const { setIsLoading, setUpdatedAgentData, reset } = editAgent.actions
 
-export const selectCreateAgents: TSelector<TInit> = (state) => state.editAgent
+export const selectUpdateAgent: TSelector<TInit> = (state) => state.editAgent
 
-export const selectUpdateAgentsIsLoading = createSelector(
-  selectCreateAgents,
+export const selectUpdateAgentIsLoading = createSelector(
+  selectUpdateAgent,
   ({ isLoading }) => isLoading,
 )
 
@@ -77,12 +78,11 @@ export const asyncUpdateAgent =
       }
       const { data } = await apiAgents.updateAgent(requestData)
       dispatch(setUpdatedAgentData(data.data))
-      const agentName = data.data.username
       dispatch(
         notificationActions.setNotification({
           key: 'notifications:agent.update-success',
           status: 'success',
-          values: { agentName },
+          values: {},
         }),
       )
 
@@ -94,6 +94,8 @@ export const asyncUpdateAgent =
     } catch (e) {
       handleRestError({ e, dispatch, formik })
     } finally {
+      formik?.resetForm()
+      dispatch(modalsActions.resetModalsState())
       dispatch(setIsLoading(false))
     }
   }

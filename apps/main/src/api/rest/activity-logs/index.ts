@@ -1,8 +1,8 @@
 import { TPaginatedRes } from '@/types/entities/pagination'
-import { TActivityLog, TExportLogsRes } from '@/types/activity-logs'
+import { TActivityLog } from '@/types/activity-logs'
 import { api } from '../instance'
 import { TAxiosResponse } from '../types'
-import { TActivityLogsReq, TExportLogsReq } from './types'
+import { TActivityLogsReq, TExportLogsReq, TExportLogsRes } from './types'
 
 const get = (params: TActivityLogsReq): TAxiosResponse<TPaginatedRes<TActivityLog>> =>
   api.get('/activity-logs', { params })

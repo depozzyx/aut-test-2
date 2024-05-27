@@ -1,4 +1,4 @@
-import { USER_ROLES } from '@/constants/roles'
+import { USER_ROLES } from '@/types/roles'
 import { TDefaultPalette } from '@peiko/styles/types/palette'
 import { UserWithMicro } from '@peiko/components/icons/UserWithMicro'
 import { UserWithTie } from '@peiko/components/icons/UserWithTie'

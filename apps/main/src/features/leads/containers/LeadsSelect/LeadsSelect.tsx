@@ -8,7 +8,7 @@ import { Text } from '@peiko/components/Text'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import useTranslation from 'next-translate/useTranslation'
 import { TSelectProps } from '@peiko/components/inputs/Select/types'
-import useModals from '@/features/common/modals/hooks/use-modals'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import {
   getLeadsGroups,

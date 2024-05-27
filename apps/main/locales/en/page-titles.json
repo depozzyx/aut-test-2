@@ -3,5 +3,9 @@
   "dashboard-agents": "Dashboard - Agents",
   "campaigns-list": "Campaigns - List",
   "agents-list": "Agents - List",
-  "create-agent": "Create Agent"
+  "create-agent": "Create Agent",
+  "agents-analytics": "Agents - Analytics",
+  "campaigns-analytics": "Campaigns - Analytics",
+  "managers-list": "Managers - List",
+  "create-manager": "Create Manager"
 }

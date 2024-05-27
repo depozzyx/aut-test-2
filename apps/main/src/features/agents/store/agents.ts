@@ -3,7 +3,12 @@ import { TAsyncAction, TSelector } from '@/store'
 import { TPagination } from '@/types/entities/pagination'
 import { apiAgents } from '@/api-rest/agents'
 import { handleRestError } from '@/features/common/error'
-import { TAgent, TAgentsReq, TDeletedAgentData } from '@/api-rest/agents/types'
+import {
+  TAgent,
+  TAgentsReq,
+  TAssignedCampaign,
+  TDeletedAgentData,
+} from '@/api-rest/agents/types'
 import { TAgentSortBy, TAgentWorkStatus } from '@/features/agents/types'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { notificationActions } from '@/features/common/notifications/store'
@@ -20,6 +25,7 @@ export type TInit = {
   statusFilter?: TAgentWorkStatus
   deletedAgentData: null | TDeletedAgentData
   searchTerm: string
+  selectedAssignedCampaign: null | TAssignedCampaign
 }
 
 const init: TInit = {
@@ -30,13 +36,14 @@ const init: TInit = {
   meta: {},
   pagination: {
     page: 1,
-    limit: 10,
-    total: 10,
+    limit: 8,
+    total: 1,
   },
   sort: { sortBy: undefined, orderBy: 'ASC' },
   statusFilter: undefined,
   deletedAgentData: null,
   searchTerm: '',
+  selectedAssignedCampaign: null,
 }
 
 const agents = createSlice({
@@ -52,8 +59,15 @@ const agents = createSlice({
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
       state.pagination = action.payload
     },
-    setAgentsList(state, action: PayloadAction<TInit['agentsList']>) {
-      state.agentsList = action.payload
+    setAgentsList(
+      state,
+      action: PayloadAction<{ data: TInit['agentsList']; append?: boolean }>,
+    ) {
+      if (action.payload.append) {
+        state.agentsList = [...state.agentsList, ...action.payload.data]
+      } else {
+        state.agentsList = action.payload.data
+      }
     },
     setActiveAgents(state, action: PayloadAction<TInit['activeAgents']>) {
       state.activeAgents = action.payload
@@ -70,6 +84,12 @@ const agents = createSlice({
     setSearchTerm(state, action: PayloadAction<TInit['searchTerm']>) {
       state.searchTerm = action.payload
     },
+    setSelectedAssignedCampaign(
+      state,
+      action: PayloadAction<TInit['selectedAssignedCampaign']>,
+    ) {
+      state.selectedAssignedCampaign = action.payload
+    },
     reset: () => init,
   },
 })
@@ -84,6 +104,7 @@ export const {
   setStatusFilter,
   setDeletedAgentData,
   setSearchTerm,
+  setSelectedAssignedCampaign,
   reset,
 } = agents.actions
 
@@ -135,17 +156,23 @@ export const selectSearchTerm = createSelector(
   ({ searchTerm }) => searchTerm,
 )
 
+export const selectAssignedCampaignsInfo = createSelector(
+  selectAgents,
+  ({ selectedAssignedCampaign }) => selectedAssignedCampaign,
+)
+
 export default agents.reducer
 
 export const asyncGetAgentsList =
-  (params: TAgentsReq): TAsyncAction =>
+  (params: TAgentsReq, append = false): TAsyncAction =>
   async (dispatch) => {
     try {
       dispatch(setIsLoading(true))
       const {
-        data: { data },
+        data: { data, pagination },
       } = await apiAgents.getAgentsList(params)
-      dispatch(setAgentsList(data))
+      dispatch(setAgentsList({ data, append }))
+      dispatch(setPagination(pagination))
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
@@ -159,9 +186,10 @@ export const asyncGetActiveAgents =
     try {
       dispatch(setIsLoading(true))
       const {
-        data: { data },
+        data: { data, pagination },
       } = await apiAgents.getActiveAgents(params)
       dispatch(setActiveAgents(data))
+      dispatch(setPagination(pagination))
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {

@@ -43,8 +43,3 @@ export const SORT_BY = {
   WORK_STATUS: 'status',
   NAME: 'name',
 } as const
-
-export const ORDER_BY = {
-  ASC: 'ASC',
-  DESC: 'DESC',
-} as const

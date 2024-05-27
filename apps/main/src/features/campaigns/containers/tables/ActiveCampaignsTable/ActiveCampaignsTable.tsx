@@ -11,12 +11,12 @@ import { TrashIcon } from '@peiko/components/icons/TrashIcon'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
-import useModals from '@/features/common/modals/hooks/use-modals'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useCampaignSort } from '@/features/campaigns/hooks/use-campaignSort'
 import { SORT_BY } from '@/features/campaigns/constants'
 import { HeaderWithSort } from 'components/HeaderWithSort'
-import { InfoColumn } from '../../../components/InfoColumn'
+import { InfoCell } from '../../../components/InfoCell'
 import {
   selectActiveCampaignsForView,
   selectIsLoading,
@@ -89,11 +89,12 @@ export const ActiveCampaignsTable = (): JSX.Element => {
 
   const rows = data.map((campaign) => ({
     row: {
-      name: <InfoColumn title={campaign.name} />,
-      date: <InfoColumn title={formatCreatedAt(campaign.createdAt)} />,
-      callVolume: <InfoColumn title={getCallFrequencyLabel(campaign.intensity)} />,
-      callAnswerRate: <InfoColumn title={`${campaign.callAnswerRate}%`} />,
-      conversionRate: <InfoColumn title={`${campaign.conversionRate}%`} />,
+      id: campaign.id,
+      name: <InfoCell title={campaign.name} />,
+      date: <InfoCell title={formatCreatedAt(campaign.createdAt)} />,
+      callVolume: <InfoCell title={getCallFrequencyLabel(campaign.intensity)} />,
+      callAnswerRate: <InfoCell title={`${campaign.callAnswerRate}%`} />,
+      conversionRate: <InfoCell title={`${campaign.conversionRate}%`} />,
       edit: (
         <IconButton
           onClick={() => handleEditCampaign(campaign.id)}

@@ -11,7 +11,7 @@ import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useRedux } from '@/hooks/use-redux'
-import useModals from '@/features/common/modals/hooks/use-modals'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import {
   selectAgentsList,
   selectIsLoadingAgents,
@@ -76,10 +76,11 @@ export const AgentsListTable = (): JSX.Element => {
   ]
 
   const rows = data.map((agent) => {
-    const assignedCampaigns = agent.assignedCampaigns.map((campaign) => campaign.name)
+    const { assignedCampaigns } = agent
 
     return {
       row: {
+        id: agent.id,
         username: <InfoColumn title={agent.username} />,
         email: <InfoColumn title={agent.email} />,
         date: <InfoColumn title={formatCreatedAt(agent.createdAt)} />,

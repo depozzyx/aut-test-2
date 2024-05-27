@@ -1,0 +1,26 @@
+{
+    "add-manager": "Add Manager",
+    "DESC": "Newest",
+    "ASC": "Oldest",
+    "list-headers": {
+        "id": "ID",
+        "username": "User Name",
+        "email": "Email",
+        "pbxName": "PBX Name",
+        "edit": "Edit"
+    },
+    "sort-by": "Sort By",
+    "create-manager": {
+        "email": "Email",
+        "username": "User Name",
+        "password": "Password",
+        "action": "Create Manager"
+    },
+    "edit-manager": {
+        "title": "Edit manager info",
+        "email": "Email",
+        "username":"User Name",
+        "cancel": "Cancel",
+        "save": "Save"
+    }
+}

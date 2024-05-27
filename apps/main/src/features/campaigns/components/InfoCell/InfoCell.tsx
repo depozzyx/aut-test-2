@@ -1,10 +1,10 @@
 import { Text } from '@peiko/components/Text'
 
-interface IInfoColumnProps {
+interface IInfoCellProps {
   title: string | number
 }
 
-export const InfoColumn = ({ title }: IInfoColumnProps): JSX.Element => (
+export const InfoCell = ({ title }: IInfoCellProps): JSX.Element => (
   <Text variant="f8" styles={{ lineHeight: '22px' }}>
     {title}
   </Text>

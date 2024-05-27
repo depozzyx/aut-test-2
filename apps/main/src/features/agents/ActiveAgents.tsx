@@ -52,13 +52,14 @@ export const ActiveAgents = (): JSX.Element => {
     dispatch(
       asyncGetActiveAgents({
         page: 1,
+        limit: limit ?? 7,
         orderBy,
         ...(sortBy && { sortBy }),
         ...(searchTerm && { search: searchTerm }),
         ...(statusFilter && { workStatus: statusFilter }),
       }),
     )
-  }, [searchTerm, sortBy, orderBy, statusFilter])
+  }, [limit, searchTerm, sortBy, orderBy, statusFilter])
 
   const handleChangePage = useCallback(
     (newPage) => {
@@ -121,7 +122,7 @@ export const ActiveAgents = (): JSX.Element => {
       <ActiveAgentsTable />
       <Flex padding="40px 0 0 0" justify="center">
         <Pagination
-          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
+          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 7))}
           currentPage={page}
           onChange={handleChangePage}
         />

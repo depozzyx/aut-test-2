@@ -19,7 +19,7 @@ import {
   selectSort,
 } from '@/features/campaigns/store/campaigns'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import useModals from '@/features/common/modals/hooks/use-modals'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { dateToString } from '@/utils/date-to-string'
 import { TActiveCampaignsReq } from '@/api-rest/campaigns/types'
 import { AnyAction, ThunkAction } from '@reduxjs/toolkit'
@@ -34,7 +34,7 @@ type TReturn = {
   pagination: { total: number; page: number; limit?: number }
   filters: {
     searchTerm?: string
-    filterCampaignName?: string
+    filterCampaignName?: string | number
     filterStatus?: TCampaignStatus
     filterDate?: { from?: string | Date; to?: string | Date }
   }
@@ -75,7 +75,7 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
         limit,
         orderBy,
         ...(searchTerm && { search: searchTerm }),
-        ...(filterCampaignName && { name: filterCampaignName }),
+        ...(filterCampaignName && { name: filterCampaignName as string }),
         ...(filterStatus && { status: filterStatus }),
         ...(filterDate?.from && { fromDate: filterDate?.from }),
         ...(filterDate?.to && { toDate: filterDate?.to }),
@@ -110,7 +110,7 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
           limit,
           orderBy,
           ...(searchTerm && { search: searchTerm }),
-          ...(filterCampaignName && { name: filterCampaignName }),
+          ...(filterCampaignName && { name: filterCampaignName as string }),
           ...(filterStatus && { status: filterStatus }),
           ...(filterDate?.from && { fromDate: filterDate?.from }),
           ...(filterDate?.to && { toDate: filterDate?.to }),

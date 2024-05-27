@@ -11,7 +11,7 @@ import { SidebarItem } from './components/SidebarItem'
 import { Accordion, Container, MenuItem } from './styles/Sidebar.styled'
 
 export const Sidebar = (): JSX.Element => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('auth')
   const { logoutAsync } = useAuth()
   const links = useMenuLinks()
   const { pathname } = useRouter()
@@ -57,7 +57,7 @@ export const Sidebar = (): JSX.Element => {
       <BaseButton width="fit-content" onClick={handleLogout}>
         <MenuItem align="center" gap="8px" justify="space-between" padding="8px 16px">
           <LogoutIcon />
-          <Text color="base">{t('logout')}</Text>
+          <Text color="base">{t('logout-btn')}</Text>
         </MenuItem>
       </BaseButton>
     </Container>

@@ -4,7 +4,7 @@ import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import { Table } from '@peiko/components/Table'
 import { useRedux } from '@/hooks/use-redux'
-import useModals from '@/features/common/modals/hooks/use-modals'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { TCampaignStatus } from '@/features/campaigns/types'
 import { IconButton } from '@peiko/components/buttons/IconButton'
@@ -17,7 +17,7 @@ import { THeader } from '@peiko/components/Table/types'
 import { HeaderWithSort } from 'components/HeaderWithSort'
 import { SORT_BY } from '@/features/campaigns/constants'
 import { useCampaignSort } from '@/features/campaigns/hooks/use-campaignSort'
-import { InfoColumn } from '../../../components/InfoColumn'
+import { InfoCell } from '../../../components/InfoCell'
 import { StatusChip } from '../../../components/StatusChip'
 import { ActionBtn } from '../../../components/ActionBtn'
 import {
@@ -111,11 +111,12 @@ export const CampaignListTable = (): JSX.Element => {
 
   const rows = data.map((campaign) => ({
     row: {
-      name: <InfoColumn title={campaign.name} />,
-      date: <InfoColumn title={formatCreatedAt(campaign.createdAt)} />,
+      id: campaign.id,
+      name: <InfoCell title={campaign.name} />,
+      date: <InfoCell title={formatCreatedAt(campaign.createdAt)} />,
       status: <StatusChip status={campaign.status} />,
-      leads: <InfoColumn title={campaign.leadCount} />,
-      agents: <InfoColumn title={campaign.agentCount} />,
+      leads: <InfoCell title={campaign.leadCount} />,
+      agents: <InfoCell title={campaign.agentCount} />,
       action: (
         <ActionBtn
           status={campaign.status}

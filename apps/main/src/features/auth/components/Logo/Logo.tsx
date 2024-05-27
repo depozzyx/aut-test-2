@@ -1,12 +1,13 @@
 import { FC } from 'react'
 import useTranslation from 'next-translate/useTranslation'
-import logo from '@/assets/img/logo.png'
 import { BaseImage } from '@peiko/components/BaseImage'
 import { Text } from '@peiko/components/Text'
 import { LogoWrapper } from './Logo.styled'
 
+const logo = '/images/logo.png'
+
 export const Logo: FC = () => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('app-general')
 
   return (
     <LogoWrapper>

@@ -18,4 +18,6 @@ export const ROUTES = {
   SETTINGS_ACCOUNT_MANAGEMENT: '/cabinet/settings/account-management',
   SETTINGS_API_KEY_MANAGEMENT: '/cabinet/settings/api-key-management',
   SETTINGS_ACTIVITY_LOG: '/cabinet/settings/activity-log',
+  MANAGERS_LIST: '/cabinet/managers/list',
+  CREATE_MANAGER: '/cabinet/managers/create',
 }

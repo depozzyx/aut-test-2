@@ -37,5 +37,3 @@ export type TActivityLog = {
   targetUser: TActivityLogUser | null
   createdAt: Date
 }
-
-export type TExportLogsRes = string
