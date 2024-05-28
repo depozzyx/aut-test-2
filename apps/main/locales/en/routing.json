@@ -23,5 +23,6 @@
   "settings_activity_log": "Activity log",
   "managers": "Managers",
   "managers_list": "Managers list",
-  "create_manager": "Create new Manager"
+  "create_manager": "Create new Manager",
+  "calls": "Calls"
 }

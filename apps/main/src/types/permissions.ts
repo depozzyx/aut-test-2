@@ -1,9 +1,48 @@
-export enum USER_PERMISSIONS {
-  AGENT_PAGE = 'agent_page',
-  MANAGER_PAGE = 'manager_page',
-  CREATE_MANAGER = 'create_manager',
-  UPDATE_MANAGER = 'update_manager',
-  DELETE_MANAGER = 'delete_manager',
-}
+export type TManagerPermissions =
+  | 'manager_page'
+  | 'get_api_key'
+  | 'create_api_key'
+  | 'create_manager'
+  | 'update_manager'
+  | 'delete_manager'
+  | 'get_manager'
+  | 'create_campaign'
+  | 'update_campaign'
+  | 'delete_campaign'
+  | 'get_campaign'
+  | 'start_campaign'
+  | 'stop_campaign'
+  | 'create_agent'
+  | 'update_agent'
+  | 'delete_agent'
+  | 'get_agent'
+  | 'create_lead'
+  | 'update_lead'
+  | 'delete_lead'
+  | 'get_lead'
+  | 'import_lead'
 
-export type TGeneratedUserPermissions = keyof typeof USER_PERMISSIONS
+export type TAdminPermissions =
+  | 'agent_page'
+  | 'manager_page'
+  | 'create_manager'
+  | 'update_manager'
+  | 'delete_manager'
+  | 'get_api_key'
+  | 'get_manager'
+  | 'update_campaign'
+  | 'delete_campaign'
+  | 'get_campaign'
+  | 'start_campaign'
+  | 'stop_campaign'
+  | 'update_agent'
+  | 'delete_agent'
+  | 'get_agent'
+  | 'update_lead'
+  | 'delete_lead'
+  | 'get_lead'
+  | 'import_lead'
+
+export type TAgentPermissions = 'create_call'
+
+export type TUserPermissions = TManagerPermissions | TAdminPermissions | TAgentPermissions
