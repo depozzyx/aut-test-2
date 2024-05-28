@@ -2,7 +2,7 @@ import { forwardRef } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
-import { TUserRoles } from '@/types/entities/profile'
+import { TUserRoles } from '@/types/roles'
 import { UserRoleIcon } from '@/features/common/user/components/UserRoleIcon'
 
 export interface ITriggerProps {

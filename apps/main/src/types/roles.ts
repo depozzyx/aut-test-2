@@ -5,3 +5,5 @@ export enum USER_ROLES {
 }
 
 export type TGeneratedUserRoles = keyof typeof USER_ROLES
+
+export type TUserRoles = 'admin' | 'agent' | 'manager'

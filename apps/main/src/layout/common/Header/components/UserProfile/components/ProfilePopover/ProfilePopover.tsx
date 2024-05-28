@@ -11,7 +11,7 @@ import { SettingsIcon } from '@peiko/components/icons/SettingsIcon'
 import { ROUTES } from '@/routes'
 import { useAuth } from '@/features/common/user'
 import { TFlexComponentProps } from '@/components/Flex/types'
-import { TUserRoles } from '@/types/entities/profile'
+import { TUserRoles } from '@/types/roles'
 import { Divider, ItemWrapper } from './ProfilePopover.styled'
 
 export interface IProfilePopoverProps {
