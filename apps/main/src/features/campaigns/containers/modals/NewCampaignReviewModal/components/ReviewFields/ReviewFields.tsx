@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
+import { shallowEqual } from 'react-redux'
+import useTranslation from 'next-translate/useTranslation'
 import { Flex } from '@/components/Flex'
 import { useRedux } from '@/hooks/use-redux'
-import useTranslation from 'next-translate/useTranslation'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
@@ -25,7 +26,7 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
   const { t } = useTranslation('campaigns')
   const { setModal } = useModals()
   const { select, dispatch } = useRedux()
-  const formDataForReview = select(selectFormDataForReview)
+  const formDataForReview = select(selectFormDataForReview, shallowEqual)
 
   const { getCallTimeLabel } = useCallTime()
   const { getCallFrequencyLabel } = useCallFrequency()
