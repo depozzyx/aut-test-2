@@ -12,6 +12,7 @@ import { ROUTES } from '@/routes'
 import { useAuth } from '@/features/common/user'
 import { TFlexComponentProps } from '@/components/Flex/types'
 import { TUserRoles } from '@/types/roles'
+import { ERoles } from '@/constants/profile'
 import { Divider, ItemWrapper } from './ProfilePopover.styled'
 
 export interface IProfilePopoverProps {
@@ -73,12 +74,14 @@ export const ProfilePopover = ({
       <Flex direction="column" gap={16}>
         {phone && <PopoverMenuItem icon={<PhoneIcon />} title={phone} />}
         {email && <PopoverMenuItem icon={<EmailIcon />} title={email} />}
-        <PopoverMenuItem
-          icon={<SettingsIcon />}
-          title={t('routing:settings')}
-          onClick={handleGoToSettings}
-          cursor="pointer"
-        />
+        {userRole !== ERoles.AGENT && (
+          <PopoverMenuItem
+            icon={<SettingsIcon />}
+            title={t('routing:settings')}
+            onClick={handleGoToSettings}
+            cursor="pointer"
+          />
+        )}
         <Divider />
         <PopoverMenuItem
           icon={<LogoutIcon color="main5" />}
