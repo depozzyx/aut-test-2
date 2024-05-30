@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { useRedux } from '@/hooks/use-redux'
 import { handleRestError } from '@/features/common/error'
@@ -6,8 +6,8 @@ import { TPagination } from '@/types/entities/pagination'
 import { setAgentNameFilter } from '@/features/agents/store/agent-analytics'
 import {
   TActiveCampaign,
-  TCampaignTableType,
   TCampaign,
+  TCampaignTableType,
 } from '@/features/campaigns/types'
 import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 import { apiCampaigns } from '@/api-rest/campaigns'
@@ -38,13 +38,13 @@ export const useCampaignNameFilter = (
     total: 1,
   })
 
-  const apiRequest = useMemo(() => {
-    const api =
+  const apiRequest = useMemo(
+    () =>
       type === CAMPAIGN_TABLE_TYPES.LIST
         ? apiCampaigns.getCampaignList
-        : apiCampaigns.getActiveCampaigns
-    return api
-  }, [type])
+        : apiCampaigns.getActiveCampaigns,
+    [type],
+  )
 
   const fetcher = (params: TCampaignListReq) => apiRequest(params).then((res) => res.data)
 
