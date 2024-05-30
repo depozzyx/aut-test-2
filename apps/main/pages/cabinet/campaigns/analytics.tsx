@@ -4,13 +4,14 @@ import useTranslation from 'next-translate/useTranslation'
 import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
 import { CampaignAnalytics } from '@/features/campaigns/CampaignAnalytics'
+import { ERoles } from '@/constants/profile'
 
 const CampaignsAnalyticsPage: NextPage = () => {
   const { t } = useTranslation('routing')
   useTitle(t('page-titles:campaigns-analytics'))
 
   return (
-    <Permissions>
+    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
       <CabinetLayout title={t('campaigns_analytics')}>
         <CampaignAnalytics />
       </CabinetLayout>

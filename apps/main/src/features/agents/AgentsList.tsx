@@ -9,6 +9,8 @@ import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
 import { useRedux } from '@/hooks/use-redux'
 import { ROUTES } from '@/constants/routes'
+import { FeaturePermission } from '@/features/common/permissions/FeaturePermissions'
+import { EManagerPermissions } from '@/constants/profile'
 import {
   Container,
   Panel,
@@ -84,15 +86,17 @@ export const AgentsList = (): JSX.Element => {
     <>
       <Container>
         <Panel>
-          <FilledButton
-            size="m"
-            maxWidth="236px"
-            width="100%"
-            startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
-            onClick={goToCreateAgentPage}
-          >
-            {t('add-agent')}
-          </FilledButton>
+          <FeaturePermission permissions={[EManagerPermissions.CREATE_AGENT]}>
+            <FilledButton
+              size="m"
+              maxWidth="236px"
+              width="100%"
+              startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
+              onClick={goToCreateAgentPage}
+            >
+              {t('add-agent')}
+            </FilledButton>
+          </FeaturePermission>
         </Panel>
         <TableContainer>
           <AgentsListTable />
