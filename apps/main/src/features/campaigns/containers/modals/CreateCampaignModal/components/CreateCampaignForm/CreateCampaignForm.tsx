@@ -16,6 +16,7 @@ import {
   asyncGetLeadListCatalog,
   selectLeadListPagination,
   selectLeadListCatalogAsOptions,
+  selectIsLoadingLeadsCatalog,
 } from '@/features/leads/store/lead-list'
 import { Loader } from '@peiko/components/loaders/Loader'
 import { TGeneratedCallTime } from '@/features/campaigns/constants'
@@ -25,6 +26,7 @@ import {
   asyncGetAgentsList,
   selectAgentsPagination,
   selectAgentsOptions,
+  selectIsLoadingAgents,
 } from '@/features/agents/store/agents'
 import { createCampaignValidationSchema } from './validationSchema'
 
@@ -38,12 +40,16 @@ export const CreateCampaignForm = (): JSX.Element => {
     leadListOptions,
     agentsPagination: { page: agentsPage, limit: agentsLimit, total: agentsTotal },
     agentsOptions,
+    isAgentLoading,
+    isLeadsLoading,
   } = select(
     createStructuredSelector({
       leadsPagination: selectLeadListPagination,
       leadListOptions: selectLeadListCatalogAsOptions,
       agentsPagination: selectAgentsPagination,
       agentsOptions: selectAgentsOptions,
+      isAgentLoading: selectIsLoadingAgents,
+      isLeadsLoading: selectIsLoadingLeadsCatalog,
     }),
     shallowEqual,
   )
@@ -101,7 +107,7 @@ export const CreateCampaignForm = (): JSX.Element => {
       )
   }
 
-  if (!leadListOptions.length || !agentsOptions.length)
+  if (isLeadsLoading || isAgentLoading)
     return <Loader styles={{ height: '278px', marginTop: '40px' }} />
 
   return (

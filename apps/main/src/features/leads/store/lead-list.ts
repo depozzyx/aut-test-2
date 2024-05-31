@@ -52,7 +52,7 @@ export const selectLeadListCatalog = createSelector(
   ({ leadListCatalog }) => leadListCatalog,
 )
 
-export const selectIsLoadingLeadsGroups = createSelector(
+export const selectIsLoadingLeadsCatalog = createSelector(
   selectLeadList,
   ({ isLoading }) => isLoading,
 )

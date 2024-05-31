@@ -5,7 +5,6 @@ import { UserRoleIcon } from '@/features/common/user/components/UserRoleIcon'
 import { Text } from '@peiko/components/Text'
 import { Flex } from '@/components/Flex'
 import { EmailIcon } from '@peiko/components/icons/EmailIcon'
-import { PhoneIcon } from '@peiko/components/icons/PhoneIcon'
 import { LogoutIcon } from '@peiko/components/icons/LogoutIcon'
 import { SettingsIcon } from '@peiko/components/icons/SettingsIcon'
 import { ROUTES } from '@/routes'
@@ -42,7 +41,6 @@ const PopoverMenuItem = ({
 
 export const ProfilePopover = ({
   name = 'John Johnson',
-  phone = '(207) 555-0119',
   email = 'john.johnson@example.com',
   userRole = 'manager',
 }: IProfilePopoverProps): JSX.Element => {
@@ -72,7 +70,6 @@ export const ProfilePopover = ({
         </Flex>
       </Flex>
       <Flex direction="column" gap={16}>
-        {phone && <PopoverMenuItem icon={<PhoneIcon />} title={phone} />}
         {email && <PopoverMenuItem icon={<EmailIcon />} title={email} />}
         {userRole !== ERoles.AGENT && (
           <PopoverMenuItem
