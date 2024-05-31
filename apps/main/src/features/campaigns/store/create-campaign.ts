@@ -1,8 +1,9 @@
 import filter from 'lodash/filter'
 import includes from 'lodash/includes'
 import map from 'lodash/map'
-import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit'
-import { TSelector, TAsyncAction } from '@/store'
+import uniq from 'lodash/uniq'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { TAsyncAction, TSelector } from '@/store'
 import { modalsActions } from '@/features/common/modals/store'
 import { handleRestError } from '@/features/common/error'
 import { apiCampaigns } from '@/api-rest/campaigns'
@@ -58,19 +59,23 @@ export const selectFormDataForReview = createSelector(
     if (!formData) return null
 
     const leadsLabels =
-      map(
-        filter(leadListCatalog, (leadList) =>
-          includes(formData.leadListIds, leadList.value),
+      uniq(
+        map(
+          filter(leadListCatalog, (leadList) =>
+            includes(formData.leadListIds, leadList.value),
+          ),
+          'label',
         ),
-        'label',
       ) || []
 
     const agentsLabels =
-      map(
-        filter(agentsOptions, (assignedAgentIds) =>
-          includes(formData.assignedAgentIds, assignedAgentIds.value),
+      uniq(
+        map(
+          filter(agentsOptions, (assignedAgent) =>
+            includes(formData.assignedAgentIds, assignedAgent.value),
+          ),
+          'label',
         ),
-        'label',
       ) || []
 
     return {

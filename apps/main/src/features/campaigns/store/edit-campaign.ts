@@ -1,13 +1,11 @@
-import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit'
-import { TAsyncAction } from '@/store'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { TAsyncAction, TSelector } from '@/store'
 import { TCampaignTableType } from '@/features/campaigns/types'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 import {
   asyncGetActiveCampaigns,
   asyncGetCampaignsList,
-  selectCampaignsList,
-  selectSelectedCampaignId,
 } from '@/features/campaigns/store/campaigns'
 import { handleRestError } from '@/features/common/error'
 import { modalsActions } from '@/features/common/modals/store'
@@ -36,36 +34,7 @@ const editCampaign = createSlice({
 
 export const { reset, setFormData } = editCampaign.actions
 
-type TAgent = {
-  id: number
-  name: string
-}
-
-type TLeadList = {
-  id: number
-  name: string
-  createdAt: string
-  updatedAt: string
-}
-
-export const selectInitialFormData = createSelector(
-  [selectSelectedCampaignId, selectCampaignsList],
-  (selectedId, campaignsList) => {
-    const campaign = campaignsList.find((campaign) => campaign.id === selectedId)
-
-    if (!campaign) return undefined
-    const { name, intensity, preferredCallTime, assignedAgents, leadLists } = campaign
-
-    return {
-      id: selectedId,
-      name,
-      intensity,
-      preferredCallTime,
-      assignedAgentIds: assignedAgents.map((agent: TAgent) => agent?.id),
-      leadListIds: leadLists.map((list: TLeadList) => list?.id),
-    }
-  },
-)
+export const selectEditCampaign: TSelector<TInit> = (state) => state.editCampaign
 
 export default editCampaign.reducer
 

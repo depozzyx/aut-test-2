@@ -28,8 +28,9 @@ module.exports = {
       'agents',
       'validation',
     ],
-    '/cabinet/dashboard/active-agents': ['user', 'routing', 'agents', 'campaigns'],
     '/cabinet/campaigns/list': ['user', 'routing', 'campaigns', 'validation'],
+    '/cabinet/campaigns/analytics': ['user', 'routing', 'campaigns'],
+    '/cabinet/dashboard/active-agents': ['user', 'routing', 'agents', 'campaigns'],
     '/cabinet/agents/list': ['user', 'routing', 'agents', 'campaigns'],
     '/cabinet/leads/list': ['user', 'routing', 'validation', 'leads-list'],
     '/cabinet/leads/import': [
@@ -49,8 +50,8 @@ module.exports = {
     '/cabinet/settings/account-management': ['user', 'routing', 'settings', 'validation'],
     '/cabinet/settings/activity-log': ['user', 'routing', 'activity-log', 'validation'],
     '/cabinet/agents/analytics': ['user', 'routing', 'agents'],
-    '/cabinet/campaigns/analytics': ['user', 'routing', 'campaigns'],
     '/cabinet/managers/list': ['user', 'routing', 'managers'],
     '/cabinet/managers/create': ['user', 'routing', 'managers'],
+    '/calls': ['user', 'routing', 'calls'],
   },
 }

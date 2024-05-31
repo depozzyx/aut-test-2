@@ -36,7 +36,7 @@ const init: TInit = {
   meta: {},
   pagination: {
     page: 1,
-    limit: 8,
+    limit: 7,
     total: 1,
   },
   sort: { sortBy: undefined, orderBy: 'ASC' },
