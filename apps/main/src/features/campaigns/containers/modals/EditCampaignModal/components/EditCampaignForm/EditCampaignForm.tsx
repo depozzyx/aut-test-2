@@ -16,6 +16,7 @@ import { FormikMultiSelect } from '@/components/formik-wrappers/FormikMultiSelec
 import { createStructuredSelector } from 'reselect'
 import {
   asyncGetLeadListCatalog,
+  selectIsLoadingLeadsCatalog,
   selectLeadListCatalogAsOptions,
   selectLeadListPagination,
 } from '@/features/leads/store/lead-list'
@@ -25,6 +26,7 @@ import {
   asyncGetAgentsList,
   selectAgentsOptions,
   selectAgentsPagination,
+  selectIsLoadingAgents,
 } from '@/features/agents/store/agents'
 import { Loader } from '@peiko/components/loaders/Loader'
 import { useGetCampaignById } from '@/features/campaigns/hooks/use-getCampaignById'
@@ -56,12 +58,16 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     leadListOptions,
     agentsPagination: { page: agentsPage, limit: agentsLimit, total: agentsTotal },
     agentsOptions,
+    isAgentLoading,
+    isLeadsLoading,
   } = select(
     createStructuredSelector({
       leadsPagination: selectLeadListPagination,
       leadListOptions: selectLeadListCatalogAsOptions,
       agentsPagination: selectAgentsPagination,
       agentsOptions: selectAgentsOptions,
+      isAgentLoading: selectIsLoadingAgents,
+      isLeadsLoading: selectIsLoadingLeadsCatalog,
     }),
     shallowEqual,
   )
@@ -136,7 +142,8 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
       )
   }
 
-  if (isLoading) return <Loader styles={{ height: '278px', marginTop: '40px' }} />
+  if (isLoading || isAgentLoading || isLeadsLoading)
+    return <Loader styles={{ height: '278px', marginTop: '40px' }} />
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
