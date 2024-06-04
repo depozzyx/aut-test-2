@@ -1,5 +1,6 @@
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
+import { useTitle } from 'react-use'
 import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
 import { UserData } from '@/features/settings/UserData'
@@ -8,6 +9,7 @@ import { ERoles } from '@/constants/profile'
 
 const AccountManagementPage: NextPage = () => {
   const { t } = useTranslation('routing')
+  useTitle(t('page-titles:account-management'))
 
   return (
     <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>

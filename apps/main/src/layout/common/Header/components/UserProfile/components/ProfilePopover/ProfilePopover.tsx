@@ -59,7 +59,7 @@ export const ProfilePopover = ({
   }
 
   return (
-    <Flex direction="column" align="center" gap={48}>
+    <Flex direction="column" align="center" gap={30}>
       <Flex direction="column" align="center" gap={8}>
         <UserRoleIcon userRole={userRole} iconSize="28px" variant="medium" />
         <Flex direction="column" align="center">
