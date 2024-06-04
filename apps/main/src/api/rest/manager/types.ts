@@ -39,3 +39,20 @@ export type TUpdateManagerRes = {
   statusCode: TGeneratedSuccessStatuses
   data: TManager
 }
+
+export type TApiKey = {
+  id: number
+  key: string
+  createdAt: string
+}
+
+export type TApiKeyRes = {
+  statusCode: TGeneratedSuccessStatuses
+  data: TApiKey
+}
+
+export type TApiKeysListRes = {
+  statusCode: TGeneratedSuccessStatuses
+  data: TApiKey[]
+  pagination: TPagination
+}

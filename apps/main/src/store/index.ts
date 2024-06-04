@@ -20,6 +20,7 @@ import campaignAnalyticsReducer from '@/features/campaigns/store/campaign-analyt
 import managersReducer from '@/features/managers/store/managers'
 import createManagerReducer from '@/features/managers/store/create-manager'
 import editManagerReducer from '@/features/managers/store/edit-manager'
+import apiKeyReducer from '@/features/settings/store/api-key'
 
 const store = configureStore({
   reducer: {
@@ -44,6 +45,7 @@ const store = configureStore({
     managers: managersReducer,
     createManager: createManagerReducer,
     editManager: editManagerReducer,
+    apiKey: apiKeyReducer,
   },
 })
 
