@@ -21,6 +21,8 @@ import { Pagination } from '@peiko/components/Pagination'
 import { StatusFilter } from '@/features/agents/containers/filters/StatusFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton/OutlinedButton'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
+import { EManagerPermissions } from '@/constants/profile'
+import { FeaturePermission } from '@/features/common/permissions/FeaturePermissions'
 import { ActiveAgentsTable } from './containers/tables/ActiveAgentsTable'
 import { AgentSearchField } from './components/AgentSearchField'
 
@@ -66,6 +68,7 @@ export const ActiveAgents = (): JSX.Element => {
       dispatch(
         asyncGetActiveAgents({
           page: newPage,
+          limit: limit ?? 7,
           orderBy,
           ...(sortBy && { sortBy }),
           ...(searchTerm && { search: searchTerm }),
@@ -88,15 +91,17 @@ export const ActiveAgents = (): JSX.Element => {
           <AgentSearchField />
           <StatusFilter />
         </Flex>
-        <FilledButton
-          size="m"
-          maxWidth="236px"
-          width="100%"
-          startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
-          onClick={createCampaignHandler}
-        >
-          {t('add-agent')}
-        </FilledButton>
+        <FeaturePermission permissions={[EManagerPermissions.CREATE_AGENT]}>
+          <FilledButton
+            size="m"
+            maxWidth="236px"
+            width="100%"
+            startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
+            onClick={createCampaignHandler}
+          >
+            {t('add-agent')}
+          </FilledButton>
+        </FeaturePermission>
       </Flex>
       <Flex
         gap={16}
@@ -122,7 +127,7 @@ export const ActiveAgents = (): JSX.Element => {
       <ActiveAgentsTable />
       <Flex padding="40px 0 0 0" justify="center">
         <Pagination
-          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 7))}
+          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 8))}
           currentPage={page}
           onChange={handleChangePage}
         />

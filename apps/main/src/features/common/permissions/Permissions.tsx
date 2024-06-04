@@ -1,10 +1,16 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { ROUTES } from '@/routes'
+import { RoleGuard } from '@/features/common/permissions/RoleGuard'
 import { InitLoader } from '../user/InitLoader'
 import { useAuth } from '../user'
 
-export const Permissions: React.FC = ({ children }) => {
+type TProps = {
+  children: JSX.Element
+  roles: string[]
+}
+
+export const Permissions: React.FC<TProps> = ({ children, roles }) => {
   const { user, userFetching } = useAuth()
   const { replace } = useRouter()
 
@@ -15,10 +21,13 @@ export const Permissions: React.FC = ({ children }) => {
     }
   }, [user, userFetching])
 
+  if (userFetching) {
+    return <InitLoader />
+  }
+
   return (
-    <>
-      <InitLoader />
+    <RoleGuard roles={roles} user={user}>
       {user && children}
-    </>
+    </RoleGuard>
   )
 }

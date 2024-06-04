@@ -13,6 +13,8 @@ import { CampaignNameFilter } from '@/features/campaigns/containers/filters/Camp
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { StatusFilter } from '@/features/campaigns/containers/filters/StatusFilter'
+import { FeaturePermission } from '@/features/common/permissions/FeaturePermissions'
+import { EManagerPermissions } from '@/constants/profile'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import {
   Container,
@@ -53,15 +55,17 @@ export const CampaignsList = (): JSX.Element => {
             <StatusFilter />
             <RangeDayPicker onChange={handleChangeDate} />
           </Flex>
-          <FilledButton
-            size="m"
-            maxWidth="236px"
-            width="100%"
-            startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
-            onClick={handleCreateCampaign}
-          >
-            {t('add-campaign')}
-          </FilledButton>
+          <FeaturePermission permissions={[EManagerPermissions.CREATE_CAMPAIGN]}>
+            <FilledButton
+              size="m"
+              maxWidth="236px"
+              width="100%"
+              startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
+              onClick={handleCreateCampaign}
+            >
+              {t('add-campaign')}
+            </FilledButton>
+          </FeaturePermission>
         </Panel>
         <Flex
           gap={16}

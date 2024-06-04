@@ -16,7 +16,7 @@ export const Copy: FC<CopyProps> = ({ value, disabled = false, onClick, size = '
   const buttonRef = useRef<HTMLDivElement | null>(null)
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
-  const iconSize = size === 'm' ? 's' : 's'
+  const iconSize = size === 'm' ? 'm' : 's'
 
   const setBlure = useCallback(() => {
     if (!buttonRef.current) return
@@ -47,11 +47,19 @@ export const Copy: FC<CopyProps> = ({ value, disabled = false, onClick, size = '
 
   const renderButtonContent = () => {
     if (showSuccess) {
-      return <Text color="main8">{t('copy-success')}</Text>
+      return (
+        <Text variant="f10" color="main11">
+          {t('copy-success')}
+        </Text>
+      )
     }
 
     if (showError) {
-      return <Text color="main7">{t('copy-error')}</Text>
+      return (
+        <Text variant="f10" color="main13">
+          {t('copy-error')}
+        </Text>
+      )
     }
 
     return <CopyIcon size={iconSize} />

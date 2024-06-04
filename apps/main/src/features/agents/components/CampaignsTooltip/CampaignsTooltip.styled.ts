@@ -19,4 +19,10 @@ export const Menu = styled.div`
 
 export const MenuItem = styled.div`
   padding: 6px 0;
+  cursor: pointer;
+  border-radius: 8px;
+
+  p:hover {
+    color: ${({ theme }) => theme.palette.main5};
+  }
 `

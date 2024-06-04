@@ -1,0 +1,1 @@
+export { ManagerListTable } from './ManagerListTable'

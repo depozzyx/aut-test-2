@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useCallback } from 'react'
 import useSWR from 'swr'
-import { apiCampaignAnalytics } from '@/api-rest/campaign-analytics'
-import { TCampaignAnalyticsReqParams } from '@/api-rest/campaign-analytics/types'
-import { useRedux } from '@/hooks/use-redux'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import { handleRestError } from '@/features/common/error'
+import { apiCampaignAnalytics } from '@/api-rest/campaign-analytics'
+import { TCampaignAnalyticsReqParams } from '@/api-rest/campaign-analytics/types'
+import { useRedux } from '@/hooks/use-redux'
 import {
   selectDateFilter,
   setIsLoading,

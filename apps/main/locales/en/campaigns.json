@@ -47,8 +47,8 @@
         "lead-selection": "Lead Selection",
         "call-frequency": "Call Frequency",
         "time-for-calls": "Time for Call",
-        "save-btn": "Save",
-        "cancel-btn": "Cancel"
+        "save": "Save",
+        "cancel": "Cancel"
     },
     "review-campaign": {
         "title": "Review New Campaign",

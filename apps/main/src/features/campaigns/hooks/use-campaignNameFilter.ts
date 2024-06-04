@@ -1,60 +1,90 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import useSWR from 'swr'
+import { useRedux } from '@/hooks/use-redux'
+import { handleRestError } from '@/features/common/error'
+import { TPagination } from '@/types/entities/pagination'
+import { setAgentNameFilter } from '@/features/agents/store/agent-analytics'
 import {
   TActiveCampaign,
-  TCampaignTableType,
   TCampaign,
+  TCampaignTableType,
 } from '@/features/campaigns/types'
-import { useRedux } from '@/hooks/use-redux'
 import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 import { apiCampaigns } from '@/api-rest/campaigns'
-import { handleRestError } from '@/features/common/error'
 import { TCampaignListReq } from '@/api-rest/campaigns/types'
 
-type TCampaigns = TActiveCampaign[] | TCampaign[]
+type TUniversalCampaign = TActiveCampaign | TCampaign
+
+type TCampaignOption = {
+  label: string
+  value: string | number
+}
 
 type TReturn = {
-  campaignsOptions: { label: string; value: string | number }[]
-  pagination: { total: number; page: number; limit?: number }
-  fetcher: (params: TCampaignListReq) => void
+  campaignOptions: { label: string; value: string | number }[]
+  pagination: TPagination
+  loadMoreCampaigns: () => void
 }
 
 export const useCampaignNameFilter = (
   type: TCampaignTableType,
   useIdForValue = false,
 ): TReturn => {
-  const [campaigns, setCampaigns] = useState<TCampaigns>([])
-  const [pagination, setPagination] = useState({ total: 1, page: 1, limit: 10 })
   const { dispatch } = useRedux()
+  const [campaignOptions, setCampaignOptions] = useState<TCampaignOption[]>([])
+  const [pagination, setPagination] = useState<TPagination>({
+    page: 1,
+    limit: 10,
+    total: 1,
+  })
 
-  const params: TCampaignListReq = {
-    page: pagination.page,
-    limit: pagination.limit,
-    orderBy: 'ASC',
-  }
+  const apiRequest = useMemo(
+    () =>
+      type === CAMPAIGN_TABLE_TYPES.LIST
+        ? apiCampaigns.getCampaignList
+        : apiCampaigns.getActiveCampaigns,
+    [type],
+  )
 
-  const { getCampaignList, getActiveCampaigns } = apiCampaigns
+  const fetcher = (params: TCampaignListReq) => apiRequest(params).then((res) => res.data)
 
-  const apiRequest =
-    type === CAMPAIGN_TABLE_TYPES.LIST ? getCampaignList : getActiveCampaigns
+  const key = useMemo(
+    () => (type === CAMPAIGN_TABLE_TYPES.LIST ? '/campaigns' : '/active-campaigns'),
+    [type],
+  )
 
-  const fetcher = async (params: TCampaignListReq): Promise<void> => {
-    try {
-      const { data } = await apiRequest(params)
-      setCampaigns((prev) => [...prev, ...data.data])
-      setPagination(data.pagination)
-    } catch (e) {
-      handleRestError({ e, dispatch })
+  useSWR(
+    [key, pagination.page, pagination.limit],
+    () =>
+      fetcher({
+        page: pagination.page,
+        limit: pagination.limit,
+        orderBy: 'ASC',
+      }),
+    {
+      revalidateOnFocus: false,
+      onSuccess: (data) => {
+        const formattedData = data.data.map((campaign: TUniversalCampaign) => ({
+          label: campaign.name,
+          value: useIdForValue ? campaign.id : campaign.name,
+        }))
+        if (formattedData.length > 0 && !campaignOptions.length && useIdForValue) {
+          dispatch(setAgentNameFilter(formattedData[0].value))
+        }
+        setCampaignOptions((prev) => [...prev, ...formattedData])
+        setPagination(data.pagination)
+      },
+      onError: (e) => handleRestError({ e, dispatch }),
+    },
+  )
+
+  const loadMoreCampaigns = useCallback(() => {
+    const nextPage = pagination.page + 1
+    const lastPage = Math.ceil(pagination.total / (pagination.limit ?? 10))
+    if (pagination.page < lastPage) {
+      setPagination((prev) => ({ ...prev, page: nextPage }))
     }
-  }
+  }, [pagination])
 
-  useEffect(() => {
-    fetcher(params)
-  }, [pagination.page, pagination.limit])
-
-  const campaignsOptions = campaigns?.map((campaign) => ({
-    label: campaign.name,
-    value: useIdForValue ? campaign.id : campaign.name,
-  }))
-
-  return { campaignsOptions, pagination, fetcher }
+  return { campaignOptions, pagination, loadMoreCampaigns }
 }

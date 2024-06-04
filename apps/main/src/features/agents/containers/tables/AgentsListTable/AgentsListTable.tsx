@@ -76,10 +76,11 @@ export const AgentsListTable = (): JSX.Element => {
   ]
 
   const rows = data.map((agent) => {
-    const assignedCampaigns = agent.assignedCampaigns.map((campaign) => campaign.name)
+    const { assignedCampaigns } = agent
 
     return {
       row: {
+        id: agent.id,
         username: <InfoColumn title={agent.username} />,
         email: <InfoColumn title={agent.email} />,
         date: <InfoColumn title={formatCreatedAt(agent.createdAt)} />,

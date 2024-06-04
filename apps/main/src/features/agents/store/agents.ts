@@ -3,7 +3,12 @@ import { TAsyncAction, TSelector } from '@/store'
 import { TPagination } from '@/types/entities/pagination'
 import { apiAgents } from '@/api-rest/agents'
 import { handleRestError } from '@/features/common/error'
-import { TAgent, TAgentsReq, TDeletedAgentData } from '@/api-rest/agents/types'
+import {
+  TAgent,
+  TAgentsReq,
+  TAssignedCampaign,
+  TDeletedAgentData,
+} from '@/api-rest/agents/types'
 import { TAgentSortBy, TAgentWorkStatus } from '@/features/agents/types'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { notificationActions } from '@/features/common/notifications/store'
@@ -20,6 +25,7 @@ export type TInit = {
   statusFilter?: TAgentWorkStatus
   deletedAgentData: null | TDeletedAgentData
   searchTerm: string
+  selectedAssignedCampaign: null | TAssignedCampaign
 }
 
 const init: TInit = {
@@ -30,13 +36,14 @@ const init: TInit = {
   meta: {},
   pagination: {
     page: 1,
-    limit: 8,
+    limit: 7,
     total: 1,
   },
   sort: { sortBy: undefined, orderBy: 'ASC' },
   statusFilter: undefined,
   deletedAgentData: null,
   searchTerm: '',
+  selectedAssignedCampaign: null,
 }
 
 const agents = createSlice({
@@ -77,6 +84,12 @@ const agents = createSlice({
     setSearchTerm(state, action: PayloadAction<TInit['searchTerm']>) {
       state.searchTerm = action.payload
     },
+    setSelectedAssignedCampaign(
+      state,
+      action: PayloadAction<TInit['selectedAssignedCampaign']>,
+    ) {
+      state.selectedAssignedCampaign = action.payload
+    },
     reset: () => init,
   },
 })
@@ -91,6 +104,7 @@ export const {
   setStatusFilter,
   setDeletedAgentData,
   setSearchTerm,
+  setSelectedAssignedCampaign,
   reset,
 } = agents.actions
 
@@ -140,6 +154,11 @@ export const selectSelectedId = createSelector(
 export const selectSearchTerm = createSelector(
   selectAgents,
   ({ searchTerm }) => searchTerm,
+)
+
+export const selectAssignedCampaignsInfo = createSelector(
+  selectAgents,
+  ({ selectedAssignedCampaign }) => selectedAssignedCampaign,
 )
 
 export default agents.reducer

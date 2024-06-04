@@ -1,18 +1,18 @@
-import { Flex } from '@/components/Flex'
 import { useFormik } from 'formik'
-import { useRedux } from '@/hooks/use-redux'
+import { createStructuredSelector } from 'reselect'
+import { shallowEqual } from 'react-redux'
 import * as yup from 'yup'
 import useTranslation from 'next-translate/useTranslation'
+import { Flex } from '@/components/Flex'
+import { useRedux } from '@/hooks/use-redux'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
-import { createStructuredSelector } from 'reselect'
-import { shallowEqual } from 'react-redux'
 import {
   asyncUpdateAgent,
   selectInitFormData,
-  selectUpdateAgentsIsLoading,
+  selectUpdateAgentIsLoading,
 } from '@/features/agents/store/edit-agent'
 import { validation } from '@/utils/validation'
 
@@ -23,7 +23,7 @@ export const EditAgentForm = (): JSX.Element => {
 
   const { isLoading, initFormData } = select(
     createStructuredSelector({
-      isLoading: selectUpdateAgentsIsLoading,
+      isLoading: selectUpdateAgentIsLoading,
       initFormData: selectInitFormData,
     }),
     shallowEqual,
@@ -75,10 +75,10 @@ export const EditAgentForm = (): JSX.Element => {
             width="236px"
             isLoading={isLoading}
           >
-            {t('edit-agent.save')}
+            {t('edit-agent.save-btn')}
           </FilledButton>
           <OutlinedButton onClick={resetModals} width="236px">
-            {t('edit-agent.cancel')}
+            {t('edit-agent.cancel-btn')}
           </OutlinedButton>
         </Flex>
       </Flex>

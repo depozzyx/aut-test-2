@@ -1,4 +1,5 @@
-import { TUserPermissions, TUserRoles } from '@/types/entities/profile'
+import { TUserRoles } from '@/types/roles'
+import { TUserPermissions } from '@/types/permissions'
 import { TGeneratedSuccessStatuses } from '@/constants/success-status'
 
 export type TLoginReq = {

@@ -77,6 +77,7 @@ export const ActiveAgentsTable = memo((): JSX.Element => {
 
   const rows = activeAgents.map((agent) => ({
     row: {
+      id: agent.id,
       name: <InfoColumn title={agent.username} />,
       status: <AgentStatusChip status={agent.workStatus} />,
       date: <InfoColumn title={formatCreatedAt(agent.createdAt)} />,

@@ -5,5 +5,11 @@
   "agents-list": "Agents - List",
   "create-agent": "Create Agent",
   "agents-analytics": "Agents - Analytics",
-  "campaigns-analytics": "Campaigns - Analytics"
+  "campaigns-analytics": "Campaigns - Analytics",
+  "managers-list": "Managers - List",
+  "create-manager": "Create Manager",
+  "calls": "Calls",
+  "api-key-management": "API key - management",
+  "activity-log": "Activity log",
+  "account-management": "Account management"
 }
