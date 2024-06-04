@@ -23,6 +23,11 @@ export type TLoginRes = {
   data: TLoginResponseData
 }
 
+export type TLoginWSRes = {
+  statusCode: TGeneratedSuccessStatuses
+  data: string
+}
+
 export type TForgotPasswordReq = {
   email: string
 }
