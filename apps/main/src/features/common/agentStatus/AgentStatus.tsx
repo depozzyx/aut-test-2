@@ -4,7 +4,7 @@ import useTranslation from 'next-translate/useTranslation'
 import React, { FC } from 'react'
 import { TAgentWorkStatus } from '@/features/agents/types'
 import styled from 'styled-components'
-import { agentActions } from './store'
+import { agentActions, agentStatusSelector } from './store'
 
 const StyledSelect = styled(Select)`
   .custom-rs__control {
@@ -14,7 +14,8 @@ const StyledSelect = styled(Select)`
 
 export const AgentStatus: FC = () => {
   const { t } = useTranslation('user')
-  const { dispatch } = useRedux()
+  const { dispatch, select } = useRedux()
+  const { status } = select(agentStatusSelector)
 
   const options: {
     label: string
@@ -43,6 +44,7 @@ export const AgentStatus: FC = () => {
       width="105px"
       name="workStatus"
       options={options}
+      value={status ?? undefined}
       onChange={(e) => {
         if (e?.value && typeof e.value === 'string')
           dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))

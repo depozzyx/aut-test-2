@@ -9,5 +9,10 @@
     "pause": "Pause",
     "unpause": "Unpause",
     "finish": "Finish"
+  },
+  "agentLogout": {
+    "text": "Your work status will automatically change to “Finished” after logging out",
+    "cancel": "Cancel",
+    "agree": "Agree & Logout"
   }
 }

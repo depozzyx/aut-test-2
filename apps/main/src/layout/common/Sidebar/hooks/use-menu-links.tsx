@@ -81,7 +81,7 @@ export const useMenuLinks = (): TMenuItem[] => {
     {
       title: t('agents'),
       icon: <AgentsIcon />,
-      availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+      availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.AGENT],
       links: [
         {
           title: t('agents_list'),
@@ -156,13 +156,13 @@ export const useMenuLinks = (): TMenuItem[] => {
     {
       title: t('settings'),
       icon: <SettingsIcon />,
-      availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+      availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.AGENT],
       links: [
         {
           title: t('settings_account_management'),
           link: ROUTES.SETTINGS_ACCOUNT_MANAGEMENT,
           disabled: false,
-          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+          availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.AGENT],
         },
         {
           title: t('settings_api_key_management'),
@@ -178,19 +178,6 @@ export const useMenuLinks = (): TMenuItem[] => {
         },
       ],
     },
-    // {
-    //   title: t('calls'),
-    //   icon: <DashboardIcon />,
-    //   availableRoles: [ERoles.AGENT],
-    //   links: [
-    //     {
-    //       title: t('calls'),
-    //       link: ROUTES.CALLS,
-    //       disabled: false,
-    //       availableRoles: [ERoles.AGENT],
-    //     },
-    //   ],
-    // },
   ]
 
   return filterMenuItemsByRole(links, user?.role || '')

@@ -6,10 +6,12 @@ import { TAgentWorkStatus } from '@/features/agents/types'
 
 export type TInit = {
   status: TAgentWorkStatus | null
+  loading: boolean
 }
 
 const init: TInit = {
   status: null,
+  loading: false,
 }
 
 const agentStatus = createSlice({
@@ -19,21 +21,28 @@ const agentStatus = createSlice({
     setStatus(state, action: PayloadAction<TInit['status']>) {
       state.status = action.payload
     },
+    setLoading(state, action: PayloadAction<TInit['loading']>) {
+      state.loading = action.payload
+    },
     reset: () => init,
   },
 })
 
 // actions
-const { setStatus, reset } = agentStatus.actions
+const { setStatus, setLoading, reset } = agentStatus.actions
 
 const setStatusAsync =
-  (workStatus: TAgentWorkStatus): TAsyncAction =>
+  (workStatus: TAgentWorkStatus, onSuccess?: () => void): TAsyncAction =>
   async (dispatch) => {
     try {
+      dispatch(setLoading(true))
       const { data } = await apiAgents.changeWorkStatus({ workStatus })
-      setStatus(data.data.workStatus)
+      dispatch(setStatus(data.data.workStatus))
+      onSuccess?.()
     } catch (e) {
       handleRestError({ e, dispatch })
+    } finally {
+      dispatch(setLoading(false))
     }
   }
 
