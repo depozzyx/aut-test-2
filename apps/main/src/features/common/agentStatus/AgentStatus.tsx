@@ -44,7 +44,7 @@ export const AgentStatus: FC = () => {
       width="105px"
       name="workStatus"
       options={options}
-      value={status ?? undefined}
+      value={status === 'on-call' ? 'start' : status ?? undefined}
       onChange={(e) => {
         if (e?.value && typeof e.value === 'string')
           dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))

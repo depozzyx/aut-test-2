@@ -1,10 +1,9 @@
 import { io, Socket } from 'socket.io-client'
-
 import axios from 'axios'
-import { TStore } from '@/store'
 import { errorActions } from '@/features/common/error'
-import { E_SOCKET_ERRORS } from '@/constants/socket-errors'
 import { API_SOCKET_URL } from '@/constants/config'
+import { TStore } from '@/store'
+import { E_SOCKET_ERRORS } from '@/constants/socket-errors'
 import {
   TDisconnectProps,
   TEmitProps,
@@ -24,7 +23,7 @@ export const injectStoreSocket = (_store: TStore): void => {
 const EMIT_SUBSCRIBE = 'subscribe'
 const EMIT_UNSUBSCRIBE = 'unsubscribe'
 
-const EVENT_USER = 'user'
+const EVENT_AUTH = 'auth'
 
 type TSubscribe<T> = {
   id: string
@@ -51,7 +50,7 @@ type TScope<T = any> = {
 
 const SOCKET_CONFIG = {
   timeout: 2000,
-  path: '/v1/events/ws',
+  path: '',
   transports: ['websocket'],
   reconnection: true,
   reconnectionDelay: 5000,
@@ -86,7 +85,10 @@ class SocketClass {
     if (!this.io) {
       try {
         const { data } = await apiAuth.loginWS()
-        this.io = io(API_SOCKET_URL, { ...SOCKET_CONFIG, auth: { token: data.data } })
+        this.io = io(API_SOCKET_URL, {
+          ...SOCKET_CONFIG,
+          auth: { token: data.data.token },
+        })
       } catch (e) {
         if (!axios.isAxiosError(e) || !e.response) return
         const { data } = e.response
@@ -98,7 +100,7 @@ class SocketClass {
     }
 
     const connect = () => {
-      this.io?.off(EVENT_USER, connect)
+      this.io?.off(EVENT_AUTH, connect)
       if (this.hasReconnect) {
         this.reconnectCallback.forEach((callback) => {
           callback()
@@ -108,7 +110,7 @@ class SocketClass {
     }
 
     this.io.on('connect', () => {
-      this.io?.on(EVENT_USER, connect)
+      this.io?.on(EVENT_AUTH, connect)
     })
 
     this.io.on('disconnect', () => {

@@ -1,30 +1,27 @@
 import { socket } from '../Socket'
 import { TSubscribeProps } from '../types'
+import { TCallsInit } from './types'
 
-type TCallbackReturn<T> = {
-  action: string
-  data: T
-}
 // subscribe to chat
-const callInit = ({
-  id,
-  callback,
-}: TSubscribeProps<
-  TCallbackReturn<{
-    username: string
-    leadId: number
-    campaignId: number
-    dst: string
-  }>
->): void => {
+const callInit = ({ id, callback }: TSubscribeProps<TCallsInit>): void => {
   socket.subscribe({
     id,
     callback,
-    scope: 'chat:list',
-    eventName: 'chat:list',
+    scope: 'call:callInit',
+    eventName: 'call:callInit',
+  })
+}
+
+const callEnd = ({ id, callback }: TSubscribeProps<TCallsInit>): void => {
+  socket.subscribe({
+    id,
+    callback,
+    scope: 'call:callEnd',
+    eventName: 'call:callEnd',
   })
 }
 
 export const callSocket = {
   callInit,
+  callEnd,
 }

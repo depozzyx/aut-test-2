@@ -26,7 +26,9 @@ export type TLoginRes = {
 
 export type TLoginWSRes = {
   statusCode: TGeneratedSuccessStatuses
-  data: string
+  data: {
+    token: string
+  }
 }
 
 export type TForgotPasswordReq = {

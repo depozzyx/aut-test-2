@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useEffect, useState } from 'react'
 import JsSIP, { UA } from 'jssip'
 import {
@@ -10,15 +9,28 @@ import { AnswerOptions } from 'jssip/lib/RTCSession'
 import { useAuth } from '@/features/common/user'
 import { useRedux } from '@/hooks/use-redux'
 import { errorActions } from '@/features/common/error'
+import { callSocket } from 'api/socket/call'
+import { socket } from 'api/socket/Socket'
+import { TCallsInit } from 'api/socket/call/types'
+import { agentActions } from '@/features/common/agentStatus/store'
+
+const TEXTS = {
+  SUBSCRIBE_CALLS: 'Subscribe calls',
+  SUBSCRIBE_CALLS_END: 'Subscribe calls end',
+}
 
 export const useSIPService = (): {
   connect: () => void
   disconnect: () => void
   ua: UA | null
   endCall: () => void
+  lead: TCallsInit | null
+  endedCall: boolean
 } => {
   const { pbxAuth } = useAuth()
   const { dispatch } = useRedux()
+  const [endedCall, setEndedCall] = useState(false)
+  const [lead, setLead] = useState<TCallsInit | null>(null)
 
   const sipOptions: AnswerOptions = {
     pcConfig: {
@@ -38,19 +50,42 @@ export const useSIPService = (): {
     },
   }
 
-  const socket = new JsSIP.WebSocketInterface('wss://dev.voipenv.uk:7777/ws')
+  const jsSIPSocket = new JsSIP.WebSocketInterface('wss://dev.voipenv.uk:7777/ws')
   const [ua, setUA] = useState<UA | null>(null)
+
+  const endCall = () => {
+    ua?.terminateSessions()
+    setEndedCall(true)
+    dispatch(agentActions.setStatusAsync('pause'))
+  }
+
+  const onSubscribeCalls = () => {
+    callSocket.callInit({
+      id: TEXTS.SUBSCRIBE_CALLS,
+      callback: (e) => {
+        dispatch(agentActions.setStatusAsync('on-call'))
+        setLead(e)
+      },
+    })
+    callSocket.callEnd({
+      id: TEXTS.SUBSCRIBE_CALLS_END,
+      callback: endCall,
+    })
+  }
+
+  const onUnsubscribeCalls = () => {
+    socket.unsubscribe(TEXTS.SUBSCRIBE_CALLS)
+    socket.unsubscribe(TEXTS.SUBSCRIBE_CALLS_END)
+  }
 
   const connect = () => {
     ua?.start()
+    onSubscribeCalls()
   }
 
   const disconnect = () => {
     ua?.stop()
-  }
-
-  const endCall = () => {
-    ua?.terminateSessions()
+    onUnsubscribeCalls()
   }
 
   useEffect(() => {
@@ -59,7 +94,7 @@ export const useSIPService = (): {
         const configuration: UAConfiguration = {
           uri: `sip:${pbxAuth?.username}@${pbxAuth?.domain}`,
           password: pbxAuth?.password,
-          sockets: socket,
+          sockets: jsSIPSocket,
           register: true,
           ...sipOptions,
           connection_recovery_min_interval: 1,
@@ -68,34 +103,33 @@ export const useSIPService = (): {
         const user = new JsSIP.UA(configuration)
 
         user.on('connected', (e) => {
-          console.log('Connected to SIP server', e)
+          console.warn('Connected to SIP server', e)
         })
 
         user.on('disconnected', (e) => {
-          console.log('Disconnected from SIP server', e)
+          console.warn('Disconnected from SIP server', e)
         })
 
         user.on(
           'newRTCSession',
           ({ session }: IncomingRTCSessionEvent | OutgoingRTCSessionEvent) => {
-            console.log('New session started', session)
+            console.warn('New session started', session)
 
             const answerCall = async () => {
               if (session) {
                 session.answer(sipOptions)
               } else {
-                console.log('No call session')
+                console.warn('No call session')
               }
             }
             setTimeout(() => {
               answerCall()
             }, 2000)
 
-            session.on('peerconnection', ({ peerconnection, ...e }) => {
-              console.log({ peerconnection, e })
+            session.on('peerconnection', ({ peerconnection }) => {
               const pc = peerconnection
               pc.ontrack = (event) => {
-                console.log('New track added:', event.track)
+                console.warn('New track added:', event.track)
                 const remoteStream = event.streams[0]
                 const audioElement = document.createElement('audio')
                 audioElement.srcObject = remoteStream
@@ -104,23 +138,19 @@ export const useSIPService = (): {
               }
             })
 
-            session.on('accepted', () => {
-              console.log('Call accepted')
-            })
-
             session.on('ended', (e) => {
-              console.log('Call ended', e)
+              console.warn('Call ended', e)
             })
 
             session.on('failed', (e) => {
-              console.log('Call failed', e)
+              console.error('Call failed', e)
               if (e.cause) dispatch(errorActions.showGlobalError(e.cause))
             })
           },
         )
 
         user.on('registrationFailed', (e) => {
-          console.log('Registration failed', e)
+          console.error('Registration failed', e)
           if (e.cause) dispatch(errorActions.showGlobalError(e.cause))
         })
 
@@ -128,5 +158,5 @@ export const useSIPService = (): {
       })
   }, [pbxAuth])
 
-  return { connect, disconnect, ua, endCall }
+  return { connect, disconnect, ua, endCall, lead, endedCall }
 }
