@@ -6,10 +6,13 @@ import {
   TForgotPasswordRes,
   TResetPasswordReq,
   TForgotPasswordReq,
+  TLoginWSRes,
 } from './types'
 
 const login = (data: TLoginReq): TAxiosResponse<TLoginRes> =>
   api.post('/auth/login', data)
+
+const loginWS = (): TAxiosResponse<TLoginWSRes> => api.get('/auth/login-ws')
 
 const logout = (): TAxiosResponse<void> => api.delete('/auth/logout')
 
@@ -21,6 +24,7 @@ const resetPassword = (data: TResetPasswordReq): TAxiosResponse<TForgotPasswordR
 
 export const apiAuth = {
   login,
+  loginWS,
   logout,
   forgotPassword,
   resetPassword,

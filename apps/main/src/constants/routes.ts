@@ -11,6 +11,7 @@ export const ROUTES = {
   CAMPAIGNS_ANALYTICS: '/cabinet/campaigns/analytics',
   AGENTS_LIST: '/cabinet/agents/list',
   AGENTS_ANALYTICS: '/cabinet/agents/analytics',
+  AGENT_CALLS: '/cabinet/agents/calls',
   CREATE_AGENT: '/cabinet/agents/create',
   LEADS_LIST: '/cabinet/leads/list',
   IMPORT_LEADS: '/cabinet/leads/import',
@@ -20,5 +21,4 @@ export const ROUTES = {
   SETTINGS_ACTIVITY_LOG: '/cabinet/settings/activity-log',
   MANAGERS_LIST: '/cabinet/managers/list',
   CREATE_MANAGER: '/cabinet/managers/create',
-  CALLS: '/calls',
 }

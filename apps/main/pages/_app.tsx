@@ -9,6 +9,7 @@ import { InitUser } from '@/features/common/user/InitUser'
 import { injectStore } from '@/api-rest/instance'
 import { GlobalError, NetworkError } from '@/features/common/error'
 import { StyledProvider } from '@peiko/styles'
+import { SocketError } from '@/features/common/error/SocketError'
 
 injectStore(store)
 
@@ -21,6 +22,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <GlobalStyles />
         <GlobalError />
         <NetworkError />
+        <SocketError />
         <InitUser />
         <Component {...pageProps} />
       </StyledProvider>

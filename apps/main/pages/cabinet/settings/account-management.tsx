@@ -12,7 +12,7 @@ const AccountManagementPage: NextPage = () => {
   useTitle(t('page-titles:account-management'))
 
   return (
-    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
+    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER, ERoles.AGENT]}>
       <CabinetLayout title={t('settings_account_management')}>
         <UserData />
         <ChangePassword />
