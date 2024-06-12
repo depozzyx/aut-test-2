@@ -4,7 +4,7 @@ import {
   BUTTON_TRANSITION_TIMING_FUNCTION,
 } from '../constants/animation'
 
-type TColors = {
+export type TColors = {
   color?: string
   bg?: string
   icon?: string

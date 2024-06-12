@@ -26,6 +26,8 @@ export const useSIPService = (): {
   endCall: () => void
   lead: TCallsInit | null
   endedCall: boolean
+  setEndedCall: (endedCall: boolean) => void
+  setLead: (lead: TCallsInit | null) => void
 } => {
   const { pbxAuth } = useAuth()
   const { dispatch } = useRedux()
@@ -56,7 +58,6 @@ export const useSIPService = (): {
   const endCall = () => {
     ua?.terminateSessions()
     setEndedCall(true)
-    dispatch(agentActions.setStatusAsync('pause'))
   }
 
   const onSubscribeCalls = () => {
@@ -140,6 +141,7 @@ export const useSIPService = (): {
 
             session.on('ended', (e) => {
               console.warn('Call ended', e)
+              dispatch(agentActions.setStatusAsync('pause'))
             })
 
             session.on('failed', (e) => {
@@ -158,5 +160,5 @@ export const useSIPService = (): {
       })
   }, [pbxAuth])
 
-  return { connect, disconnect, ua, endCall, lead, endedCall }
+  return { connect, disconnect, ua, endCall, lead, endedCall, setEndedCall, setLead }
 }

@@ -37,6 +37,8 @@ export type TDefaultPalette = {
   main23: Color
   main24: Color
   main25: Color
+  main26: Color
+  main27: Color
   'main6-100': Color
   'main7-100': Color
   'main8-100': Color
