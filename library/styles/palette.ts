@@ -35,6 +35,8 @@ const defaultPalette: TDefaultPalette = {
   main23: '#57585D',
   main24: '#FF3C6A',
   main25: '#DB0035',
+  main26: '#01E34D',
+  main27: '#029032',
   'main6-100': '#818405',
   'main7-100': '#02B757',
   'main8-100': '#FD0202 ',

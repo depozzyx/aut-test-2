@@ -1,5 +1,8 @@
 {
   "title": "Calls",
   "noCalls": "There are no calls now",
-  "newCall": "New incoming call"
+  "newCall": "New incoming call",
+  "feedback": "Call feedback",
+  "success": "Success",
+  "failure": "Failure"
 }
