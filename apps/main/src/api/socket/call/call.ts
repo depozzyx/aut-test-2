@@ -2,7 +2,6 @@ import { socket } from '../Socket'
 import { TSubscribeProps } from '../types'
 import { TCallsInit } from './types'
 
-// subscribe to chat
 const callInit = ({ id, callback }: TSubscribeProps<TCallsInit>): void => {
   socket.subscribe({
     id,
