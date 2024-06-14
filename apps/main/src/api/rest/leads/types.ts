@@ -9,9 +9,19 @@ export type TImportLeadsRes = {
   statusCode: TGeneratedSuccessStatuses
 }
 
+export enum ELeadsSortBy {
+  CREATED_AT = 'createdAt',
+  NAME = 'name',
+  TIMEZONE = 'timezone',
+  STATUS = 'status',
+  PHONE = 'phone',
+  SOURCE = 'source',
+}
+
 export type TLeadsListReq = {
   orderBy: TOrderBy
   leadListId?: number
+  sortBy?: ELeadsSortBy
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TLeadsGroupReq = {

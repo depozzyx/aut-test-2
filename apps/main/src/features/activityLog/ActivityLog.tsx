@@ -10,10 +10,12 @@ import { useRedux } from '@/hooks/use-redux'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
+import { useUnmount } from 'react-use'
 import { useFilters } from './hooks/useFilters'
 import { ActivityLogs } from './containers/ActivityLogs'
 import {
   getActivityLogsAsync,
+  reset,
   selectFilters,
   selectIsLoading,
   selectLogs,
@@ -66,7 +68,7 @@ export const ActivityLog: FC = () => {
   useEffect(() => {
     dispatch(
       getActivityLogsAsync({
-        page,
+        page: 1,
         limit,
         ...filters,
       }),
@@ -83,13 +85,15 @@ export const ActivityLog: FC = () => {
     )
 
   useEffect(() => {
-    const { page, limit } = managerPagination
-    getManagers({ page, limit, orderBy: 'DESC' })
+    const { limit } = managerPagination
+    getManagers({ page: 1, limit, orderBy: 'DESC' })
   }, [])
 
   const onExport = () => {
     setModal({ modalName: MODAL_NAMES.EXPORT_ACTIVITY_LOGS, isOpen: true })
   }
+
+  useUnmount(() => dispatch(reset()))
 
   return (
     <Box styles={{ marginTop: '10px' }}>

@@ -13,6 +13,7 @@ import {
   selectLeadsGroup,
   selectLeadsGroupPagination,
   selectLeadsPagination,
+  selectLeadsSortBy,
 } from './store/leads'
 import { CreateLeadsGroup } from './containers/CreateLeadsGroup'
 
@@ -24,23 +25,27 @@ export const LeadsList: FC = () => {
     pagination: { total, page, limit },
     leadsGroup,
     groupsPagination,
+    sortBy,
   } = select(
     createStructuredSelector({
       pagination: selectLeadsPagination,
       groupsPagination: selectLeadsGroupPagination,
       leadsGroup: selectLeadsGroup,
+      sortBy: selectLeadsSortBy,
     }),
     shallowEqual,
   )
 
   useEffect(() => {
-    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy: 'ASC' }))
+    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy: 'DESC' }))
   }, [])
 
   useEffect(() => {
     if (secondMount)
-      dispatch(getLeadList({ page, limit, orderBy: 'ASC', leadListId: leadsGroup }))
-  }, [leadsGroup, secondMount])
+      dispatch(
+        getLeadList({ page: 1, limit, orderBy: 'DESC', leadListId: leadsGroup, sortBy }),
+      )
+  }, [leadsGroup, secondMount, sortBy])
 
   useUnmount(() => {
     dispatch(reset())
@@ -51,7 +56,7 @@ export const LeadsList: FC = () => {
   }, [leadsGroup])
 
   const onChangePage = (page: number) =>
-    dispatch(getLeadList({ page, limit, orderBy: 'ASC', leadListId: leadsGroup }))
+    dispatch(getLeadList({ page, limit, orderBy: 'DESC', leadListId: leadsGroup }))
 
   return (
     <>
