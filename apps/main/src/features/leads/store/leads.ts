@@ -5,6 +5,7 @@ import { TLeadsGroup, TLeadsList } from '@/types/leads/leads-list'
 import { handleRestError } from '@/features/common/error'
 import { leadsApi } from '@/api-rest/leads'
 import {
+  ELeadsSortBy,
   TCreateLeadGroupReq,
   TLeadsGroupReq,
   TLeadsListReq,
@@ -22,6 +23,7 @@ export type TInit = {
   selectedLeadsGroup?: TLeadsGroup['id']
   selectError?: string
   filesForImport: TPreparedFiles[]
+  sortBy?: ELeadsSortBy
 }
 
 const init: TInit = {
@@ -78,6 +80,9 @@ const leads = createSlice({
     setLeadsGroup(state, action: PayloadAction<TLeadsGroup['id']>) {
       state.selectedLeadsGroup = action.payload
     },
+    setLeadsSortBy(state, action: PayloadAction<TInit['sortBy']>) {
+      state.sortBy = action.payload
+    },
     setSelectError(state, action: PayloadAction<TInit['selectError']>) {
       state.selectError = action.payload
     },
@@ -103,6 +108,7 @@ export const {
   deleteImportFile,
   setSelectError,
   setLeadsGroupPagination,
+  setLeadsSortBy,
   reset,
 } = leads.actions
 // selectors
@@ -130,6 +136,8 @@ export const selectLeadsGroup = createSelector(
   selectLeads,
   ({ selectedLeadsGroup }) => selectedLeadsGroup,
 )
+
+export const selectLeadsSortBy = createSelector(selectLeads, ({ sortBy }) => sortBy)
 
 export const selectLeadsGroupError = createSelector(
   selectLeads,
@@ -162,7 +170,7 @@ export const getLeadList =
   }
 
 export const getLeadsGroups =
-  (params: TLeadsGroupReq): TAsyncAction =>
+  (params: TLeadsGroupReq, onSuccess?: () => void): TAsyncAction =>
   async (dispatch) => {
     try {
       const {
@@ -170,6 +178,7 @@ export const getLeadsGroups =
       } = await leadsApi.leadsGroup(params)
       dispatch(setLeadsGroups(data))
       dispatch(setLeadsGroupPagination(pagination))
+      onSuccess?.()
     } catch (e) {
       handleRestError({ e, dispatch })
     }
@@ -193,9 +202,13 @@ export const createLeadsGroups =
         },
       } = _store()
 
-      await leadsApi.createLeadGroup(formData)
+      const { data } = await leadsApi.createLeadGroup(formData)
 
-      dispatch(getLeadsGroups({ page, limit, orderBy: 'ASC' }))
+      dispatch(
+        getLeadsGroups({ page, limit, orderBy: 'DESC' }, () =>
+          dispatch(setLeadsGroup(data.data.id)),
+        ),
+      )
       onSuccess()
     } catch (e) {
       handleRestError({ e, dispatch, formik })

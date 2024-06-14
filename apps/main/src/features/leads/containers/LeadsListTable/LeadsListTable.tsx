@@ -8,9 +8,11 @@ import { THeader } from '@peiko/components/Table/types'
 import { useRedux } from '@/hooks/use-redux'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
+import { ELeadsSortBy } from '@/api-rest/leads/types'
+import { HeaderWithSort } from '@/components/HeaderWithSort'
 import { StatusChip } from '../../components/StatusChip'
 import { InfoColumn } from '../../components/InfoColumn'
-import { selectIsLoading, selectLeadsList } from '../../store/leads'
+import { selectIsLoading, selectLeadsList, setLeadsSortBy } from '../../store/leads'
 import { LeadsSelect } from '../LeadsSelect'
 
 type TLeadsRowKeys =
@@ -25,7 +27,7 @@ type TLeadsRowKeys =
 
 export const LeadsListTable = memo((): JSX.Element => {
   const { t } = useTranslation('leads-list')
-  const { select } = useRedux()
+  const { select, dispatch } = useRedux()
 
   const { data, isLoading } = select(
     createStructuredSelector({
@@ -36,12 +38,60 @@ export const LeadsListTable = memo((): JSX.Element => {
   )
 
   const headers: THeader<TLeadsRowKeys>[] = [
-    { label: t('headers.lead-id'), value: 'leadId' },
-    { label: t('headers.lead-name'), value: 'name' },
-    { label: t('headers.lead-phone'), value: 'phone' },
-    { label: t('headers.lead-timezone'), value: 'timezone' },
-    { label: t('headers.lead-status'), value: 'status' },
-    { label: t('headers.lead-source'), value: 'source' },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('headers.lead-id')}
+          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.CREATED_AT))}
+        />
+      ),
+      value: 'leadId',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('headers.lead-name')}
+          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.NAME))}
+        />
+      ),
+      value: 'name',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('headers.lead-phone')}
+          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.PHONE))}
+        />
+      ),
+      value: 'phone',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('headers.lead-timezone')}
+          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.TIMEZONE))}
+        />
+      ),
+      value: 'timezone',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('headers.lead-status')}
+          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.STATUS))}
+        />
+      ),
+      value: 'status',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('headers.lead-source')}
+          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.SOURCE))}
+        />
+      ),
+      value: 'source',
+    },
     { label: <LeadsSelect maxMenuHeight={200} width="213px" />, value: 'selectLeads' },
   ]
 

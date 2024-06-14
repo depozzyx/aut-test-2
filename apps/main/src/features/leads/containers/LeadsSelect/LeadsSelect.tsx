@@ -49,7 +49,7 @@ export const LeadsSelect: FC<
   const onMenuScrollToBottom = () => {
     const lastPage = total === 0 ? 1 : Math.ceil(total / (limit ?? 15))
     if (page < lastPage)
-      dispatch(getLeadsGroups({ page: page + 1, limit, orderBy: 'ASC' }))
+      dispatch(getLeadsGroups({ page: page + 1, limit, orderBy: 'DESC' }))
   }
 
   return (
