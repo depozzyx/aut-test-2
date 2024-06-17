@@ -1,6 +1,6 @@
 {
   "title": "API Key Management",
-  "generate": "Generate api key",
+  "generate": "Generate API key",
   "table-headers": {
     "action": "Action",
     "api-key": "API key",
