@@ -164,10 +164,12 @@ export const selectAssignedCampaignsInfo = createSelector(
 export default agents.reducer
 
 export const asyncGetAgentsList =
-  (params: TAgentsReq, append = false): TAsyncAction =>
+  (params: TAgentsReq, append = false, withLoading = true): TAsyncAction =>
   async (dispatch) => {
     try {
-      dispatch(setIsLoading(true))
+      if (withLoading) {
+        dispatch(setIsLoading(true))
+      }
       const {
         data: { data, pagination },
       } = await apiAgents.getAgentsList(params)
@@ -176,7 +178,9 @@ export const asyncGetAgentsList =
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
-      dispatch(setIsLoading(false))
+      if (withLoading) {
+        dispatch(setIsLoading(false))
+      }
     }
   }
 

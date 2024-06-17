@@ -77,23 +77,23 @@ export const CreateCampaignForm = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(resetLeadsList())
-    dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS))
-  }, [])
-
-  useEffect(() => {
     dispatch(resetAgentsList())
     dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS))
+    dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS))
   }, [])
 
   const onLeadsScrollToBottom = () => {
     const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 15))
     if (leadsPage < lastPage)
       dispatch(
-        asyncGetLeadListCatalog({
-          page: leadsPage + 1,
-          limit: leadsLimit,
-          orderBy: 'ASC',
-        }),
+        asyncGetLeadListCatalog(
+          {
+            page: leadsPage + 1,
+            limit: leadsLimit,
+            orderBy: 'ASC',
+          },
+          false,
+        ),
       )
   }
 
@@ -108,6 +108,7 @@ export const CreateCampaignForm = (): JSX.Element => {
             orderBy: 'ASC',
           },
           true,
+          false,
         ),
       )
   }
