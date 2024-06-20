@@ -11,6 +11,7 @@ import {
   TLeadsListReq,
 } from '@/api-rest/leads/types'
 import { TFormik } from '@peiko/types/formik'
+import { TOrderBy } from '@/types/entities/orderBy'
 import { TImportError, TPreparedFiles } from '../types/files'
 import { dataURIToBlob } from '../utils/dataURIToBlob'
 
@@ -24,6 +25,7 @@ export type TInit = {
   selectError?: string
   filesForImport: TPreparedFiles[]
   sortBy?: ELeadsSortBy
+  orderBy: TOrderBy
 }
 
 const init: TInit = {
@@ -41,6 +43,7 @@ const init: TInit = {
   isLoading: true,
   leadsGroups: [],
   filesForImport: [],
+  orderBy: 'DESC',
 }
 
 const leads = createSlice({
@@ -81,6 +84,8 @@ const leads = createSlice({
       state.selectedLeadsGroup = action.payload
     },
     setLeadsSortBy(state, action: PayloadAction<TInit['sortBy']>) {
+      if (action.payload === state.sortBy)
+        state.orderBy = state.orderBy === 'DESC' ? 'ASC' : 'DESC'
       state.sortBy = action.payload
     },
     setSelectError(state, action: PayloadAction<TInit['selectError']>) {
@@ -138,6 +143,7 @@ export const selectLeadsGroup = createSelector(
 )
 
 export const selectLeadsSortBy = createSelector(selectLeads, ({ sortBy }) => sortBy)
+export const selectLeadsOrderBy = createSelector(selectLeads, ({ orderBy }) => orderBy)
 
 export const selectLeadsGroupError = createSelector(
   selectLeads,
