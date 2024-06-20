@@ -12,6 +12,7 @@ import {
   reset,
   selectLeadsGroup,
   selectLeadsGroupPagination,
+  selectLeadsOrderBy,
   selectLeadsPagination,
   selectLeadsSortBy,
 } from './store/leads'
@@ -26,12 +27,14 @@ export const LeadsList: FC = () => {
     leadsGroup,
     groupsPagination,
     sortBy,
+    orderBy,
   } = select(
     createStructuredSelector({
       pagination: selectLeadsPagination,
       groupsPagination: selectLeadsGroupPagination,
       leadsGroup: selectLeadsGroup,
       sortBy: selectLeadsSortBy,
+      orderBy: selectLeadsOrderBy,
     }),
     shallowEqual,
   )
@@ -42,10 +45,8 @@ export const LeadsList: FC = () => {
 
   useEffect(() => {
     if (secondMount)
-      dispatch(
-        getLeadList({ page: 1, limit, orderBy: 'DESC', leadListId: leadsGroup, sortBy }),
-      )
-  }, [leadsGroup, secondMount, sortBy])
+      dispatch(getLeadList({ page: 1, limit, orderBy, leadListId: leadsGroup, sortBy }))
+  }, [leadsGroup, secondMount, sortBy, orderBy])
 
   useUnmount(() => {
     dispatch(reset())
