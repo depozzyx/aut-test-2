@@ -69,10 +69,12 @@ export const selectLeadListCatalogAsOptions = createSelector(
 export default leadList.reducer
 
 export const asyncGetLeadListCatalog =
-  (params: TLeadListCatalogReq): TAsyncAction =>
+  (params: TLeadListCatalogReq, withLoading = true): TAsyncAction =>
   async (dispatch) => {
     try {
-      dispatch(setIsLoading(true))
+      if (withLoading) {
+        dispatch(setIsLoading(true))
+      }
       const { data } = await apiLeadList.getLeadListCatalog(params)
 
       dispatch(setLeadListCatalog(data.data))
@@ -80,6 +82,8 @@ export const asyncGetLeadListCatalog =
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
-      dispatch(setIsLoading(false))
+      if (withLoading) {
+        dispatch(setIsLoading(false))
+      }
     }
   }

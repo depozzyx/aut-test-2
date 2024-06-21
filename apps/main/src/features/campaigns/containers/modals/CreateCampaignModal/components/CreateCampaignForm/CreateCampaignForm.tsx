@@ -17,6 +17,7 @@ import {
   selectLeadListPagination,
   selectLeadListCatalogAsOptions,
   selectIsLoadingLeadsCatalog,
+  reset as resetLeadsList,
 } from '@/features/leads/store/lead-list'
 import { Loader } from '@peiko/components/loaders/Loader'
 import { TGeneratedCallTime } from '@/features/campaigns/constants'
@@ -27,8 +28,12 @@ import {
   selectAgentsPagination,
   selectAgentsOptions,
   selectIsLoadingAgents,
+  reset as resetAgentsList,
 } from '@/features/agents/store/agents'
+import { TOrderBy } from '@/types/entities/orderBy'
 import { createCampaignValidationSchema } from './validationSchema'
+
+const INITIAL_REQUEST_PARAMS = { page: 1, limit: 10, orderBy: 'ASC' as TOrderBy }
 
 export const CreateCampaignForm = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
@@ -71,24 +76,24 @@ export const CreateCampaignForm = (): JSX.Element => {
   })
 
   useEffect(() => {
-    dispatch(
-      asyncGetLeadListCatalog({ page: leadsPage, limit: leadsLimit, orderBy: 'ASC' }),
-    )
-  }, [])
-
-  useEffect(() => {
-    dispatch(asyncGetAgentsList({ page: agentsPage, limit: agentsLimit, orderBy: 'ASC' }))
+    dispatch(resetLeadsList())
+    dispatch(resetAgentsList())
+    dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS))
+    dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS))
   }, [])
 
   const onLeadsScrollToBottom = () => {
     const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 15))
     if (leadsPage < lastPage)
       dispatch(
-        asyncGetLeadListCatalog({
-          page: leadsPage + 1,
-          limit: leadsLimit,
-          orderBy: 'ASC',
-        }),
+        asyncGetLeadListCatalog(
+          {
+            page: leadsPage + 1,
+            limit: leadsLimit,
+            orderBy: 'ASC',
+          },
+          false,
+        ),
       )
   }
 
@@ -103,6 +108,7 @@ export const CreateCampaignForm = (): JSX.Element => {
             orderBy: 'ASC',
           },
           true,
+          false,
         ),
       )
   }

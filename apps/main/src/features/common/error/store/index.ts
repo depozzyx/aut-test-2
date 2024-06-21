@@ -9,6 +9,7 @@ type TInitialState = {
   }
   errorPage: TPageError
   networkError: boolean
+  socketError: boolean
 }
 
 const initialState: TInitialState = {
@@ -18,6 +19,7 @@ const initialState: TInitialState = {
   },
   errorPage: null,
   networkError: false,
+  socketError: false,
 }
 
 const errorState = createSlice({
@@ -39,6 +41,9 @@ const errorState = createSlice({
     },
     setNetworkError(state, action: PayloadAction<TInitialState['networkError']>) {
       state.networkError = action.payload
+    },
+    setSocketError(state, action: PayloadAction<TInitialState['socketError']>) {
+      state.socketError = action.payload
     },
   },
 })

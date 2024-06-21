@@ -12,6 +12,8 @@ import { useAuth } from '@/features/common/user'
 import { TFlexComponentProps } from '@/components/Flex/types'
 import { TUserRoles } from '@/types/roles'
 import { ERoles } from '@/constants/profile'
+import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { Divider, ItemWrapper } from './ProfilePopover.styled'
 
 export interface IProfilePopoverProps {
@@ -45,13 +47,18 @@ export const ProfilePopover = ({
   userRole = 'manager',
 }: IProfilePopoverProps): JSX.Element => {
   const { t } = useTranslation('user')
+  const { setModal } = useModals()
 
   const router = useRouter()
 
   const { logoutAsync } = useAuth()
 
   const handleLogout = () => {
-    logoutAsync()
+    if (userRole === 'agent') {
+      setModal({ modalName: MODAL_NAMES.AGENT_LOGOUT, isOpen: true })
+    } else {
+      logoutAsync()
+    }
   }
 
   const handleGoToSettings = () => {
@@ -59,7 +66,7 @@ export const ProfilePopover = ({
   }
 
   return (
-    <Flex direction="column" align="center" gap={48}>
+    <Flex direction="column" align="center" gap={30}>
       <Flex direction="column" align="center" gap={8}>
         <UserRoleIcon userRole={userRole} iconSize="28px" variant="medium" />
         <Flex direction="column" align="center">

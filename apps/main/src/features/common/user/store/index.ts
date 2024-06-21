@@ -6,18 +6,22 @@ import { apiAuth } from '@/api-rest/auth'
 import { authorized } from '@/browser-api/authorized'
 import { apiProfile } from '@/api-rest/profile'
 import { TProfile } from '@/types/entities/profile'
+import { apiAgents } from '@/api-rest/agents'
+import { TPbxAuthRes } from '@/api-rest/agents/types'
 // import { ROUTES } from '@/constants/routes'
 
 export type TInit = {
   userFetching: boolean
   loading: boolean
   user: TProfile | null
+  pbxAuth: TPbxAuthRes['data'] | null
 }
 
 const init: TInit = {
   userFetching: true,
   loading: false,
   user: null,
+  pbxAuth: null,
 }
 
 const userState = createSlice({
@@ -33,6 +37,9 @@ const userState = createSlice({
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload
     },
+    setPBXAuth(state, action: PayloadAction<TPbxAuthRes['data']>) {
+      state.pbxAuth = action.payload
+    },
     removeUser(state) {
       state.user = null
     },
@@ -40,7 +47,7 @@ const userState = createSlice({
 })
 
 // actions
-const { setUser, setUserFetching, setLoading, removeUser } = userState.actions
+const { setUser, setPBXAuth, setUserFetching, setLoading, removeUser } = userState.actions
 // selectors
 const userSelector: TSelector<TInit> = (state) => state.user
 
@@ -61,6 +68,12 @@ const getProfile = (): TAsyncAction => async (dispatch) => {
     }
     const { data } = await apiProfile.get()
     dispatch(setUser(data.data))
+    if (data.data.role === 'agent') {
+      const {
+        data: { data },
+      } = await apiAgents.getPBXAuth()
+      dispatch(setPBXAuth(data))
+    }
   } catch (e) {
     handleRestError({
       e,

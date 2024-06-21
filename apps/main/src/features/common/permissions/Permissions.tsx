@@ -4,6 +4,7 @@ import { ROUTES } from '@/routes'
 import { RoleGuard } from '@/features/common/permissions/RoleGuard'
 import { InitLoader } from '../user/InitLoader'
 import { useAuth } from '../user'
+import { AgentLogout } from '../agentStatus/AgentLogout'
 
 type TProps = {
   children: JSX.Element
@@ -27,7 +28,10 @@ export const Permissions: React.FC<TProps> = ({ children, roles }) => {
 
   return (
     <RoleGuard roles={roles} user={user}>
-      {user && children}
+      <>
+        {user?.role === 'agent' && <AgentLogout />}
+        {user && children}
+      </>
     </RoleGuard>
   )
 }

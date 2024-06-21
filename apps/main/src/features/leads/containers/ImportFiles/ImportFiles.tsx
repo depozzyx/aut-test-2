@@ -48,7 +48,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   }
 
   const onButtonClick = () => {
-    fetch('files/sample_leads.csv').then((response) => {
+    fetch('/files/sample_leads.csv').then((response) => {
       response.blob().then((blob) => {
         if (typeof window !== 'undefined') {
           const fileURL = window.URL.createObjectURL(blob)

@@ -6,5 +6,6 @@
   "500-desc": "Something went wrong. You can use the menu or return to home page.",
   "default-message": "Something went wrong",
   "network-error-message": "No internet connection",
-  "global-error-close": "Close"
+  "global-error-close": "Close",
+  "socket-connection": "No socket Connection"
 }

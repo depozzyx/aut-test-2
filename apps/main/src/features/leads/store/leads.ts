@@ -5,11 +5,13 @@ import { TLeadsGroup, TLeadsList } from '@/types/leads/leads-list'
 import { handleRestError } from '@/features/common/error'
 import { leadsApi } from '@/api-rest/leads'
 import {
+  ELeadsSortBy,
   TCreateLeadGroupReq,
   TLeadsGroupReq,
   TLeadsListReq,
 } from '@/api-rest/leads/types'
 import { TFormik } from '@peiko/types/formik'
+import { TOrderBy } from '@/types/entities/orderBy'
 import { TImportError, TPreparedFiles } from '../types/files'
 import { dataURIToBlob } from '../utils/dataURIToBlob'
 
@@ -22,6 +24,8 @@ export type TInit = {
   selectedLeadsGroup?: TLeadsGroup['id']
   selectError?: string
   filesForImport: TPreparedFiles[]
+  sortBy?: ELeadsSortBy
+  orderBy: TOrderBy
 }
 
 const init: TInit = {
@@ -39,6 +43,7 @@ const init: TInit = {
   isLoading: true,
   leadsGroups: [],
   filesForImport: [],
+  orderBy: 'DESC',
 }
 
 const leads = createSlice({
@@ -78,6 +83,11 @@ const leads = createSlice({
     setLeadsGroup(state, action: PayloadAction<TLeadsGroup['id']>) {
       state.selectedLeadsGroup = action.payload
     },
+    setLeadsSortBy(state, action: PayloadAction<TInit['sortBy']>) {
+      if (action.payload === state.sortBy)
+        state.orderBy = state.orderBy === 'DESC' ? 'ASC' : 'DESC'
+      state.sortBy = action.payload
+    },
     setSelectError(state, action: PayloadAction<TInit['selectError']>) {
       state.selectError = action.payload
     },
@@ -103,6 +113,7 @@ export const {
   deleteImportFile,
   setSelectError,
   setLeadsGroupPagination,
+  setLeadsSortBy,
   reset,
 } = leads.actions
 // selectors
@@ -130,6 +141,9 @@ export const selectLeadsGroup = createSelector(
   selectLeads,
   ({ selectedLeadsGroup }) => selectedLeadsGroup,
 )
+
+export const selectLeadsSortBy = createSelector(selectLeads, ({ sortBy }) => sortBy)
+export const selectLeadsOrderBy = createSelector(selectLeads, ({ orderBy }) => orderBy)
 
 export const selectLeadsGroupError = createSelector(
   selectLeads,
@@ -162,7 +176,7 @@ export const getLeadList =
   }
 
 export const getLeadsGroups =
-  (params: TLeadsGroupReq): TAsyncAction =>
+  (params: TLeadsGroupReq, onSuccess?: () => void): TAsyncAction =>
   async (dispatch) => {
     try {
       const {
@@ -170,6 +184,7 @@ export const getLeadsGroups =
       } = await leadsApi.leadsGroup(params)
       dispatch(setLeadsGroups(data))
       dispatch(setLeadsGroupPagination(pagination))
+      onSuccess?.()
     } catch (e) {
       handleRestError({ e, dispatch })
     }
@@ -193,9 +208,13 @@ export const createLeadsGroups =
         },
       } = _store()
 
-      await leadsApi.createLeadGroup(formData)
+      const { data } = await leadsApi.createLeadGroup(formData)
 
-      dispatch(getLeadsGroups({ page, limit, orderBy: 'ASC' }))
+      dispatch(
+        getLeadsGroups({ page, limit, orderBy: 'DESC' }, () =>
+          dispatch(setLeadsGroup(data.data.id)),
+        ),
+      )
       onSuccess()
     } catch (e) {
       handleRestError({ e, dispatch, formik })

@@ -1,0 +1,25 @@
+{
+  "title": "API Key Management",
+  "generate": "Generate API key",
+  "table-headers": {
+    "action": "Action",
+    "api-key": "API key",
+    "creation-date": "Creation date"
+  },
+  "revoke": "Revoke",
+  "generate-api-key": {
+    "title": "Generating new API key",
+    "start": "Start",
+    "cancel": "Cancel"
+  },
+  "confirm-new-api-key": {
+    "title": "New API key",
+    "field-label": "API key",
+    "done": "Done"
+  }, 
+  "revoke-api-key": {
+    "title": "Are you sure you want to revoke API key?",
+    "revoke": "Revoke",
+    "cancel": "Cancel"
+  }
+}
