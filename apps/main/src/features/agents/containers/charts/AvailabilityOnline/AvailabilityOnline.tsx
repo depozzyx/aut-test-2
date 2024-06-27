@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { Text } from '@peiko/components/Text'
 import { Flex } from '@/components/Flex'
@@ -11,7 +10,6 @@ import {
 import { useRedux } from '@/hooks/use-redux'
 import { SimpleLineChart } from '@/components/charts/SimpleLineChart'
 import { Loader } from '@peiko/components/loaders/Loader'
-import { mockAvailabilityOnline } from '@/features/agents/mocks/analytics'
 import { SLCCustomYAxis } from '@/components/charts/components/SLCCustomYAxis'
 
 export const AvailabilityOnline = (): JSX.Element => {
@@ -24,11 +22,6 @@ export const AvailabilityOnline = (): JSX.Element => {
       data: selectAvailailityOnlineData,
     }),
     shallowEqual,
-  )
-
-  const isEveryValueNull = useMemo(
-    () => data.every((item) => item.availability === 0),
-    [data],
   )
 
   return (
@@ -47,7 +40,7 @@ export const AvailabilityOnline = (): JSX.Element => {
         <Loader />
       ) : (
         <SimpleLineChart
-          data={isEveryValueNull ? mockAvailabilityOnline : data}
+          data={data}
           YAxisCustom={SLCCustomYAxis}
           valueKey="availability"
           customLabel={{ availability: t('availability-online') }}

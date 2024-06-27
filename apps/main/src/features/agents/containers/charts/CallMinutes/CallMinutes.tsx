@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
@@ -11,7 +10,6 @@ import { Text } from '@peiko/components/Text'
 import { Flex } from '@/components/Flex'
 import { SimpleLineChart } from '@/components/charts/SimpleLineChart'
 import { Loader } from '@peiko/components/loaders/Loader'
-import { mockTimeOnline } from '@/features/agents/mocks/analytics'
 import { SLCCustomYAxis } from '@/components/charts/components/SLCCustomYAxis'
 
 export const CallMinutes = (): JSX.Element => {
@@ -25,11 +23,6 @@ export const CallMinutes = (): JSX.Element => {
       data: selectCallMinutesData,
     }),
     shallowEqual,
-  )
-
-  const isEveryValueNull = useMemo(
-    () => data.every((item) => item.callMinutes === 0),
-    [data],
   )
 
   return (
@@ -48,7 +41,7 @@ export const CallMinutes = (): JSX.Element => {
         <Loader />
       ) : (
         <SimpleLineChart
-          data={isEveryValueNull ? mockTimeOnline : data}
+          data={data}
           YAxisCustom={SLCCustomYAxis}
           valueKey="callMinutes"
           customLabel={{ callMinutes: t('call-minutes') }}

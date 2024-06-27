@@ -9,7 +9,6 @@ import { useRedux } from '@/hooks/use-redux'
 import { Text } from '@peiko/components/Text'
 import { Flex } from '@/components/Flex'
 import { Loader } from '@peiko/components/loaders/Loader'
-import { mockCallSuccess } from '@/features/agents/mocks/analytics'
 import { Chart } from './components/Chart'
 
 export const CallSuccess = (): JSX.Element => {
@@ -24,13 +23,6 @@ export const CallSuccess = (): JSX.Element => {
     shallowEqual,
   )
 
-  const isEveryValueNull = data.every(
-    (item) =>
-      item.successfulCalls === 0 &&
-      item.undeterminedCalls === 0 &&
-      item.unsuccessfulCalls === 0,
-  )
-
   return (
     <Flex direction="column" gap={18} width="100%" height={536}>
       <Text
@@ -43,11 +35,7 @@ export const CallSuccess = (): JSX.Element => {
       >
         {t('average-call-duration')}
       </Text>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <Chart data={isEveryValueNull ? mockCallSuccess : data} />
-      )}
+      {isLoading ? <Loader /> : <Chart data={data} />}
     </Flex>
   )
 }
