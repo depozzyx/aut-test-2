@@ -6,6 +6,8 @@ import { TOrderBy } from '@/types/entities/orderBy'
 export type TCreateAgentReq = {
   username: string
   email: string
+  password?: string
+  sendToEmail: boolean
 }
 
 export type TAssignedCampaign = {
@@ -69,7 +71,9 @@ export type TChangeWorkStatusReq = {
 
 export type TChangeWorkStatusRes = TCreateAgentRes
 
-export type TUpdateAgentReq = TCreateAgentReq & {
+export type TUpdateAgentReq = {
+  username: string
+  email: string
   id: number
 }
 

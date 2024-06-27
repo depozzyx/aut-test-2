@@ -6,6 +6,7 @@ import { apiAgents } from '@/api-rest/agents'
 import { FormikHelpers } from 'formik'
 import { TFormPropsAsync } from '@peiko/types/formik'
 import { notificationActions } from '@/features/common/notifications/store'
+import { TCreateAgentFormData } from '@/features/agents/types'
 
 export type TInit = {
   isLoading: boolean
@@ -46,13 +47,21 @@ export const asyncCreateAgent =
   ({
     formData,
     formik,
-  }: TFormPropsAsync<TCreateAgentReq> & {
-    formik?: FormikHelpers<TCreateAgentReq>
+  }: TFormPropsAsync<TCreateAgentFormData> & {
+    formik?: FormikHelpers<TCreateAgentFormData>
   }): TAsyncAction =>
   async (dispatch) => {
     try {
       dispatch(setIsLoading(true))
-      const { data } = await apiAgents.createAgent(formData)
+
+      const dataToSend: TCreateAgentReq = {
+        username: formData.username,
+        email: formData.email,
+        sendToEmail: formData.sendToEmail,
+        ...(formData.password && { password: formData.password }),
+      }
+
+      const { data } = await apiAgents.createAgent(dataToSend)
       dispatch(setCreatedAgentData(data.data))
       const agentName = data.data.username
       dispatch(
