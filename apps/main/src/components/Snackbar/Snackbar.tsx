@@ -12,6 +12,7 @@ export interface ISnackbarProps {
   onClose: () => void
   maxWidth?: string
   withAnimation?: boolean
+  height?: string
 }
 
 export const Snackbar: FC<ISnackbarProps> = ({
@@ -20,12 +21,13 @@ export const Snackbar: FC<ISnackbarProps> = ({
   message,
   onClose,
   maxWidth = '552px',
-  withAnimation,
+  withAnimation = true,
   children,
 }) => {
   const [slideOut, setSlideOut] = useState(false)
 
   const [, cancel, reset] = useTimeoutFn(() => {
+    if (!withAnimation) return
     setSlideOut(true)
     setTimeout(onClose, 500)
   }, 5000)
@@ -43,7 +45,7 @@ export const Snackbar: FC<ISnackbarProps> = ({
         </Text>
       )}
       {message && (
-        <Text variant="f10" color="main19">
+        <Text variant="f10" color="main19" styles={{ whiteSpace: 'normal' }}>
           {message}
         </Text>
       )}

@@ -1,3 +1,4 @@
+import { useState, useMemo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { Flex } from '@/components/Flex'
 import { useFormik } from 'formik'
@@ -10,30 +11,50 @@ import {
   asyncCreateAgent,
   selectCreateAgentsIsLoading,
 } from '@/features/agents/store/create-agent'
+import { FormikCheckbox } from '@peiko/components/inputs/formik-adapters/FormikCheckbox'
+import { Snackbar } from '@/components/Snackbar'
 
 export const CreateAgent = (): JSX.Element => {
+  const [showMessage, setShowMessage] = useState(true)
   const { t } = useTranslation('agents')
   const { select, dispatch } = useRedux()
   const isLoading = select(selectCreateAgentsIsLoading)
+
+  const validationSchema = useMemo(
+    () =>
+      yup.object().shape({
+        username: validation.required,
+        email: validation.email.required(),
+        sendToEmail: validation.boolean,
+        password: yup.string(),
+      }),
+    [],
+  )
 
   const formik = useFormik({
     initialValues: {
       username: '',
       email: '',
+      sendToEmail: true,
+      password: '',
     },
-    validationSchema: yup.object().shape({
-      username: validation.required,
-      email: validation.email.required(),
-    }),
+    validationSchema,
     onSubmit: (formData) => {
       dispatch(asyncCreateAgent({ formData, formik }))
     },
   })
 
   return (
-    <Flex width="100%" height="100%" align="center" justify="center">
+    <Flex
+      width="100%"
+      height="100%"
+      align="center"
+      justify="center"
+      direction="column"
+      gap={40}
+    >
       <form onSubmit={formik.handleSubmit} autoComplete="off">
-        <Flex direction="column" align="center" gap={48} margin="40px 0 0 0">
+        <Flex direction="column" align="center" gap={40} margin="40px 0 0 0">
           <Flex gap={24}>
             <Flex direction="column" gap={16} maxWidth="326px" width="100%">
               <FormikInput
@@ -54,6 +75,23 @@ export const CreateAgent = (): JSX.Element => {
                 width={326}
                 styles={{ padding: '0 14px' }}
               />
+              <FormikInput
+                size="s"
+                name="password"
+                label={{ label: t('create-agent.password') }}
+                id="password"
+                formik={formik}
+                width={326}
+                styles={{ padding: '0 14px' }}
+              />
+              {formik.values.password && (
+                <FormikCheckbox
+                  size="s"
+                  name="sendToEmail"
+                  label={t('create-agent.send-password')}
+                  formik={formik}
+                />
+              )}
             </Flex>
           </Flex>
           <Flex align="center" justify="center" gap={24}>
@@ -68,6 +106,15 @@ export const CreateAgent = (): JSX.Element => {
           </Flex>
         </Flex>
       </form>
+      {showMessage && (
+        <Snackbar
+          status="info"
+          onClose={() => setShowMessage(false)}
+          message={t('create-agent.message')}
+          withAnimation={false}
+          maxWidth="326px"
+        />
+      )}
     </Flex>
   )
 }

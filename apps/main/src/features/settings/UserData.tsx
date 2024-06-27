@@ -1,13 +1,14 @@
 import { Card } from '@peiko/components/Card'
 import { useFormik } from 'formik'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC } from 'react'
+import { FC, useMemo } from 'react'
 import * as yup from 'yup'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { Box } from '@peiko/components/Box'
 import { validation } from '@/utils/validation'
 import { useTheme } from 'styled-components'
+import { USER_ROLES } from '@/types/roles'
 import { useAuth } from '../common/user'
 import { CardTile } from './components/CardTile'
 import { useUpdateProfile } from './hooks/useUpdateProfile'
@@ -30,6 +31,19 @@ export const UserData: FC = () => {
       if (username) updateProfileAsync({ formData: { username }, formik })
     },
   })
+
+  const isAgent = useMemo(() => user?.role === USER_ROLES.AGENT, [user?.role])
+
+  const agentInputProps = useMemo(
+    () =>
+      isAgent
+        ? {
+            readOnly: true,
+            inputProps: { style: { color: palette.main22 } },
+          }
+        : {},
+    [isAgent],
+  )
 
   return (
     <Card
@@ -62,16 +76,19 @@ export const UserData: FC = () => {
             name="username"
             label={{ label: t('changeName.username') }}
             placeholder={t('changeName.username')}
+            {...agentInputProps}
           />
-          <FilledButton
-            size="s"
-            styles={{ marginLeft: '24px', marginTop: '22px' }}
-            width="134px"
-            type="submit"
-            isLoading={formik.isSubmitting}
-          >
-            {t('changeName.save')}
-          </FilledButton>
+          {!isAgent && (
+            <FilledButton
+              size="s"
+              styles={{ marginLeft: '24px', marginTop: '22px' }}
+              width="134px"
+              type="submit"
+              isLoading={formik.isSubmitting}
+            >
+              {t('changeName.save')}
+            </FilledButton>
+          )}
         </Box>
       </form>
     </Card>
