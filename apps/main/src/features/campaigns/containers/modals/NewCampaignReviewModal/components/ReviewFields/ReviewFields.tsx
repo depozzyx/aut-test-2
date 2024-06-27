@@ -44,7 +44,7 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
     if (!formDataForReview) return
     if (formDataForReview.assignedAgentIds.length > 1) {
       return t('review-campaign.agents', {
-        count: formDataForReview.assignedAgentIds.length + 1,
+        count: formDataForReview.assignedAgentIds.length,
       })
     }
     return `${formDataForReview.assignedAgentIds}`
@@ -54,7 +54,7 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
     if (!formDataForReview) return
     if (formDataForReview.leadListIdsLabel.length > 1) {
       return t('review-campaign.leads', {
-        count: formDataForReview.leadListIdsLabel.length + 1,
+        count: formDataForReview.leadListIdsLabel.length,
       })
     }
     return `${formDataForReview.leadListIdsLabel}`
