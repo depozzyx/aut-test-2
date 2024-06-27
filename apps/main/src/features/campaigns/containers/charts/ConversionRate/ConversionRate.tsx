@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
@@ -7,7 +6,6 @@ import { Text } from '@peiko/components/Text'
 import { Flex } from '@/components/Flex'
 import { SimpleLineChart } from '@/components/charts/SimpleLineChart'
 import { Loader } from '@peiko/components/loaders/Loader'
-import { mockConversionRate } from '@/features/campaigns/mocks/analytics'
 import {
   selectConversionRateData,
   selectIsLoading,
@@ -26,11 +24,6 @@ export const ConversionRate = (): JSX.Element => {
     shallowEqual,
   )
 
-  const isEveryValueNull = useMemo(
-    () => data.every((item) => item.conversionRate === 0),
-    [data],
-  )
-
   return (
     <Flex direction="column" gap={18} width="100%" height={536}>
       <Text
@@ -47,7 +40,7 @@ export const ConversionRate = (): JSX.Element => {
         <Loader />
       ) : (
         <SimpleLineChart
-          data={isEveryValueNull ? mockConversionRate : data}
+          data={data}
           valueKey="conversionRate"
           customLabel={{ conversionRate: t('conversion-rate') }}
         />

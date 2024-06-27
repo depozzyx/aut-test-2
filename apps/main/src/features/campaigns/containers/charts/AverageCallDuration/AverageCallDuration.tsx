@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
@@ -7,7 +6,6 @@ import { Text } from '@peiko/components/Text'
 import { Flex } from '@/components/Flex'
 import { SimpleLineChart } from '@/components/charts/SimpleLineChart'
 import { Loader } from '@peiko/components/loaders/Loader'
-import { mockAverageCallDuration } from '@/features/campaigns/mocks/analytics'
 import { SLCCustomYAxis } from '@/components/charts/components/SLCCustomYAxis'
 import {
   selectAverageCallDurationData,
@@ -27,11 +25,6 @@ export const AverageCallDuration = (): JSX.Element => {
     shallowEqual,
   )
 
-  const isEveryValueNull = useMemo(
-    () => data.every((item) => item.averageCallDuration === 0),
-    [data],
-  )
-
   return (
     <Flex direction="column" gap={18} width="100%" height={536}>
       <Text
@@ -48,7 +41,7 @@ export const AverageCallDuration = (): JSX.Element => {
         <Loader />
       ) : (
         <SimpleLineChart
-          data={isEveryValueNull ? mockAverageCallDuration : data}
+          data={data}
           YAxisCustom={SLCCustomYAxis}
           valueKey="averageCallDuration"
           customLabel={{ averageCallDuration: t('average-callDuration') }}

@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
@@ -11,7 +10,6 @@ import {
   selectAnswerRateData,
   selectIsLoading,
 } from '@/features/campaigns/store/campaign-analytics'
-import { mockCallAnswerRate } from '@/features/campaigns/mocks/analytics'
 
 export const CallAnswerRate = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
@@ -24,11 +22,6 @@ export const CallAnswerRate = (): JSX.Element => {
       data: selectAnswerRateData,
     }),
     shallowEqual,
-  )
-
-  const isEveryValueNull = useMemo(
-    () => data.every((item) => item.callAnswerRate === 0),
-    [data],
   )
 
   return (
@@ -47,7 +40,7 @@ export const CallAnswerRate = (): JSX.Element => {
         <Loader />
       ) : (
         <SimpleLineChart
-          data={isEveryValueNull ? mockCallAnswerRate : data}
+          data={data}
           valueKey="callAnswerRate"
           customLabel={{ callAnswerRate: t('callAnswer-rate') }}
         />
