@@ -32,11 +32,11 @@ export const Modal = memo(
     useEffect(() => setIsClient(true), [])
 
     useClickAway(containerRef, (event) => {
-      const ignore = event
-        .composedPath()
-        .some((item) =>
-          (item as HTMLDivElement)?.className?.includes('multi-rs__clear-indicator'),
-        )
+      const ignore = event.composedPath().some((item) => {
+        if (!(item instanceof HTMLElement)) return false
+
+        return item.className.includes('multi-rs__clear-indicator')
+      })
 
       if (disableCloseOutside || ignore) return
       onClose?.()
