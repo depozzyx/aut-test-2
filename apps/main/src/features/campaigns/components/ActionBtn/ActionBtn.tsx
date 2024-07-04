@@ -14,10 +14,10 @@ export const ActionBtn = ({ status, onClick }: IActionBtnProps): JSX.Element => 
 
   switch (status) {
     case 'active':
-      icon = <PlayIcon width="24px" height="24px" />
+      icon = <StopIcon width="24px" height="24px" />
       break
     case 'pause':
-      icon = <StopIcon width="24px" height="24px" />
+      icon = <PlayIcon width="24px" height="24px" />
       break
     case 'complete':
       icon = <PlayIcon color="main22" width="24px" height="24px" />

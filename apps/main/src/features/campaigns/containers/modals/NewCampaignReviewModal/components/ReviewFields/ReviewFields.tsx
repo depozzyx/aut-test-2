@@ -12,9 +12,6 @@ import {
   reset,
   asyncCreateCampaign,
 } from '@/features/campaigns/store/create-campaign'
-import { useCallTime } from '@/features/campaigns/hooks/use-callTime'
-import { useCallFrequency } from '@/features/campaigns/hooks/use-callFrequency'
-import { TGeneratedCallTime } from '@/features/campaigns/constants'
 import { TCampaignTableType } from '@/features/campaigns/types'
 import { Field } from './ReviewFields.styled'
 
@@ -27,9 +24,6 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
   const { setModal } = useModals()
   const { select, dispatch } = useRedux()
   const formDataForReview = select(selectFormDataForReview, shallowEqual)
-
-  const { getCallTimeLabel } = useCallTime()
-  const { getCallFrequencyLabel } = useCallFrequency()
 
   const handleBack = () => {
     dispatch(reset())
@@ -73,16 +67,6 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
         />
         <Field label={t('create-campaign.agent-assignment')} value={agents} />
         <Field label={t('create-campaign.lead-selection')} value={leads} />
-        <Field
-          label={t('create-campaign.call-frequency')}
-          value={getCallFrequencyLabel(formDataForReview.intensity)}
-        />
-        <Field
-          label={t('create-campaign.time-for-calls')}
-          value={getCallTimeLabel(
-            formDataForReview.preferredCallTime as TGeneratedCallTime,
-          )}
-        />
       </Flex>
       <Flex align="center" justify="center" gap={24}>
         <OutlinedButton onClick={handleCreateCampaign} width="236px">

@@ -3,7 +3,6 @@ import useSWR from 'swr'
 import { useRedux } from '@/hooks/use-redux'
 import { handleRestError } from '@/features/common/error'
 import { TPagination } from '@/types/entities/pagination'
-import { setAgentNameFilter } from '@/features/agents/store/agent-analytics'
 import {
   TActiveCampaign,
   TCampaign,
@@ -12,6 +11,7 @@ import {
 import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { TCampaignListReq } from '@/api-rest/campaigns/types'
+import { setFilterCampaignName } from '@/features/campaigns/store/campaigns'
 
 type TUniversalCampaign = TActiveCampaign | TCampaign
 
@@ -69,7 +69,7 @@ export const useCampaignNameFilter = (
           value: useIdForValue ? campaign.id : campaign.name,
         }))
         if (formattedData.length > 0 && !campaignOptions.length && useIdForValue) {
-          dispatch(setAgentNameFilter(formattedData[0].value))
+          dispatch(setFilterCampaignName(formattedData[0].value))
         }
         setCampaignOptions((prev) => [...prev, ...formattedData])
         setPagination(data.pagination)
