@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import JsSIP, { UA } from 'jssip'
 import {
   UAConfiguration,
@@ -34,6 +34,7 @@ export const useSIPService = (): {
   const [endedCall, setEndedCall] = useState(false)
   const [lead, setLead] = useState<TCallsInit | null>(null)
   const { status } = select(agentStatusSelector)
+  const statusRef = useRef(status)
 
   const sipOptions: AnswerOptions = {
     pcConfig: {
@@ -142,7 +143,9 @@ export const useSIPService = (): {
 
             session.on('ended', (e) => {
               console.warn('Call ended', e)
-              if (status !== 'finish') dispatch(agentActions.setStatusAsync('pause'))
+              if (statusRef.current && statusRef.current !== 'finish') {
+                dispatch(agentActions.setStatusAsync('pause'))
+              }
             })
 
             session.on('failed', (e) => {
