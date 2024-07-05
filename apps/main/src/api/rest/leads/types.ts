@@ -11,6 +11,7 @@ export type TImportLeadsRes = {
 
 export enum ELeadsSortBy {
   CREATED_AT = 'createdAt',
+  ID = 'id',
   NAME = 'name',
   TIMEZONE = 'timezone',
   STATUS = 'status',

@@ -309,7 +309,7 @@ export const asyncRemoveCampaign =
   }
 
 export const asyncUpdateCampaignStatus =
-  (campaignId: number, currentStatus: TCampaignStatus): TAsyncAction =>
+  (campaignId: number, currentStatus: TCampaignStatus, isDebug?: boolean): TAsyncAction =>
   async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
@@ -326,7 +326,10 @@ export const asyncUpdateCampaignStatus =
           }),
         )
       } else {
-        await apiCampaigns.startCampaign({ id: campaignId.toString() })
+        await apiCampaigns.startCampaign({
+          id: campaignId.toString(),
+          debugging: isDebug,
+        })
         dispatch(
           notificationActions.setNotification({
             key: 'notifications:campaign.active',

@@ -34,6 +34,7 @@ type TCampaignRowKeys =
   | 'view'
   | 'name'
   | 'action'
+  | 'debugging'
   | 'date'
   | 'status'
   | 'leads'
@@ -69,6 +70,10 @@ export const CampaignListTable = (): JSX.Element => {
 
   const handleAction = useCallback((id: number, currentStatus: TCampaignStatus) => {
     dispatch(asyncUpdateCampaignStatus(id, currentStatus))
+  }, [])
+
+  const handleDebugging = useCallback((id: number, currentStatus: TCampaignStatus) => {
+    dispatch(asyncUpdateCampaignStatus(id, currentStatus, true))
   }, [])
 
   const handleEditCampaign = useCallback((id: number) => {
@@ -107,6 +112,7 @@ export const CampaignListTable = (): JSX.Element => {
     { label: t('campaign-list-headers.leads'), value: 'leads' },
     { label: t('campaign-list-headers.agents'), value: 'agents' },
     { label: t('campaign-list-headers.action'), value: 'action' },
+    { label: t('campaign-list-headers.debugging'), value: 'debugging' },
     { label: t('campaign-list-headers.view'), value: 'view' },
     { label: t('campaign-list-headers.edit'), value: 'edit' },
     { label: t('campaign-list-headers.delete'), value: 'delete' },
@@ -124,6 +130,12 @@ export const CampaignListTable = (): JSX.Element => {
         <ActionBtn
           status={campaign.status}
           onClick={() => handleAction(campaign.id, campaign.status)}
+        />
+      ),
+      debugging: (
+        <ActionBtn
+          status={campaign.status}
+          onClick={() => handleDebugging(campaign.id, campaign.status)}
         />
       ),
       view: (

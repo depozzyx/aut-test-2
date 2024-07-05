@@ -29,7 +29,7 @@ const getCampaignById = (id: string): TAxiosResponse<any> => api.get(`/campaign/
 const stopCampaign = (data: { id: string }): TAxiosResponse<any> =>
   api.post('/campaign/stop', data)
 
-const startCampaign = (data: { id: string }): TAxiosResponse<any> =>
+const startCampaign = (data: { id: string; debugging?: boolean }): TAxiosResponse<any> =>
   api.post('/campaign/start', data)
 
 export const apiCampaigns = {
