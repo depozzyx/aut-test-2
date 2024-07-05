@@ -28,13 +28,16 @@ export const Calls: FC = () => {
     useSIPService()
 
   useEffect(() => {
-    if (ua) connect()
+    if (ua && !ua?.isConnected()) {
+      connect()
+    }
   }, [ua])
 
   useUnmount(() => {
     disconnect()
-    if (!(status === 'finish') && (status === 'unpause' || status === 'start'))
+    if (!(status === 'finish') && (status === 'unpause' || status === 'start')) {
       dispatch(agentActions.setStatusAsync('pause'))
+    }
   })
 
   const resetAllData = async () => {
