@@ -12,7 +12,7 @@ import { errorActions } from '@/features/common/error'
 import { callSocket } from 'api/socket/call'
 import { socket } from 'api/socket/Socket'
 import { TCallsInit } from 'api/socket/call/types'
-import { agentActions } from '@/features/common/agentStatus/store'
+import { agentActions, agentStatusSelector } from '@/features/common/agentStatus/store'
 
 const TEXTS = {
   SUBSCRIBE_CALLS: 'Subscribe calls',
@@ -30,9 +30,10 @@ export const useSIPService = (): {
   setLead: (lead: TCallsInit | null) => void
 } => {
   const { pbxAuth } = useAuth()
-  const { dispatch } = useRedux()
+  const { dispatch, select } = useRedux()
   const [endedCall, setEndedCall] = useState(false)
   const [lead, setLead] = useState<TCallsInit | null>(null)
+  const { status } = select(agentStatusSelector)
 
   const sipOptions: AnswerOptions = {
     pcConfig: {
@@ -141,7 +142,7 @@ export const useSIPService = (): {
 
             session.on('ended', (e) => {
               console.warn('Call ended', e)
-              dispatch(agentActions.setStatusAsync('pause'))
+              if (status !== 'finish') dispatch(agentActions.setStatusAsync('pause'))
             })
 
             session.on('failed', (e) => {
