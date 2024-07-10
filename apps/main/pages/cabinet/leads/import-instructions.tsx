@@ -9,7 +9,7 @@ const APIListInstructionsPage: NextPage = () => {
   const { t } = useTranslation('routing')
 
   return (
-    <Permissions roles={[ERoles.MANAGER]}>
+    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
       <CabinetLayout title={t('import_leads_instructions_title')}>
         <ImportLeadsInstruction />
       </CabinetLayout>
