@@ -1,3 +1,5 @@
+import { TOrderBy } from '@/types/entities/orderBy'
+
 export const CAMPAIGN_STATUSES = {
   ACTIVE: 'active',
   PAUSE: 'pause',
@@ -43,3 +45,5 @@ export const SORT_BY = {
   WORK_STATUS: 'status',
   NAME: 'name',
 } as const
+
+export const INITIAL_REQUEST_PARAMS = { page: 1, limit: 10, orderBy: 'ASC' as TOrderBy }
