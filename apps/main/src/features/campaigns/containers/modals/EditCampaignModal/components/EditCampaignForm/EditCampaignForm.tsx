@@ -1,29 +1,31 @@
-import { Flex } from '@/components/Flex'
+import { useEffect } from 'react'
+import { shallowEqual } from 'react-redux'
 import { useFormik } from 'formik'
 import { useRedux } from '@/hooks/use-redux'
+import { createStructuredSelector } from 'reselect'
 import useTranslation from 'next-translate/useTranslation'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
-import { asyncEditCampaign } from '@/features/campaigns/store/edit-campaign'
-import { TCampaignTableType } from '@/features/campaigns/types'
-import { createCampaignValidationSchema } from '@/features/campaigns/containers/modals/CreateCampaignModal/components/CreateCampaignForm/validationSchema'
 import { FormikMultiSelect } from '@/components/formik-wrappers/FormikMultiSelect'
-import { createStructuredSelector } from 'reselect'
+import { Flex } from '@/components/Flex'
 import {
   asyncGetLeadListCatalog,
   selectLeadListCatalogAsOptions,
   selectLeadListPagination,
 } from '@/features/leads/store/lead-list'
-import { shallowEqual } from 'react-redux'
-import { useEffect } from 'react'
+
 import {
   asyncGetAgentsList,
   selectAgentsOptions,
   selectAgentsPagination,
 } from '@/features/agents/store/agents'
-import { useGetCampaignById } from '@/features/campaigns/hooks/use-getCampaignById'
+import { asyncEditCampaign } from '../../../../../store/edit-campaign'
+import { TCampaignTableType } from '../../../../../types'
+import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
+import { useGetCampaignById } from '../../../../../hooks/use-getCampaignById'
+import { INITIAL_REQUEST_PARAMS } from '../../../../../constants'
 
 type TProps = {
   type: TCampaignTableType
@@ -58,13 +60,11 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
   const { data } = useGetCampaignById()
 
   useEffect(() => {
-    dispatch(
-      asyncGetLeadListCatalog({ page: leadsPage, limit: leadsLimit, orderBy: 'ASC' }),
-    )
+    dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS))
   }, [])
 
   useEffect(() => {
-    dispatch(asyncGetAgentsList({ page: agentsPage, limit: agentsLimit, orderBy: 'ASC' }))
+    dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS))
   }, [])
 
   const formik = useFormik<TFormValues>({
