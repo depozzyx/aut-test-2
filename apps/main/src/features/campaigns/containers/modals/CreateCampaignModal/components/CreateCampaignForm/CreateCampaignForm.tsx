@@ -15,7 +15,6 @@ import {
   selectLeadListCatalogAsOptions,
   reset as resetLeadsList,
 } from '@/features/leads/store/lead-list'
-import { reviewFormData } from '@/features/campaigns/store/create-campaign'
 import { FormikMultiSelect } from '@/components/formik-wrappers/FormikMultiSelect'
 import {
   asyncGetAgentsList,
@@ -23,10 +22,9 @@ import {
   selectAgentsOptions,
   reset as resetAgentsList,
 } from '@/features/agents/store/agents'
-import { TOrderBy } from '@/types/entities/orderBy'
-import { createCampaignValidationSchema } from './validationSchema'
-
-const INITIAL_REQUEST_PARAMS = { page: 1, limit: 10, orderBy: 'ASC' as TOrderBy }
+import { reviewFormData } from '../../../../../store/create-campaign'
+import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
+import { INITIAL_REQUEST_PARAMS } from '../../../../../constants'
 
 export const CreateCampaignForm = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
