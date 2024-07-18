@@ -32,6 +32,7 @@ export const PBXStatus: FC = () => {
     if (status === 'offline') return 'main25'
     if (status === 'online') return 'main26'
     if (status === 'oncall') return 'main14'
+    if (status === 'ringing') return 'main10'
     if (status === 'manual_pause') return 'main17'
     if (status === 'system_pause') return 'main16'
     return 'main20'
