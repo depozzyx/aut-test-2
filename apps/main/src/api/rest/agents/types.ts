@@ -90,3 +90,7 @@ export type TDeletedAgentData = {
   username: string
   workStatus: string
 }
+
+export type TAgentStatus = {
+  data: 'offline' | 'online' | 'oncall' | 'system_pause' | 'manual_pause'
+}
