@@ -8,8 +8,6 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
 import { selectAssignedCampaignsInfo } from '@/features/agents/store/agents'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
-import { useCallFrequency } from '@/features/campaigns/hooks/use-callFrequency'
-import { TGeneratedCallFrequency } from '@/features/campaigns/constants'
 import { InfoField } from './components/InfoField'
 
 export const CampaignInfoModal = (): JSX.Element => {
@@ -18,8 +16,6 @@ export const CampaignInfoModal = (): JSX.Element => {
   const { modalState, resetModals } = useModals()
 
   const assignedCampaign = select(selectAssignedCampaignsInfo, shallowEqual)
-
-  const { getCallFrequencyLabel } = useCallFrequency()
 
   const showModal =
     modalState?.modalName === MODAL_NAMES.CAMPAING_INFO && modalState.isOpen
@@ -35,12 +31,6 @@ export const CampaignInfoModal = (): JSX.Element => {
           <InfoField
             label={t('campaign-info.campaign-name')}
             value={assignedCampaign?.name}
-          />
-          <InfoField
-            label={t('campaign-info.call-frequency')}
-            value={getCallFrequencyLabel(
-              assignedCampaign?.intensity as TGeneratedCallFrequency,
-            )}
           />
         </Flex>
         <Flex align="center" justify="center" gap={24}>
