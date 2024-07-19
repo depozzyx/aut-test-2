@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useCallback, memo } from 'react'
 import { getFieldError } from '@peiko/components/inputs/utils/get-field-error'
 import useTranslation from 'next-translate/useTranslation'
 import { TFormik } from '@peiko/types/formik'
+import { deepEqual } from '@peiko/utils/deep-equal'
 import { MultiSelect } from '../../MutliSelect'
 import { TMultiSelectProps, TSelectOption, TSelectEvent } from '../../MutliSelect/types'
 
@@ -9,30 +10,38 @@ type TProps = {
   formik: TFormik
 } & TMultiSelectProps
 
-export const FormikMultiSelect: React.FC<TProps> = ({ formik, onChange, ...props }) => {
-  const { t } = useTranslation()
-  const field = formik.getFieldProps(props.name)
-  const { touched, error } = formik.getFieldMeta(props.name)
+export const FormikMultiSelect: React.FC<TProps> = memo(
+  ({ formik, onChange, ...props }) => {
+    const { t } = useTranslation()
+    const field = formik.getFieldProps(props.name)
+    const { touched, error } = formik.getFieldMeta(props.name)
 
-  const handleChange = (selectedOptions: TSelectOption[]) => {
-    formik.setFieldTouched(field.name, true)
-    formik.setFieldValue(
-      field.name,
-      selectedOptions.map((option) => option.value),
+    const handleChange = useCallback(
+      (selectedOptions: TSelectOption[]) => {
+        formik.setFieldTouched(field.name, true)
+        formik.setFieldValue(
+          field.name,
+          selectedOptions.map((option) => option.value),
+        )
+        if (onChange) {
+          onChange(selectedOptions)
+        }
+      },
+      [formik, onChange],
     )
-    if (onChange) {
-      onChange(selectedOptions)
-    }
-  }
 
-  const fieldError = getFieldError({ touched, error, t })
+    const fieldError = getFieldError({ touched, error, t })
 
-  return (
-    <MultiSelect
-      {...props}
-      value={field.value}
-      onChange={handleChange as (p: TSelectEvent) => void}
-      error={fieldError}
-    />
-  )
-}
+    return (
+      <MultiSelect
+        {...props}
+        value={field.value}
+        onChange={handleChange as (p: TSelectEvent) => void}
+        error={fieldError}
+      />
+    )
+  },
+  deepEqual,
+)
+
+FormikMultiSelect.displayName = 'FormikMultiSelect'
