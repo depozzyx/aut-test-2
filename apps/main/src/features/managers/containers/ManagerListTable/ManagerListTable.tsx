@@ -11,7 +11,7 @@ import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import { HeaderWithSort } from '@/components/HeaderWithSort'
-import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt' // move to common uitls
+import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { useManagerList } from '../../hooks/use-managersList'
 import { InfoCell } from '../../components/InfoCell'
 import { selectManagersList, setSelectedId } from '../../store/managers'
@@ -42,24 +42,8 @@ export const ManagerListTable = (): JSX.Element => {
   }, [])
 
   const headers: THeader<TManagerRowKeys>[] = [
-    {
-      label: (
-        <HeaderWithSort
-          title={t('list-headers.id')}
-          onClick={() => handleSort(SORT_BY.ID)}
-        />
-      ),
-      value: 'managerId',
-    },
-    {
-      label: (
-        <HeaderWithSort
-          title={t('list-headers.username')}
-          onClick={() => handleSort(SORT_BY.NAME)}
-        />
-      ),
-      value: 'username',
-    },
+    { label: t('list-headers.id'), value: 'managerId' },
+    { label: t('list-headers.username'), value: 'username' },
     {
       label: (
         <HeaderWithSort
