@@ -24,7 +24,7 @@ export const EditCampaignModal = ({ type }: TProps): JSX.Element => {
       title={title}
       open={showModal}
       onClose={resetModals}
-      maxWidth="756px"
+      maxWidth="612px"
       containerWidth="100%"
     >
       <EditCampaignForm type={type} />
