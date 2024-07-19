@@ -6,7 +6,7 @@ import { useRedux } from '@/hooks/use-redux'
 import { handleRestError } from '@/features/common/error'
 import { managerApi } from '@/api-rest/manager'
 import {
-  selectSortFilter,
+  selectSort,
   selectPagination,
   setManagersList,
   setPagination,
@@ -21,11 +21,11 @@ export const useManagerList = (): TReturn => {
 
   const {
     pagination: { page, limit },
-    sortFilter,
+    sort,
   } = select(
     createStructuredSelector({
       pagination: selectPagination,
-      sortFilter: selectSortFilter,
+      sort: selectSort,
     }),
     shallowEqual,
   )
@@ -34,12 +34,13 @@ export const useManagerList = (): TReturn => {
     managerApi.getManagers(params).then((res) => res.data)
 
   const { isLoading } = useSWR(
-    ['/manager/list', page, limit, sortFilter],
+    ['/manager/list', page, limit, sort.sortBy, sort.orderBy],
     () =>
       fetcher({
         page,
         limit,
-        orderBy: sortFilter,
+        orderBy: sort.orderBy,
+        sortBy: sort.sortBy,
       }),
     {
       revalidateOnFocus: false,

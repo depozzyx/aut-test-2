@@ -10,16 +10,29 @@ import { EditIcon } from '@peiko/components/icons/EditIcon'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
+import { HeaderWithSort } from '@/components/HeaderWithSort'
+import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt' // move to common uitls
 import { useManagerList } from '../../hooks/use-managersList'
 import { InfoCell } from '../../components/InfoCell'
 import { selectManagersList, setSelectedId } from '../../store/managers'
+import { useManagersSort } from '../../hooks/use-managers-sort'
+import { SORT_BY } from '../../constants'
 
-type TManagerRowKeys = 'id' | 'username' | 'email' | 'pbxName' | 'edit' | 'managerId'
+type TManagerRowKeys =
+  | 'id'
+  | 'username'
+  | 'date'
+  | 'email'
+  | 'pbxName'
+  | 'edit'
+  | 'managerId'
+
 export const ManagerListTable = (): JSX.Element => {
   const { t } = useTranslation('managers')
   const { select, dispatch } = useRedux()
   const { setModal } = useModals()
 
+  const handleSort = useManagersSort()
   const { isLoading } = useManagerList()
   const managersList = select(selectManagersList, shallowEqual)
 
@@ -29,8 +42,33 @@ export const ManagerListTable = (): JSX.Element => {
   }, [])
 
   const headers: THeader<TManagerRowKeys>[] = [
-    { label: t('list-headers.id'), value: 'managerId' },
-    { label: t('list-headers.username'), value: 'username' },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('list-headers.id')}
+          onClick={() => handleSort(SORT_BY.ID)}
+        />
+      ),
+      value: 'managerId',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('list-headers.username')}
+          onClick={() => handleSort(SORT_BY.NAME)}
+        />
+      ),
+      value: 'username',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('list-headers.creation-date')}
+          onClick={() => handleSort(SORT_BY.CREATED_AT)}
+        />
+      ),
+      value: 'date',
+    },
     { label: t('list-headers.email'), value: 'email' },
     { label: t('list-headers.pbxName'), value: 'pbxName' },
     { label: t('list-headers.edit'), value: 'edit' },
@@ -41,8 +79,10 @@ export const ManagerListTable = (): JSX.Element => {
       id: manager.id,
       managerId: <InfoCell title={manager.id} />,
       username: <InfoCell title={manager.username || '-'} />,
+      date: <InfoCell title={formatCreatedAt(manager.createdAt)} />,
       email: <InfoCell title={manager.email} />,
       pbxName: <InfoCell title={manager.pbxName || '-'} />,
+
       edit: (
         <IconButton
           onClick={() => handleEditCampaign(manager.id)}

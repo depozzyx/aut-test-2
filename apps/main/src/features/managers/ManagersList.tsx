@@ -11,7 +11,6 @@ import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
 import { ManagerListTable } from './containers/ManagerListTable'
 import { reset, selectPagination, setPagination } from './store/managers'
-import { SortFilter } from './containers/SortFilter'
 import { EditManagerModal } from './containers/EditManagerModal'
 
 export const ManagersList = (): JSX.Element => {
@@ -42,8 +41,7 @@ export const ManagersList = (): JSX.Element => {
   return (
     <>
       <Flex width="100%" height="100%" direction="column" padding="16px 0 0 0">
-        <Flex width="100%" justify="space-between">
-          <SortFilter />
+        <Flex width="100%" justify="flex-end">
           <FilledButton
             size="m"
             maxWidth="236px"
