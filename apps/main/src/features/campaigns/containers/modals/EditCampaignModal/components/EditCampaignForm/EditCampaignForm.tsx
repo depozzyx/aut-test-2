@@ -118,44 +118,46 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
       <Flex direction="column" align="center" gap={48} margin="40px 0 0 0">
-        <Flex direction="column" gap={16} maxWidth="326px" width="100%">
+        <Flex direction="column" gap={16} maxWidth="424px" width="100%">
           <FormikInput
             size="s"
             name="name"
             label={{ label: t('edit-campaign.campaign-name') }}
             id="name"
             formik={formik}
-            width={326}
+            width={424}
             styles={{ padding: '0 14px' }}
           />
           <FormikMultiSelect
             formik={formik}
             name="assignedAgentIds"
             label={{ label: t('edit-campaign.agent-assignment') }}
-            width={326}
+            width={424}
             size="s"
             options={agentsOptions}
             onMenuScrollToBottom={onAgentsScrollToBottom}
+            isSearchable
           />
           <FormikMultiSelect
             formik={formik}
             name="leadListIds"
             label={{ label: t('edit-campaign.lead-selection') }}
             size="s"
-            width={326}
+            width={424}
             options={leadListOptions}
             onMenuScrollToBottom={onLeadsScrollToBottom}
+            isSearchable
           />
         </Flex>
         <Flex align="center" justify="center" gap={24}>
           <FilledButton
             type="submit"
             disabled={!formik.isValid || !formik.dirty}
-            width="236px"
+            width="202px"
           >
             {t('edit-campaign.save')}
           </FilledButton>
-          <OutlinedButton onClick={resetModals} width="236px">
+          <OutlinedButton onClick={resetModals} width="202px">
             {t('edit-campaign.cancel')}
           </OutlinedButton>
         </Flex>

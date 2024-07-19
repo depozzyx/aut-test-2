@@ -139,7 +139,7 @@ export const MultiSelect = ({
           onMenuOpen={() => setOpen(true)}
           classNamePrefix="multi-rs"
           isSearchable={isSearchable}
-          controlShouldRenderValue={false}
+          controlShouldRenderValue
           hasScroll={hasScroll}
           width={width}
           zIndex={zIndex}

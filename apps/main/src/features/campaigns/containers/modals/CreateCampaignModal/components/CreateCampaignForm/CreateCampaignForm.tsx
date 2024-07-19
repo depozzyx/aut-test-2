@@ -97,14 +97,14 @@ export const CreateCampaignForm = (): JSX.Element => {
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off" style={{ width: '100%' }}>
       <Flex width="100%" direction="column" align="center" gap={48} margin="40px 0 0 0">
-        <Flex maxWidth="326px" width="100%" direction="column" gap={16}>
+        <Flex maxWidth="424px" width="100%" direction="column" gap={16}>
           <FormikInput
             size="s"
             name="name"
             label={{ label: t('create-campaign.campaign-name') }}
             id="name"
             formik={formik}
-            maxWidth="326px"
+            maxWidth="424px"
             width="100%"
             styles={{ padding: '0 14px' }}
           />
@@ -112,29 +112,31 @@ export const CreateCampaignForm = (): JSX.Element => {
             formik={formik}
             name="assignedAgentIds"
             label={{ label: t('create-campaign.agent-assignment') }}
-            width={326}
+            width={424}
             size="s"
             options={agentsOptions}
             onMenuScrollToBottom={onAgentsScrollToBottom}
+            isSearchable
           />
           <FormikMultiSelect
             formik={formik}
             name="leadListIds"
             label={{ label: t('create-campaign.lead-selection') }}
             size="s"
-            width={326}
+            width={424}
             options={leadListOptions}
             onMenuScrollToBottom={onLeadsScrollToBottom}
+            isSearchable
           />
         </Flex>
         <Flex align="center" justify="center" gap={24}>
-          <OutlinedButton onClick={resetModals} width="236px">
+          <OutlinedButton onClick={resetModals} width="202px">
             {t('create-campaign.cancel')}
           </OutlinedButton>
           <FilledButton
             type="submit"
             disabled={!formik.isValid || !formik.dirty}
-            width="236px"
+            width="202px"
           >
             {t('create-campaign.review')}
           </FilledButton>
