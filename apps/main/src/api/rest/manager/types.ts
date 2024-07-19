@@ -2,8 +2,11 @@ import { TGeneratedSuccessStatuses } from '@/constants/success-status'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { TPagination } from '@/types/entities/pagination'
 
+export type TManagerSortBy = 'createdAt' | 'workStatus' | 'username' | 'id'
+
 export type TManagersReq = {
   orderBy: TOrderBy
+  sortBy?: TManagerSortBy
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TManager = {
@@ -11,6 +14,7 @@ export type TManager = {
   email: string
   username: string
   pbxName: string
+  createdAt: string
   campaigns: string[]
 }
 

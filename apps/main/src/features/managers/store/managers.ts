@@ -3,19 +3,18 @@ import { TSelector } from '@/store'
 import { ORDER_BY } from '@/constants/orderBy'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { TPagination } from '@/types/entities/pagination'
-import { TManager } from '@/api-rest/manager/types'
+import { TManager, TManagerSortBy } from '@/api-rest/manager/types'
 
 export type TInit = {
   isLoading: boolean
-  sortFilter: TOrderBy
   pagination: TPagination
   managersList: TManager[] | []
   selectedId: number | null
+  sort: { sortBy?: TManagerSortBy; orderBy: TOrderBy }
 }
 
 const init: TInit = {
   isLoading: false,
-  sortFilter: ORDER_BY.ASC,
   pagination: {
     page: 1,
     limit: 8,
@@ -23,6 +22,7 @@ const init: TInit = {
   },
   managersList: [],
   selectedId: null,
+  sort: { sortBy: undefined, orderBy: ORDER_BY.ASC },
 }
 
 const managers = createSlice({
@@ -32,8 +32,8 @@ const managers = createSlice({
     setIsLoading(state, action: PayloadAction<TInit['isLoading']>) {
       state.isLoading = action.payload
     },
-    setSortFilter(state, action: PayloadAction<TInit['sortFilter']>) {
-      state.sortFilter = action.payload
+    setSort(state, action: PayloadAction<TInit['sort']>) {
+      state.sort = action.payload
     },
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
       state.pagination = action.payload
@@ -52,17 +52,14 @@ export const {
   setIsLoading,
   setPagination,
   setManagersList,
-  setSortFilter,
+  setSort,
   setSelectedId,
   reset,
 } = managers.actions
 
 export const selectManagers: TSelector<TInit> = (state) => state.managers
 
-export const selectSortFilter = createSelector(
-  selectManagers,
-  (state) => state.sortFilter,
-)
+export const selectSort = createSelector(selectManagers, ({ sort }) => sort)
 
 export const selectPagination = createSelector(
   selectManagers,
