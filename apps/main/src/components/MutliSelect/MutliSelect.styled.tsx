@@ -179,7 +179,6 @@ export const StyledMultiSelect = styled(CustomMultiSelect)<TStyledMultiSelectPro
 
       .multi-rs__value-container {
         padding: 0;
-        /* height: 28px; */
         align-items: center;
       }
 
