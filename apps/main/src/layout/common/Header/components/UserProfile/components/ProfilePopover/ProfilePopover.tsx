@@ -42,9 +42,9 @@ const PopoverMenuItem = ({
 )
 
 export const ProfilePopover = ({
-  name = 'John Johnson',
-  email = 'john.johnson@example.com',
-  userRole = 'manager',
+  name,
+  email,
+  userRole,
 }: IProfilePopoverProps): JSX.Element => {
   const { t } = useTranslation('user')
   const { setModal } = useModals()
@@ -68,7 +68,9 @@ export const ProfilePopover = ({
   return (
     <Flex direction="column" align="center" gap={30}>
       <Flex direction="column" align="center" gap={8}>
-        <UserRoleIcon userRole={userRole} iconSize="28px" variant="medium" />
+        {userRole && (
+          <UserRoleIcon userRole={userRole} iconSize="28px" variant="medium" />
+        )}
         <Flex direction="column" align="center">
           <Text variant="f4">{name}</Text>
           <Text variant="f6" color="main22">

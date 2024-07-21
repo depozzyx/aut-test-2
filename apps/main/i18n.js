@@ -17,6 +17,7 @@ module.exports = {
       'validation',
       'page-titles',
       'auth',
+      'user',
     ],
     '/auth/sign-in': ['error', 'validation', 'inputs'],
     '/auth/forgot-password': ['error', 'validation', 'inputs'],
