@@ -199,6 +199,13 @@ export const selectSelectedCampaignId = createSelector(
   ({ selectedId }) => selectedId,
 )
 
+type TCampaignByIdReturn = (state: TRootState) => TCampaign | undefined
+
+export const selectCampaignById = (campaignId: number): TCampaignByIdReturn =>
+  createSelector(selectCampaignsList, (campaignList) =>
+    campaignList.find((campaign) => campaign.id === campaignId),
+  )
+
 export default campaigns.reducer
 
 export const asyncGetActiveCampaigns =

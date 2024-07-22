@@ -22,7 +22,7 @@ export const BaseChip = forwardRef<HTMLDivElement, TChipProps>(
   ) => {
     const chipRef = useRef<HTMLDivElement | null>(null)
 
-    const setBlure = useCallback(() => {
+    const setBlur = useCallback(() => {
       if (!chipRef.current) return
       chipRef.current.blur()
     }, [])
@@ -42,7 +42,7 @@ export const BaseChip = forwardRef<HTMLDivElement, TChipProps>(
         onClick={onClick}
         tabIndex={onClick ? 0 : undefined}
         as={onClick ? 'button' : 'div'}
-        onMouseLeave={onClick ? setBlure : undefined}
+        onMouseLeave={onClick ? setBlur : undefined}
         role={onClick ? 'button' : undefined}
         disabled={disabled}
         {...props}

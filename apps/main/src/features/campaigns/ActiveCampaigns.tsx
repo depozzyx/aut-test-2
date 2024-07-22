@@ -46,7 +46,7 @@ export const ActiveCampaigns = (): JSX.Element => {
         <DashboardTabs />
         <Flex padding="12px 0 0 0" justify="space-between">
           <Flex gap={16} align="center" width="100%" padding="0 16px 0 0">
-            <CampaignSearchField />
+            <CampaignSearchField placeholder={t('inputs:placeholder.search-campaign')} />
             <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
             <RangeDayPicker onChange={handleChangeDate} />
           </Flex>

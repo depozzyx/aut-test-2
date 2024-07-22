@@ -1,22 +1,22 @@
 import { NextPage } from 'next'
-import useTranslation from 'next-translate/useTranslation'
 import { useTitle } from 'react-use'
+import useTranslation from 'next-translate/useTranslation'
 import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
-import { ActivityLog } from '@/features/activityLog/ActivityLog'
+import { CampaignLog } from '@/features/activityLog/CampaignLog'
 import { ERoles } from '@/constants/profile'
 
-const ActivityLogPage: NextPage = () => {
+const CampaignsLogPage: NextPage = () => {
   const { t } = useTranslation('routing')
-  useTitle(t('page-titles:activity-log'))
+  useTitle(t('page-titles:campaigns-log'))
 
   return (
     <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
-      <CabinetLayout title={t('settings_activity_log')}>
-        <ActivityLog />
+      <CabinetLayout title={t('campaigns_log')}>
+        <CampaignLog />
       </CabinetLayout>
     </Permissions>
   )
 }
 
-export default ActivityLogPage
+export default CampaignsLogPage

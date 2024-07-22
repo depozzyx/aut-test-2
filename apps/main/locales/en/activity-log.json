@@ -1,5 +1,5 @@
 {
-  "tabs": { "general": "General", "business": "Business" },
+  "tabs": { "general": "General", "business": "Business", "campaign": "Campaign" },
   "admin": "Admin",
   "noLogs": "No logs to display",
   "export": "Data Export",
@@ -34,7 +34,8 @@
     "sort_by": "Sort by",
     "filter": "Filters",
     "users": "Users",
-    "reset": "Reset all filters"
+    "reset": "Reset all filters",
+    "order_by": "Order by"
   },
   "filterNames": {
     "create": "Creation",
@@ -57,5 +58,27 @@
     "fileFormatPlaceholder": "Select",
     "cancel": "Cancel",
     "submit": "Submit export"
+  },
+  "campaign": {
+    "no-info": "No campaign info",
+    "campaignFilters": {
+      "start": "Start",
+      "stop": "Stop",
+      "call-initiated": "Call initiated",
+      "call-requeue": "Call requeue"
+    },
+    "campaignSorts": {
+      "id": "Id",
+      "createdAt": "Created At",
+      "username": "Username",
+      "role": "Role",
+      "actionType": "Action type"
+    },
+    "orderBy": {
+      "ASC": "ASC",
+      "DESC": "DESC"
+    },
+    "no-data": "No data",
+    "please-select-campaign": "Please select a campaign from the list"
   }
 }

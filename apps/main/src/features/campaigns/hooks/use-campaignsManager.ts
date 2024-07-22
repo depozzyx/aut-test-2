@@ -69,29 +69,29 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
   )
 
   useEffect(() => {
-    dispatch(
-      fetcher({
-        page,
-        limit,
-        orderBy,
-        ...(searchTerm && { search: searchTerm }),
-        ...(filterCampaignName && { name: filterCampaignName as string }),
-        ...(filterStatus && { status: filterStatus }),
-        ...(filterDate?.from && { fromDate: filterDate?.from }),
-        ...(filterDate?.to && { toDate: filterDate?.to }),
-        ...(sortBy && { sortBy }),
-      }),
-    )
+    const currentParams = {
+      page,
+      limit,
+      orderBy,
+      ...(searchTerm && { search: searchTerm }),
+      ...(filterCampaignName && { name: filterCampaignName as string }),
+      ...(filterStatus && { status: filterStatus }),
+      ...(filterDate?.from && { fromDate: filterDate?.from }),
+      ...(filterDate?.to && { toDate: filterDate?.to }),
+      ...(sortBy && { sortBy }),
+    }
+
+    dispatch(fetcher(currentParams))
   }, [
     dispatch,
     page,
     limit,
+    orderBy,
     searchTerm,
     filterCampaignName,
     filterStatus,
     filterDate,
     sortBy,
-    orderBy,
   ])
 
   useUnmount(() => {

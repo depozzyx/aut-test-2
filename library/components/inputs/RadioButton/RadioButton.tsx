@@ -12,7 +12,7 @@ export const RadioButton: React.FC<TRadioProps> = ({
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
-  const setBlure = useCallback(() => {
+  const setBlur = useCallback(() => {
     if (!inputRef.current) return
     inputRef.current.blur()
   }, [])
@@ -24,7 +24,7 @@ export const RadioButton: React.FC<TRadioProps> = ({
         htmlFor={inputId}
         disabled={inputProps.disabled}
         error={error}
-        onMouseLeave={setBlure}
+        onMouseLeave={setBlur}
       >
         <input
           {...inputProps}

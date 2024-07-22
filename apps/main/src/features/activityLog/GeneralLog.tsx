@@ -1,16 +1,13 @@
-import { Tabs } from '@/components/Tabs'
-import { TTabsProps } from '@/components/Tabs/Tabs'
-import { ActivityIcon } from '@/icons/ActivityIcon'
-import { BusinessIcon } from '@/icons/BusinessIcon'
 import { Box } from '@peiko/components/Box'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect } from 'react'
 import { Flex } from '@/components/Flex'
 import { useRedux } from '@/hooks/use-redux'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { useUnmount } from 'react-use'
+import { ActivityTabs } from '@/features/activityLog/containers/ActivityTabs'
 import { useFilters } from './hooks/useFilters'
 import { ActivityLogs } from './containers/ActivityLogs'
 import {
@@ -27,7 +24,7 @@ import { useModals } from '../common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '../common/modals/constants'
 import { ExportLogs } from './containers/ExportLogs'
 
-export const ActivityLog: FC = () => {
+export const GeneralLog: FC = () => {
   const { t } = useTranslation('activity-log')
   const { select, dispatch } = useRedux()
   const { setModal } = useModals()
@@ -48,22 +45,6 @@ export const ActivityLog: FC = () => {
   )
 
   const { managers, getManagers, managerPagination } = useFilters()
-
-  const tabs: TTabsProps['tabs'] = [
-    {
-      label: t('tabs.general'),
-      value: 'general',
-      icon: (color) => <ActivityIcon color={color} />,
-    },
-    {
-      label: t('tabs.business'),
-      value: 'business',
-      icon: (color) => <BusinessIcon color={color} />,
-      disabled: true,
-    },
-  ]
-
-  const [activeTab, setActiveTab] = useState(tabs[0].value)
 
   useEffect(() => {
     dispatch(
@@ -97,12 +78,7 @@ export const ActivityLog: FC = () => {
 
   return (
     <Box styles={{ marginTop: '10px' }}>
-      <Tabs
-        tabSize="168px"
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        tabs={tabs}
-      />
+      <ActivityTabs />
       <Flex margin="18px 0 0" align="center" justify="space-between" gap="48px">
         <Filters
           managers={managers}

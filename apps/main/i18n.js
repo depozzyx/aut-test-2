@@ -53,7 +53,18 @@ module.exports = {
     '/cabinet/managers/list': ['user', 'routing', 'managers'],
     '/cabinet/managers/create': ['user', 'routing', 'managers'],
     '/cabinet/settings/account-management': ['user', 'routing', 'settings', 'validation'],
-    '/cabinet/settings/activity-log': ['user', 'routing', 'activity-log', 'validation'],
+    '/cabinet/settings/activity-log/general': [
+      'user',
+      'routing',
+      'activity-log',
+      'validation',
+    ],
+    '/cabinet/settings/activity-log/campaign': [
+      'user',
+      'routing',
+      'validation',
+      'activity-log',
+    ],
     '/cabinet/settings/api-key-management': ['user', 'routing', 'api-key', 'validation'],
   },
 }
