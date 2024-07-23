@@ -29,7 +29,7 @@ export const BaseIconButton = forwardRef<
       tabIndex={props.active || props.disabled || isLoading ? -1 : 0}
       {...props}
     >
-      {isLoading ? <Loader /> : <S.Buttonlabel>{children}</S.Buttonlabel>}
+      {isLoading ? <Loader /> : <S.ButtonLabel>{children}</S.ButtonLabel>}
     </S.Button>
   )
 
