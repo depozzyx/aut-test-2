@@ -7,24 +7,37 @@ export const FilledAccordion: React.FC<TAccordionProps> = ({
   children,
   defaultOpen = false,
   disabled,
+  onOpen,
+  headerStyles,
+  containerStyles,
+  collapseStyles,
+  isOpen: propIsOpen,
   ...props
 }) => {
-  const { isOpen, handleClick, ref, setBlure } = useOpen(defaultOpen)
+  const { isOpen: stateIsOpen, toggle, ref, setBlur } = useOpen(defaultOpen)
 
-  const isOpened = isOpen && !disabled
+  const isOpened = (propIsOpen !== undefined ? propIsOpen : stateIsOpen) && !disabled
+
+  const onClick = () => {
+    if (!disabled && onOpen) {
+      onOpen({ isOpen: isOpened })
+    }
+    toggle()
+  }
 
   return (
     <Container
+      ref={ref}
       isOpen={isOpened}
       disabled={disabled}
       {...props}
-      onClick={handleClick}
       tabIndex={disabled ? -1 : 0}
-      onMouseLeave={setBlure}
-      ref={ref}
+      onClick={onClick}
+      onMouseLeave={setBlur}
+      containerStyles={containerStyles && containerStyles({ isOpen: isOpened })}
     >
-      <Header>{header({ isOpen: isOpened })}</Header>
-      <Collapse>
+      <Header headerStyles={headerStyles}>{header({ isOpen: isOpened })}</Header>
+      <Collapse collapseStyles={collapseStyles}>
         <ReactCollapse theme={{ collapse: 'collapse' }} isOpened={isOpened}>
           {children}
         </ReactCollapse>

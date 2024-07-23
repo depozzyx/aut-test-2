@@ -12,7 +12,8 @@
     "confirm-password": "Repeat your new password",
     "search": "Search by campaign name, lead name, agent name...",
     "search-campaign": "Search by campaign name",
-    "search-agent": "Search by agent name"
+    "search-agent": "Search by agent name",
+    "short-search": "Search"
   },
   "no-options": "No options"
 }

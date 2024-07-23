@@ -10,7 +10,7 @@ export const ExternalLink = React.forwardRef<HTMLAnchorElement, TExternalLinkPro
   ({ onClick, tabIndex, onKeyPress, children, ...props }, ref) => {
     const anchorRef = useRef<HTMLAnchorElement | null>(null)
 
-    const setBlure = useCallback(() => {
+    const setBlur = useCallback(() => {
       if (!anchorRef.current) return
       anchorRef.current.blur()
     }, [])
@@ -24,7 +24,7 @@ export const ExternalLink = React.forwardRef<HTMLAnchorElement, TExternalLinkPro
         target="_blank"
         tabIndex={tabIndex}
         rel="noopener noreferrer nofollow"
-        onMouseLeave={setBlure}
+        onMouseLeave={setBlur}
         onClick={onClick}
         onKeyPress={onKeyPress}
         role="link"

@@ -18,7 +18,7 @@ export const CampaignInfoModal = (): JSX.Element => {
   const assignedCampaign = select(selectAssignedCampaignsInfo, shallowEqual)
 
   const showModal =
-    modalState?.modalName === MODAL_NAMES.CAMPAING_INFO && modalState.isOpen
+    modalState?.modalName === MODAL_NAMES.CAMPAIGN_INFO && modalState.isOpen
 
   const content = useMemo(
     () => (

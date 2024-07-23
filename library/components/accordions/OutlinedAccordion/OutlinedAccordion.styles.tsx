@@ -10,9 +10,10 @@ import {
 import { styleToCss } from '@peiko/styles'
 
 export const Container = styled.div<
-  Pick<TAccordionProps, 'disabled' | 'styles'> & TContainer
+  Pick<TAccordionProps, 'disabled'> &
+    TContainer & { containerStyles: TAccordionProps['headerStyles'] }
 >(
-  ({ theme, isOpen, disabled, styles }) => css`
+  ({ theme, isOpen, disabled, containerStyles }) => css`
     ${baseContainer}
     border-width: 0;
     border-bottom-width: 1px;
@@ -26,13 +27,18 @@ export const Container = styled.div<
       isOpen,
       disabled,
     })}
-    ${styles && styleToCss(styles, theme)}
+
+    ${containerStyles && styleToCss(containerStyles, theme)}
   `,
 )
 
-export const Header = styled.button`
-  width: 100%;
-`
+export const Header = styled.button<{ headerStyles?: TAccordionProps['headerStyles'] }>(
+  ({ theme, headerStyles }) => css`
+    width: 100%;
+
+    ${headerStyles && styleToCss(headerStyles, theme)}
+  `,
+)
 
 export const Collapse = styled.div`
   ${baseCollapse}

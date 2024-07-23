@@ -1,10 +1,10 @@
 import useTranslation from 'next-translate/useTranslation'
+import { useRouter } from 'next/router'
 import { useMenuLinks } from '@/layout/common/Sidebar/hooks/use-menu-links'
 import { Flex } from '@/components/Flex'
 import { useAuth } from '@/features/common/user'
 import { Text } from '@peiko/components/Text'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
-import { useRouter } from 'next/router'
 import { LogoutIcon } from '@/icons/LogoutIcon'
 import { BaseButton } from '@peiko/components/buttons/BaseButton'
 import { SidebarItem } from './components/SidebarItem'
@@ -26,7 +26,7 @@ export const Sidebar = (): JSX.Element => {
         {links.map((item) => (
           <Accordion
             defaultOpen={!!item.links.find(({ link }) => pathname === link)}
-            styles={{ border: 'none' }}
+            containerStyles={() => ({ border: 'none' })}
             key={item.title}
             header={({ isOpen }) => (
               <MenuItem

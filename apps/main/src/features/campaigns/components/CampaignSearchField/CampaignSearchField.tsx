@@ -1,11 +1,17 @@
-import useTranslation from 'next-translate/useTranslation'
 import { Input } from '@peiko/components/inputs/Input'
 import { SearchFieldIcon } from '@/components/icons/SearchFieldIcon'
 import { useRedux } from '@/hooks/use-redux'
-import { setSearchTerm } from '@/features/campaigns/store/campaigns'
+import { setSearchTerm } from '../../store/campaigns'
 
-export const CampaignSearchField = (): JSX.Element => {
-  const { t } = useTranslation('inputs')
+type TProps = {
+  placeholder: string
+  maxWidth?: string
+}
+
+export const CampaignSearchField = ({
+  placeholder,
+  maxWidth = '374px',
+}: TProps): JSX.Element => {
   const { dispatch } = useRedux()
 
   const handleOnChange = (value: string) => {
@@ -15,10 +21,10 @@ export const CampaignSearchField = (): JSX.Element => {
   return (
     <Input
       width="100%"
-      maxWidth="374px"
-      size="xs"
+      maxWidth={maxWidth}
+      size="s"
       name="search-campaign"
-      placeholder={t('placeholder.search-campaign')}
+      placeholder={placeholder}
       startAdornment={<SearchFieldIcon />}
       startAdornmentStyles={{ paddingRight: '0 !important' }}
       onChange={handleOnChange}

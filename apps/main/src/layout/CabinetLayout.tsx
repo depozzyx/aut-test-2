@@ -13,6 +13,7 @@ type TProps = {
   padding?: CSSProperties['padding']
   justifyContent?: CSSProperties['justifyContent']
   title?: string
+  titlePaddingTop?: string
 }
 
 type TCabinetLayoutProps = TProps & Partial<TDefaultBreakpoints<TProps>>
@@ -72,17 +73,18 @@ const CustomPopupOverlay = styled.div(
 export const CabinetLayout: React.FC<TCabinetLayoutProps> = ({
   children,
   title,
+  titlePaddingTop = '12px',
   ...props
 }) => (
   <>
     <BodyColor />
     <Header />
-    <ContentWrapper {...props}>
+    <ContentWrapper>
       <Sidebar />
       <Content padding="12px 26px 26px 40px" {...props}>
         <CustomPopupOverlay id="customPopupOverlay" />
         <Flex align="center" justify="space-between">
-          <Text variant="f2" styles={{ paddingTop: '12px' }}>
+          <Text variant="f2" styles={{ paddingTop: titlePaddingTop }}>
             {title}
           </Text>
           <Notification />

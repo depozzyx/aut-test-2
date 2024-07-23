@@ -50,7 +50,7 @@ export const CampaignsList = (): JSX.Element => {
       <Container>
         <Panel>
           <Flex gap={16} align="center" width="100%">
-            <CampaignSearchField />
+            <CampaignSearchField placeholder={t('inputs:placeholder.search-campaign')} />
             <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.LIST} />
             <StatusFilter />
             <RangeDayPicker onChange={handleChangeDate} />

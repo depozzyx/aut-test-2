@@ -11,7 +11,7 @@ export const BaseIconButton = forwardRef<
 >(({ isLoading, type = 'button', children, link, externalLink, ...props }, ref) => {
   const buttonRef = useRef<HTMLButtonElement | HTMLAnchorElement | null>(null)
 
-  const setBlure = useCallback(() => {
+  const setBlur = useCallback(() => {
     if (!buttonRef.current) return
     buttonRef.current.blur()
   }, [])
@@ -23,7 +23,7 @@ export const BaseIconButton = forwardRef<
       as={Tag}
       disabled={props.disabled}
       type={type}
-      onMouseLeave={setBlure}
+      onMouseLeave={setBlur}
       isLoading={isLoading}
       ref={mergeRefs([buttonRef, ref])}
       tabIndex={props.active || props.disabled || isLoading ? -1 : 0}
