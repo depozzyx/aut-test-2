@@ -37,7 +37,7 @@ export const Logs = (): JSX.Element => {
     dispatch(setPagination({ page: newPage, limit, total }))
 
   return (
-    <Box styles={{ width: '100%' }}>
+    <Box styles={{ width: '100%', height: '100%' }}>
       <Flex justify="space-between" align="center">
         <FilledButton
           // onClick={() => console.log('test')}

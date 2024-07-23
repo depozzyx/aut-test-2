@@ -13,13 +13,14 @@ import { TAgentSortBy, TAgentWorkStatus } from '@/features/agents/types'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { notificationActions } from '@/features/common/notifications/store'
 import { modalsActions } from '@/features/common/modals/store'
+import { ORDER_BY } from '@/constants/orderBy'
+import { AGENT_SORT_BY } from '../constants'
 
 export type TInit = {
   selectedId: null | number | string
   isLoading: boolean
   agentsList: TAgent[]
   activeAgents: TAgent[]
-  meta: unknown
   pagination: TPagination
   sort: { sortBy?: TAgentSortBy; orderBy: TOrderBy }
   statusFilter?: TAgentWorkStatus
@@ -33,13 +34,12 @@ const init: TInit = {
   isLoading: false,
   agentsList: [],
   activeAgents: [],
-  meta: {},
   pagination: {
     page: 1,
     limit: 7,
     total: 1,
   },
-  sort: { sortBy: undefined, orderBy: 'ASC' },
+  sort: { sortBy: AGENT_SORT_BY.CREATED_AT, orderBy: ORDER_BY.DESC },
   statusFilter: undefined,
   deletedAgentData: null,
   searchTerm: '',
