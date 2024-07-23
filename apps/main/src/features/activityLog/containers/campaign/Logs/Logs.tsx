@@ -6,32 +6,35 @@ import { useRedux } from '@/hooks/use-redux'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { Flex } from '@/components/Flex'
 import { Loader } from '@peiko/components/loaders/Loader/Loader'
+import { createStructuredSelector } from 'reselect'
 import {
-  asyncGetCampaignLog,
   selectIsCLLoading,
   selectLogPagination,
-  selectParams,
+  setPagination,
 } from '../../../store/campaign-log'
 import { LogContentWrapper, PaginationContainer } from './Logs.styled'
 import { LogsPanel } from './LogsPanel'
 import { LogsRecords } from './LogsRecords'
+import { useFetchCampaignLogs } from '../../../hooks/campaign/use-fetch-logs'
 
 export const Logs = (): JSX.Element => {
   const { t } = useTranslation('activity-log')
   const { dispatch, select } = useRedux()
+  useFetchCampaignLogs()
 
-  const isCLLoading = select(selectIsCLLoading)
-  const params = select(selectParams, shallowEqual)
-  const { page, limit, total } = select(selectLogPagination)
+  const {
+    isCLLoading,
+    pagination: { page, limit, total },
+  } = select(
+    createStructuredSelector({
+      isCLLoading: selectIsCLLoading,
+      pagination: selectLogPagination,
+    }),
+    shallowEqual,
+  )
 
-  const onChangePage = (page: number) =>
-    dispatch(
-      asyncGetCampaignLog({
-        ...params,
-        page,
-        limit,
-      }),
-    )
+  const onChangePage = (newPage: number) =>
+    dispatch(setPagination({ page: newPage, limit, total }))
 
   return (
     <Box styles={{ width: '100%' }}>
@@ -49,7 +52,7 @@ export const Logs = (): JSX.Element => {
         {isCLLoading ? (
           <Loader width="32px" height="32px" styles={{ height: '100%' }} />
         ) : (
-          <LogsRecords />
+          <LogsRecords isLoading={isCLLoading} />
         )}
       </LogContentWrapper>
       <PaginationContainer>

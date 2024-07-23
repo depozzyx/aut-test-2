@@ -1,8 +1,13 @@
-import { TActivityLog } from '@/types/activity-logs'
 import { format } from 'date-fns'
-import { GroupedLogs } from '../types/activity-log'
 
-export const groupLogsByDate = (data: TActivityLog[]): GroupedLogs[] => {
+export type TGroupedLogs<T> = {
+  createdDay: string
+  data: T[]
+}
+
+export const groupLogsByDate = <T extends { createdAt: string | Date }>(
+  data: T[],
+): TGroupedLogs<T>[] => {
   const groupedData = data.reduce((acc, obj) => {
     const createdDay = format(new Date(obj.createdAt), 'yyyy-MM-dd')
     const newAcc = { ...acc }
@@ -12,7 +17,7 @@ export const groupLogsByDate = (data: TActivityLog[]): GroupedLogs[] => {
     newAcc[createdDay].data.push(obj)
 
     return newAcc
-  }, {} as { [key: string]: GroupedLogs })
+  }, {} as { [key: string]: TGroupedLogs<T> })
 
   return Object.values(groupedData)
 }

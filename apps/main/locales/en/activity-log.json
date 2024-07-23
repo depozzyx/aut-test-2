@@ -78,7 +78,17 @@
       "ASC": "ASC",
       "DESC": "DESC"
     },
-    "no-data": "No data",
-    "please-select-campaign": "Please select a campaign from the list"
+    "please-select-campaign": "Please select a campaign from the list",
+    "logs": {
+      "default": "Unknown message",
+      "actionType": {
+        "start": "{{ value1 }} was started",
+        "stop": "{{ value1 }} was stopped",
+        "call_initiated": "Call initiated in campaign {{ value1 }}",
+        "call_requeue": "Call requeue in campaign {{ value1 }}"
+      },
+      "details": "details",
+      "campaign-details-info": "Details of campaign"
+    }
   }
 }

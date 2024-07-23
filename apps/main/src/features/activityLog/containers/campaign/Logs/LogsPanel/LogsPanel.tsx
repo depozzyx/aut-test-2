@@ -12,7 +12,7 @@ import { SearchFieldIcon } from '@/icons/SearchFieldIcon'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { TDateValue } from '@/inputs/RangeDayPicker/types'
 import { selectParams, updateParams } from '../../../../store/campaign-log'
-import { useCampaignFilters } from '../../../../hooks/use-campaign-filters'
+import { useCampaignFilters } from '../../../../hooks/campaign/use-campaign-filters'
 
 export const LogsPanel = (): JSX.Element => {
   const { t } = useTranslation('activity-log')

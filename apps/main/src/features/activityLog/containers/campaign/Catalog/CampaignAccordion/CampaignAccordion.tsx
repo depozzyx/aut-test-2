@@ -1,14 +1,9 @@
 import { useTheme } from 'styled-components'
-import { shallowEqual } from 'react-redux'
 import { useRedux } from '@/hooks/use-redux'
 import { FilledAccordion } from '@peiko/components/accordions/FilledAccordion'
 import { CampaignAccordionHeader } from './components/CampaignAccordionHeader'
 import { CampaignAccordionContent } from './components/CampaignAccordionContent'
-import {
-  asyncGetCampaignLog,
-  selectLogPagination,
-  selectParams,
-} from '../../../../store/campaign-log'
+import { updateParams } from '../../../../store/campaign-log'
 
 type TProps = {
   campaignName: string
@@ -24,16 +19,11 @@ export const CampaignAccordion = ({
   onToggle,
 }: TProps): JSX.Element => {
   const theme = useTheme()
-  const { dispatch, select } = useRedux()
-  const params = select(selectParams, shallowEqual)
-  const pagination = select(selectLogPagination)
+  const { dispatch } = useRedux()
 
   const handleGetCampaignLogInfo = (campaignId: number) => {
     dispatch(
-      asyncGetCampaignLog({
-        ...params,
-        page: pagination.page,
-        limit: pagination.limit,
+      updateParams({
         campaignId,
       }),
     )

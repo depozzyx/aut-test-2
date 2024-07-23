@@ -28,7 +28,7 @@ export const CampaignsTooltip = ({ campaigns }: ICampaignTooltipProps): JSX.Elem
 
   const handleOpenCampaignInfoModal = (campaign: TAssignedCampaign) => {
     dispatch(setSelectedAssignedCampaign(campaign))
-    setModal({ modalName: MODAL_NAMES.CAMPAING_INFO, isOpen: true })
+    setModal({ modalName: MODAL_NAMES.CAMPAIGN_INFO, isOpen: true })
   }
 
   return (

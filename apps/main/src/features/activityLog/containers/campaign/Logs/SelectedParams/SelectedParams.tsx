@@ -5,7 +5,7 @@ import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { useRedux } from '@/hooks/use-redux'
 import { deleteParams, resetParams, selectParams } from '../../../../store/campaign-log'
-import { useCampaignFilters } from '../../../../hooks/use-campaign-filters'
+import { useCampaignFilters } from '../../../../hooks/campaign/use-campaign-filters'
 
 export const SelectedParams = (): JSX.Element => {
   const { t } = useTranslation('activity-log')

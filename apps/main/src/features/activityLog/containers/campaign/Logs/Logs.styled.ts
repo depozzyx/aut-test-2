@@ -8,8 +8,9 @@ export const LogContentWrapper = styled(Card)<{ isLoading: boolean }>(
     display: flex;
     flex: 1;
     width: 100%;
-    height: 100%;
     background-color: ${theme.palette.overlay};
+    padding: 12px;
+    min-height: 442px;
 
     ${isLoading &&
     css`
