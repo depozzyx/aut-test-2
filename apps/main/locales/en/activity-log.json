@@ -82,10 +82,10 @@
     "logs": {
       "default": "Unknown message",
       "actionType": {
-        "start": "{{ value1 }} was started",
-        "stop": "{{ value1 }} was stopped",
-        "call_initiated": "Call initiated in campaign {{ value1 }}",
-        "call_requeue": "Call requeue in campaign {{ value1 }}"
+        "start": "<base><value>{{ value1 }}</value> started campaign <value>{{ value2 }}</value></base>",
+        "stop": "<base><value>{{ value1 }}</value> stopped campaign <value>{{ value2 }}</value></base>",
+        "call_initiated": "<base><value>{{ value1 }}</value> initiated a call in campaign <value>{{ value2 }}</value> for lead <value>{{ value3 }} ({{ value4}})</value> </base>",
+        "call_requeue": "<base>Call requeue in campaign <value>{{ value1 }}</value> for lead <value>{{ value2 }} ({{ value3}})</value></base>"
       },
       "details": "details",
       "campaign-details-info": "Details of campaign"

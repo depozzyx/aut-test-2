@@ -21,7 +21,7 @@ export const DetailsLogModal = (): JSX.Element | null => {
     modalState?.modalName === MODAL_NAMES.CAMPAIGN_DETAILS_LOG && modalState.isOpen
 
   const title = (
-    <Text styles={{ marginBottom: '4px' }}>
+    <Text tag="span" styles={{ marginBottom: '4px' }}>
       {t('campaign.logs.campaign-details-info')}
     </Text>
   )
