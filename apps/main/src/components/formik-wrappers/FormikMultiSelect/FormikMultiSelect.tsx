@@ -3,7 +3,7 @@ import { getFieldError } from '@peiko/components/inputs/utils/get-field-error'
 import useTranslation from 'next-translate/useTranslation'
 import { TFormik } from '@peiko/types/formik'
 import { deepEqual } from '@peiko/utils/deep-equal'
-import { MultiSelect } from '../../MutliSelect'
+import { VirtualizedMultiSelect } from '../../MutliSelect'
 import { TMultiSelectProps, TSelectOption, TSelectEvent } from '../../MutliSelect/types'
 
 type TProps = {
@@ -33,7 +33,7 @@ export const FormikMultiSelect: React.FC<TProps> = memo(
     const fieldError = getFieldError({ touched, error, t })
 
     return (
-      <MultiSelect
+      <VirtualizedMultiSelect
         {...props}
         value={field.value}
         onChange={handleChange as (p: TSelectEvent) => void}

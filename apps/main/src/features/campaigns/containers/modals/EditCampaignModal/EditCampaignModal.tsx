@@ -17,7 +17,7 @@ export const EditCampaignModal = ({ type }: TProps): JSX.Element => {
   const showModal =
     modalState?.modalName === MODAL_NAMES.EDIT_CAMPAIGN && modalState.isOpen
 
-  const title = <Text>{t('edit-campaign.title')}</Text>
+  const title = <Text tag="span">{t('edit-campaign.title')}</Text>
 
   return (
     <ModalMessage

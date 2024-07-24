@@ -25,7 +25,7 @@ import { asyncEditCampaign } from '../../../../../store/edit-campaign'
 import { TCampaignTableType } from '../../../../../types'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
 import { useGetCampaignById } from '../../../../../hooks/use-getCampaignById'
-import { INITIAL_REQUEST_PARAMS } from '../../../../../constants'
+import { INITIAL_REQUEST_PARAMS_EDIT } from '../../../../../constants'
 
 type TProps = {
   type: TCampaignTableType
@@ -60,11 +60,11 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
   const { data } = useGetCampaignById()
 
   useEffect(() => {
-    dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS))
+    dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS_EDIT))
   }, [])
 
   useEffect(() => {
-    dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS))
+    dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_EDIT))
   }, [])
 
   const formik = useFormik<TFormValues>({
