@@ -10,9 +10,10 @@ import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { DetailsLogModal } from '@/features/activityLog/containers/campaign/Logs/DetailsLogModal'
 import { TDetails } from '@/api-rest/campaign-log/types'
-import { useCampaignMessage } from '../../../../hooks/campaign/use-campaign-message'
+import Trans from 'next-translate/Trans'
 import { selectLogsData, setCurrentLogDetails } from '../../../../store/campaign-log'
 import { DetailsText } from './LogsRecords.styled'
+import { getCampaignLogValues } from '../../../../utils/getCampaignLogValues'
 
 type TProps = {
   isLoading: boolean
@@ -23,8 +24,6 @@ export const LogsRecords = ({ isLoading }: TProps): JSX.Element => {
   const { dispatch, select } = useRedux()
   const { setModal } = useModals()
   const logs = select(selectLogsData, shallowEqual)
-
-  const { createLogMessage } = useCampaignMessage()
 
   const handleOnDetailsClick = (details: TDetails) => {
     dispatch(setCurrentLogDetails(details))
@@ -82,9 +81,22 @@ export const LogsRecords = ({ isLoading }: TProps): JSX.Element => {
                   {data.map((log) => (
                     <Flex key={log.id} fullWidth justify="space-between" align="center">
                       <Flex gap={12} align="center">
-                        <Text variant="f8" color="main5">
-                          {createLogMessage(log)}
-                        </Text>
+                        <Trans
+                          i18nKey={`activity-log:campaign.logs.actionType.${log.actionType}`}
+                          components={{
+                            value: (
+                              <Text
+                                tag="span"
+                                variant="f8"
+                                color="main5"
+                                styles={{ fontWeight: 'bold' }}
+                              />
+                            ),
+                            base: <Text tag="span" variant="f8" color="main5" />,
+                          }}
+                          values={getCampaignLogValues(log)}
+                          defaultTrans="activity-log:campaign.logs.default"
+                        />
                         {log.details && (
                           <DetailsText
                             variant="f10"

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { Tooltip } from '@peiko/components/Tooltip'
 import { Text } from '@peiko/components/Text'
@@ -16,15 +15,10 @@ interface ICampaignTooltipProps {
 
 export const CampaignsTooltip = ({ campaigns }: ICampaignTooltipProps): JSX.Element => {
   const { t } = useTranslation('agents')
-  const [isOpen, setIsOpen] = useState(false)
   const { dispatch } = useRedux()
   const { setModal } = useModals()
 
   const campaignsAmount = campaigns.length
-
-  const handleOpen = () => {
-    setIsOpen(true)
-  }
 
   const handleOpenCampaignInfoModal = (campaign: TAssignedCampaign) => {
     dispatch(setSelectedAssignedCampaign(campaign))
@@ -33,10 +27,9 @@ export const CampaignsTooltip = ({ campaigns }: ICampaignTooltipProps): JSX.Elem
 
   return (
     <Tooltip
-      open={isOpen}
       position="bottom center"
       trigger={
-        <Trigger onClick={handleOpen} startAdornment={<SmallInfoIcon />}>
+        <Trigger startAdornment={<SmallInfoIcon />} disabled={!campaignsAmount}>
           <Text variant="f8" color="base">
             {t('campaigns-amount', { campaignsAmount })}
           </Text>

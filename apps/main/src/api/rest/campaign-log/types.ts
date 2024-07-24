@@ -1,6 +1,8 @@
 import { TPagination } from '@/types/entities/pagination'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { TCampaignStatus } from '@/features/campaigns/types'
+import { TUserRoles } from '@/types/roles'
+import { TLeadList } from '@/features/campaigns/hooks/use-getCampaignById'
 
 type TEntityType = 'campaign'
 
@@ -32,6 +34,21 @@ export type TCLUser = {
   id: number
   email: string
   createdAt: string
+  role: TUserRoles
+  username: string
+  workStatus: string
+}
+
+export type TCLLead = {
+  id: number
+  name: string
+  phone: string
+  timezone: string
+  status: 'active' | 'inactive'
+  source: string
+  createdAt: string
+  leadListId: number
+  leadList: TLeadList
 }
 
 export type TDetails = {
@@ -58,7 +75,7 @@ export type TCampaignLogData = {
   details: null | TDetails
   entityType: TEntityType
   id: number
-  lead: null
+  lead: null | TCLLead
   leadId: null
   pbxStatistics: null
   user: TCLUser

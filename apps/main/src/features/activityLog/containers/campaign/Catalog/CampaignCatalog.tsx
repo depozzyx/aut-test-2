@@ -27,7 +27,7 @@ export const CampaignCatalog = (): JSX.Element => {
   }
 
   return (
-    <Box>
+    <Box styles={{ width: '100%' }}>
       <CatalogPanel />
       <CatalogWrapper>
         {campaignsList.map((campaign) => (

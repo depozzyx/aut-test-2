@@ -4,6 +4,7 @@ import { ORDER_BY } from '@/constants/orderBy'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { TPagination } from '@/types/entities/pagination'
 import { TManager, TManagerSortBy } from '@/api-rest/manager/types'
+import { SORT_BY } from '../constants'
 
 export type TInit = {
   isLoading: boolean
@@ -22,7 +23,7 @@ const init: TInit = {
   },
   managersList: [],
   selectedId: null,
-  sort: { sortBy: undefined, orderBy: ORDER_BY.ASC },
+  sort: { sortBy: SORT_BY.CREATED_AT, orderBy: ORDER_BY.DESC },
 }
 
 const managers = createSlice({

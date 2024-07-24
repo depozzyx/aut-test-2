@@ -31,15 +31,15 @@ export const IconButton = styled(BaseIconButton)((props) => {
     })}
 
     ${buttonFocusColors({
-      bg: palette.main15,
+      bg: palette.main9,
     })}
 
     ${buttonHoverColors({
-      bg: palette.main16,
+      bg: palette.main9,
     })}
 
     ${buttonPressedColors({
-      bg: palette.main15,
+      bg: palette.main9,
     })}
 
     ${buttonDisabledColors({

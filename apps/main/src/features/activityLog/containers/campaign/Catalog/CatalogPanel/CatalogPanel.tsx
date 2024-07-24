@@ -8,7 +8,7 @@ export const CatalogPanel = (): JSX.Element => {
 
   return (
     <Container>
-      <CampaignSearchField placeholder={t('placeholder.short-search')} />
+      <CampaignSearchField placeholder={t('placeholder.search-campaign')} />
       <DateSortField />
     </Container>
   )
