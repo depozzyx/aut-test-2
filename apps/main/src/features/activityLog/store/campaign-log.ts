@@ -1,16 +1,12 @@
 import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit'
-import { TAsyncAction, TSelector } from '@/store'
+import { TSelector } from '@/store'
 import { TCampaignLogData, TCampaignLogsReq } from '@/api-rest/campaign-log/types'
-import { handleRestError } from '@/features/common/error'
-import { campaignLogsApi } from '@/api-rest/campaign-log'
 import { TPagination } from '@/types/entities/pagination'
-import {
-  groupLogsByDate,
-  TGroupedLogs,
-} from '@/features/activityLog/utils/groupLogsByDate'
+import { TGroupedLogs } from '@/features/activityLog/utils/groupLogsByDate'
+import { ORDER_BY } from '@/constants/orderBy'
+import { SORT_BY } from '@/features/campaigns/constants'
 
 export type TInit = {
-  isCLLoading: boolean
   params: Omit<TCampaignLogsReq, 'page' | 'limit'>
   pagination: TPagination
   logsData: [] | TGroupedLogs<TCampaignLogData>[]
@@ -18,9 +14,9 @@ export type TInit = {
 }
 
 const init: TInit = {
-  isCLLoading: false,
   params: {
-    orderBy: 'ASC',
+    sortBy: SORT_BY.CREATED_AT,
+    orderBy: ORDER_BY.DESC,
   },
   pagination: {
     page: 1,
@@ -46,9 +42,6 @@ const campaignLog = createSlice({
     resetParams(state) {
       state.params = init.params
     },
-    setIsCLLoading: (state, action: PayloadAction<TInit['isCLLoading']>) => {
-      state.isCLLoading = action.payload
-    },
     setLogsData: (state, action: PayloadAction<TInit['logsData']>) => {
       state.logsData = action.payload
     },
@@ -66,7 +59,6 @@ export const {
   updateParams,
   deleteParams,
   resetParams,
-  setIsCLLoading,
   setLogsData,
   setPagination,
   resetCampaignLog,
@@ -82,11 +74,6 @@ export const selectLogPagination = createSelector(
   ({ pagination }) => pagination,
 )
 
-export const selectIsCLLoading = createSelector(
-  selectCampaignLog,
-  ({ isCLLoading }) => isCLLoading,
-)
-
 export const selectLogsData = createSelector(
   selectCampaignLog,
   ({ logsData }) => logsData,
@@ -98,30 +85,3 @@ export const selectCurrentLogDetails = createSelector(
 )
 
 export default campaignLog.reducer
-
-export const asyncGetCampaignLog = (): TAsyncAction => async (dispatch, getState) => {
-  try {
-    dispatch(setIsCLLoading(true))
-    const { params, pagination } = getState().campaignLog
-
-    const req = {
-      page: pagination.page,
-      limit: pagination.limit,
-      ...params,
-    }
-
-    const {
-      data: { data, pagination: resPagination },
-    } = await campaignLogsApi.getCampaignLogs(req)
-
-    dispatch(setLogsData(groupLogsByDate(data)))
-    dispatch(setPagination(resPagination))
-  } catch (e) {
-    handleRestError({
-      e,
-      dispatch,
-    })
-  } finally {
-    dispatch(setIsCLLoading(false))
-  }
-}

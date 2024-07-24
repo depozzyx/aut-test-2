@@ -5,11 +5,7 @@ import { useRedux } from '@/hooks/use-redux'
 import { Flex } from '@/components/Flex'
 import { Loader } from '@peiko/components/loaders/Loader/Loader'
 import { createStructuredSelector } from 'reselect'
-import {
-  selectIsCLLoading,
-  selectLogPagination,
-  setPagination,
-} from '../../../store/campaign-log'
+import { selectLogPagination, setPagination } from '../../../store/campaign-log'
 import { LogContentWrapper, PaginationContainer } from './Logs.styled'
 import { LogsPanel } from './LogsPanel'
 import { LogsRecords } from './LogsRecords'
@@ -17,14 +13,12 @@ import { useFetchCampaignLogs } from '../../../hooks/campaign/use-fetch-logs'
 
 export const Logs = (): JSX.Element => {
   const { dispatch, select } = useRedux()
-  useFetchCampaignLogs()
+  const { isLoading } = useFetchCampaignLogs()
 
   const {
-    isCLLoading,
     pagination: { page, limit, total },
   } = select(
     createStructuredSelector({
-      isCLLoading: selectIsCLLoading,
       pagination: selectLogPagination,
     }),
     shallowEqual,
@@ -38,11 +32,11 @@ export const Logs = (): JSX.Element => {
       <Flex justify="space-between" align="center">
         <LogsPanel />
       </Flex>
-      <LogContentWrapper isLoading={isCLLoading}>
-        {isCLLoading ? (
+      <LogContentWrapper isLoading={isLoading}>
+        {isLoading ? (
           <Loader width="32px" height="32px" styles={{ height: '100%' }} />
         ) : (
-          <LogsRecords isLoading={isCLLoading} />
+          <LogsRecords isLoading={isLoading} />
         )}
       </LogContentWrapper>
       <PaginationContainer>
