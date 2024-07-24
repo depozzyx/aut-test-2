@@ -20,6 +20,7 @@ import {
   selectAgentsOptions,
   selectAgentsPagination,
 } from '@/features/agents/store/agents'
+import { ORDER_BY } from '@/constants/orderBy'
 import { asyncEditCampaign } from '../../../../../store/edit-campaign'
 import { TCampaignTableType } from '../../../../../types'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
@@ -95,7 +96,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
         asyncGetLeadListCatalog({
           page: leadsPage + 1,
           limit: leadsLimit,
-          orderBy: 'ASC',
+          orderBy: ORDER_BY.DESC,
         }),
       )
   }
@@ -108,7 +109,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
           {
             page: agentsPage + 1,
             limit: agentsLimit,
-            orderBy: 'ASC',
+            orderBy: ORDER_BY.DESC,
           },
           true,
         ),

@@ -11,7 +11,7 @@ export const EditAgentModal = (): JSX.Element => {
 
   const showModal = modalState?.modalName === MODAL_NAMES.EDIT_AGENT && modalState.isOpen
 
-  const title = <Text>{t('edit-agent.title')}</Text>
+  const title = <Text tag="span">{t('edit-agent.title')}</Text>
 
   return (
     <ModalMessage

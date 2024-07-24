@@ -218,7 +218,13 @@ export const asyncRemoveAgent =
           values: { agentName: data.username ?? '' },
         }),
       )
-      dispatch(asyncGetAgentsList({ page: 1, limit: 10, orderBy: 'ASC' }))
+      dispatch(
+        asyncGetAgentsList({
+          page: 1,
+          limit: 10,
+          orderBy: ORDER_BY.DESC,
+        }),
+      )
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
