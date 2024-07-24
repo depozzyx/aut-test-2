@@ -3,7 +3,11 @@ import { useRedux } from '@/hooks/use-redux'
 import { FilledAccordion } from '@peiko/components/accordions/FilledAccordion'
 import { CampaignAccordionHeader } from './components/CampaignAccordionHeader'
 import { CampaignAccordionContent } from './components/CampaignAccordionContent'
-import { updateParams } from '../../../../store/campaign-log'
+import {
+  selectLogPagination,
+  setPagination,
+  updateParams,
+} from '../../../../store/campaign-log'
 
 type TProps = {
   campaignName: string
@@ -19,9 +23,16 @@ export const CampaignAccordion = ({
   onToggle,
 }: TProps): JSX.Element => {
   const theme = useTheme()
-  const { dispatch } = useRedux()
+  const { dispatch, select } = useRedux()
+  const pagination = select(selectLogPagination)
 
   const handleGetCampaignLogInfo = (campaignId: number) => {
+    dispatch(
+      setPagination({
+        ...pagination,
+        page: 1,
+      }),
+    )
     dispatch(
       updateParams({
         campaignId,
