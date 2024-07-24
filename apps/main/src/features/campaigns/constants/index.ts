@@ -46,8 +46,14 @@ export const SORT_BY = {
   NAME: 'name',
 } as const
 
-export const INITIAL_REQUEST_PARAMS = {
+export const INITIAL_REQUEST_PARAMS_CREATE = {
   page: 1,
   limit: 10,
+  orderBy: ORDER_BY.DESC,
+}
+
+export const INITIAL_REQUEST_PARAMS_EDIT = {
+  page: 1,
+  limit: 1000000,
   orderBy: ORDER_BY.DESC,
 }

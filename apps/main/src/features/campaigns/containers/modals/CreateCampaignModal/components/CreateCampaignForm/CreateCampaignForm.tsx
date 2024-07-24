@@ -24,7 +24,7 @@ import {
 } from '@/features/agents/store/agents'
 import { reviewFormData } from '../../../../../store/create-campaign'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
-import { INITIAL_REQUEST_PARAMS } from '../../../../../constants'
+import { INITIAL_REQUEST_PARAMS_CREATE } from '../../../../../constants'
 
 export const CreateCampaignForm = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
@@ -59,8 +59,8 @@ export const CreateCampaignForm = (): JSX.Element => {
   useEffect(() => {
     dispatch(resetLeadsList())
     dispatch(resetAgentsList())
-    dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS))
-    dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS))
+    dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_CREATE))
+    dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS_CREATE))
   }, [])
 
   const onLeadsScrollToBottom = () => {
