@@ -95,7 +95,7 @@ export const LogsRecords = ({ isLoading }: TProps): JSX.Element => {
                             base: <Text tag="span" variant="f8" color="main5" />,
                           }}
                           values={getCampaignLogValues(log)}
-                          defaultTrans="activity-log:campaign.logs.default"
+                          defaultTrans="<base>Unknown message</base>"
                         />
                         {log.details && (
                           <DetailsText
