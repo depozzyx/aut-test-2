@@ -1,15 +1,23 @@
-import { useEffect, useRef } from 'react'
-import isEqual from 'lodash/isEqual'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import { useRedux } from '@/hooks/use-redux'
+import { TCampaignLogsReq } from '@/api-rest/campaign-log/types'
+import { campaignLogsApi } from '@/api-rest/campaign-log'
+import useSWR from 'swr'
+import { handleRestError } from '@/features/common/error'
+import { groupLogsByDate } from '@/features/activityLog/utils/groupLogsByDate'
 import {
-  asyncGetCampaignLog,
   selectLogPagination,
   selectParams,
+  setLogsData,
+  setPagination,
 } from '../../store/campaign-log'
 
-export function useFetchCampaignLogs(): undefined {
+type TReturn = {
+  isLoading: boolean
+}
+
+export function useFetchCampaignLogs(): TReturn {
   const { dispatch, select } = useRedux()
 
   const { params, pagination } = select(
@@ -20,17 +28,26 @@ export function useFetchCampaignLogs(): undefined {
     shallowEqual,
   )
 
-  const prevParamsRef = useRef(params)
-  const prevPaginationRef = useRef(pagination)
+  const fetcher = (params: TCampaignLogsReq) =>
+    campaignLogsApi.getCampaignLogs(params).then((response) => response.data)
 
-  useEffect(() => {
-    if (
-      !isEqual(params, prevParamsRef.current) ||
-      !isEqual(pagination, prevPaginationRef.current)
-    ) {
-      dispatch(asyncGetCampaignLog())
-      prevParamsRef.current = params
-      prevPaginationRef.current = pagination
-    }
-  }, [params, pagination])
+  const { isLoading } = useSWR(
+    ['/campaign-logs', pagination.page, pagination.limit, ...Object.values(params)],
+    () =>
+      fetcher({
+        page: pagination.page,
+        limit: pagination.limit,
+        ...params,
+      }),
+    {
+      revalidateOnFocus: false,
+      onSuccess: (data) => {
+        dispatch(setLogsData(groupLogsByDate(data.data)))
+        dispatch(setPagination(data.pagination))
+      },
+      onError: (e) => handleRestError({ e, dispatch }),
+    },
+  )
+
+  return { isLoading }
 }

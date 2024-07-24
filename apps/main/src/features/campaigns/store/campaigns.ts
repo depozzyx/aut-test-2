@@ -296,7 +296,7 @@ export const asyncRemoveCampaign =
       const params = {
         page: pagination.page,
         limit: pagination.limit,
-        orderBy: 'ASC',
+        orderBy: ORDER_BY.ASC,
         search: searchTerm,
         name: filterCampaignName,
       }
@@ -343,7 +343,8 @@ export const asyncUpdateCampaignStatus =
       const params = {
         page: pagination.page,
         limit: pagination.limit,
-        orderBy: ORDER_BY.ASC,
+        sortBy: SORT_BY.CREATED_AT,
+        orderBy: ORDER_BY.DESC,
       }
 
       getCurrentCampaigns({
