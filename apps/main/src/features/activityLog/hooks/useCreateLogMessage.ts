@@ -27,25 +27,21 @@ export const useCreateLogMessage = (): {
             return message(userName, targetUser?.username ?? '')
           case 'delete':
             return message(userName, targetUser?.username ?? '')
-          case 'create-api-key':
-            return message(userName)
-          case 'delete-api-key':
-            return message(userName)
           default:
             return unknownMessage
         }
       case 'campaign':
         switch (actionType) {
           case 'campaign-start':
-            return message(userName, campaign?.name)
+            return message(userName, campaign?.name ?? '')
           case 'campaign-stop':
-            return message(userName, campaign?.name)
+            return message(userName, campaign?.name ?? '')
           case 'create':
-            return message(userName, campaign?.name)
+            return message(userName, campaign?.name ?? '')
           case 'update':
-            return message(userName, campaign?.name)
+            return message(userName, campaign?.name ?? '')
           case 'delete':
-            return message(userName, campaign?.name)
+            return message(userName, campaign?.name ?? '')
           default:
             return unknownMessage
         }
@@ -58,9 +54,9 @@ export const useCreateLogMessage = (): {
         }
       case 'api-key':
         switch (actionType) {
-          case 'create-api-key':
+          case 'create':
             return message(userName)
-          case 'delete-api-key':
+          case 'delete':
             return message(userName)
           default:
             return unknownMessage
