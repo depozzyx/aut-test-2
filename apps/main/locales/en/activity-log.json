@@ -7,9 +7,7 @@
     "user": {
       "create": "{{value1}} has created an account for {{value2}}",
       "update": "{{value1}} has updated an account for {{value2}}",
-      "delete": "{{value1}} has deleted an account for {{value2}}",
-      "create-api-key": "{{value1}} created api key",
-      "delete-api-key": "{{value1}} deleted api key"
+      "delete": "{{value1}} has deleted an account for {{value2}}"
     },
     "campaign": {
       "campaign-start": "{{value1}} has started an campaign: {{value2}}",
@@ -22,8 +20,8 @@
       "export-activity-log": "{{value1}} exported activity log"
     },
     "api-key": {
-      "create-api-key": "{{value1}} created api key",
-      "delete-api-key": "{{value1}} deleted api key"
+      "create": "{{value1}} created api key",
+      "delete": "{{value1}} deleted api key"
     },
     "lead": {
       "import-lead": "{{value1}} imported leads"
