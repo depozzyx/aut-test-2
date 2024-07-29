@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import JsSIP, { UA } from 'jssip'
 import {
   UAConfiguration,
@@ -12,7 +12,7 @@ import { errorActions } from '@/features/common/error'
 import { callSocket } from 'api/socket/call'
 import { socket } from 'api/socket/Socket'
 import { TCallsInit } from 'api/socket/call/types'
-import { agentActions, agentStatusSelector } from '@/features/common/agentStatus/store'
+import { agentActions } from '@/features/common/agentStatus/store'
 
 const TEXTS = {
   SUBSCRIBE_CALLS: 'Subscribe calls',
@@ -30,11 +30,9 @@ export const useSIPService = (): {
   setLead: (lead: TCallsInit | null) => void
 } => {
   const { pbxAuth } = useAuth()
-  const { dispatch, select } = useRedux()
+  const { dispatch } = useRedux()
   const [endedCall, setEndedCall] = useState(false)
   const [lead, setLead] = useState<TCallsInit | null>(null)
-  const { status } = select(agentStatusSelector)
-  const statusRef = useRef(status)
 
   const sipOptions: AnswerOptions = {
     pcConfig: {
@@ -60,6 +58,7 @@ export const useSIPService = (): {
   const endCall = () => {
     ua?.terminateSessions()
     setEndedCall(true)
+    dispatch(agentActions.setStatusAsync('pause'))
   }
 
   const onSubscribeCalls = () => {
@@ -143,9 +142,6 @@ export const useSIPService = (): {
 
             session.on('ended', (e) => {
               console.warn('Call ended', e)
-              if (statusRef.current && statusRef.current !== 'finish') {
-                dispatch(agentActions.setStatusAsync('pause'))
-              }
             })
 
             session.on('failed', (e) => {
