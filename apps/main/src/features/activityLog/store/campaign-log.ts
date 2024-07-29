@@ -3,8 +3,6 @@ import { TSelector } from '@/store'
 import { TCampaignLogData, TCampaignLogsReq } from '@/api-rest/campaign-log/types'
 import { TPagination } from '@/types/entities/pagination'
 import { TGroupedLogs } from '@/features/activityLog/utils/groupLogsByDate'
-import { ORDER_BY } from '@/constants/orderBy'
-import { SORT_BY } from '@/features/campaigns/constants'
 
 export type TInit = {
   params: Omit<TCampaignLogsReq, 'page' | 'limit'>
@@ -14,10 +12,7 @@ export type TInit = {
 }
 
 const init: TInit = {
-  params: {
-    sortBy: SORT_BY.CREATED_AT,
-    orderBy: ORDER_BY.DESC,
-  },
+  params: {},
   pagination: {
     page: 1,
     limit: 25,

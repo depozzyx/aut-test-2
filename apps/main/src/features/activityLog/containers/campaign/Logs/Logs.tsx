@@ -3,13 +3,14 @@ import { Box } from '@peiko/components/Box'
 import { Pagination } from '@peiko/components/Pagination'
 import { useRedux } from '@/hooks/use-redux'
 import { Flex } from '@/components/Flex'
-import { Loader } from '@peiko/components/loaders/Loader/Loader'
+import { Loader } from '@peiko/components/loaders/Loader'
 import { createStructuredSelector } from 'reselect'
 import { selectLogPagination, setPagination } from '../../../store/campaign-log'
 import { LogContentWrapper, PaginationContainer } from './Logs.styled'
 import { LogsPanel } from './LogsPanel'
 import { LogsRecords } from './LogsRecords'
 import { useFetchCampaignLogs } from '../../../hooks/campaign/use-fetch-logs'
+import { SelectedParams } from './SelectedParams'
 
 export const Logs = (): JSX.Element => {
   const { dispatch, select } = useRedux()
@@ -32,6 +33,7 @@ export const Logs = (): JSX.Element => {
       <Flex justify="space-between" align="center">
         <LogsPanel />
       </Flex>
+      <SelectedParams />
       <LogContentWrapper isLoading={isLoading}>
         {isLoading ? (
           <Loader width="32px" height="32px" styles={{ height: '100%' }} />
