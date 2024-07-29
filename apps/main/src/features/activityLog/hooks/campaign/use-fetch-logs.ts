@@ -6,6 +6,8 @@ import { campaignLogsApi } from '@/api-rest/campaign-log'
 import useSWR from 'swr'
 import { handleRestError } from '@/features/common/error'
 import { groupLogsByDate } from '@/features/activityLog/utils/groupLogsByDate'
+import { SORT_BY } from '@/features/campaigns/constants'
+import { ORDER_BY } from '@/constants/orderBy'
 import {
   selectLogPagination,
   selectParams,
@@ -37,6 +39,8 @@ export function useFetchCampaignLogs(): TReturn {
       fetcher({
         page: pagination.page,
         limit: pagination.limit,
+        sortBy: SORT_BY.CREATED_AT,
+        orderBy: ORDER_BY.DESC,
         ...params,
       }),
     {
