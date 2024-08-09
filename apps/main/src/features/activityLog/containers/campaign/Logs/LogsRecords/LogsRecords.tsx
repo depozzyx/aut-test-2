@@ -97,11 +97,13 @@ export const LogsRecords = ({ isLoading }: TProps): JSX.Element => {
                           values={getCampaignLogValues(log)}
                           defaultTrans="<base>Unknown message</base>"
                         />
-                        {log.details && (
+                        {log.pbxStatistics && (
                           <DetailsText
                             variant="f10"
                             color="main5"
-                            onClick={() => handleOnDetailsClick(log.details as TDetails)}
+                            onClick={() =>
+                              handleOnDetailsClick(log.pbxStatistics as TDetails)
+                            }
                           >
                             {t('campaign.logs.details')}
                           </DetailsText>

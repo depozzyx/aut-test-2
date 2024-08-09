@@ -77,7 +77,7 @@ export type TCampaignLogData = {
   id: number
   lead: null | TCLLead
   leadId: null
-  pbxStatistics: null
+  pbxStatistics: null | TDetails
   user: TCLUser
   userId: number
 }
