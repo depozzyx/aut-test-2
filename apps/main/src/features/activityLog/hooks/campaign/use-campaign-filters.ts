@@ -23,7 +23,7 @@ export const useCampaignFilters = (): TFilters => {
 
   const actionTypes: TFilters['actionTypes'] = [
     { label: t('campaign.campaignFilters.start'), value: 'start' },
-    { label: t('campaign.campaignFilters.start'), value: 'stop' },
+    { label: t('campaign.campaignFilters.stop'), value: 'stop' },
     { label: t('campaign.campaignFilters.call-initiated'), value: 'call_initiated' },
     { label: t('campaign.campaignFilters.call-requeue'), value: 'call_requeue' },
   ]
