@@ -1,14 +1,43 @@
 import { useUnmount } from 'react-use'
+import dynamic from 'next/dynamic'
+
 import { Flex } from '@/components/Flex'
-import { RangeDayPicker } from '@/inputs/RangeDayPicker'
-import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 import { useRedux } from '@/hooks/use-redux'
-import { resetStore } from '@/features/campaigns/store/campaign-analytics'
+import { CAMPAIGN_TABLE_TYPES } from './constants'
+import { resetStore } from './store/campaign-analytics'
 import { CampaignNameFilter } from './containers/filters/CampaignNameFilter'
 import { useCampaignAnalytics } from './hooks/use-campaignAnalytics'
-import { ConversionRate } from './containers/charts/ConversionRate/ConversionRate'
-import { CallAnswerRate } from './containers/charts/CallAnswerRate'
-import { AverageCallDuration } from './containers/charts/AverageCallDuration/AverageCallDuration'
+
+const RangeDayPicker = dynamic(
+  () => import('@/inputs/RangeDayPicker').then((mod) => mod.RangeDayPicker),
+  {
+    ssr: false,
+  },
+)
+
+const CallAnswerRate = dynamic(
+  () => import('./containers/charts/CallAnswerRate').then((mod) => mod.CallAnswerRate),
+  {
+    ssr: false,
+  },
+)
+
+const ConversionRate = dynamic(
+  () => import('./containers/charts/ConversionRate').then((mod) => mod.ConversionRate),
+  {
+    ssr: false,
+  },
+)
+
+const AverageCallDuration = dynamic(
+  () =>
+    import('./containers/charts/AverageCallDuration').then(
+      (mod) => mod.AverageCallDuration,
+    ),
+  {
+    ssr: false,
+  },
+)
 
 export const CampaignAnalytics = (): JSX.Element => {
   const { dispatch } = useRedux()

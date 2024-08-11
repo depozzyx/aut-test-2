@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { shallowEqual } from 'react-redux'
 import { useFormik } from 'formik'
 import { createStructuredSelector } from 'reselect'
 import useTranslation from 'next-translate/useTranslation'
+
 import { useRedux } from '@/hooks/use-redux'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
@@ -89,21 +90,24 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     }
   }, [data])
 
-  const onLeadsScrollToBottom = () => {
-    const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 15))
+  const onLeadsScrollToBottom = useCallback(() => {
+    const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 10))
     if (leadsPage < lastPage)
       dispatch(
-        asyncGetLeadListCatalog({
-          page: leadsPage + 1,
-          limit: leadsLimit,
-          orderBy: ORDER_BY.DESC,
-        }),
+        asyncGetLeadListCatalog(
+          {
+            page: leadsPage + 1,
+            limit: leadsLimit,
+            orderBy: ORDER_BY.DESC,
+          },
+          true,
+        ),
       )
-  }
+  }, [leadsPage, leadsTotal, leadsLimit, dispatch])
 
-  const onAgentsScrollToBottom = () => {
-    const lastPage = agentsTotal === 0 ? 1 : Math.ceil(agentsTotal / (agentsLimit ?? 15))
-    if (agentsPage < lastPage)
+  const onAgentsScrollToBottom = useCallback(() => {
+    const lastPage = agentsTotal === 0 ? 1 : Math.ceil(agentsTotal / (agentsLimit ?? 10))
+    if (agentsPage < lastPage) {
       dispatch(
         asyncGetAgentsList(
           {
@@ -112,9 +116,11 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
             orderBy: ORDER_BY.DESC,
           },
           true,
+          true,
         ),
       )
-  }
+    }
+  }, [agentsPage, agentsLimit, agentsTotal, dispatch])
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">

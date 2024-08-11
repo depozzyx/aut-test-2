@@ -4,6 +4,8 @@ import { createStructuredSelector } from 'reselect'
 import { useRouter } from 'next/router'
 import { shallowEqual } from 'react-redux'
 import { useUnmount } from 'react-use'
+import dynamic from 'next/dynamic'
+
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
@@ -25,9 +27,29 @@ import {
   reset,
 } from './store/agents'
 import { AgentsListTable } from './containers/tables/AgentsListTable'
-import { DeleteAgentModal } from './containers/modals/DeleteAgentModal'
-import { EditAgentModal } from './containers/modals/EditAgentModal'
-import { CampaignInfoModal } from './containers/modals/CampaignInfoModal'
+
+const DeleteAgentModal = dynamic(
+  () =>
+    import('./containers/modals/DeleteAgentModal').then((mod) => mod.DeleteAgentModal),
+  {
+    ssr: false,
+  },
+)
+
+const EditAgentModal = dynamic(
+  () => import('./containers/modals/EditAgentModal').then((mod) => mod.EditAgentModal),
+  {
+    ssr: false,
+  },
+)
+
+const CampaignInfoModal = dynamic(
+  () =>
+    import('./containers/modals/CampaignInfoModal').then((mod) => mod.CampaignInfoModal),
+  {
+    ssr: false,
+  },
+)
 
 export const AgentsList = (): JSX.Element => {
   const router = useRouter()

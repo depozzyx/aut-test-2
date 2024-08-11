@@ -1,13 +1,15 @@
-import { Box } from '@peiko/components/Box'
-import useTranslation from 'next-translate/useTranslation'
 import React, { FC, useEffect } from 'react'
+import { shallowEqual } from 'react-redux'
+import { useUnmount } from 'react-use'
+import useTranslation from 'next-translate/useTranslation'
+import { createStructuredSelector } from 'reselect'
+import dynamic from 'next/dynamic'
+
+import { Box } from '@peiko/components/Box'
 import { Flex } from '@/components/Flex'
 import { useRedux } from '@/hooks/use-redux'
-import { shallowEqual } from 'react-redux'
-import { createStructuredSelector } from 'reselect'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
-import { useUnmount } from 'react-use'
-import { ActivityTabs } from '@/features/activityLog/containers/ActivityTabs'
+import { ActivityTabs } from './containers/ActivityTabs'
 import { useFilters } from './hooks/useFilters'
 import { ActivityLogs } from './containers/ActivityLogs'
 import {
@@ -22,7 +24,13 @@ import { Filters } from './containers/Filters'
 import { SelectedFilters } from './containers/SelectedFilters'
 import { useModals } from '../common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '../common/modals/constants'
-import { ExportLogs } from './containers/ExportLogs'
+
+const ExportLogs = dynamic(
+  () => import('./containers/ExportLogs').then((mod) => mod.ExportLogs),
+  {
+    ssr: false,
+  },
+)
 
 export const GeneralLog: FC = () => {
   const { t } = useTranslation('activity-log')

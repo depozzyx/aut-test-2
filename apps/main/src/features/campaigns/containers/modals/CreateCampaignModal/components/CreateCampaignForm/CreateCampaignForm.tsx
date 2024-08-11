@@ -1,8 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useFormik } from 'formik'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import useTranslation from 'next-translate/useTranslation'
+import debounce from 'lodash/debounce'
+
 import { Flex } from '@/components/Flex'
 import { useRedux } from '@/hooks/use-redux'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
@@ -22,9 +24,13 @@ import {
   selectAgentsOptions,
   reset as resetAgentsList,
 } from '@/features/agents/store/agents'
+import { ORDER_BY } from '@/constants/orderBy'
 import { reviewFormData } from '../../../../../store/create-campaign'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
-import { INITIAL_REQUEST_PARAMS_CREATE } from '../../../../../constants'
+import {
+  INITIAL_REQUEST_PARAMS_CREATE,
+  PAGINATION_REQUEST_TIME,
+} from '../../../../../constants'
 
 export const CreateCampaignForm = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
@@ -63,36 +69,44 @@ export const CreateCampaignForm = (): JSX.Element => {
     dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS_CREATE))
   }, [])
 
-  const onLeadsScrollToBottom = () => {
-    const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 15))
-    if (leadsPage < lastPage)
-      dispatch(
-        asyncGetLeadListCatalog(
-          {
-            page: leadsPage + 1,
-            limit: leadsLimit,
-            orderBy: 'ASC',
-          },
-          false,
-        ),
-      )
-  }
+  const onLeadsScrollToBottom = useCallback(
+    debounce(() => {
+      const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 15))
+      if (leadsPage < lastPage)
+        dispatch(
+          asyncGetLeadListCatalog(
+            {
+              page: leadsPage + 1,
+              limit: leadsLimit,
+              orderBy: ORDER_BY.DESC,
+            },
+            true,
+          ),
+        )
+    }, PAGINATION_REQUEST_TIME),
+    [leadsPage, leadsTotal, leadsLimit, dispatch],
+  )
 
-  const onAgentsScrollToBottom = () => {
-    const lastPage = agentsTotal === 0 ? 1 : Math.ceil(agentsTotal / (agentsLimit ?? 15))
-    if (agentsPage < lastPage)
-      dispatch(
-        asyncGetAgentsList(
-          {
-            page: agentsPage + 1,
-            limit: agentsLimit,
-            orderBy: 'ASC',
-          },
-          true,
-          false,
-        ),
-      )
-  }
+  const onAgentsScrollToBottom = useCallback(
+    debounce(() => {
+      const lastPage =
+        agentsTotal === 0 ? 1 : Math.ceil(agentsTotal / (agentsLimit ?? 10))
+      if (agentsPage < lastPage) {
+        dispatch(
+          asyncGetAgentsList(
+            {
+              page: agentsPage + 1,
+              limit: agentsLimit,
+              orderBy: ORDER_BY.DESC,
+            },
+            true,
+            true,
+          ),
+        )
+      }
+    }, PAGINATION_REQUEST_TIME),
+    [agentsPage, agentsLimit, agentsTotal, dispatch],
+  )
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off" style={{ width: '100%' }}>
@@ -102,7 +116,6 @@ export const CreateCampaignForm = (): JSX.Element => {
             size="s"
             name="name"
             label={{ label: t('create-campaign.campaign-name') }}
-            id="name"
             formik={formik}
             maxWidth="424px"
             width="100%"

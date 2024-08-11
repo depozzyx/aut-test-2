@@ -57,3 +57,5 @@ export const INITIAL_REQUEST_PARAMS_EDIT = {
   limit: 1000000,
   orderBy: ORDER_BY.DESC,
 }
+
+export const PAGINATION_REQUEST_TIME = 300
