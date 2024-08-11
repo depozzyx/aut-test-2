@@ -2,7 +2,9 @@ import { useCallback } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useUnmount } from 'react-use'
+import dynamic from 'next/dynamic'
 import { shallowEqual } from 'react-redux'
+
 import { useRedux } from '@/hooks/use-redux'
 import { ROUTES } from '@/constants/routes'
 import { Flex } from '@/components/Flex'
@@ -11,7 +13,13 @@ import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
 import { ManagerListTable } from './containers/ManagerListTable'
 import { reset, selectPagination, setPagination } from './store/managers'
-import { EditManagerModal } from './containers/EditManagerModal'
+
+const EditManagerModal = dynamic(
+  () => import('./containers/EditManagerModal').then((mod) => mod.EditManagerModal),
+  {
+    ssr: false,
+  },
+)
 
 export const ManagersList = (): JSX.Element => {
   const { t } = useTranslation('managers')

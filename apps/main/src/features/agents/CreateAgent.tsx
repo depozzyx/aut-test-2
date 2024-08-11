@@ -1,18 +1,35 @@
 import { useState, useMemo } from 'react'
-import useTranslation from 'next-translate/useTranslation'
-import { Flex } from '@/components/Flex'
+import dynamic from 'next/dynamic'
 import { useFormik } from 'formik'
+import useTranslation from 'next-translate/useTranslation'
 import * as yup from 'yup'
+
+import { Flex } from '@/components/Flex'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
-import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { validation } from '@/utils/validation'
 import { useRedux } from '@/hooks/use-redux'
-import {
-  asyncCreateAgent,
-  selectCreateAgentsIsLoading,
-} from '@/features/agents/store/create-agent'
-import { FormikCheckbox } from '@peiko/components/inputs/formik-adapters/FormikCheckbox'
 import { Snackbar } from '@/components/Snackbar'
+import { asyncCreateAgent, selectCreateAgentsIsLoading } from './store/create-agent'
+
+const FormikCheckbox = dynamic(
+  () =>
+    import('@peiko/components/inputs/formik-adapters/FormikCheckbox').then(
+      (mod) => mod.FormikCheckbox,
+    ),
+  {
+    ssr: false,
+  },
+)
+
+const FormikInput = dynamic(
+  () =>
+    import('@peiko/components/inputs/formik-adapters/FormikInput').then(
+      (mod) => mod.FormikInput,
+    ),
+  {
+    ssr: false,
+  },
+)
 
 export const CreateAgent = (): JSX.Element => {
   const [showMessage, setShowMessage] = useState(true)

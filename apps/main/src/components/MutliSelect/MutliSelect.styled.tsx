@@ -180,6 +180,7 @@ export const StyledMultiSelect = styled(CustomMultiSelect)<TStyledMultiSelectPro
       .multi-rs__value-container {
         padding: 0;
         align-items: center;
+        gap: 1px;
       }
 
       .multi-rs__placeholder {

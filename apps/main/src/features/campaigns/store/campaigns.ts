@@ -159,13 +159,11 @@ export const selectCampaignForDelete = (
     return selectedCampaign
   })
 
-// ToDo: change to correct format for user view
 export const selectActiveCampaignsForView = createSelector(
   [selectActiveCampaigns],
   (activeCampaigns) => activeCampaigns,
 )
 
-// ToDo: change to correct format for user view
 export const selectCampaignsListForView = createSelector(
   [selectCampaignsList],
   (campaignList) => campaignList,
