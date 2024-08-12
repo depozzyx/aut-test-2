@@ -53,11 +53,12 @@ export const selectInitFormData = createSelector(
   (selectedId, managersList) => {
     if (!selectedId || !managersList) return null
 
-    const currentAgent = managersList.find((manager) => manager.id === selectedId)
+    const currentManager = managersList.find((manager) => manager.id === selectedId)
 
     return {
-      email: currentAgent?.email || '',
-      username: currentAgent?.username || '',
+      email: currentManager?.email || '',
+      username: currentManager?.username || '',
+      managerId: currentManager?.id || selectedId,
     }
   },
 )
@@ -71,10 +72,14 @@ export const asyncEditManager =
   }: TFormPropsAsync<TUpdateManagerReq> & {
     formik?: FormikHelpers<TUpdateManagerReq>
   }): TAsyncAction =>
-  async (dispatch) => {
+  async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
-      const { data } = await managerApi.updateManager(formData)
+      const managerId = getState().managers.selectedId
+      const { data } = await managerApi.updateManager({
+        ...formData,
+        ...(managerId && { managerId }),
+      })
       dispatch(setEditedManager(data.data))
       dispatch(
         notificationActions.setNotification({
@@ -83,7 +88,7 @@ export const asyncEditManager =
           values: {},
         }),
       )
-      mutate(['/manager/list', 1, 8, 'ASC'])
+      await mutate((key) => Array.isArray(key) && key[0] === '/manager/list')
     } catch (e) {
       handleRestError({ e, dispatch, formik })
     } finally {

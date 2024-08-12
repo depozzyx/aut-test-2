@@ -36,7 +36,9 @@ export type TPostManagerRes = {
 }
 
 export type TUpdateManagerReq = {
+  email?: string
   username: string
+  managerId?: number
 }
 
 export type TUpdateManagerRes = {
