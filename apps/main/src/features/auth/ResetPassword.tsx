@@ -1,11 +1,11 @@
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 import { useRouter } from 'next/router'
 import { useUnmount } from 'react-use'
 import useTranslation from 'next-translate/useTranslation'
 import { useRedux } from '@/hooks/use-redux'
 import { ROUTES } from '@/routes'
 import { Message } from './components/Message'
-import { reset, selectResetPassword, setToken } from './store/reset-password'
+import { reset, selectResetPassword } from './store/reset-password'
 import { ResetPasswordForm } from './containers/ResetPasswordForm'
 
 export const ResetPassword: FC = () => {
@@ -13,12 +13,6 @@ export const ResetPassword: FC = () => {
   const { t } = useTranslation('auth')
   const { select, dispatch } = useRedux()
   const { step } = select(selectResetPassword)
-
-  useEffect(() => {
-    const { token } = router.query
-    if (typeof token !== 'string') return
-    dispatch(setToken(token))
-  }, [])
 
   useUnmount(() => dispatch(reset()))
 
