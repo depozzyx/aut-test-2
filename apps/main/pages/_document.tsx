@@ -1,6 +1,7 @@
 import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document'
 import React from 'react'
 import { DRAWER_PORTAL_ID } from '@peiko/constants/id'
+import { FavIcon } from '@/html/FavIcon'
 import { Fonts } from '../src/html/Fonts'
 import { InitStyleSheet } from '../src/html/init-style-sheet'
 
@@ -15,6 +16,7 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <Fonts />
+          <FavIcon />
         </Head>
         <body>
           <Main />
