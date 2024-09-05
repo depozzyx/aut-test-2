@@ -8,6 +8,7 @@ import { Box } from '@peiko/components/Box'
 import { Translate } from 'next-translate'
 import { agentActions, agentStatusSelector } from './store'
 import { PBXStatus } from './containers/PBXStatus'
+import { useAuth } from '../user'
 
 const StyledSelect = styled(Select)`
   .custom-rs__control {
@@ -44,23 +45,50 @@ export const AgentStatus: FC = () => {
   const { dispatch, select } = useRedux()
   const { status } = select(agentStatusSelector)
   const [options, setOptions] = useState(INIT_OPTIONS(t))
+  const { user } = useAuth()
+
+  useEffect(() => {
+    if (user?.workStatus) dispatch(agentActions.setStatus(user?.workStatus))
+  }, [user])
 
   useEffect(() => {
     if (status === 'pause') {
       setOptions(
         INIT_OPTIONS(t).filter(
-          (option) => option.value !== 'start' && option.value !== 'finish',
+          (option) =>
+            option.value === 'unpause' ||
+            option.value === 'finish' ||
+            option.value === 'pause',
         ),
       )
-    } else if (
-      status === null ||
-      status === 'finish' ||
-      status === 'start' ||
-      status === 'on-call'
-    ) {
-      setOptions(INIT_OPTIONS(t).filter((option) => option.value !== 'unpause'))
-    } else {
-      setOptions(INIT_OPTIONS(t))
+      return
+    }
+    if (status === 'start' || status === 'on-call') {
+      setOptions(
+        INIT_OPTIONS(t).filter(
+          (option) =>
+            option.value === 'finish' ||
+            option.value === 'pause' ||
+            option.value === 'start',
+        ),
+      )
+      return
+    }
+    if (status === 'unpause') {
+      setOptions(
+        INIT_OPTIONS(t).filter(
+          (option) => option.value === 'finish' || option.value === 'pause',
+        ),
+      )
+      dispatch(agentActions.setStatusAsync('start'))
+      return
+    }
+    if (status === 'finish') {
+      setOptions(
+        INIT_OPTIONS(t).filter(
+          (option) => option.value === 'finish' || option.value === 'start',
+        ),
+      )
     }
   }, [status])
 
