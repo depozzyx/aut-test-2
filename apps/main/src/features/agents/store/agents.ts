@@ -36,7 +36,7 @@ const init: TInit = {
   activeAgents: [],
   pagination: {
     page: 1,
-    limit: 7,
+    limit: 8,
     total: 1,
   },
   sort: { sortBy: AGENT_SORT_BY.CREATED_AT, orderBy: ORDER_BY.DESC },
@@ -221,7 +221,7 @@ export const asyncRemoveAgent =
       dispatch(
         asyncGetAgentsList({
           page: 1,
-          limit: 10,
+          limit: 8,
           orderBy: ORDER_BY.DESC,
         }),
       )
