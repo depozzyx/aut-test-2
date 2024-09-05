@@ -1,7 +1,7 @@
 import { Input } from '@peiko/components/inputs/Input'
 import { SearchFieldIcon } from '@/components/icons/SearchFieldIcon'
 import { useRedux } from '@/hooks/use-redux'
-import { setSearchTerm } from '../../store/campaigns'
+import { setSearchTerm, selectSearchTerm } from '../../store/campaigns'
 
 type TProps = {
   placeholder: string
@@ -12,7 +12,9 @@ export const CampaignSearchField = ({
   placeholder,
   maxWidth = '374px',
 }: TProps): JSX.Element => {
-  const { dispatch } = useRedux()
+  const { select, dispatch } = useRedux()
+
+  const searchTerm = select(selectSearchTerm)
 
   const handleOnChange = (value: string) => {
     dispatch(setSearchTerm(value))
@@ -23,6 +25,7 @@ export const CampaignSearchField = ({
       width="100%"
       maxWidth={maxWidth}
       size="s"
+      value={searchTerm}
       name="search-campaign"
       placeholder={placeholder}
       startAdornment={<SearchFieldIcon />}

@@ -4,6 +4,7 @@ import { Flex } from '@/components/Flex'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { useRedux } from '@/hooks/use-redux'
+import { setSearchTerm } from '@/features/campaigns/store/campaigns'
 import { deleteParams, resetParams, selectParams } from '../../../../store/campaign-log'
 import { useCampaignFilters } from '../../../../hooks/campaign/use-campaign-filters'
 
@@ -16,6 +17,11 @@ export const SelectedParams = (): JSX.Element => {
 
   const deleteSelectedFilter = (filterName: keyof typeof filters) =>
     dispatch(deleteParams(filterName))
+
+  const handleResetFilters = () => {
+    dispatch(setSearchTerm(''))
+    dispatch(resetParams())
+  }
 
   return (
     <Flex
@@ -45,7 +51,7 @@ export const SelectedParams = (): JSX.Element => {
           )}
         </Flex>
       )}
-      <OutlinedButton size="s" onClick={() => dispatch(resetParams())}>
+      <OutlinedButton size="s" onClick={handleResetFilters}>
         {t('filters.reset')}
       </OutlinedButton>
     </Flex>
