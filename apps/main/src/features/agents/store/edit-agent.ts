@@ -90,7 +90,7 @@ export const asyncUpdateAgent =
       dispatch(
         asyncGetAgentsList({
           page: 1,
-          limit: 7,
+          limit: 8,
           orderBy: ORDER_BY.DESC,
         }),
       )

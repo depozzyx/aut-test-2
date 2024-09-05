@@ -90,7 +90,7 @@ export const AgentsList = (): JSX.Element => {
       dispatch(
         asyncGetAgentsList({
           page: newPage,
-          limit: limit ?? 10,
+          limit: limit ?? 8,
           orderBy,
           workStatus: statusFilter,
           ...(sortBy && { sortBy }),
