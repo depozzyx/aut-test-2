@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useFormik } from 'formik'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
@@ -9,7 +9,6 @@ import { Flex } from '@/components/Flex'
 import { useRedux } from '@/hooks/use-redux'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
-import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import {
   asyncGetLeadListCatalog,
@@ -25,6 +24,7 @@ import {
   reset as resetAgentsList,
 } from '@/features/agents/store/agents'
 import { ORDER_BY } from '@/constants/orderBy'
+import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { reviewFormData } from '../../../../../store/create-campaign'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
 import {
@@ -65,13 +65,15 @@ export const CreateCampaignForm = (): JSX.Element => {
   useEffect(() => {
     dispatch(resetLeadsList())
     dispatch(resetAgentsList())
-    dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_CREATE))
-    dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS_CREATE))
+    Promise.all([
+      dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_CREATE)),
+      dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS_CREATE)),
+    ])
   }, [])
 
   const onLeadsScrollToBottom = useCallback(
     debounce(() => {
-      const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 15))
+      const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 10))
       if (leadsPage < lastPage)
         dispatch(
           asyncGetLeadListCatalog(
@@ -84,7 +86,7 @@ export const CreateCampaignForm = (): JSX.Element => {
           ),
         )
     }, PAGINATION_REQUEST_TIME),
-    [leadsPage, leadsTotal, leadsLimit, dispatch],
+    [leadsPage, leadsLimit, leadsTotal],
   )
 
   const onAgentsScrollToBottom = useCallback(
@@ -105,7 +107,7 @@ export const CreateCampaignForm = (): JSX.Element => {
         )
       }
     }, PAGINATION_REQUEST_TIME),
-    [agentsPage, agentsLimit, agentsTotal, dispatch],
+    [agentsPage, agentsLimit, agentsTotal],
   )
 
   return (

@@ -16,7 +16,7 @@ export const NewCampaignReviewModal = ({ type }: TProps): JSX.Element => {
   const { dispatch } = useRedux()
   const { resetModals } = useModals()
 
-  const title = <Text>{t('review-campaign.title')}</Text>
+  const title = <Text tag="span">{t('review-campaign.title')}</Text>
 
   const handleClose = () => {
     resetModals()
