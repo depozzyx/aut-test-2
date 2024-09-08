@@ -61,11 +61,10 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
   const { data } = useGetCampaignById()
 
   useEffect(() => {
-    dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS_EDIT))
-  }, [])
-
-  useEffect(() => {
-    dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_EDIT))
+    Promise.all([
+      dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_EDIT)),
+      dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS_EDIT)),
+    ])
   }, [])
 
   const formik = useFormik<TFormValues>({
@@ -103,7 +102,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
           true,
         ),
       )
-  }, [leadsPage, leadsTotal, leadsLimit, dispatch])
+  }, [leadsPage, leadsTotal, leadsLimit])
 
   const onAgentsScrollToBottom = useCallback(() => {
     const lastPage = agentsTotal === 0 ? 1 : Math.ceil(agentsTotal / (agentsLimit ?? 10))
@@ -120,7 +119,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
         ),
       )
     }
-  }, [agentsPage, agentsLimit, agentsTotal, dispatch])
+  }, [agentsPage, agentsLimit, agentsTotal])
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">

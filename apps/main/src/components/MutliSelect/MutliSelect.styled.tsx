@@ -10,7 +10,7 @@ type TStyledMultiSelectProps = {
   size?: TMultiSelectProps['size']
   width?: CSSProperties['width']
   disabled?: boolean
-  hasScroll: boolean
+  hasScroll?: boolean
   zIndex?: CSSProperties['zIndex']
   error?: string
   backgroundColor?: keyof DefaultTheme['palette']

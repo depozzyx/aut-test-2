@@ -6,7 +6,6 @@ import {
   GroupBase,
   DropdownIndicatorProps,
   NoticeProps,
-  MenuProps,
   MenuListProps,
 } from 'react-select'
 import { FixedSizeList as List } from 'react-window'
@@ -21,58 +20,67 @@ import { Container, CustomLabel, StyledMultiSelect } from './MutliSelect.styled'
 const OPTION_HEIGHT = 38
 const MENU_MAX_HEIGHT = 300
 
-const MenuList = memo(
-  ({
+type TCustomMenuListProps = MenuListProps<
+  TSelectOption,
+  boolean,
+  GroupBase<TSelectOption>
+> & {
+  onMenuScrollToBottom?: () => void
+}
+
+const CustomMenuList = memo((props: TCustomMenuListProps) => {
+  const {
+    options,
     children,
-    maxHeight,
+    maxHeight = MENU_MAX_HEIGHT,
+    getValue,
     onMenuScrollToBottom,
-  }: MenuListProps<TSelectOption, boolean, GroupBase<TSelectOption>> & {
-    onMenuScrollToBottom?: () => void
+  } = props
+
+  const childrenArray = React.Children.toArray(children)
+  const listRef = useRef<List | null>(null)
+  const [value] = getValue()
+  const initialOffset = options.indexOf(value) * OPTION_HEIGHT
+
+  const handleScroll = ({
+    scrollOffset,
+    scrollDirection,
+  }: {
+    scrollOffset: number
+    scrollDirection: string
   }) => {
-    const listRef = useRef<List | null>(null)
-    const innerRef = useRef<HTMLDivElement | null>(null)
-    const outerRef = useRef<HTMLDivElement | null>(null)
-    const itemCount = React.Children.count(children)
+    if (scrollDirection === 'forward') {
+      if (!listRef.current) return
+      const listHeight = listRef.current.props.height as number
+      const totalHeight = childrenArray.length * OPTION_HEIGHT
 
-    const handleOnScroll = useCallback(
-      ({ scrollDirection, scrollOffset }) => {
-        if (!outerRef.current || !innerRef.current) return
+      if (scrollOffset + listHeight >= totalHeight - OPTION_HEIGHT) {
+        onMenuScrollToBottom?.()
+      }
+    }
+  }
 
-        const outerHeight = outerRef.current.clientHeight
-        const innerHeight = innerRef.current.clientHeight
-
-        if (
-          scrollDirection === 'forward' &&
-          innerHeight - (scrollOffset + outerHeight) <= 1
-        ) {
-          onMenuScrollToBottom?.()
-        }
-      },
-      [onMenuScrollToBottom],
-    )
-
-    return (
+  return (
+    <div>
       <List
-        className="virtualized-list"
         width="100%"
+        className="virtualized-list"
         ref={listRef}
-        innerRef={innerRef}
-        outerRef={outerRef}
-        height={Math.min(maxHeight || MENU_MAX_HEIGHT, itemCount * OPTION_HEIGHT)}
-        itemCount={itemCount}
+        height={maxHeight}
+        itemCount={childrenArray.length}
         itemSize={OPTION_HEIGHT}
-        onScroll={handleOnScroll}
+        initialScrollOffset={initialOffset}
+        onScroll={handleScroll}
       >
         {({ index, style }) => (
-          <div style={style}>{React.Children.toArray(children)[index]}</div>
+          <div style={style}>{childrenArray[index] as React.ReactNode}</div>
         )}
       </List>
-    )
-  },
-  deepEqual,
-)
+    </div>
+  )
+}, deepEqual)
 
-MenuList.displayName = 'MenuList'
+CustomMenuList.displayName = 'CustomMenuList'
 
 export const VirtualizedMultiSelect = memo(
   ({
@@ -90,24 +98,9 @@ export const VirtualizedMultiSelect = memo(
   }: TMultiSelectProps): JSX.Element => {
     const { t } = useTranslation('inputs')
     const [open, setOpen] = useState(false)
-    const [openCount, setOpenCount] = useState(0)
-    const [hasScroll, setHasScroll] = useState(false)
     const [state, setState] = useState<{ optionSelected: TSelectEvent | null }>({
       optionSelected: null,
     })
-
-    useEffect(() => {
-      if (!open) return
-      setOpenCount((state) => state + 1)
-    }, [open])
-
-    useEffect(() => {
-      if (openCount === 0) return
-      const menuEl = document.body.querySelector('.multi-rs__menu-list')
-      if (!menuEl) return
-      const hasScrollBar = menuEl.scrollHeight > menuEl.clientHeight + 1
-      setHasScroll(hasScrollBar)
-    }, [openCount])
 
     useEffect(() => {
       if (!options || !value) return
@@ -116,20 +109,16 @@ export const VirtualizedMultiSelect = memo(
       })
     }, [value, options])
 
-    const handleChange = (selected: TSelectEvent) => {
-      setState({
-        optionSelected: selected,
-      })
-      if (onChange) onChange(selected)
-    }
+    const handleChange = useCallback(
+      (selected: TSelectEvent) => {
+        setState((prevState) => ({
+          ...prevState,
+          optionSelected: selected,
+        }))
 
-    const Menu = useCallback(
-      (props: MenuProps<TSelectOption, true, GroupBase<TSelectOption>>) => {
-        const { children } = props
-
-        return <components.Menu {...props}>{children}</components.Menu>
+        if (onChange) onChange(selected)
       },
-      [],
+      [onChange],
     )
 
     const DropdownIndicator = useCallback(
@@ -189,11 +178,8 @@ export const VirtualizedMultiSelect = memo(
             closeMenuOnSelect={false}
             hideSelectedOptions={false}
             components={{
-              Menu,
-              MenuList: ({ children, ...rest }) => (
-                <MenuList onMenuScrollToBottom={onMenuScrollToBottom} {...rest}>
-                  {children}
-                </MenuList>
+              MenuList: (props) => (
+                <CustomMenuList {...props} onMenuScrollToBottom={onMenuScrollToBottom} />
               ),
               Option,
               DropdownIndicator,
@@ -206,7 +192,6 @@ export const VirtualizedMultiSelect = memo(
             classNamePrefix="multi-rs"
             isSearchable={isSearchable}
             controlShouldRenderValue
-            hasScroll={hasScroll}
             width={width}
             zIndex={zIndex}
             isMulti
