@@ -96,8 +96,6 @@ export const logoutAsync = (): TAsyncAction => async (dispatch) => {
     await apiAuth.logout()
     authorized.remove()
     dispatch(removeUser())
-    // ToDO: check if it's necessary
-    // Router.push(ROUTES.LOGOUT)
   } catch (e) {
     handleRestError({ e, dispatch })
   } finally {

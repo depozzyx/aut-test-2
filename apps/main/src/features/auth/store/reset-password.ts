@@ -9,13 +9,11 @@ import { ERROR_STATUS } from '@/constants/error-status'
 export type TInit = {
   step: null | 'success' | 'error'
   isLoading: boolean
-  token: string
 }
 
 const init: TInit = {
   step: null,
   isLoading: false,
-  token: '',
 }
 
 const resetPassword = createSlice({
@@ -25,9 +23,6 @@ const resetPassword = createSlice({
     setIsLoading(state, action: PayloadAction<TInit['isLoading']>) {
       state.isLoading = action.payload
     },
-    setToken(state, action: PayloadAction<TInit['token']>) {
-      state.token = action.payload
-    },
     setStep(state, action: PayloadAction<TInit['step']>) {
       state.step = action.payload
     },
@@ -35,7 +30,7 @@ const resetPassword = createSlice({
   },
 })
 
-export const { reset, setStep, setToken, setIsLoading } = resetPassword.actions
+export const { reset, setStep, setIsLoading } = resetPassword.actions
 
 export const selectResetPassword: TSelector<TInit> = (state) => state.resetPassword
 
@@ -44,15 +39,14 @@ export default resetPassword.reducer
 export const resetPasswordAsync =
   ({
     formData,
+    token,
     formik,
-  }: TFormPropsAsync<Omit<TResetPasswordReq, 'token'>>): TAsyncAction =>
-  async (dispatch, getState) => {
+  }: TFormPropsAsync<Omit<TResetPasswordReq, 'token'>> & {
+    token: string
+  }): TAsyncAction =>
+  async (dispatch) => {
     try {
       dispatch(setIsLoading(true))
-
-      const {
-        resetPassword: { token },
-      } = getState()
 
       await apiAuth.resetPassword({ ...formData, token })
 

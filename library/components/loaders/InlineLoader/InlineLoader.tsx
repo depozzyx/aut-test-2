@@ -5,9 +5,10 @@ import { TInlineLoader } from './types'
 export const InlineLoader: React.FC<TInlineLoader> = ({
   loading,
   height = 4,
+  variant = 'default',
   ...props
 }) => {
-  if (!loading) return null
+  if (!loading && variant === 'default') return null
 
   return (
     <S.Container height={height} {...props}>

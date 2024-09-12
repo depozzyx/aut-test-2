@@ -12,7 +12,7 @@ export const Edit: FC<EditProps> = ({ disabled = false, onClick, size = 'm' }) =
   const buttonRef = useRef<HTMLDivElement | null>(null)
   const iconSize = size === 'm' ? 's' : 's'
 
-  const setBlure = useCallback(() => {
+  const setBlur = useCallback(() => {
     if (!buttonRef.current) return
     buttonRef.current.blur()
   }, [])
@@ -21,7 +21,7 @@ export const Edit: FC<EditProps> = ({ disabled = false, onClick, size = 'm' }) =
     <Container
       disabled={disabled}
       onClick={onClick}
-      onMouseLeave={setBlure}
+      onMouseLeave={setBlur}
       role="button"
       tabIndex={disabled ? -1 : 0}
       ref={buttonRef}

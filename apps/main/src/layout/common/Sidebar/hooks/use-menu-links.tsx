@@ -172,7 +172,7 @@ export const useMenuLinks = (): TMenuItem[] => {
         },
         {
           title: t('settings_activity_log'),
-          link: ROUTES.SETTINGS_ACTIVITY_LOG,
+          link: ROUTES.SETTINGS_ACTIVITY_LOG_GENERAL,
           disabled: false,
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
         },

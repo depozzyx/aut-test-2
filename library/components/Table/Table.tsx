@@ -146,13 +146,13 @@ export function Table<R extends TRow, H extends THeader<keyof R['row']>>({
   return (
     <HorizontalScroll hideScrollbars={Boolean(loading)}>
       <Box styles={{ width: '100%', minHeight }}>
-        <InlineLoader loading={loading} borderRadius={4} />
+        <InlineLoader variant="table" loading={loading} borderRadius={4} />
         <S.Table gridTemplateColumns={gridTemplateColumns}>
           {renderHeader()}
           {!isFallback && renderRows()}
           {isFallback && emptyComponent}
         </S.Table>
-        <InlineLoader loading={loading} borderRadius={4} />
+        <InlineLoader variant="table" loading={loading} borderRadius={4} />
       </Box>
     </HorizontalScroll>
   )

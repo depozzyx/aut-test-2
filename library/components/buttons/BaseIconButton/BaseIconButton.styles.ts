@@ -33,7 +33,7 @@ export const Button = styled.button<TIconButton>(
   `,
 )
 
-export const Buttonlabel = styled.span`
+export const ButtonLabel = styled.span`
   position: relative;
   line-height: 0;
 `

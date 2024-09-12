@@ -5,6 +5,7 @@ import {
   TAgentByIdRes,
   TAgentsListRes,
   TAgentsReq,
+  TAgentStatus,
   TChangeWorkStatusReq,
   TChangeWorkStatusRes,
   TCreateAgentReq,
@@ -41,6 +42,8 @@ const getAgentById = (id: number): TAxiosResponse<TAgentByIdRes> =>
 const deleteAgent = (id: number): TAxiosResponse<TDeleteAgentRes> =>
   api.delete(`/agents/${id}`)
 
+const getAgentStatus = (): TAxiosResponse<TAgentStatus> => api.get(`/agents/pbx/status`)
+
 export const apiAgents = {
   pbxAuth,
   changeWorkStatus,
@@ -51,4 +54,5 @@ export const apiAgents = {
   getActiveAgents,
   getAgentById,
   deleteAgent,
+  getAgentStatus,
 }

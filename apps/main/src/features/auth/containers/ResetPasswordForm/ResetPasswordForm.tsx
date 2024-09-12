@@ -2,6 +2,7 @@ import { FC } from 'react'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
 import useTranslation from 'next-translate/useTranslation'
+import { useRouter } from 'next/router'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { LockIcon } from '@peiko/components/icons/LockIcon'
@@ -14,6 +15,7 @@ import { AuthFormCard } from '../../components/AuthFormCard'
 
 export const ResetPasswordForm: FC = () => {
   const { t } = useTranslation('auth')
+  const router = useRouter()
   const { dispatch } = useRedux()
 
   const formik = useFormik({
@@ -26,7 +28,13 @@ export const ResetPasswordForm: FC = () => {
       confirmPassword: validation.repeatPassword,
     }),
     onSubmit: (formData) => {
-      dispatch(resetPasswordAsync({ formData, formik }))
+      dispatch(
+        resetPasswordAsync({
+          formData,
+          token: router.query.token as string,
+          formik,
+        }),
+      )
     },
   })
 
@@ -41,7 +49,6 @@ export const ResetPasswordForm: FC = () => {
             {t('reset-password.subtitle')}
           </Text>
           <FormikInput
-            id="password"
             name="password"
             type="password"
             size="s"
@@ -52,7 +59,6 @@ export const ResetPasswordForm: FC = () => {
             startAdornment={<LockIcon width="24px" height="24px" />}
           />
           <FormikInput
-            id="password"
             name="confirmPassword"
             type="password"
             size="s"

@@ -7,32 +7,47 @@ import {
   baseContainer,
   colors,
 } from '@peiko/components/accordions'
+import { styleToCss } from '@peiko/styles'
 
-export const Container = styled.button<Pick<TAccordionProps, 'disabled'> & TContainer>(
-  ({ theme: { palette }, isOpen, disabled }) => css`
-    ${baseContainer}
+export const Container = styled.button<
+  Pick<TAccordionProps, 'disabled'> &
+    TContainer & { containerStyles?: TAccordionProps['headerStyles'] }
+>(
+  ({ theme, isOpen, disabled, containerStyles }) => css`
+    ${baseContainer};
 
     border-width: 1px;
     border-radius: 8px;
     padding: ${isOpen ? '0 0 24px' : '0'};
 
     ${colors({
-      bg: palette.base3,
-      borderOpen: palette.main2,
-      borderHover: hexToRGBA(palette.main2, 0.5),
-      borderFocus: hexToRGBA(palette.main2, 0.5),
+      bg: theme.palette.base3,
+      borderOpen: theme.palette.main2,
+      borderHover: hexToRGBA(theme.palette.main2, 0.5),
+      borderFocus: hexToRGBA(theme.palette.main2, 0.5),
       borderDisabled: 'transparent',
       isOpen,
       disabled,
     })}
+
+    ${containerStyles && styleToCss(containerStyles, theme)}
   `,
 )
 
-export const Header = styled.div`
-  padding: 24px 32px;
-`
+export const Header = styled.div<{ headerStyles?: TAccordionProps['headerStyles'] }>(
+  ({ theme, headerStyles }) => css`
+    padding: 24px 32px;
 
-export const Collapse = styled.div`
-  padding: 0 32px;
-  ${baseCollapse}
-`
+    ${headerStyles && styleToCss(headerStyles, theme)}
+  `,
+)
+
+export const Collapse = styled.div<{
+  collapseStyles?: TAccordionProps['collapseStyles']
+}>(
+  ({ theme, collapseStyles }) => css`
+    padding: 0 32px;
+    ${baseCollapse}
+    ${collapseStyles && styleToCss(collapseStyles, theme)}
+  `,
+)

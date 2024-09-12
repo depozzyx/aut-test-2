@@ -10,7 +10,7 @@ type TStyledMultiSelectProps = {
   size?: TMultiSelectProps['size']
   width?: CSSProperties['width']
   disabled?: boolean
-  hasScroll: boolean
+  hasScroll?: boolean
   zIndex?: CSSProperties['zIndex']
   error?: string
   backgroundColor?: keyof DefaultTheme['palette']
@@ -68,22 +68,22 @@ export const StyledMultiSelect = styled(CustomMultiSelect)<TStyledMultiSelectPro
       switch (size) {
         case 's':
           return css`
-            height: 30px;
-            padding: 0 16px;
+            min-height: 30px;
+            padding: 0 8px;
           `
         case 'sm':
           return css`
-            height: 32px;
+            min-height: 32px;
             padding: 0 8px;
           `
         case 'm':
           return css`
-            height: 30px;
-            padding: 0 16px;
+            min-height: 34px;
+            padding: 0 8px;
           `
         case 'l':
           return css`
-            height: 56px;
+            min-height: 36px;
             padding: 0 24px;
           `
         default:
@@ -179,8 +179,8 @@ export const StyledMultiSelect = styled(CustomMultiSelect)<TStyledMultiSelectPro
 
       .multi-rs__value-container {
         padding: 0;
-        height: 28px;
         align-items: center;
+        gap: 1px;
       }
 
       .multi-rs__placeholder {
@@ -219,7 +219,7 @@ export const StyledMultiSelect = styled(CustomMultiSelect)<TStyledMultiSelectPro
         font-family: inherit;
         align-items: center;
         height: 38px;
-        padding: 0 16px;
+        padding: 0 8px;
         white-space: nowrap;
         color: ${palette.main5};
 
@@ -236,11 +236,6 @@ export const StyledMultiSelect = styled(CustomMultiSelect)<TStyledMultiSelectPro
           background-color: ${palette.base4};
           color: ${palette.main2};
         }
-
-        // :not(:last-of-type) {
-        //   border-bottom: 1px solid;
-        //   border-color: ${({ theme }) => theme.palette.main3};
-        // }
       }
 
       .multi-rs__indicator-separator {

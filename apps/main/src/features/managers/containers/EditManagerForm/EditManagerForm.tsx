@@ -10,12 +10,12 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 
+import { validation } from '@/utils/validation'
 import {
   asyncEditManager,
   selectInitFormData,
   selectEditManagerIsLoading,
-} from '@/features/managers/store/edit-manager'
-import { validation } from '@/utils/validation'
+} from '../../store/edit-manager'
 
 export const EditManagerForm = (): JSX.Element => {
   const { t } = useTranslation('managers')

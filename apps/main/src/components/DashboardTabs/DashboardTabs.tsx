@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { Tabs } from '@/components/Tabs'
-import { CallOperatorIcon } from '@peiko/components/icons/CallOperatorIcon'
-import { LoudSpeakerIcon } from '@peiko/components/icons/LoudSpeakerIcon'
+import { CallOperatorIcon } from 'components/icons/CallOperatorIcon'
+import { LoudSpeakerIcon } from '@/icons/LoudSpeakerIcon'
 import { TTabsProps } from '@/components/Tabs/Tabs'
 import { useRouter } from 'next/router'
 import { ROUTES } from '@/routes'
@@ -50,5 +50,12 @@ export const DashboardTabs = (): JSX.Element => {
     return () => router.events.off('routeChangeComplete', handleRouteChange)
   }, [router.events, tabs])
 
-  return <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={handleChangeTab} />
+  return (
+    <Tabs
+      tabs={tabs}
+      tabSize="244px"
+      activeTab={activeTab}
+      setActiveTab={handleChangeTab}
+    />
+  )
 }

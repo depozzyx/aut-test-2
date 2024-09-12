@@ -1,66 +1,69 @@
 {
-    "add-agent": "Add new Agent",
-    "headers": {
-        "agent-name": "Agent Name",
-        "email": "Email",
-        "creation-date": "Creation Date",
-        "campaigns": "Campaigns",
-        "edit": "Edit",
-        "delete": "Delete"
-    },
-    "active-agents-headers": {
-        "agent-name": "Agent Name",
-        "agent-status": "Agent Status",
-        "calls-handled": "Calls Handled",
-        "calls-duration": "Calls Duration (avg)",
-        "rating": "Rating",
-        "time-online": "Time Online",
-        "sum-call-duration": "Sum Call Duration"
-    },
-    "create-agent": {
-        "title": "Create new agent",
-        "action": "Create agent"
-    },
-    "delete-agent": {
-        "title": "<translate>Are you sure you want to delete <value>{{ agentName }}</value>?</translate>",
-        "delete-btn": "Delete",
-        "cancel-btn": "Cancel"
-    },
-    "edit-agent": {
-        "title": "Edit agent`s info",
-        "agent-name": "Agent Name",
-        "email": "Email",
-        "role": "Role",
-        "assigned-campaigns": "Assigned Campaigns",
-        "save-btn": "Save",
-        "cancel-btn": "Cancel"
-    },
-    "campaigns-amount": "{{ campaignsAmount }} campaigns",
-    "active-agents": "Active Agents",
-    "filter-by-status": "Agent status",
-    "reset-filters": "Reset filters",
-    "filter-agentName": "Agent name",
-    "average-call-duration": "Average call duration",
-    "call-minutes": "Call minutes",
-    "availability-online": "Availability online",
-    "call-success": "Call success",
-    "tooltip": {
-        "successful-calls": "Succesful calls",
-        "unsuccessful-calls": "Unsuccessful calls",
-        "undetermined-calls": "Undefined calls"
-    },
-    "statuses": {
-        "start": "Start",
-        "pause": "Pause",
-        "unpause": "Unpause",
-        "finish": "Finished",
-        "on-call": "On Call"
-    },
-    "campaign-info": {
-        "title": "Campaign Info",
-        "campaign-id": "Campaign ID",
-        "campaign-name": "Campaign Name",
-        "call-frequency": "Call Frequency",
-        "close": "Close"
-    }
+  "add-agent": "Add new Agent",
+  "headers": {
+    "agent-name": "Agent Name",
+    "email": "Email",
+    "creation-date": "Creation Date",
+    "campaigns": "Campaigns",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "active-agents-headers": {
+    "agent-name": "Agent Name",
+    "agent-status": "Agent Status",
+    "calls-handled": "Calls Handled",
+    "calls-duration": "Calls Duration (avg)",
+    "rating": "Rating",
+    "time-online": "Time Online",
+    "sum-call-duration": "Sum Call Duration"
+  },
+  "create-agent": {
+    "title": "Create new agent",
+    "action": "Create agent",
+    "password": "Password",
+    "send-password": "Send password to email?",
+    "message": "If you leave the password field blank, it will be generated automatically by the system!"
+  },
+  "delete-agent": {
+    "title": "<translate>Are you sure you want to delete <value>{{ agentName }}</value>?</translate>",
+    "delete-btn": "Delete",
+    "cancel-btn": "Cancel"
+  },
+  "edit-agent": {
+    "title": "Edit agent`s info",
+    "agent-name": "Agent Name",
+    "email": "Email",
+    "role": "Role",
+    "assigned-campaigns": "Assigned Campaigns",
+    "save-btn": "Save",
+    "cancel-btn": "Cancel"
+  },
+  "campaigns-amount": "{{ campaignsAmount }} campaigns",
+  "active-agents": "Active Agents",
+  "filter-by-status": "Agent status",
+  "reset-filters": "Reset filters",
+  "filter-agentName": "Agent name",
+  "average-call-duration": "Average call duration",
+  "call-minutes": "Call minutes",
+  "availability-online": "Availability online",
+  "call-success": "Call success",
+  "tooltip": {
+    "successful-calls": "Succesful calls",
+    "unsuccessful-calls": "Unsuccessful calls",
+    "undetermined-calls": "Undefined calls"
+  },
+  "statuses": {
+    "start": "Start",
+    "pause": "Pause",
+    "unpause": "Unpause",
+    "finish": "Finished",
+    "on-call": "On Call"
+  },
+  "campaign-info": {
+    "title": "Campaign Info",
+    "campaign-id": "Campaign ID",
+    "campaign-name": "Campaign Name",
+    "call-frequency": "Call Frequency",
+    "close": "Close"
+  }
 }

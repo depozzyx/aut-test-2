@@ -42,7 +42,7 @@ export const LeadsListTable = memo((): JSX.Element => {
       label: (
         <HeaderWithSort
           title={t('headers.lead-id')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.CREATED_AT))}
+          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.ID))}
         />
       ),
       value: 'leadId',

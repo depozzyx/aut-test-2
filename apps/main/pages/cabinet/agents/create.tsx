@@ -11,7 +11,7 @@ const CreateAgentPage: NextPage = () => {
   useTitle(t('page-titles:create-agent'))
 
   return (
-    <Permissions roles={[ERoles.MANAGER]}>
+    <Permissions roles={[ERoles.MANAGER, ERoles.ADMIN]}>
       <CabinetLayout title={t('create_agent')}>
         <CreateAgent />
       </CabinetLayout>

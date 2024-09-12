@@ -22,6 +22,7 @@ import managersReducer from '@/features/managers/store/managers'
 import createManagerReducer from '@/features/managers/store/create-manager'
 import editManagerReducer from '@/features/managers/store/edit-manager'
 import apiKeyReducer from '@/features/settings/store/api-key'
+import campaignLogReducer from '@/features/activityLog/store/campaign-log'
 
 const store = configureStore({
   reducer: {
@@ -41,6 +42,7 @@ const store = configureStore({
     editCampaign: editCampaignReducer,
     createCampaign: createCampaignReducer,
     campaignAnalytics: campaignAnalyticsReducer,
+    campaignLog: campaignLogReducer,
     leads: leadsReducer,
     leadList: leadListReducer,
     activityLog: activityLogReducer,

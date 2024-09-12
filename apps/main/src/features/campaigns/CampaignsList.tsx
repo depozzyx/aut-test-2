@@ -1,4 +1,6 @@
 import useTranslation from 'next-translate/useTranslation'
+import dynamic from 'next/dynamic'
+
 import { Flex } from '@/components/Flex'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
@@ -23,10 +25,44 @@ import {
   PaginationContainer,
 } from './styles/CampaignsList.styled'
 import { asyncGetCampaignsList } from './store/campaigns'
-import { DeleteCampaignModal } from './containers/modals/DeleteCampaignModal'
-import { CreateCampaignModal } from './containers/modals/CreateCampaignModal'
-import { EditCampaignModal } from './containers/modals/EditCampaignModal'
-import { NewCampaignReviewModal } from './containers/modals/NewCampaignReviewModal'
+
+const CreateCampaignModal = dynamic(
+  () =>
+    import('./containers/modals/CreateCampaignModal').then(
+      (mod) => mod.CreateCampaignModal,
+    ),
+  {
+    ssr: false,
+  },
+)
+
+const DeleteCampaignModal = dynamic(
+  () =>
+    import('./containers/modals/DeleteCampaignModal').then(
+      (mod) => mod.DeleteCampaignModal,
+    ),
+  {
+    ssr: false,
+  },
+)
+
+const EditCampaignModal = dynamic(
+  () =>
+    import('./containers/modals/EditCampaignModal').then((mod) => mod.EditCampaignModal),
+  {
+    ssr: false,
+  },
+)
+
+const NewCampaignReviewModal = dynamic(
+  () =>
+    import('./containers/modals/NewCampaignReviewModal').then(
+      (mod) => mod.NewCampaignReviewModal,
+    ),
+  {
+    ssr: false,
+  },
+)
 
 export const CampaignsList = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
@@ -50,7 +86,7 @@ export const CampaignsList = (): JSX.Element => {
       <Container>
         <Panel>
           <Flex gap={16} align="center" width="100%">
-            <CampaignSearchField />
+            <CampaignSearchField placeholder={t('inputs:placeholder.search-campaign')} />
             <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.LIST} />
             <StatusFilter />
             <RangeDayPicker onChange={handleChangeDate} />

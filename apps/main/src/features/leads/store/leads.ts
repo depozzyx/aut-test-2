@@ -98,6 +98,9 @@ const leads = createSlice({
       state.leadsGroupsPagination = action.payload
     },
     reset: () => init,
+    resetLeadGroups(state) {
+      state.leadsGroups = []
+    },
   },
 })
 
@@ -115,6 +118,7 @@ export const {
   setLeadsGroupPagination,
   setLeadsSortBy,
   reset,
+  resetLeadGroups,
 } = leads.actions
 // selectors
 
@@ -179,11 +183,9 @@ export const getLeadsGroups =
   (params: TLeadsGroupReq, onSuccess?: () => void): TAsyncAction =>
   async (dispatch) => {
     try {
-      const {
-        data: { data, pagination },
-      } = await leadsApi.leadsGroup(params)
-      dispatch(setLeadsGroups(data))
-      dispatch(setLeadsGroupPagination(pagination))
+      const data = await leadsApi.leadsGroup(params)
+      dispatch(setLeadsGroups(data.data.data))
+      dispatch(setLeadsGroupPagination(data.data.pagination))
       onSuccess?.()
     } catch (e) {
       handleRestError({ e, dispatch })
@@ -204,14 +206,16 @@ export const createLeadsGroups =
     try {
       const {
         leads: {
-          leadsGroupsPagination: { page, limit },
+          leadsGroupsPagination: { limit },
         },
       } = _store()
 
       const { data } = await leadsApi.createLeadGroup(formData)
 
+      dispatch(resetLeadGroups())
+
       dispatch(
-        getLeadsGroups({ page, limit, orderBy: 'DESC' }, () =>
+        getLeadsGroups({ page: 1, limit, orderBy: 'DESC' }, () =>
           dispatch(setLeadsGroup(data.data.id)),
         ),
       )

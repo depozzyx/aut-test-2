@@ -18,7 +18,7 @@ export const Copy: FC<CopyProps> = ({ value, disabled = false, onClick, size = '
   const [showError, setShowError] = useState(false)
   const iconSize = size === 'm' ? 'm' : 's'
 
-  const setBlure = useCallback(() => {
+  const setBlur = useCallback(() => {
     if (!buttonRef.current) return
     buttonRef.current.blur()
   }, [])
@@ -69,7 +69,7 @@ export const Copy: FC<CopyProps> = ({ value, disabled = false, onClick, size = '
     <Container
       disabled={disabled}
       onClick={handleClick}
-      onMouseLeave={setBlure}
+      onMouseLeave={setBlur}
       role="button"
       tabIndex={disabled ? -1 : 0}
       ref={buttonRef}

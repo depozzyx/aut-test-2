@@ -14,7 +14,7 @@ export const CreateCampaignModal = (): JSX.Element => {
       open
       title={title}
       onClose={resetModals}
-      maxWidth="756px"
+      maxWidth="612px"
       containerWidth="100%"
     >
       <CreateCampaignForm />

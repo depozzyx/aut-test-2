@@ -1,11 +1,49 @@
+import dynamic from 'next/dynamic'
+
 import { Flex } from '@/components/Flex'
-import { RangeDayPicker } from '@/inputs/RangeDayPicker'
-import { AgentNameFilter } from '@/features/agents/containers/filters/AgentNameFilter'
-import { AverageCallDuration } from '@/features/agents/containers/charts/AverageCallDuration'
-import { AvailabilityOnline } from '@/features/agents/containers/charts/AvailabilityOnline'
-import { CallMinutes } from '@/features/agents/containers/charts/CallMinutes'
-import { CallSuccess } from '@/features/agents/containers/charts/CallSuccess'
+import { AgentNameFilter } from './containers/filters/AgentNameFilter'
 import { useAgentAnalytics } from './hooks/use-agentAnalytics'
+
+const RangeDayPicker = dynamic(
+  () => import('@/inputs/RangeDayPicker').then((mod) => mod.RangeDayPicker),
+  {
+    ssr: false,
+  },
+)
+
+const CallMinutes = dynamic(
+  () => import('./containers/charts/CallMinutes').then((mod) => mod.CallMinutes),
+  {
+    ssr: false,
+  },
+)
+
+const CallSuccess = dynamic(
+  () => import('./containers/charts/CallSuccess').then((mod) => mod.CallSuccess),
+  {
+    ssr: false,
+  },
+)
+
+const AvailabilityOnline = dynamic(
+  () =>
+    import('./containers/charts/AvailabilityOnline').then(
+      (mod) => mod.AvailabilityOnline,
+    ),
+  {
+    ssr: false,
+  },
+)
+
+const AverageCallDuration = dynamic(
+  () =>
+    import('./containers/charts/AverageCallDuration').then(
+      (mod) => mod.AverageCallDuration,
+    ),
+  {
+    ssr: false,
+  },
+)
 
 export const AgentAnalytics = (): JSX.Element => {
   useAgentAnalytics()

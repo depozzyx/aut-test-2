@@ -69,11 +69,11 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
         <Field label={t('create-campaign.lead-selection')} value={leads} />
       </Flex>
       <Flex align="center" justify="center" gap={24}>
-        <OutlinedButton onClick={handleCreateCampaign} width="236px">
-          {t('review-campaign.submit-btn')}
-        </OutlinedButton>
-        <FilledButton onClick={handleBack} width="236px">
+        <OutlinedButton onClick={handleBack} width="236px">
           {t('review-campaign.back-btn')}
+        </OutlinedButton>
+        <FilledButton onClick={handleCreateCampaign} width="236px">
+          {t('review-campaign.submit-btn')}
         </FilledButton>
       </Flex>
     </Flex>

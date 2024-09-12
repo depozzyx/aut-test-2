@@ -26,6 +26,4 @@ export type TCreateCampaignReq = {
   leadListIds?: number[] | []
 }
 
-export type TCreateCampaignRes = any
-
 export type TEditCampaignReq = TCreateCampaignReq & { id: number }
