@@ -35,7 +35,7 @@ export const BaseButton = React.forwardRef<
       }
     }
 
-    const setBlure = useCallback(() => {
+    const setBlur = useCallback(() => {
       if (!buttonRef.current) return
       buttonRef.current.blur()
     }, [])
@@ -51,7 +51,7 @@ export const BaseButton = React.forwardRef<
         size={size}
         onClick={handleClick}
         disabled={disabled}
-        onMouseLeave={setBlure}
+        onMouseLeave={setBlur}
         isLoading={isLoading}
         ref={mergeRefs([buttonRef, ref])}
         tabIndex={disabled || isLoading ? -1 : 0}

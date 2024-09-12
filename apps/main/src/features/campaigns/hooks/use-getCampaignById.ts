@@ -5,7 +5,6 @@ import { useRedux } from '@/hooks/use-redux'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { handleRestError } from '@/features/common/error'
-import { TGeneratedCallFrequency, TGeneratedCallTime } from '../constants'
 
 export type TAgent = {
   id: number
@@ -23,9 +22,6 @@ type TReturn = {
   data?: {
     id: number | string | null
     name: string
-    intensity: TGeneratedCallFrequency
-    intensityPerAgent: TGeneratedCallFrequency
-    preferredCallTime: TGeneratedCallTime
     assignedAgents: number[]
     leadLists: number[]
   }
@@ -49,23 +45,18 @@ export const useGetCampaignById = (): TReturn => {
     onError: (e) => handleRestError({ e, dispatch }),
   })
 
-  const campaign = data?.data
-
   const initialFormData = useMemo(() => {
-    if (!campaign) return undefined
+    if (!data?.data) return undefined
 
-    const { name, intensity, preferredCallTime, assignedAgents, leadLists } = campaign
+    const { name, assignedAgents, leadLists } = data.data
 
     return {
       id,
       name,
-      intensity,
-      intensityPerAgent: intensity,
-      preferredCallTime,
       assignedAgents: assignedAgents.map((agent: TAgent) => agent?.id),
       leadLists: leadLists.map((list: TLeadList) => list?.id),
     }
-  }, [campaign, id])
+  }, [data?.data, id])
 
   return { data: initialFormData, isLoading }
 }

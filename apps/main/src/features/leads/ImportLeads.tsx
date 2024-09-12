@@ -5,6 +5,7 @@ import { Pagination } from '@peiko/components/Pagination'
 import { Box } from '@peiko/components/Box'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
+import dynamic from 'next/dynamic'
 import { LeadsListTable } from './containers/LeadsListTable'
 import {
   getLeadList,
@@ -17,7 +18,13 @@ import {
 } from './store/leads'
 import { ImportFiles } from './containers/ImportFiles'
 import { CreateLeads } from './containers/CreateLeads'
-import { CreateLeadsGroup } from './containers/CreateLeadsGroup'
+
+const CreateLeadsGroup = dynamic(
+  () => import('./containers/CreateLeadsGroup').then((mod) => mod.CreateLeadsGroup),
+  {
+    ssr: false,
+  },
+)
 
 export const ImportLeads: FC = () => {
   const { select, dispatch } = useRedux()

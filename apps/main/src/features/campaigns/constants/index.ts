@@ -1,4 +1,4 @@
-import { TOrderBy } from '@/types/entities/orderBy'
+import { ORDER_BY } from '@/constants/orderBy'
 
 export const CAMPAIGN_STATUSES = {
   ACTIVE: 'active',
@@ -46,4 +46,16 @@ export const SORT_BY = {
   NAME: 'name',
 } as const
 
-export const INITIAL_REQUEST_PARAMS = { page: 1, limit: 10, orderBy: 'ASC' as TOrderBy }
+export const INITIAL_REQUEST_PARAMS_CREATE = {
+  page: 1,
+  limit: 10,
+  orderBy: ORDER_BY.DESC,
+}
+
+export const INITIAL_REQUEST_PARAMS_EDIT = {
+  page: 1,
+  limit: 1000000,
+  orderBy: ORDER_BY.DESC,
+}
+
+export const PAGINATION_REQUEST_TIME = 300

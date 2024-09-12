@@ -26,7 +26,7 @@ export const Toogle: React.FC<TToogleProps> = ({
     setLocalChecked(checked)
   }, [checked])
 
-  const setBlure = useCallback(() => {
+  const setBlur = useCallback(() => {
     if (!inputRef.current) return
     inputRef.current.blur()
   }, [])
@@ -40,7 +40,7 @@ export const Toogle: React.FC<TToogleProps> = ({
           htmlFor={htmlFor}
           disabled={disabled}
           checked={localChecked}
-          onMouseLeave={setBlure}
+          onMouseLeave={setBlur}
         >
           <Input
             {...inputProps}

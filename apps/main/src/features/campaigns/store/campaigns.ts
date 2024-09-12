@@ -10,23 +10,18 @@ import { TSelector, TAsyncAction, TRootState } from '@/store'
 import { TActiveCampaignsReq, TSortBy } from '@/api-rest/campaigns/types'
 import { TPagination } from '@/types/entities/pagination'
 import { handleRestError } from '@/features/common/error'
-import {
-  TActiveCampaign,
-  TCampaign,
-  TCampaignStatus,
-  TCampaignTableType,
-} from '@/features/campaigns/types'
 import { notificationActions } from '@/features/common/notifications/store'
 import { modalsActions } from '@/features/common/modals/store'
-import { CAMPAIGN_STATUSES, CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 import { TOrderBy } from '@/types/entities/orderBy'
+import { ORDER_BY } from '@/constants/orderBy'
+import { TActiveCampaign, TCampaign, TCampaignStatus, TCampaignTableType } from '../types'
+import { CAMPAIGN_STATUSES, CAMPAIGN_TABLE_TYPES, SORT_BY } from '../constants'
 
 export type TInit = {
   isLoading: boolean
   selectedId: null | number | string
   activeCampaigns: TActiveCampaign[] | []
   campaignList: TCampaign[] | []
-  meta: unknown
   pagination: TPagination
   searchTerm?: string
   filterCampaignName?: string | number
@@ -43,7 +38,6 @@ const init: TInit = {
   selectedId: null,
   activeCampaigns: [],
   campaignList: [],
-  meta: {},
   pagination: {
     page: 1,
     limit: 8,
@@ -56,7 +50,7 @@ const init: TInit = {
     to: undefined,
   },
   filterStatus: undefined,
-  sort: { sortBy: undefined, orderBy: 'ASC' },
+  sort: { sortBy: SORT_BY.CREATED_AT, orderBy: ORDER_BY.DESC },
 }
 
 const campaigns = createSlice({
@@ -165,13 +159,11 @@ export const selectCampaignForDelete = (
     return selectedCampaign
   })
 
-// ToDo: change to correct format for user view
 export const selectActiveCampaignsForView = createSelector(
   [selectActiveCampaigns],
   (activeCampaigns) => activeCampaigns,
 )
 
-// ToDo: change to correct format for user view
 export const selectCampaignsListForView = createSelector(
   [selectCampaignsList],
   (campaignList) => campaignList,
@@ -198,6 +190,13 @@ export const selectSelectedCampaignId = createSelector(
   selectCampaigns,
   ({ selectedId }) => selectedId,
 )
+
+type TCampaignByIdReturn = (state: TRootState) => TCampaign | undefined
+
+export const selectCampaignById = (campaignId: number): TCampaignByIdReturn =>
+  createSelector(selectCampaignsList, (campaignList) =>
+    campaignList.find((campaign) => campaign.id === campaignId),
+  )
 
 export default campaigns.reducer
 
@@ -295,7 +294,7 @@ export const asyncRemoveCampaign =
       const params = {
         page: pagination.page,
         limit: pagination.limit,
-        orderBy: 'ASC',
+        orderBy: ORDER_BY.ASC,
         search: searchTerm,
         name: filterCampaignName,
       }
@@ -309,7 +308,7 @@ export const asyncRemoveCampaign =
   }
 
 export const asyncUpdateCampaignStatus =
-  (campaignId: number, currentStatus: TCampaignStatus): TAsyncAction =>
+  (campaignId: number, currentStatus: TCampaignStatus, isDebug?: boolean): TAsyncAction =>
   async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
@@ -326,7 +325,10 @@ export const asyncUpdateCampaignStatus =
           }),
         )
       } else {
-        await apiCampaigns.startCampaign({ id: campaignId.toString() })
+        await apiCampaigns.startCampaign({
+          id: campaignId.toString(),
+          debugging: isDebug,
+        })
         dispatch(
           notificationActions.setNotification({
             key: 'notifications:campaign.active',
@@ -339,7 +341,8 @@ export const asyncUpdateCampaignStatus =
       const params = {
         page: pagination.page,
         limit: pagination.limit,
-        orderBy: 'ASC',
+        sortBy: SORT_BY.CREATED_AT,
+        orderBy: ORDER_BY.DESC,
       }
 
       getCurrentCampaigns({

@@ -27,7 +27,7 @@ export const Checkbox: React.FC<TCheckBoxProps> = ({
     setActive(e.target.checked)
   }
 
-  const setBlure = useCallback(() => {
+  const setBlur = useCallback(() => {
     if (!inputRef.current) return
     inputRef.current.blur()
   }, [])
@@ -40,7 +40,7 @@ export const Checkbox: React.FC<TCheckBoxProps> = ({
         error={error}
         indeterminate={indeterminate}
       >
-        <S.LabelTarget onMouseLeave={setBlure}>
+        <S.LabelTarget onMouseLeave={setBlur}>
           <input
             ref={inputRef}
             type="checkbox"

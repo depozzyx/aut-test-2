@@ -1,9 +1,10 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { shallowEqual } from 'react-redux'
 import { useFormik } from 'formik'
-import { useRedux } from '@/hooks/use-redux'
 import { createStructuredSelector } from 'reselect'
 import useTranslation from 'next-translate/useTranslation'
+
+import { useRedux } from '@/hooks/use-redux'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
@@ -15,17 +16,17 @@ import {
   selectLeadListCatalogAsOptions,
   selectLeadListPagination,
 } from '@/features/leads/store/lead-list'
-
 import {
   asyncGetAgentsList,
   selectAgentsOptions,
   selectAgentsPagination,
 } from '@/features/agents/store/agents'
+import { ORDER_BY } from '@/constants/orderBy'
 import { asyncEditCampaign } from '../../../../../store/edit-campaign'
 import { TCampaignTableType } from '../../../../../types'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
 import { useGetCampaignById } from '../../../../../hooks/use-getCampaignById'
-import { INITIAL_REQUEST_PARAMS } from '../../../../../constants'
+import { INITIAL_REQUEST_PARAMS_EDIT } from '../../../../../constants'
 
 type TProps = {
   type: TCampaignTableType
@@ -60,11 +61,10 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
   const { data } = useGetCampaignById()
 
   useEffect(() => {
-    dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS))
-  }, [])
-
-  useEffect(() => {
-    dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS))
+    Promise.all([
+      dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_EDIT)),
+      dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS_EDIT)),
+    ])
   }, [])
 
   const formik = useFormik<TFormValues>({
@@ -89,74 +89,81 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     }
   }, [data])
 
-  const onLeadsScrollToBottom = () => {
-    const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 15))
+  const onLeadsScrollToBottom = useCallback(() => {
+    const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 10))
     if (leadsPage < lastPage)
       dispatch(
-        asyncGetLeadListCatalog({
-          page: leadsPage + 1,
-          limit: leadsLimit,
-          orderBy: 'ASC',
-        }),
+        asyncGetLeadListCatalog(
+          {
+            page: leadsPage + 1,
+            limit: leadsLimit,
+            orderBy: ORDER_BY.DESC,
+          },
+          true,
+        ),
       )
-  }
+  }, [leadsPage, leadsTotal, leadsLimit])
 
-  const onAgentsScrollToBottom = () => {
-    const lastPage = agentsTotal === 0 ? 1 : Math.ceil(agentsTotal / (agentsLimit ?? 15))
-    if (agentsPage < lastPage)
+  const onAgentsScrollToBottom = useCallback(() => {
+    const lastPage = agentsTotal === 0 ? 1 : Math.ceil(agentsTotal / (agentsLimit ?? 10))
+    if (agentsPage < lastPage) {
       dispatch(
         asyncGetAgentsList(
           {
             page: agentsPage + 1,
             limit: agentsLimit,
-            orderBy: 'ASC',
+            orderBy: ORDER_BY.DESC,
           },
+          true,
           true,
         ),
       )
-  }
+    }
+  }, [agentsPage, agentsLimit, agentsTotal])
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
       <Flex direction="column" align="center" gap={48} margin="40px 0 0 0">
-        <Flex direction="column" gap={16} maxWidth="326px" width="100%">
+        <Flex direction="column" gap={16} maxWidth="424px" width="100%">
           <FormikInput
             size="s"
             name="name"
             label={{ label: t('edit-campaign.campaign-name') }}
             id="name"
             formik={formik}
-            width={326}
+            width={424}
             styles={{ padding: '0 14px' }}
           />
           <FormikMultiSelect
             formik={formik}
             name="assignedAgentIds"
             label={{ label: t('edit-campaign.agent-assignment') }}
-            width={326}
+            width={424}
             size="s"
             options={agentsOptions}
             onMenuScrollToBottom={onAgentsScrollToBottom}
+            isSearchable
           />
           <FormikMultiSelect
             formik={formik}
             name="leadListIds"
             label={{ label: t('edit-campaign.lead-selection') }}
             size="s"
-            width={326}
+            width={424}
             options={leadListOptions}
             onMenuScrollToBottom={onLeadsScrollToBottom}
+            isSearchable
           />
         </Flex>
         <Flex align="center" justify="center" gap={24}>
           <FilledButton
             type="submit"
             disabled={!formik.isValid || !formik.dirty}
-            width="236px"
+            width="202px"
           >
             {t('edit-campaign.save')}
           </FilledButton>
-          <OutlinedButton onClick={resetModals} width="236px">
+          <OutlinedButton onClick={resetModals} width="202px">
             {t('edit-campaign.cancel')}
           </OutlinedButton>
         </Flex>

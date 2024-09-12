@@ -9,6 +9,7 @@ export const ROUTES = {
   DASHBOARD_CAMPAIGN_EFFECTIVENESS: '/cabinet/dashboard/campaigns-effectiveness',
   CAMPAIGNS_LIST: '/cabinet/campaigns/list',
   CAMPAIGNS_ANALYTICS: '/cabinet/campaigns/analytics',
+
   AGENTS_LIST: '/cabinet/agents/list',
   AGENTS_ANALYTICS: '/cabinet/agents/analytics',
   AGENT_CALLS: '/cabinet/agents/calls',
@@ -18,7 +19,8 @@ export const ROUTES = {
   IMPORT_LEADS_INSTRUCTIONS: '/cabinet/leads/import-instructions',
   SETTINGS_ACCOUNT_MANAGEMENT: '/cabinet/settings/account-management',
   SETTINGS_API_KEY_MANAGEMENT: '/cabinet/settings/api-key-management',
-  SETTINGS_ACTIVITY_LOG: '/cabinet/settings/activity-log',
+  SETTINGS_ACTIVITY_LOG_GENERAL: '/cabinet/settings/activity-log/general',
+  SETTINGS_ACTIVITY_LOG_CAMPAIGN: '/cabinet/settings/activity-log/campaign',
   MANAGERS_LIST: '/cabinet/managers/list',
   CREATE_MANAGER: '/cabinet/managers/create',
 }

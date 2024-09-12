@@ -12,7 +12,7 @@ export const EditManagerModal = (): JSX.Element => {
   const showModal =
     modalState?.modalName === MODAL_NAMES.EDIT_MANAGER && modalState.isOpen
 
-  const title = <Text>{t('edit-manager.title')}</Text>
+  const title = <Text tag="span">{t('edit-manager.title')}</Text>
 
   return (
     <ModalMessage

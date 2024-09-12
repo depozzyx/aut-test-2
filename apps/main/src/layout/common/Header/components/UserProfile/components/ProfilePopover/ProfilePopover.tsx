@@ -4,7 +4,6 @@ import useTranslation from 'next-translate/useTranslation'
 import { UserRoleIcon } from '@/features/common/user/components/UserRoleIcon'
 import { Text } from '@peiko/components/Text'
 import { Flex } from '@/components/Flex'
-import { EmailIcon } from '@peiko/components/icons/EmailIcon'
 import { LogoutIcon } from '@peiko/components/icons/LogoutIcon'
 import { SettingsIcon } from '@peiko/components/icons/SettingsIcon'
 import { ROUTES } from '@/routes'
@@ -14,6 +13,7 @@ import { TUserRoles } from '@/types/roles'
 import { ERoles } from '@/constants/profile'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
+import { EnvelopeIcon } from '@/icons/EnvelopeIcon'
 import { Divider, ItemWrapper } from './ProfilePopover.styled'
 
 export interface IProfilePopoverProps {
@@ -42,9 +42,9 @@ const PopoverMenuItem = ({
 )
 
 export const ProfilePopover = ({
-  name = 'John Johnson',
-  email = 'john.johnson@example.com',
-  userRole = 'manager',
+  name,
+  email,
+  userRole,
 }: IProfilePopoverProps): JSX.Element => {
   const { t } = useTranslation('user')
   const { setModal } = useModals()
@@ -68,7 +68,9 @@ export const ProfilePopover = ({
   return (
     <Flex direction="column" align="center" gap={30}>
       <Flex direction="column" align="center" gap={8}>
-        <UserRoleIcon userRole={userRole} iconSize="28px" variant="medium" />
+        {userRole && (
+          <UserRoleIcon userRole={userRole} iconSize="28px" variant="medium" />
+        )}
         <Flex direction="column" align="center">
           <Text variant="f4">{name}</Text>
           <Text variant="f6" color="main22">
@@ -77,7 +79,7 @@ export const ProfilePopover = ({
         </Flex>
       </Flex>
       <Flex direction="column" gap={16}>
-        {email && <PopoverMenuItem icon={<EmailIcon />} title={email} />}
+        {email && <PopoverMenuItem icon={<EnvelopeIcon />} title={email} />}
         {userRole !== ERoles.AGENT && (
           <PopoverMenuItem
             icon={<SettingsIcon />}

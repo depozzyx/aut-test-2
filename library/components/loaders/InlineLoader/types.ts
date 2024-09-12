@@ -53,4 +53,5 @@ export type TInlineLoader = {
    * @default false
    */
   loading?: boolean
+  variant?: 'default' | 'table'
 } & TInlineLoaderContainerProps

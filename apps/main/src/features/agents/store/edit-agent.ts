@@ -11,6 +11,7 @@ import {
   selectSelectedId,
 } from '@/features/agents/store/agents'
 import { modalsActions } from '@/features/common/modals/store'
+import { ORDER_BY } from '@/constants/orderBy'
 
 export type TInit = {
   isLoading: boolean
@@ -86,11 +87,13 @@ export const asyncUpdateAgent =
         }),
       )
 
-      asyncGetAgentsList({
-        page: 1,
-        limit: 10,
-        orderBy: 'ASC',
-      })
+      dispatch(
+        asyncGetAgentsList({
+          page: 1,
+          limit: 8,
+          orderBy: ORDER_BY.DESC,
+        }),
+      )
     } catch (e) {
       handleRestError({ e, dispatch, formik })
     } finally {

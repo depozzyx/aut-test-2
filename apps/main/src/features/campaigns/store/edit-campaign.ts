@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { TAsyncAction, TSelector } from '@/store'
 import { TCampaignTableType } from '@/features/campaigns/types'
 import { apiCampaigns } from '@/api-rest/campaigns'
-import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
+import { CAMPAIGN_TABLE_TYPES, SORT_BY } from '@/features/campaigns/constants'
 import {
   asyncGetActiveCampaigns,
   asyncGetCampaignsList,
@@ -12,6 +12,7 @@ import { modalsActions } from '@/features/common/modals/store'
 import { setIsLoading } from '@/features/campaigns/store/create-campaign'
 import { TEditCampaignReq } from '@/api-rest/campaigns/types'
 import { notificationActions } from '@/features/common/notifications/store/'
+import { ORDER_BY } from '@/constants/orderBy'
 
 export type TInit = {
   formData: Record<string, unknown>
@@ -60,9 +61,23 @@ export const asyncEditCampaign =
 
       const { page, limit } = getState().campaigns.pagination
       if (type === CAMPAIGN_TABLE_TYPES.ACTIVE) {
-        dispatch(asyncGetActiveCampaigns({ page, limit, orderBy: 'ASC' }))
+        dispatch(
+          asyncGetActiveCampaigns({
+            page,
+            limit,
+            orderBy: ORDER_BY.DESC,
+            sortBy: SORT_BY.CREATED_AT,
+          }),
+        )
       } else {
-        dispatch(asyncGetCampaignsList({ page, limit, orderBy: 'ASC' }))
+        dispatch(
+          asyncGetCampaignsList({
+            page,
+            limit,
+            orderBy: ORDER_BY.DESC,
+            sortBy: SORT_BY.CREATED_AT,
+          }),
+        )
       }
 
       dispatch(

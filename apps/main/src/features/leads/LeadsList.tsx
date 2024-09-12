@@ -1,10 +1,12 @@
 import React, { FC, useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { useRedux } from '@/hooks/use-redux'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
+import { useUnmount } from 'react-use'
+
 import { Pagination } from '@peiko/components/Pagination'
 import { Box } from '@peiko/components/Box'
-import { useUnmount } from 'react-use'
 import { LeadsListTable } from './containers/LeadsListTable'
 import {
   getLeadList,
@@ -16,7 +18,13 @@ import {
   selectLeadsPagination,
   selectLeadsSortBy,
 } from './store/leads'
-import { CreateLeadsGroup } from './containers/CreateLeadsGroup'
+
+const CreateLeadsGroup = dynamic(
+  () => import('./containers/CreateLeadsGroup').then((mod) => mod.CreateLeadsGroup),
+  {
+    ssr: false,
+  },
+)
 
 export const LeadsList: FC = () => {
   const { select, dispatch } = useRedux()

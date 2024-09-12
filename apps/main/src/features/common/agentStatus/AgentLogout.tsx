@@ -23,12 +23,12 @@ export const AgentLogout: FC = () => {
     modalState?.modalName === MODAL_NAMES.AGENT_LOGOUT && modalState.isOpen
 
   const logoutHandler = () => {
-    dispatch(
-      agentActions.setStatusAsync('finish', () => {
-        logoutAsync()
-        resetModals()
-      }),
-    )
+    const logout = () => {
+      logoutAsync()
+      resetModals()
+    }
+    if (status !== 'finish') dispatch(agentActions.setStatusAsync('finish', logout))
+    else logout()
   }
 
   const handleBeforeUnload = useCallback(

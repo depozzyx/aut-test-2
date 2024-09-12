@@ -58,6 +58,7 @@ export const useSIPService = (): {
   const endCall = () => {
     ua?.terminateSessions()
     setEndedCall(true)
+    dispatch(agentActions.setStatusAsync('pause'))
   }
 
   const onSubscribeCalls = () => {
@@ -141,7 +142,6 @@ export const useSIPService = (): {
 
             session.on('ended', (e) => {
               console.warn('Call ended', e)
-              dispatch(agentActions.setStatusAsync('pause'))
             })
 
             session.on('failed', (e) => {

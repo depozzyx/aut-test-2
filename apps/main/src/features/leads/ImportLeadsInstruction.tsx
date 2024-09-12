@@ -127,6 +127,7 @@ export const ImportLeadsInstruction: FC = () => {
                   <BodyCell {...props} whiteSpace="nowrap" bg="base2" />
                 )}
                 headerCell={(props) => <HeaderCell {...props} whiteSpace="nowrap" />}
+                loading={false}
               />
             )}
           </Card>

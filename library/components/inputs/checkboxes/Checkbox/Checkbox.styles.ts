@@ -10,7 +10,6 @@ const sizeStyle = (size: TCheckBoxProps['size']) => {
   switch (size) {
     case 's':
       return css`
-        top: 3px;
         width: 18px;
         height: 18px;
       `
@@ -29,7 +28,7 @@ const checkedDefaultStyle = (theme: DefaultTheme) => {
     content: '';
     display: block;
     position: absolute;
-    background-color: ${theme.palette.main8};
+    background-color: ${theme.palette.base};
     border-radius: 10px;
   `
 
@@ -51,7 +50,7 @@ const determinateStyle = (theme: DefaultTheme) => {
     content: '';
     display: block;
     position: absolute;
-    background-color: ${theme.palette.main8};
+    background-color: ${theme.palette.base};
     border-radius: 10px;
   `
 
@@ -138,7 +137,8 @@ export const Target = styled.div``
 
 export const LabelTarget = styled.label`
   display: inline-flex;
-  align-items: flex-start;
+
+  align-items: center;
   cursor: pointer;
 
   :focus-within {
@@ -150,10 +150,10 @@ export const LabelCont = styled.div<{ size?: TCheckBoxProps['size'] }>((props) =
   const { size, theme } = props
 
   return css`
-    color: ${theme.palette.main8};
+    color: ${theme.palette.main5};
     margin-left: 8px;
     position: relative;
-    ${theme.fonts[size === 's' ? 'f7' : 'f5']}
+    ${theme.fonts[size === 's' ? 'f8' : 'f5']}
   `
 })
 
@@ -177,7 +177,7 @@ export const CheckBoxContainer = styled.div<{
       ${Target} {
         color: ${error ? theme.palette.main7 : theme.palette.main2};
         ${targetBorderStyle(error ? theme.palette.main7 : theme.palette.main2)}
-        box-shadow: 0 0 0px 4px ${(props) => props.theme.palette.base};
+        box-shadow: 0 0 0px 1px ${(props) => props.theme.palette.main2};
       }
     }
 
@@ -187,7 +187,7 @@ export const CheckBoxContainer = styled.div<{
       box-sizing: border-box;
       position: relative;
       border-radius: 4px;
-      ${targetBorderStyle(error ? theme.palette.main7 : theme.palette.main8)}
+      ${targetBorderStyle(error ? theme.palette.main7 : theme.palette.main5)}
       ${sizeStyle(size)};
 
       &:hover {

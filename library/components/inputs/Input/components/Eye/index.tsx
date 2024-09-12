@@ -14,7 +14,7 @@ export const Eye: FC<Eye> = ({ open = false, disabled = false, onClick, size = '
   const buttonRef = useRef<HTMLDivElement | null>(null)
   const iconSize = size === 'm' ? 's' : 's'
 
-  const setBlure = useCallback(() => {
+  const setBlur = useCallback(() => {
     if (!buttonRef.current) return
     buttonRef.current.blur()
   }, [])
@@ -24,7 +24,7 @@ export const Eye: FC<Eye> = ({ open = false, disabled = false, onClick, size = '
       disabled={disabled}
       onClick={onClick}
       onKeyPress={onClick}
-      onMouseLeave={setBlure}
+      onMouseLeave={setBlur}
       role="button"
       tabIndex={disabled ? -1 : 0}
       ref={buttonRef}

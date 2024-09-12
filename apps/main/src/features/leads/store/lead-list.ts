@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit'
+import uniqBy from 'lodash/uniqBy'
 import { TAsyncAction, TSelector } from '@/store'
 import { TPagination } from '@/types/entities/pagination'
 import { handleRestError } from '@/features/common/error'
@@ -52,15 +53,10 @@ export const selectLeadListCatalog = createSelector(
   ({ leadListCatalog }) => leadListCatalog,
 )
 
-export const selectIsLoadingLeadsCatalog = createSelector(
-  selectLeadList,
-  ({ isLoading }) => isLoading,
-)
-
 export const selectLeadListCatalogAsOptions = createSelector(
   selectLeadListCatalog,
   (leadListCatalog) =>
-    leadListCatalog.map((leadList) => ({
+    uniqBy(leadListCatalog, 'id').map((leadList) => ({
       label: leadList.name,
       value: leadList.id,
     })),
