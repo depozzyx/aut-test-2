@@ -2,7 +2,6 @@ import React, { useCallback, memo } from 'react'
 import { getFieldError } from '@peiko/components/inputs/utils/get-field-error'
 import useTranslation from 'next-translate/useTranslation'
 import { TFormik } from '@peiko/types/formik'
-import { deepEqual } from '@peiko/utils/deep-equal'
 import { VirtualizedMultiSelect } from '../../MutliSelect'
 import { TMultiSelectProps, TSelectOption, TSelectEvent } from '../../MutliSelect/types'
 
@@ -36,6 +35,6 @@ export const FormikMultiSelect: React.FC<TProps> = memo(({ formik, ...props }) =
       error={fieldError}
     />
   )
-}, deepEqual)
+})
 
 FormikMultiSelect.displayName = 'FormikMultiSelect'

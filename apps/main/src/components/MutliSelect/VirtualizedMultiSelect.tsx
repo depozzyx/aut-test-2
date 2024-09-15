@@ -6,81 +6,17 @@ import {
   GroupBase,
   DropdownIndicatorProps,
   NoticeProps,
-  MenuListProps,
 } from 'react-select'
-import { FixedSizeList as List } from 'react-window'
+
+import { FixedSizeList } from 'react-window'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { Text } from '@peiko/components/Text'
 import { Label } from '@peiko/components/inputs/Label'
 import { CheckIcon } from '@/icons/CheckIcon'
-import { deepEqual } from '@peiko/utils/deep-equal'
 import { TSelectOption, TMultiSelectProps, TSelectEvent } from './types'
 import { Container, CustomLabel, StyledMultiSelect } from './MutliSelect.styled'
 
 const OPTION_HEIGHT = 38
-const MENU_MAX_HEIGHT = 300
-
-type TCustomMenuListProps = MenuListProps<
-  TSelectOption,
-  boolean,
-  GroupBase<TSelectOption>
-> & {
-  onMenuScrollToBottom?: () => void
-}
-
-const CustomMenuList = memo((props: TCustomMenuListProps) => {
-  const {
-    options,
-    children,
-    maxHeight = MENU_MAX_HEIGHT,
-    getValue,
-    onMenuScrollToBottom,
-  } = props
-
-  const childrenArray = React.Children.toArray(children)
-  const listRef = useRef<List | null>(null)
-  const [value] = getValue()
-  const initialOffset = options.indexOf(value) * OPTION_HEIGHT
-
-  const handleScroll = ({
-    scrollOffset,
-    scrollDirection,
-  }: {
-    scrollOffset: number
-    scrollDirection: string
-  }) => {
-    if (scrollDirection === 'forward') {
-      if (!listRef.current) return
-      const listHeight = listRef.current.props.height as number
-      const totalHeight = childrenArray.length * OPTION_HEIGHT
-
-      if (scrollOffset + listHeight >= totalHeight - OPTION_HEIGHT) {
-        onMenuScrollToBottom?.()
-      }
-    }
-  }
-
-  return (
-    <div>
-      <List
-        width="100%"
-        className="virtualized-list"
-        ref={listRef}
-        height={maxHeight}
-        itemCount={childrenArray.length}
-        itemSize={OPTION_HEIGHT}
-        initialScrollOffset={initialOffset}
-        onScroll={handleScroll}
-      >
-        {({ index, style }) => (
-          <div style={style}>{childrenArray[index] as React.ReactNode}</div>
-        )}
-      </List>
-    </div>
-  )
-}, deepEqual)
-
-CustomMenuList.displayName = 'CustomMenuList'
 
 export const VirtualizedMultiSelect = memo(
   ({
@@ -165,6 +101,57 @@ export const VirtualizedMultiSelect = memo(
       [],
     )
 
+    const listRef = useRef<FixedSizeList>(null)
+    const scrollPositionRef = useRef(0)
+
+    useEffect(() => {
+      if (listRef.current && scrollPositionRef.current > 0) {
+        listRef.current.scrollTo(scrollPositionRef.current)
+      }
+    }, [options])
+
+    const CustomMenuList = useCallback(
+      ({ children, maxHeight }) => {
+        const itemCount = React.Children.count(children)
+
+        const handleScroll = ({
+          scrollOffset,
+          scrollDirection,
+        }: {
+          scrollOffset: number
+          scrollDirection: 'forward' | 'backward'
+        }) => {
+          scrollPositionRef.current = scrollOffset
+
+          if (scrollDirection === 'forward' && listRef.current) {
+            const listHeight = listRef.current.props.height as number
+            const scrollThreshold = itemCount * OPTION_HEIGHT - listHeight
+
+            if (scrollOffset >= scrollThreshold - OPTION_HEIGHT) {
+              onMenuScrollToBottom?.()
+            }
+          }
+        }
+
+        return (
+          <FixedSizeList
+            width="100%"
+            ref={listRef}
+            height={Math.min(maxHeight, itemCount * OPTION_HEIGHT)}
+            itemCount={itemCount}
+            itemSize={OPTION_HEIGHT}
+            onScroll={handleScroll}
+            initialScrollOffset={scrollPositionRef.current}
+          >
+            {({ index, style }) => (
+              <div style={style}>{React.Children.toArray(children)[index]}</div>
+            )}
+          </FixedSizeList>
+        )
+      },
+      [onMenuScrollToBottom, options],
+    )
+
     const id = props.name
 
     return (
@@ -178,9 +165,7 @@ export const VirtualizedMultiSelect = memo(
             closeMenuOnSelect={false}
             hideSelectedOptions={false}
             components={{
-              MenuList: (props) => (
-                <CustomMenuList {...props} onMenuScrollToBottom={onMenuScrollToBottom} />
-              ),
+              MenuList: CustomMenuList,
               Option,
               DropdownIndicator,
               NoOptionsMessage,
@@ -201,7 +186,6 @@ export const VirtualizedMultiSelect = memo(
       </Container>
     )
   },
-  deepEqual,
 )
 
 VirtualizedMultiSelect.displayName = 'VirtualizedMultiSelect'

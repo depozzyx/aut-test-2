@@ -1,11 +1,9 @@
 import { withThemeFromJSXProvider } from '@storybook/addon-styling'
 import type { Preview } from '@storybook/react'
 import { ThemeProvider } from 'styled-components'
-import { GlobalStyles } from '@/styles/global-styles'
 import { theming } from '@peiko/styles/theme'
-import 'react-toastify/dist/ReactToastify.css'
 import 'react-day-picker/dist/style.css'
-import 'swiper/css/bundle'
+import { GlobalStyles } from "@/styles/global-styles"
 
 export const decorators = [
   withThemeFromJSXProvider({
