@@ -3,15 +3,18 @@ import { TSelector, TAsyncAction } from '@/store'
 import { handleRestError } from '@/features/common/error'
 import { apiAgents } from '@/api-rest/agents'
 import { TAgentWorkStatus } from '@/features/agents/types'
+import { TAgentStatus } from '@/api-rest/agents/types'
 
 export type TInit = {
   status: TAgentWorkStatus | null
   loading: boolean
+  pbxStatus: TAgentStatus['data']
 }
 
 const init: TInit = {
   status: null,
   loading: false,
+  pbxStatus: 'offline',
 }
 
 const agentStatus = createSlice({
@@ -21,6 +24,9 @@ const agentStatus = createSlice({
     setStatus(state, action: PayloadAction<TInit['status']>) {
       state.status = action.payload
     },
+    setPBXStatus(state, action: PayloadAction<TInit['pbxStatus']>) {
+      state.pbxStatus = action.payload
+    },
     setLoading(state, action: PayloadAction<TInit['loading']>) {
       state.loading = action.payload
     },
@@ -29,7 +35,7 @@ const agentStatus = createSlice({
 })
 
 // actions
-const { setStatus, setLoading, reset } = agentStatus.actions
+const { setStatus, setLoading, setPBXStatus, reset } = agentStatus.actions
 
 const setStatusAsync =
   (workStatus: TAgentWorkStatus, onSuccess?: () => void): TAsyncAction =>
@@ -46,7 +52,7 @@ const setStatusAsync =
     }
   }
 
-export const agentActions = { setStatus, setStatusAsync, reset }
+export const agentActions = { setStatus, setStatusAsync, reset, setPBXStatus }
 // selectors
 export const agentStatusSelector: TSelector<TInit> = (state) => state.agentStatus
 
