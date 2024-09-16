@@ -77,10 +77,12 @@ export const AgentStatus: FC = () => {
     if (status === 'unpause') {
       setOptions(
         INIT_OPTIONS(t).filter(
-          (option) => option.value === 'finish' || option.value === 'pause',
+          (option) =>
+            option.value === 'finish' ||
+            option.value === 'pause' ||
+            option.value === 'unpause',
         ),
       )
-      dispatch(agentActions.setStatusAsync('start'))
       return
     }
     if (status === 'finish') {

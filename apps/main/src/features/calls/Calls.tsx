@@ -20,7 +20,7 @@ export const Calls: FC = () => {
   const { t } = useTranslation('calls')
 
   const { dispatch, select } = useRedux()
-  const { status } = select(agentStatusSelector)
+  const { status, pbxStatus } = select(agentStatusSelector)
   const [callDuration, setCallDuration] = useState(0)
   const [isFeedbackLoading, setIsFeedbackLoading] = useState(false)
   const { connect, disconnect, ua, endCall, lead, endedCall, setEndedCall, setLead } =
@@ -43,7 +43,6 @@ export const Calls: FC = () => {
     setCallDuration(0)
     setEndedCall(false)
     setLead(null)
-    dispatch(agentActions.setStatusAsync('start'))
   }
 
   const onCallFeedback = async (status: TCallStatuses) => {
@@ -67,7 +66,7 @@ export const Calls: FC = () => {
   return (
     <>
       <Flex justify="center" align="center" styles={{ flex: 1 }}>
-        {lead && endedCall && callDuration > 0 && status === 'pause' && (
+        {lead && endedCall && callDuration > 0 && pbxStatus === 'system_pause' && (
           <Card
             padding="32px 60px"
             maxWidth="440px"
@@ -103,12 +102,12 @@ export const Calls: FC = () => {
             </Flex>
           </Card>
         )}
-        {!(status === 'on-call') && !lead && !endedCall && !callDuration && (
+        {!(pbxStatus === 'oncall') && !lead && !endedCall && !callDuration && (
           <Text styles={{ textAlign: 'center' }} variant="f4">
             {t('noCalls')}
           </Text>
         )}
-        {status === 'on-call' && lead && (
+        {pbxStatus === 'oncall' && lead && (
           <Card padding="32px 68px" fullWidth maxWidth={582}>
             <Text styles={{ textAlign: 'center', marginBottom: '40px' }} variant="f2">
               {t('newCall')}
@@ -119,7 +118,7 @@ export const Calls: FC = () => {
                 setDuration={(duration) => setCallDuration(duration)}
                 name={lead.lead.name}
               />
-              <CallButton onClick={endCall}>
+              <CallButton onClick={() => endCall(true)} isLoading={endedCall}>
                 <CallIcon />
               </CallButton>
             </Flex>
