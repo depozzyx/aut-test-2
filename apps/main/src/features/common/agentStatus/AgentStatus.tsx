@@ -63,7 +63,9 @@ export const AgentStatus: FC = () => {
       return
     }
     if (pbxStatus === 'system_pause') {
-      setOptions(INIT_OPTIONS(t).filter(({ value }) => value === 'pause'))
+      setOptions(
+        INIT_OPTIONS(t).filter(({ value }) => value === 'pause' || value === 'finish'),
+      )
       return
     }
     if (pbxStatus === 'oncall' || pbxStatus === 'ringing') {
