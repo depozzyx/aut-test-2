@@ -20,7 +20,7 @@ export const Calls: FC = () => {
   const { t } = useTranslation('calls')
 
   const { dispatch, select } = useRedux()
-  const { status, pbxStatus } = select(agentStatusSelector)
+  const { pbxStatus } = select(agentStatusSelector)
   const [callDuration, setCallDuration] = useState(0)
   const [isFeedbackLoading, setIsFeedbackLoading] = useState(false)
   const { connect, disconnect, ua, endCall, lead, endedCall, setEndedCall, setLead } =
@@ -34,7 +34,10 @@ export const Calls: FC = () => {
 
   useUnmount(() => {
     disconnect()
-    if (!(status === 'finish') && (status === 'unpause' || status === 'start')) {
+    if (
+      !(pbxStatus === 'offline') &&
+      (pbxStatus === 'online' || pbxStatus === 'system_pause')
+    ) {
       dispatch(agentActions.setStatusAsync('pause'))
     }
   })

@@ -43,7 +43,7 @@ const INIT_OPTIONS = (
 export const AgentStatus: FC = () => {
   const { t } = useTranslation('user')
   const { dispatch, select } = useRedux()
-  const { status } = select(agentStatusSelector)
+  const { pbxStatus } = select(agentStatusSelector)
   const [options, setOptions] = useState(INIT_OPTIONS(t))
   const { user } = useAuth()
 
@@ -52,56 +52,39 @@ export const AgentStatus: FC = () => {
   }, [user])
 
   useEffect(() => {
-    if (status === 'pause') {
+    if (pbxStatus === 'offline') {
+      setOptions(INIT_OPTIONS(t).filter(({ value }) => value === 'start'))
+      return
+    }
+    if (pbxStatus === 'manual_pause') {
       setOptions(
-        INIT_OPTIONS(t).filter(
-          (option) =>
-            option.value === 'unpause' ||
-            option.value === 'finish' ||
-            option.value === 'pause',
-        ),
+        INIT_OPTIONS(t).filter(({ value }) => value === 'unpause' || value === 'finish'),
       )
       return
     }
-    if (status === 'start' || status === 'on-call') {
-      setOptions(
-        INIT_OPTIONS(t).filter(
-          (option) =>
-            option.value === 'finish' ||
-            option.value === 'pause' ||
-            option.value === 'start',
-        ),
-      )
+    if (pbxStatus === 'system_pause') {
+      setOptions(INIT_OPTIONS(t).filter(({ value }) => value === 'pause'))
       return
     }
-    if (status === 'unpause') {
-      setOptions(
-        INIT_OPTIONS(t).filter(
-          (option) =>
-            option.value === 'finish' ||
-            option.value === 'pause' ||
-            option.value === 'unpause',
-        ),
-      )
+    if (pbxStatus === 'oncall' || pbxStatus === 'ringing') {
+      setOptions([])
       return
     }
-    if (status === 'finish') {
+    if (pbxStatus === 'online') {
       setOptions(
-        INIT_OPTIONS(t).filter(
-          (option) => option.value === 'finish' || option.value === 'start',
-        ),
+        INIT_OPTIONS(t).filter(({ value }) => value === 'pause' || value === 'finish'),
       )
     }
-  }, [status])
+  }, [pbxStatus])
 
   return (
-    <Box styles={{ display: 'felx', alignItems: 'center', gap: '0' }}>
+    <Box styles={{ display: 'flex', alignItems: 'center', gap: '0' }}>
       <PBXStatus />
       <StyledSelect
         width="105px"
         name="workStatus"
         options={options}
-        value={status === 'on-call' ? 'start' : status ?? undefined}
+        readOnlySelection
         onChange={(e) => {
           if (e?.value && typeof e.value === 'string')
             dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
