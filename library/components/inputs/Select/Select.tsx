@@ -20,6 +20,7 @@ export const Select: React.FC<TSelectProps> = ({
   onChange,
   isSearchable = false,
   menuContent,
+  readOnlySelection,
   ...props
 }) => {
   const { t } = useTranslation('inputs')
@@ -121,7 +122,7 @@ export const Select: React.FC<TSelectProps> = ({
         <S.RS
           id={id}
           size={size}
-          value={selectValue}
+          value={readOnlySelection ? null : selectValue}
           options={options}
           error={error}
           instanceId={id}
