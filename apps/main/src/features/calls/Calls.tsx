@@ -51,8 +51,6 @@ export const Calls: FC = () => {
   }
 
   const onCallFeedback = async (status: TCallStatuses) => {
-    // eslint-disable-next-line no-console
-    console.log('click', lead)
     try {
       if (!lead) return
       setIsFeedbackLoading(true)
@@ -70,8 +68,9 @@ export const Calls: FC = () => {
     }
   }
 
-  // eslint-disable-next-line no-console
-  console.log({ endedCall, pbxStatus, status, lead })
+  useEffect(() => {
+    if (pbxStatus === 'online' && endedCall) resetAllData()
+  }, [pbxStatus])
 
   return (
     <>
