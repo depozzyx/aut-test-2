@@ -22,6 +22,8 @@ const changeWorkStatus = (
   data: TChangeWorkStatusReq,
 ): TAxiosResponse<TChangeWorkStatusRes> => api.put('/agents/work-status', data)
 
+const hangup = (): TAxiosResponse<never> => api.put('/agents/hangup')
+
 const createAgent = (data: TCreateAgentReq): TAxiosResponse<TCreateAgentRes> =>
   api.post('/agents', data)
 
@@ -47,6 +49,7 @@ const getAgentStatus = (): TAxiosResponse<TAgentStatus> => api.get(`/agents/pbx/
 export const apiAgents = {
   pbxAuth,
   changeWorkStatus,
+  hangup,
   createAgent,
   getAgentsList,
   getPBXAuth,

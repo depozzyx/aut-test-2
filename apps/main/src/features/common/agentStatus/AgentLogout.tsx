@@ -16,7 +16,7 @@ export const AgentLogout: FC = () => {
   const { t } = useTranslation('user')
   const { modalState, resetModals } = useModals()
   const { dispatch, select } = useRedux()
-  const { loading, status } = select(agentStatusSelector)
+  const { loading, pbxStatus } = select(agentStatusSelector)
   const { logoutAsync } = useAuth()
 
   const showModal =
@@ -27,18 +27,18 @@ export const AgentLogout: FC = () => {
       logoutAsync()
       resetModals()
     }
-    if (status !== 'finish') dispatch(agentActions.setStatusAsync('finish', logout))
+    if (pbxStatus !== 'offline') dispatch(agentActions.setStatusAsync('finish', logout))
     else logout()
   }
 
   const handleBeforeUnload = useCallback(
     (e: BeforeUnloadEvent) => {
-      if (!(status === 'finish')) {
+      if (!(pbxStatus === 'offline')) {
         e.preventDefault()
         return ''
       }
     },
-    [status],
+    [pbxStatus],
   )
 
   useEffect(() => {
