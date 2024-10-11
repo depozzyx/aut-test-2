@@ -5,18 +5,19 @@ import { useRedux } from '@/hooks/use-redux'
 import { Box } from '@peiko/components/Box'
 import { Text } from '@peiko/components/Text'
 import { TPalette } from '@peiko/styles/types/palette'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect } from 'react'
 import { BlinkingButton } from './PBXStatus.styled'
+import { agentActions, agentStatusSelector } from '../../store'
 
 export const PBXStatus: FC = () => {
-  const [pbxStatus, setPBXStatus] = useState<TAgentStatus['data']>('offline')
-  const { dispatch } = useRedux()
+  const { dispatch, select } = useRedux()
+  const { pbxStatus } = select(agentStatusSelector)
 
   useEffect(() => {
     const getStatusAsync = async () => {
       try {
         const { data } = await apiAgents.getAgentStatus()
-        setPBXStatus(data.data)
+        dispatch(agentActions.setPBXStatus(data.data))
       } catch (e) {
         handleRestError({ e, dispatch })
       }

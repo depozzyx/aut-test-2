@@ -8,11 +8,11 @@ import {
 import { AnswerOptions } from 'jssip/lib/RTCSession'
 import { useAuth } from '@/features/common/user'
 import { useRedux } from '@/hooks/use-redux'
-import { errorActions } from '@/features/common/error'
+import { errorActions, handleRestError } from '@/features/common/error'
 import { callSocket } from 'api/socket/call'
 import { socket } from 'api/socket/Socket'
 import { TCallsInit } from 'api/socket/call/types'
-import { agentActions } from '@/features/common/agentStatus/store'
+import { apiAgents } from '@/api-rest/agents'
 
 const TEXTS = {
   SUBSCRIBE_CALLS: 'Subscribe calls',
@@ -23,7 +23,7 @@ export const useSIPService = (): {
   connect: () => void
   disconnect: () => void
   ua: UA | null
-  endCall: () => void
+  endCall: (isClient?: boolean) => void
   lead: TCallsInit | null
   endedCall: boolean
   setEndedCall: (endedCall: boolean) => void
@@ -55,23 +55,29 @@ export const useSIPService = (): {
   const jsSIPSocket = new JsSIP.WebSocketInterface('wss://dev.voipenv.uk:7777/ws')
   const [ua, setUA] = useState<UA | null>(null)
 
-  const endCall = () => {
-    ua?.terminateSessions()
+  const hangupAsync = async () => {
+    try {
+      await apiAgents.hangup()
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    }
+  }
+
+  const endCall = (isClient?: boolean) => {
+    if (isClient) hangupAsync()
     setEndedCall(true)
-    dispatch(agentActions.setStatusAsync('pause'))
   }
 
   const onSubscribeCalls = () => {
     callSocket.callInit({
       id: TEXTS.SUBSCRIBE_CALLS,
       callback: (e) => {
-        dispatch(agentActions.setStatusAsync('on-call'))
         setLead(e)
       },
     })
     callSocket.callEnd({
       id: TEXTS.SUBSCRIBE_CALLS_END,
-      callback: endCall,
+      callback: () => endCall(),
     })
   }
 

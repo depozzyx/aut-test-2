@@ -29,8 +29,8 @@ const campaignAnalytics = createSlice({
     setIsLoading(state, action: PayloadAction<TInit['isLoading']>) {
       state.isLoading = action.payload
     },
-    setDateFilter(state, action: PayloadAction<TInit['filterDate']>) {
-      state.filterDate = action.payload
+    setDateFilter(state, action: PayloadAction<Partial<TInit['filterDate']>>) {
+      state.filterDate = { ...state.filterDate, ...action.payload }
     },
     setAnalyticsData(state, action: PayloadAction<TInit['analyticsData']>) {
       state.analyticsData = action.payload
