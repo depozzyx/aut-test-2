@@ -7,6 +7,7 @@ import { Text } from '@peiko/components/Text'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { LogoutIcon } from '@/icons/LogoutIcon'
 import { BaseButton } from '@peiko/components/buttons/BaseButton'
+import { useDisableClickOnCall } from 'main/src/hooks/use-disable-click-on-call'
 import { SidebarItem } from './components/SidebarItem'
 import { Accordion, Container, MenuItem } from './styles/Sidebar.styled'
 
@@ -15,9 +16,14 @@ export const Sidebar = (): JSX.Element => {
   const { logoutAsync } = useAuth()
   const links = useMenuLinks()
   const { pathname } = useRouter()
+  const { menuDisabled, showErrorMessage } = useDisableClickOnCall()
 
   const handleLogout = () => {
-    logoutAsync()
+    if (menuDisabled) {
+      showErrorMessage()
+    } else {
+      logoutAsync()
+    }
   }
 
   return (
@@ -47,6 +53,8 @@ export const Sidebar = (): JSX.Element => {
                 />
               </MenuItem>
             )}
+            disabled={menuDisabled}
+            handleDisabledToggle={showErrorMessage}
           >
             {item.links.map((item) => (
               <SidebarItem key={item.title} link={item.link} title={item.title} />
@@ -56,8 +64,8 @@ export const Sidebar = (): JSX.Element => {
       </Flex>
       <BaseButton width="fit-content" onClick={handleLogout}>
         <MenuItem align="center" gap="8px" justify="space-between" padding="8px 16px">
-          <LogoutIcon />
-          <Text color="base">{t('logout-btn')}</Text>
+          <LogoutIcon color={menuDisabled ? 'overlay' : 'base'} />
+          <Text color={menuDisabled ? 'overlay' : 'base'}>{t('logout-btn')}</Text>
         </MenuItem>
       </BaseButton>
     </Container>

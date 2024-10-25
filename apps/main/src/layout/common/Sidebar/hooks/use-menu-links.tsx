@@ -13,6 +13,7 @@ type TMenuItem = {
   title: string
   icon: JSX.Element
   availableRoles: string[]
+  disabled?: boolean
   links: {
     title: string
     link: string
@@ -157,6 +158,7 @@ export const useMenuLinks = (): TMenuItem[] => {
       title: t('settings'),
       icon: <SettingsIcon />,
       availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.AGENT],
+      disabled: false,
       links: [
         {
           title: t('settings_account_management'),
