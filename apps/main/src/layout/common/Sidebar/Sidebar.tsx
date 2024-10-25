@@ -7,6 +7,8 @@ import { Text } from '@peiko/components/Text'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { LogoutIcon } from '@/icons/LogoutIcon'
 import { BaseButton } from '@peiko/components/buttons/BaseButton'
+import { errorActions } from 'main/src/features/common/error'
+import { useRedux } from 'main/src/hooks/use-redux'
 import { SidebarItem } from './components/SidebarItem'
 import { Accordion, Container, MenuItem } from './styles/Sidebar.styled'
 
@@ -15,9 +17,19 @@ export const Sidebar = (): JSX.Element => {
   const { logoutAsync } = useAuth()
   const links = useMenuLinks()
   const { pathname } = useRouter()
+  const { dispatch } = useRedux()
 
   const handleLogout = () => {
     logoutAsync()
+  }
+
+  const handleDisabledToggle = () => {
+    dispatch(
+      errorActions.showGlobalError(
+        'You are live now. ' +
+          'Please finish your call to be able to navigate the system',
+      ),
+    )
   }
 
   return (
@@ -28,6 +40,8 @@ export const Sidebar = (): JSX.Element => {
             defaultOpen={!!item.links.find(({ link }) => pathname === link)}
             containerStyles={() => ({ border: 'none' })}
             key={item.title}
+            disabled={item.disabled}
+            handleDisabledToggle={handleDisabledToggle}
             header={({ isOpen }) => (
               <MenuItem
                 isOpen={isOpen}

@@ -8,11 +8,14 @@ import { SettingsIcon } from '@/icons/SettingsIcon'
 import { UserWithTie } from '@peiko/components/icons/UserWithTie'
 import { useAuth } from '@/features/common/user'
 import { ERoles } from '@/constants/profile'
+import { agentStatusSelector } from '@/features/common/agentStatus/store'
+import { useRedux } from '@/hooks/use-redux'
 
 type TMenuItem = {
   title: string
   icon: JSX.Element
   availableRoles: string[]
+  disabled?: boolean
   links: {
     title: string
     link: string
@@ -30,6 +33,8 @@ const filterMenuItemsByRole = (menuItems: TMenuItem[], userRole: string) =>
     }))
 
 export const useMenuLinks = (): TMenuItem[] => {
+  const { select } = useRedux()
+  const { pbxStatus } = select(agentStatusSelector)
   const { t } = useTranslation('routing')
   const { user } = useAuth()
 
@@ -157,6 +162,7 @@ export const useMenuLinks = (): TMenuItem[] => {
       title: t('settings'),
       icon: <SettingsIcon />,
       availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.AGENT],
+      disabled: pbxStatus === 'oncall',
       links: [
         {
           title: t('settings_account_management'),

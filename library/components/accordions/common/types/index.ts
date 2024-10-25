@@ -31,4 +31,5 @@ export type TAccordionProps = {
   headerStyles?: TStylesProps['styles']
   collapseStyles?: TStylesProps['styles']
   isOpen?: boolean
+  handleDisabledToggle?: () => void
 }

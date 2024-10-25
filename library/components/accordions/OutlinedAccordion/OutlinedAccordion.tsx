@@ -10,10 +10,17 @@ export const OutlinedAccordion: React.FC<TAccordionProps> = ({
   disabled,
   containerStyles,
   headerStyles,
+  handleDisabledToggle,
   ...props
 }) => {
   const { isOpen, toggle, ref, setBlur } = useOpen(defaultOpen)
-
+  const handleToggle = () => {
+    if (!disabled) {
+      toggle()
+    } else if (handleDisabledToggle) {
+      handleDisabledToggle()
+    }
+  }
   const isOpened = isOpen && !disabled
 
   return (
@@ -25,7 +32,7 @@ export const OutlinedAccordion: React.FC<TAccordionProps> = ({
       {...props}
       containerStyles={containerStyles && containerStyles({ isOpen: isOpened })}
     >
-      <Header ref={ref} onClick={toggle} headerStyles={headerStyles}>
+      <Header ref={ref} onClick={handleToggle} headerStyles={headerStyles}>
         {header({ isOpen: isOpened })}
       </Header>
       <Collapse>
