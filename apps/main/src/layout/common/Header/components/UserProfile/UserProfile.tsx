@@ -26,7 +26,7 @@ const containerStyles = `
   padding: 24px;
 `
 
-export const UserProfile = (): JSX.Element => {
+export const UserProfile = ({ disabled }: { disabled?: boolean }): JSX.Element => {
   const { user } = useAuth()
 
   const { applyStyle, resetStyle } = useToggleStyle({
@@ -41,6 +41,7 @@ export const UserProfile = (): JSX.Element => {
     <ContextMenu
       on="hover"
       position="bottom center"
+      disabled={disabled}
       renderMenu={() => (
         <ProfilePopover
           userRole={user?.role}

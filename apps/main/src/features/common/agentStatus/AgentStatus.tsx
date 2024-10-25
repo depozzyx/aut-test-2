@@ -87,6 +87,7 @@ export const AgentStatus: FC = () => {
         name="workStatus"
         options={options}
         readOnlySelection
+        disabled={pbxStatus === 'oncall' || pbxStatus === 'offline'}
         onChange={(e) => {
           if (e?.value && typeof e.value === 'string')
             dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
