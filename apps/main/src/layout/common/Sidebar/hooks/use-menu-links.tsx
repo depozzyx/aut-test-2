@@ -31,6 +31,7 @@ const filterMenuItemsByRole = (menuItems: TMenuItem[], userRole: string) =>
 
 export const useMenuLinks = (): TMenuItem[] => {
   const { t } = useTranslation('routing')
+
   const { user } = useAuth()
 
   const links: TMenuItem[] = [
