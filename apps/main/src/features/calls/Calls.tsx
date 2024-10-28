@@ -33,7 +33,6 @@ export const Calls: FC = () => {
   }, [ua])
 
   useUnmount(() => {
-    disconnect()
     if (
       pbxStatus !== 'offline' &&
       status !== 'finish' &&
@@ -42,6 +41,7 @@ export const Calls: FC = () => {
     ) {
       dispatch(agentActions.setStatusAsync('pause'))
     }
+    setTimeout(() => disconnect(), 100)
   })
 
   const resetAllData = async () => {
