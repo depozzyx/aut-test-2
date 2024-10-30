@@ -41,7 +41,7 @@ export const Calls: FC = () => {
     ) {
       dispatch(agentActions.setStatusAsync('pause'))
     }
-    setTimeout(() => disconnect(), 100)
+    setTimeout(() => disconnect(), 300)
   })
 
   const resetAllData = async () => {
