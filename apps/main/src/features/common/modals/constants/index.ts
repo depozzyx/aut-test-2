@@ -1,5 +1,3 @@
-import { SelectAgentCampaignModal } from '@/features/calls/containers/modals/SelectAgentCampaignModal'
-
 export const MODAL_NAMES = {
   CREATE_CAMPAIGN: 'CREATE_CAMPAIGN',
   EDIT_CAMPAIGN: 'EDIT_CAMPAIGN',

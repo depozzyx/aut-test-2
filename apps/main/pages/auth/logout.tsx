@@ -10,9 +10,7 @@ const LogoutPage: NextPage = () => {
   const router = useRouter()
   const { t } = useTranslation('auth')
 
-  const handleLogout = () => {
-    router.push(ROUTES.SIGN_IN)
-  }
+  const handleLogout = () => router.push(ROUTES.SIGN_IN)
 
   return (
     <PermissionAuth>
