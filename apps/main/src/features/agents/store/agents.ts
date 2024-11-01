@@ -27,6 +27,7 @@ export type TInit = {
   deletedAgentData: null | TDeletedAgentData
   searchTerm: string
   selectedAssignedCampaign: null | TAssignedCampaign
+  selectedCampaignId: null | string
 }
 
 const init: TInit = {
@@ -44,6 +45,7 @@ const init: TInit = {
   deletedAgentData: null,
   searchTerm: '',
   selectedAssignedCampaign: null,
+  selectedCampaignId: '',
 }
 
 const agents = createSlice({
@@ -90,6 +92,9 @@ const agents = createSlice({
     ) {
       state.selectedAssignedCampaign = action.payload
     },
+    setSelectedCampaignId(state, action: PayloadAction<TInit['selectedCampaignId']>) {
+      state.selectedCampaignId = action.payload
+    },
     reset: () => init,
   },
 })
@@ -105,6 +110,7 @@ export const {
   setDeletedAgentData,
   setSearchTerm,
   setSelectedAssignedCampaign,
+  setSelectedCampaignId,
   reset,
 } = agents.actions
 
@@ -149,6 +155,11 @@ export const selectSort = createSelector(selectAgents, ({ sort }) => sort)
 export const selectSelectedId = createSelector(
   selectAgents,
   ({ selectedId }) => selectedId,
+)
+
+export const selectSelectedCampaignId = createSelector(
+  selectAgents,
+  ({ selectedCampaignId }) => selectedCampaignId,
 )
 
 export const selectSearchTerm = createSelector(

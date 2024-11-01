@@ -2,13 +2,12 @@ import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/do
 import React from 'react'
 import { DRAWER_PORTAL_ID } from '@peiko/constants/id'
 import { FavIcon } from '@/html/FavIcon'
-import { Fonts } from '../src/html/Fonts'
-import { InitStyleSheet } from '../src/html/init-style-sheet'
+import { Fonts } from '@/html/Fonts'
+import { InitStyleSheet } from '@/html/init-style-sheet'
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
-    const styleSheet = await InitStyleSheet(ctx)
-    return styleSheet
+    return InitStyleSheet(ctx)
   }
 
   render() {

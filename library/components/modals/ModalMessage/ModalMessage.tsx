@@ -4,7 +4,7 @@ import { Card } from '@peiko/components/Card'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { Box } from '@peiko/components/Box'
 import { ModalHeader } from '../ModalHeader'
-import { Modal } from '../Modal/Modal'
+import { Modal } from '../Modal'
 import { TModalMessage } from './types'
 
 export const ModalMessage = memo(

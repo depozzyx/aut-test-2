@@ -3,18 +3,39 @@ import { Card } from '@peiko/components/Card'
 import { Text } from '@peiko/components/Text'
 import useTranslation from 'next-translate/useTranslation'
 import React, { FC, useEffect, useState } from 'react'
-import { CallIcon } from '@/icons/CallIcon'
 import { useUnmount } from 'react-use'
+import dynamic from 'next/dynamic'
+
+import { CallIcon } from '@/icons/CallIcon'
 import { useRedux } from '@/hooks/use-redux'
 import { Thumb } from '@/icons/Thumb'
 import { apiCalls } from '@/api-rest/calls'
 import { TCallStatuses } from '@/api-rest/calls/types'
+import { useAuth } from '@/features/common/user'
+import {
+  selectSelectedCampaignId,
+  setSelectedCampaignId,
+} from '@/features/agents/store/agents'
+import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
+import { apiCampaigns } from '@/api-rest/campaigns'
+import { TCampaign } from '@/features/campaigns/types'
 import { CallButton } from './components/CallButton/CallButton'
 import { CallWindow } from './components/CallWindow'
 import { useSIPService } from './hooks/useSIPService'
 import { agentActions, agentStatusSelector } from '../common/agentStatus/store'
 import { FeedbackButton } from './components/FeedbackButton'
 import { handleRestError } from '../common/error'
+
+const SelectAgentCampaignModal = dynamic(
+  () =>
+    import('./containers/modals/SelectAgentCampaignModal').then(
+      (mod) => mod.SelectAgentCampaignModal,
+    ),
+  {
+    ssr: false,
+  },
+)
 
 export const Calls: FC = () => {
   const { t } = useTranslation('calls')
@@ -25,6 +46,10 @@ export const Calls: FC = () => {
   const [isFeedbackLoading, setIsFeedbackLoading] = useState(false)
   const { connect, disconnect, ua, endCall, lead, endedCall, setEndedCall, setLead } =
     useSIPService()
+  const { user } = useAuth()
+  const { modalState, setModal } = useModals()
+
+  const selectedCampaignId = select(selectSelectedCampaignId)
 
   useEffect(() => {
     if (ua && !ua?.isConnected()) {
@@ -43,6 +68,28 @@ export const Calls: FC = () => {
     }
     setTimeout(() => disconnect(), 300)
   })
+
+  const [campaigns, setCampaigns] = useState<Partial<TCampaign>[]>([])
+
+  const openModal = () =>
+    setModal({ modalName: MODAL_NAMES.SELECT_AGENT_CAMPAIGN, isOpen: true })
+  const setCampaignId = async () => {
+    if (user?.role === 'agent' && !selectedCampaignId) {
+      const response = await apiCampaigns.getAgentAssignedActiveCampaigns()
+      const campaignsData = response?.data?.data
+      if (campaignsData.length) {
+        setCampaigns(campaignsData)
+        if (campaignsData.length === 1) {
+          const campaignId = campaignsData[0].id
+          if (campaignId) dispatch(setSelectedCampaignId(String(campaignId)))
+        } else {
+          openModal()
+        }
+      } else {
+        openModal()
+      }
+    }
+  }
 
   const resetAllData = async () => {
     setCallDuration(0)
@@ -71,6 +118,13 @@ export const Calls: FC = () => {
   useEffect(() => {
     if (pbxStatus === 'online' && endedCall) resetAllData()
   }, [pbxStatus])
+
+  useEffect(() => {
+    setCampaignId()
+  }, [selectedCampaignId])
+
+  const showModal =
+    modalState?.modalName === MODAL_NAMES.SELECT_AGENT_CAMPAIGN && modalState.isOpen
 
   return (
     <>
@@ -134,6 +188,7 @@ export const Calls: FC = () => {
           </Card>
         )}
       </Flex>
+      {showModal && <SelectAgentCampaignModal campaigns={campaigns} />}
     </>
   )
 }
