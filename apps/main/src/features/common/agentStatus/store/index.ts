@@ -3,7 +3,7 @@ import { TSelector, TAsyncAction } from '@/store'
 import { handleRestError } from '@/features/common/error'
 import { apiAgents } from '@/api-rest/agents'
 import { TAgentWorkStatus } from '@/features/agents/types'
-import { TAgentStatus } from '@/api-rest/agents/types'
+import { TAgentStatus, TChangeWorkStatusReq } from '@/api-rest/agents/types'
 
 export type TInit = {
   status: TAgentWorkStatus | null
@@ -39,10 +39,13 @@ const { setStatus, setLoading, setPBXStatus, reset } = agentStatus.actions
 
 const setStatusAsync =
   (workStatus: TAgentWorkStatus, onSuccess?: () => void): TAsyncAction =>
-  async (dispatch) => {
+  async (dispatch, getState) => {
     try {
       dispatch(setLoading(true))
-      const { data } = await apiAgents.changeWorkStatus({ workStatus })
+      const campaignId = getState().agents.selectedCampaignId
+      const payload: TChangeWorkStatusReq = { workStatus }
+      if (campaignId) payload.campaignId = campaignId
+      const { data } = await apiAgents.changeWorkStatus(payload)
       dispatch(setStatus(data.data.workStatus))
       onSuccess?.()
     } catch (e) {

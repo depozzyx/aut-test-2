@@ -1,3 +1,5 @@
+import { SelectAgentCampaignModal } from '@/features/calls/containers/modals/SelectAgentCampaignModal'
+
 export const MODAL_NAMES = {
   CREATE_CAMPAIGN: 'CREATE_CAMPAIGN',
   EDIT_CAMPAIGN: 'EDIT_CAMPAIGN',
@@ -17,6 +19,7 @@ export const MODAL_NAMES = {
   CONFIRM_NEW_API_KEY: 'CONFIRM_NEW_API_KEY',
   REVOKE_API_KEY: 'REVOKE_API_KEY',
   CAMPAIGN_DETAILS_LOG: 'CAMPAIGN_DETAILS_LOG',
+  SELECT_AGENT_CAMPAIGN: 'SELECT_AGENT_CAMPAIGN',
 } as const
 
 export type TModalNames = typeof MODAL_NAMES[keyof typeof MODAL_NAMES]

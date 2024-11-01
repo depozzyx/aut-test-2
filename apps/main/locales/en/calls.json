@@ -4,5 +4,8 @@
   "newCall": "New incoming call",
   "feedback": "Call feedback",
   "success": "Success",
-  "failure": "Failure"
+  "failure": "Failure",
+  "selectCampaignTitle": "Select campaign",
+  "selectPlaceholder": "Select...",
+  "noCampaignError": "Contact your admin, because your campaign is inactive or don’t exist!"
 }

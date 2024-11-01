@@ -6,9 +6,14 @@ import { TAgentWorkStatus } from '@/features/agents/types'
 import styled from 'styled-components'
 import { Box } from '@peiko/components/Box'
 import { Translate } from 'next-translate'
-import { agentActions, agentStatusSelector } from './store'
-import { PBXStatus } from './containers/PBXStatus'
+import { selectSelectedCampaignId } from '@/features/agents/store/agents'
+import { router } from 'next/client'
+import { ROUTES } from '@/routes'
+import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { useAuth } from '../user'
+import { PBXStatus } from './containers/PBXStatus'
+import { agentActions, agentStatusSelector } from './store'
 
 const StyledSelect = styled(Select)`
   .custom-rs__control {
@@ -46,6 +51,8 @@ export const AgentStatus: FC = () => {
   const { pbxStatus } = select(agentStatusSelector)
   const [options, setOptions] = useState(INIT_OPTIONS(t))
   const { user } = useAuth()
+  const selectedCampaignId = select(selectSelectedCampaignId)
+  const { setModal } = useModals()
 
   useEffect(() => {
     if (user?.workStatus) dispatch(agentActions.setStatus(user?.workStatus))
@@ -89,8 +96,13 @@ export const AgentStatus: FC = () => {
         readOnlySelection
         disabled={pbxStatus === 'oncall' || pbxStatus === 'ringing'}
         onChange={(e) => {
-          if (e?.value && typeof e.value === 'string')
-            dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
+          if (e?.value && typeof e.value === 'string') {
+            if (e?.value === 'start' && !selectedCampaignId) {
+              setModal({ modalName: MODAL_NAMES.SELECT_AGENT_CAMPAIGN, isOpen: true })
+            } else {
+              dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
+            }
+          }
         }}
       />
     </Box>

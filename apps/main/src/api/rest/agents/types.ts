@@ -67,6 +67,7 @@ export type TPbxAuthRes = {
 
 export type TChangeWorkStatusReq = {
   workStatus: TAgentWorkStatus
+  campaignId?: string
 }
 
 export type TChangeWorkStatusRes = TCreateAgentRes
