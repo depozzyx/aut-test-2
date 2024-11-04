@@ -3,13 +3,16 @@ import React, { FC, useEffect } from 'react'
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
 import { useStopwatch } from 'react-timer-hook'
+import useTranslation from 'next-translate/useTranslation'
 import { Wrapper } from './CallWindow.styled'
+import { TCallsInit } from '../../../../api/socket/call/types'
 
 export const CallWindow: FC<{
-  name: string
+  callData: TCallsInit
   endedCall: boolean
   setDuration: (duration: number) => void
-}> = ({ name, endedCall, setDuration }) => {
+}> = ({ callData, endedCall, setDuration }) => {
+  const { t } = useTranslation('calls')
   const { seconds, minutes, hours, totalSeconds } = useStopwatch({
     autoStart: true,
   })
@@ -28,7 +31,26 @@ export const CallWindow: FC<{
           <span>{formatData(seconds)}</span>
         </Text>
       </Wrapper>
-      <Text>{name}</Text>
+      <Flex justify="start" direction="column">
+        <Text>
+          {t('campaign')}: {callData.campaign.name}
+        </Text>
+        <Text>
+          {t('lead')}: {callData.lead.name}
+        </Text>
+        <Text>
+          {t('phone')}: {callData.lead.phone}
+        </Text>
+        <Text>
+          {t('timezone')}: {callData.lead.timezone}
+        </Text>
+        <Text>
+          {t('status')}: {callData.lead.status}
+        </Text>
+        <Text>
+          {t('source')}: {callData.lead.source}
+        </Text>
+      </Flex>
     </Flex>
   )
 }
