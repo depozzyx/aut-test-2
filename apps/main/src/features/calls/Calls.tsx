@@ -102,10 +102,8 @@ export const Calls: FC = () => {
       if (!lead) return
       setIsFeedbackLoading(true)
       await apiCalls.feedback({
-        duration: callDuration,
         status,
-        leadId: lead?.lead.id,
-        campaignId: lead?.campaign.id,
+        requestId: lead.requestId,
       })
       await resetAllData()
     } catch (e) {
@@ -179,7 +177,7 @@ export const Calls: FC = () => {
               <CallWindow
                 endedCall={endedCall}
                 setDuration={(duration) => setCallDuration(duration)}
-                name={lead.lead.name}
+                callData={lead}
               />
               <CallButton onClick={() => endCall(true)} isLoading={endedCall}>
                 <CallIcon />
