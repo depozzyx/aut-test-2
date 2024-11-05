@@ -52,12 +52,12 @@ export const useMenuLinks = (): TMenuItem[] => {
           disabled: false,
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
         },
-        {
-          title: t('dashboard_campaign_effectiveness'),
-          link: ROUTES.DASHBOARD_CAMPAIGN_EFFECTIVENESS,
-          disabled: false,
-          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
-        },
+        // {
+        //   title: t('dashboard_campaign_effectiveness'),
+        //   link: ROUTES.DASHBOARD_CAMPAIGN_EFFECTIVENESS,
+        //   disabled: false,
+        //   availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+        // },
       ],
     },
     {
