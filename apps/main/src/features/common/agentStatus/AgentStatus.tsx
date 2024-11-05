@@ -9,6 +9,8 @@ import { Translate } from 'next-translate'
 import { selectSelectedCampaignId } from '@/features/agents/store/agents'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
+import { useRouter } from 'next/router'
+import { ROUTES } from '@/routes'
 import { useAuth } from '../user'
 import { PBXStatus } from './containers/PBXStatus'
 import { agentActions, agentStatusSelector } from './store'
@@ -51,6 +53,7 @@ export const AgentStatus: FC = () => {
   const { user } = useAuth()
   const selectedCampaignId = select(selectSelectedCampaignId)
   const { setModal } = useModals()
+  const router = useRouter()
 
   useEffect(() => {
     if (user?.workStatus) dispatch(agentActions.setStatus(user?.workStatus))
@@ -63,7 +66,11 @@ export const AgentStatus: FC = () => {
     }
     if (pbxStatus === 'manual_pause') {
       setOptions(
-        INIT_OPTIONS(t).filter(({ value }) => value === 'unpause' || value === 'finish'),
+        INIT_OPTIONS(t).filter(
+          ({ value }) =>
+            (router.pathname === ROUTES.AGENT_CALLS && value === 'unpause') ||
+            value === 'finish',
+        ),
       )
       return
     }
