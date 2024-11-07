@@ -60,7 +60,7 @@ export const SelectAgentCampaignModal = ({ campaigns }: TProps): JSX.Element => 
       containerWidth="100%"
       onClose={handleClose}
     >
-      {!campaigns.length && <Text>{t('noCampaignError')}</Text>}
+      {campaigns.length === 0 && <Text>{t('noCampaignError')}</Text>}
       {campaigns.length > 1 && (
         <Flex direction="column" align="center" gap={40} margin="40px 0 0 0">
           <Flex align="center" justify="center">
