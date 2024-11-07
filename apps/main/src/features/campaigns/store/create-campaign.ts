@@ -114,9 +114,9 @@ export const asyncCreateCampaign =
 
       const { page, limit } = getState().campaigns.pagination
       if (type === CAMPAIGN_TABLE_TYPES.ACTIVE) {
-        dispatch(asyncGetActiveCampaigns({ page, limit, orderBy: 'ASC' }))
+        dispatch(asyncGetActiveCampaigns({ page, limit, orderBy: 'DESC' }))
       } else {
-        dispatch(asyncGetCampaignsList({ page, limit, orderBy: 'ASC' }))
+        dispatch(asyncGetCampaignsList({ page, limit, orderBy: 'DESC' }))
       }
 
       dispatch(
