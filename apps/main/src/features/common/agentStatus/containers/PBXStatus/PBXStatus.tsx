@@ -6,30 +6,32 @@ import { Box } from '@peiko/components/Box'
 import { Text } from '@peiko/components/Text'
 import { TPalette } from '@peiko/styles/types/palette'
 import React, { FC, useEffect } from 'react'
+import { selectSelectedCampaignId } from '@/features/agents/store/agents'
 import { BlinkingButton } from './PBXStatus.styled'
 import { agentActions, agentStatusSelector } from '../../store'
 
 export const PBXStatus: FC = () => {
   const { dispatch, select } = useRedux()
   const { pbxStatus } = select(agentStatusSelector)
+  const selectedCampaignId = select(selectSelectedCampaignId)
 
   useEffect(() => {
-    const getStatusAsync = async () => {
+    const getStatusAsync = async (campaignId: string | null) => {
       try {
-        const { data } = await apiAgents.getAgentStatus()
+        const { data } = await apiAgents.getAgentStatus({ campaignId })
         dispatch(agentActions.setPBXStatus(data.data))
       } catch (e) {
         handleRestError({ e, dispatch })
       }
     }
-    getStatusAsync()
-    const interval = setInterval(getStatusAsync, 5000)
+    getStatusAsync(selectedCampaignId)
+    const interval = setInterval(() => getStatusAsync(selectedCampaignId), 5000)
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [selectedCampaignId])
 
-  const statusColors = (status: TAgentStatus['data']): keyof TPalette => {
+  const statusColors = (status: TAgentStatus['data']['status']): keyof TPalette => {
     if (status === 'offline') return 'main25'
     if (status === 'online') return 'main26'
     if (status === 'oncall') return 'main14'
@@ -48,9 +50,9 @@ export const PBXStatus: FC = () => {
         padding: '0 24px',
       }}
     >
-      <BlinkingButton bgColor={statusColors(pbxStatus)} />
-      <Text variant="f10" tag="span" color={statusColors(pbxStatus)}>
-        {pbxStatus
+      <BlinkingButton bgColor={statusColors(pbxStatus.status)} />
+      <Text variant="f10" tag="span" color={statusColors(pbxStatus.status)}>
+        {pbxStatus.status
           .split('_')
           .map((item) => item.charAt(0).toUpperCase() + item.slice(1))
           .join(' ')}

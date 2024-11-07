@@ -3,6 +3,7 @@ import { TAxiosResponse } from '../types'
 import {
   TActiveAgentsRes,
   TAgentByIdRes,
+  TAgentCampaignStatus,
   TAgentsListRes,
   TAgentsReq,
   TAgentStatus,
@@ -44,7 +45,8 @@ const getAgentById = (id: number): TAxiosResponse<TAgentByIdRes> =>
 const deleteAgent = (id: number): TAxiosResponse<TDeleteAgentRes> =>
   api.delete(`/agents/${id}`)
 
-const getAgentStatus = (): TAxiosResponse<TAgentStatus> => api.get(`/agents/pbx/status`)
+const getAgentStatus = (params: TAgentCampaignStatus): TAxiosResponse<TAgentStatus> =>
+  api.get(`/agents/pbx/status`, { params })
 
 export const apiAgents = {
   pbxAuth,

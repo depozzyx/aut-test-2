@@ -57,12 +57,21 @@ export const Calls: FC = () => {
     }
   }, [ua])
 
+  useEffect(() => {
+    if (!pbxStatus.campaignNotCompleted) {
+      if (selectedCampaignId) {
+        dispatch(agentActions.setStatusAsync('finish'))
+      }
+      dispatch(setSelectedCampaignId(null))
+    }
+  }, [pbxStatus.campaignNotCompleted])
+
   useUnmount(() => {
     if (
-      pbxStatus !== 'offline' &&
+      pbxStatus.status !== 'offline' &&
       status !== 'finish' &&
       status !== 'pause' &&
-      pbxStatus !== 'manual_pause'
+      pbxStatus.status !== 'manual_pause'
     ) {
       dispatch(agentActions.setStatusAsync('pause'))
     } else {
@@ -115,7 +124,7 @@ export const Calls: FC = () => {
   }
 
   useEffect(() => {
-    if (pbxStatus === 'online' && endedCall) resetAllData()
+    if (pbxStatus.status === 'online' && endedCall) resetAllData()
   }, [pbxStatus])
 
   useEffect(() => {
@@ -132,7 +141,7 @@ export const Calls: FC = () => {
           lead.requestId &&
           endedCall &&
           callDuration > 0 &&
-          pbxStatus === 'system_pause' && (
+          pbxStatus.status === 'system_pause' && (
             <Card
               padding="32px 60px"
               maxWidth="440px"
@@ -168,12 +177,12 @@ export const Calls: FC = () => {
               </Flex>
             </Card>
           )}
-        {!(pbxStatus === 'oncall') && !lead && !endedCall && !callDuration && (
+        {!(pbxStatus.status === 'oncall') && !lead && !endedCall && !callDuration && (
           <Text styles={{ textAlign: 'center' }} variant="f4">
             {t('noCalls')}
           </Text>
         )}
-        {pbxStatus === 'oncall' && lead && (
+        {pbxStatus.status === 'oncall' && lead && (
           <Card padding="32px 68px" fullWidth maxWidth={582}>
             <Text styles={{ textAlign: 'center', marginBottom: '40px' }} variant="f2">
               {t('newCall')}

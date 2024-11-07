@@ -14,7 +14,10 @@ export type TInit = {
 const init: TInit = {
   status: null,
   loading: false,
-  pbxStatus: 'offline',
+  pbxStatus: {
+    status: 'offline',
+    campaignNotCompleted: undefined,
+  },
 }
 
 const agentStatus = createSlice({
