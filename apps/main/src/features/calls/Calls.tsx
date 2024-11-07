@@ -73,7 +73,9 @@ export const Calls: FC = () => {
       status !== 'pause' &&
       pbxStatus.status !== 'manual_pause'
     ) {
-      dispatch(agentActions.setStatusAsync('pause'))
+      if (selectedCampaignId) {
+        dispatch(agentActions.setStatusAsync('pause'))
+      }
     } else {
       disconnect()
     }
