@@ -13,24 +13,23 @@ import { agentActions, agentStatusSelector } from '../../store'
 export const PBXStatus: FC = () => {
   const { dispatch, select } = useRedux()
   const { pbxStatus } = select(agentStatusSelector)
-  // const selectedCampaignId = select(selectSelectedCampaignId)
+  const selectedCampaignId = select(selectSelectedCampaignId)
 
   useEffect(() => {
-    const getStatusAsync = async () => {
+    const getStatusAsync = async (campaignId: string | null) => {
       try {
-        const campaignId = select(selectSelectedCampaignId)
         const { data } = await apiAgents.getAgentStatus({ campaignId })
         dispatch(agentActions.setPBXStatus(data.data))
       } catch (e) {
         handleRestError({ e, dispatch })
       }
     }
-    getStatusAsync()
-    const interval = setInterval(() => getStatusAsync(), 5000)
+    getStatusAsync(selectedCampaignId)
+    const interval = setInterval(() => getStatusAsync(selectedCampaignId), 5000)
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [selectedCampaignId])
 
   const statusColors = (status: TAgentStatus['data']['status']): keyof TPalette => {
     if (status === 'offline') return 'main25'
