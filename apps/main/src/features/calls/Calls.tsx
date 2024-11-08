@@ -76,15 +76,15 @@ export const Calls: FC = () => {
       if (selectedCampaignId) {
         dispatch(agentActions.setStatusAsync('pause'))
       }
-    } else {
-      disconnect()
     }
+    setTimeout(() => disconnect(), 300)
   })
 
   const [campaigns, setCampaigns] = useState<Partial<TCampaign>[]>([])
 
   const openModal = () =>
     setModal({ modalName: MODAL_NAMES.SELECT_AGENT_CAMPAIGN, isOpen: true })
+
   const setCampaignId = async () => {
     if (user?.role === 'agent' && !selectedCampaignId) {
       const response = await apiCampaigns.getAgentAssignedActiveCampaigns()
@@ -95,10 +95,10 @@ export const Calls: FC = () => {
         if (campaignsData.length === 1) {
           const campaignId = campaignsData[0].id
           if (campaignId) dispatch(setSelectedCampaignId(String(campaignId)))
-        } else {
+        } else if (pbxStatus.status !== 'oncall') {
           openModal()
         }
-      } else {
+      } else if (pbxStatus.status !== 'oncall') {
         setCampaigns(campaignsData)
         openModal()
       }
