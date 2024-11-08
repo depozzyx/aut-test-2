@@ -1,11 +1,12 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useUnmount } from 'react-use'
 import useTranslation from 'next-translate/useTranslation'
 import { useRedux } from '@/hooks/use-redux'
 import { ROUTES } from '@/routes'
+import { apiAuth } from '@/api-rest/auth'
 import { Message } from './components/Message'
-import { reset, selectResetPassword } from './store/reset-password'
+import { reset, selectResetPassword, setStep } from './store/reset-password'
 import { ResetPasswordForm } from './containers/ResetPasswordForm'
 
 export const ResetPassword: FC = () => {
@@ -13,6 +14,19 @@ export const ResetPassword: FC = () => {
   const { t } = useTranslation('auth')
   const { select, dispatch } = useRedux()
   const { step } = select(selectResetPassword)
+
+  const token = router.query?.token
+
+  const checkToken = async () => {
+    const response = await apiAuth.checkResetPasswordToken(token as string)
+    const isValid = !!response.data.data
+    if (!isValid) {
+      dispatch(setStep('invalidToken'))
+    }
+  }
+  useEffect(() => {
+    checkToken()
+  }, [token])
 
   useUnmount(() => dispatch(reset()))
 
@@ -42,6 +56,16 @@ export const ResetPassword: FC = () => {
         <Message
           status="error"
           message={t('reset-error')}
+          buttonText={t('reset-password-link')}
+          buttonAction={handleResetError}
+          onClose={handleResetError}
+        />
+      )
+    case 'invalidToken':
+      return (
+        <Message
+          status="error"
+          message={t('reset-error-invalid')}
           buttonText={t('reset-password-link')}
           buttonAction={handleResetError}
           onClose={handleResetError}

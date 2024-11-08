@@ -47,3 +47,8 @@ export type TResetPasswordReq = {
   password: string
   confirmPassword: string
 }
+
+export type TCheckResetPasswordTokenReq = {
+  statusCode: number
+  data: boolean
+}

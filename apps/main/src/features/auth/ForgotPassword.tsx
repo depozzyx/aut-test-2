@@ -55,6 +55,9 @@ export const ForgotPassword: FC = () => {
             <Text variant="f7" styles={{ whiteSpace: 'nowrap' }}>
               {t('forgot-password.subtitle')}
             </Text>
+            <Text variant="f7" styles={{ whiteSpace: 'nowrap' }}>
+              {t('forgot-password.subtitle-annotation')}
+            </Text>
             <FormikInput
               size="s"
               name="email"
