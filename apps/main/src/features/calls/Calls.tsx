@@ -58,7 +58,7 @@ export const Calls: FC = () => {
   }, [ua])
 
   useEffect(() => {
-    if (!pbxStatus.campaignNotCompleted) {
+    if (!pbxStatus.campaignNotCompleted && pbxStatus.status !== 'oncall') {
       if (selectedCampaignId && pbxStatus.status === 'online') {
         dispatch(agentActions.setStatusAsync('finish'))
       }
@@ -95,10 +95,10 @@ export const Calls: FC = () => {
         if (campaignsData.length === 1) {
           const campaignId = campaignsData[0].id
           if (campaignId) dispatch(setSelectedCampaignId(String(campaignId)))
-        } else if (pbxStatus.status !== 'oncall') {
+        } else {
           openModal()
         }
-      } else if (pbxStatus.status !== 'oncall') {
+      } else {
         setCampaigns(campaignsData)
         openModal()
       }
