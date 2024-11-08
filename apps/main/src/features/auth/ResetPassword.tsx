@@ -25,7 +25,9 @@ export const ResetPassword: FC = () => {
     }
   }
   useEffect(() => {
-    checkToken()
+    if (token) {
+      checkToken()
+    }
   }, [token])
 
   useUnmount(() => dispatch(reset()))
