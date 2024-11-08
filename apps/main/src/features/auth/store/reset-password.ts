@@ -7,7 +7,7 @@ import { TFormPropsAsync } from '@peiko/types/formik'
 import { ERROR_STATUS } from '@/constants/error-status'
 
 export type TInit = {
-  step: null | 'success' | 'error'
+  step: null | 'success' | 'error' | 'invalidToken'
   isLoading: boolean
 }
 
