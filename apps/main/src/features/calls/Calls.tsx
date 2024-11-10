@@ -128,8 +128,8 @@ export const Calls: FC = () => {
   }
 
   useEffect(() => {
-    if (pbxStatus.status === 'online' && endedCall) resetAllData()
-  }, [pbxStatus])
+    if (['online', 'system_pause'].includes(pbxStatus.status) && endedCall) resetAllData()
+  }, [pbxStatus.status])
 
   useEffect(() => {
     setCampaignId()
