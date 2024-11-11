@@ -294,7 +294,7 @@ export const asyncRemoveCampaign =
       const params = {
         page: pagination.page,
         limit: pagination.limit,
-        orderBy: ORDER_BY.ASC,
+        orderBy: ORDER_BY.DESC,
         search: searchTerm,
         name: filterCampaignName,
       }

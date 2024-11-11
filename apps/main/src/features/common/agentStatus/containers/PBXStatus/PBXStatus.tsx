@@ -24,7 +24,7 @@ export const PBXStatus: FC = () => {
         handleRestError({ e, dispatch })
       }
     }
-    getStatusAsync(selectedCampaignId)
+
     const interval = setInterval(() => getStatusAsync(selectedCampaignId), 5000)
     return () => {
       clearInterval(interval)

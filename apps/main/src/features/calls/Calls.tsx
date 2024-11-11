@@ -3,7 +3,7 @@ import { Card } from '@peiko/components/Card'
 import { Text } from '@peiko/components/Text'
 import useTranslation from 'next-translate/useTranslation'
 import React, { FC, useEffect, useState } from 'react'
-import { useUnmount } from 'react-use'
+import { useMount, useUnmount } from 'react-use'
 import dynamic from 'next/dynamic'
 
 import { CallIcon } from '@/icons/CallIcon'
@@ -20,6 +20,7 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { TCampaign } from '@/features/campaigns/types'
+import { apiAgents } from '@/api-rest/agents'
 import { CallButton } from './components/CallButton/CallButton'
 import { CallWindow } from './components/CallWindow'
 import { useSIPService } from './hooks/useSIPService'
@@ -41,7 +42,7 @@ export const Calls: FC = () => {
   const { t } = useTranslation('calls')
 
   const { dispatch, select } = useRedux()
-  const { pbxStatus, status } = select(agentStatusSelector)
+  const { pbxStatus, status, checkCampaignId } = select(agentStatusSelector)
   const [callDuration, setCallDuration] = useState(0)
   const [isFeedbackLoading, setIsFeedbackLoading] = useState(false)
   const { connect, disconnect, ua, endCall, lead, endedCall, setEndedCall, setLead } =
@@ -58,13 +59,25 @@ export const Calls: FC = () => {
   }, [ua])
 
   useEffect(() => {
-    if (!pbxStatus.campaignNotCompleted && pbxStatus.status !== 'oncall') {
-      if (selectedCampaignId && pbxStatus.status === 'online') {
+    if (!pbxStatus.campaignNotCompleted) {
+      if (['online', 'system_pause'].includes(pbxStatus.status)) {
         dispatch(agentActions.setStatusAsync('finish'))
       }
-      dispatch(setSelectedCampaignId(null))
+      if (pbxStatus.status !== 'oncall') {
+        dispatch(setSelectedCampaignId(null))
+      }
     }
-  }, [pbxStatus.campaignNotCompleted])
+  }, [pbxStatus])
+
+  useMount(() => {
+    const checkStatus = async () => {
+      const response = await apiAgents.getAgentStatus({})
+      if (response.data.data.status === 'online') {
+        dispatch(agentActions.setStatusAsync('finish'))
+      }
+    }
+    checkStatus()
+  })
 
   useUnmount(() => {
     if (
@@ -73,20 +86,24 @@ export const Calls: FC = () => {
       status !== 'pause' &&
       pbxStatus.status !== 'manual_pause'
     ) {
-      if (selectedCampaignId) {
-        dispatch(agentActions.setStatusAsync('pause'))
-      }
+      dispatch(agentActions.setStatusAsync('pause'))
+    } else {
+      disconnect()
     }
-    setTimeout(() => disconnect(), 300)
   })
 
   const [campaigns, setCampaigns] = useState<Partial<TCampaign>[]>([])
+  const [onSelectedCampaign, setOnSelectedCampaign] = useState(false)
 
-  const openModal = () =>
+  const openModal = () => {
     setModal({ modalName: MODAL_NAMES.SELECT_AGENT_CAMPAIGN, isOpen: true })
+  }
 
-  const setCampaignId = async () => {
+  const setCampaignId = async (createCallback?: boolean): Promise<number | null> => {
     if (user?.role === 'agent' && !selectedCampaignId) {
+      if (createCallback) {
+        setOnSelectedCampaign(true)
+      }
       const response = await apiCampaigns.getAgentAssignedActiveCampaigns()
       const campaignsData = response?.data?.data
       setCampaigns([])
@@ -94,16 +111,31 @@ export const Calls: FC = () => {
         setCampaigns(campaignsData)
         if (campaignsData.length === 1) {
           const campaignId = campaignsData[0].id
-          if (campaignId) dispatch(setSelectedCampaignId(String(campaignId)))
+          if (campaignId) {
+            dispatch(setSelectedCampaignId(String(campaignId)))
+            return campaignId
+          }
         } else {
           openModal()
         }
       } else {
-        setCampaigns(campaignsData)
+        setCampaigns([])
         openModal()
       }
     }
+    return null
   }
+
+  useEffect(() => {
+    if (checkCampaignId) {
+      dispatch(agentActions.setCheckCampaignId(false))
+      setCampaignId(true).then((id) => {
+        if (id) {
+          dispatch(agentActions.setStatusAsync('start'))
+        }
+      })
+    }
+  }, [checkCampaignId])
 
   const resetAllData = async () => {
     setCallDuration(0)
@@ -128,7 +160,11 @@ export const Calls: FC = () => {
   }
 
   useEffect(() => {
-    if (['online', 'system_pause'].includes(pbxStatus.status) && endedCall) resetAllData()
+    if (['online', 'system_pause'].includes(pbxStatus.status) && endedCall) {
+      // eslint-disable-next-line no-console
+      console.log('reset all')
+      resetAllData()
+    }
   }, [pbxStatus.status])
 
   useEffect(() => {
@@ -204,7 +240,18 @@ export const Calls: FC = () => {
           </Card>
         )}
       </Flex>
-      {showModal && <SelectAgentCampaignModal campaigns={campaigns} />}
+      {showModal && (campaigns.length > 1 || campaigns.length === 0) && (
+        <SelectAgentCampaignModal
+          campaigns={campaigns}
+          onSelectedCampaign={onSelectedCampaign}
+          callback={(id: string | undefined) => {
+            if (id) {
+              dispatch(agentActions.setStatusAsync('start'))
+              setOnSelectedCampaign(false)
+            }
+          }}
+        />
+      )}
     </>
   )
 }

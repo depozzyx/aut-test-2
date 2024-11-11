@@ -17,9 +17,15 @@ import { useRedux } from '@/hooks/use-redux'
 
 type TProps = {
   campaigns: Partial<TCampaign>[]
+  onSelectedCampaign: boolean
+  callback: (value: string) => void
 }
 
-export const SelectAgentCampaignModal = ({ campaigns }: TProps): JSX.Element => {
+export const SelectAgentCampaignModal = ({
+  campaigns,
+  callback,
+  onSelectedCampaign,
+}: TProps): JSX.Element => {
   const { t } = useTranslation('calls')
   const { modalState, resetModals } = useModals()
   const { dispatch } = useRedux()
@@ -39,6 +45,9 @@ export const SelectAgentCampaignModal = ({ campaigns }: TProps): JSX.Element => 
     }),
     onSubmit: (formData) => {
       dispatch(setSelectedCampaignId(formData.campaignId))
+      if (formData.campaignId && onSelectedCampaign) {
+        callback(formData.campaignId)
+      }
     },
   })
 

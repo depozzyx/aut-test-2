@@ -63,9 +63,9 @@ export const useSIPService = (): {
     }
   }
 
-  const endCall = (isClient?: boolean) => {
-    if (isClient) hangupAsync()
+  const endCall = async (isClient?: boolean) => {
     setEndedCall(true)
+    if (isClient) await hangupAsync()
   }
 
   const onSubscribeCalls = () => {

@@ -7,8 +7,6 @@ import styled from 'styled-components'
 import { Box } from '@peiko/components/Box'
 import { Translate } from 'next-translate'
 import { selectSelectedCampaignId } from '@/features/agents/store/agents'
-import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { useRouter } from 'next/router'
 import { ROUTES } from '@/routes'
 import { useAuth } from '../user'
@@ -52,7 +50,6 @@ export const AgentStatus: FC = () => {
   const [options, setOptions] = useState(INIT_OPTIONS(t))
   const { user } = useAuth()
   const selectedCampaignId = select(selectSelectedCampaignId)
-  const { setModal } = useModals()
   const router = useRouter()
 
   useEffect(() => {
@@ -103,7 +100,7 @@ export const AgentStatus: FC = () => {
         onChange={(e) => {
           if (e?.value && typeof e.value === 'string') {
             if (e?.value === 'start' && !selectedCampaignId) {
-              setModal({ modalName: MODAL_NAMES.SELECT_AGENT_CAMPAIGN, isOpen: true })
+              dispatch(agentActions.setCheckCampaignId(true))
             } else {
               dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
             }
