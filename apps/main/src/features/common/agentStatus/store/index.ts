@@ -9,6 +9,7 @@ export type TInit = {
   status: TAgentWorkStatus | null
   loading: boolean
   pbxStatus: TAgentStatus['data']
+  checkCampaignId: boolean
 }
 
 const init: TInit = {
@@ -18,6 +19,7 @@ const init: TInit = {
     status: 'offline',
     campaignNotCompleted: undefined,
   },
+  checkCampaignId: false,
 }
 
 const agentStatus = createSlice({
@@ -33,12 +35,16 @@ const agentStatus = createSlice({
     setLoading(state, action: PayloadAction<TInit['loading']>) {
       state.loading = action.payload
     },
+    setCheckCampaignId(state, action: PayloadAction<TInit['checkCampaignId']>) {
+      state.checkCampaignId = action.payload
+    },
     reset: () => init,
   },
 })
 
 // actions
-const { setStatus, setLoading, setPBXStatus, reset } = agentStatus.actions
+const { setStatus, setLoading, setPBXStatus, setCheckCampaignId, reset } =
+  agentStatus.actions
 
 const setStatusAsync =
   (workStatus: TAgentWorkStatus, onSuccess?: () => void): TAsyncAction =>
@@ -47,7 +53,7 @@ const setStatusAsync =
       dispatch(setLoading(true))
       const campaignId = getState().agents.selectedCampaignId
       const payload: TChangeWorkStatusReq = { workStatus }
-      if (campaignId) payload.campaignId = campaignId
+      payload.campaignId = campaignId || '-1'
       const { data } = await apiAgents.changeWorkStatus(payload)
       dispatch(setStatus(data.data.workStatus))
       onSuccess?.()
@@ -58,7 +64,13 @@ const setStatusAsync =
     }
   }
 
-export const agentActions = { setStatus, setStatusAsync, reset, setPBXStatus }
+export const agentActions = {
+  setStatus,
+  setStatusAsync,
+  reset,
+  setPBXStatus,
+  setCheckCampaignId,
+}
 // selectors
 export const agentStatusSelector: TSelector<TInit> = (state) => state.agentStatus
 
