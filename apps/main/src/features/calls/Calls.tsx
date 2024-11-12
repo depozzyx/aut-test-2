@@ -162,7 +162,6 @@ export const Calls: FC = () => {
   useEffect(() => {
     if (['online', 'system_pause'].includes(pbxStatus.status) && endedCall) {
       // eslint-disable-next-line no-console
-      console.log('reset all')
       resetAllData()
     }
   }, [pbxStatus.status])
