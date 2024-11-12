@@ -3,7 +3,15 @@ import { validation } from '@/utils/validation'
 
 export const createCampaignValidationSchema = yup.object().shape({
   name: validation.required,
-  assignedAgentIds: yup.array().of(yup.number()).default([]),
+  assignedAgentIds: yup
+    .array()
+    .of(yup.number())
+    .min(1, 'This field must have at least 1 item')
+    .default([]),
   reserveAgentIds: yup.array().of(yup.number()).default([]),
-  leadListIds: yup.array().of(yup.number()).default([]),
+  leadListIds: yup
+    .array()
+    .of(yup.number())
+    .min(1, 'This field must have at least 1 item')
+    .default([]),
 })
