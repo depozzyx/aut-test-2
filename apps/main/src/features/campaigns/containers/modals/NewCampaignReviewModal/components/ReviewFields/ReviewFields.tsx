@@ -67,6 +67,10 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
         />
         <Field label={t('create-campaign.agent-assignment')} value={agents} />
         <Field label={t('create-campaign.lead-selection')} value={leads} />
+        <Field
+          label={t('create-campaign.hold-time')}
+          value={formDataForReview.holdTime}
+        />
       </Flex>
       <Flex align="center" justify="center" gap={24}>
         <OutlinedButton onClick={handleBack} width="236px">

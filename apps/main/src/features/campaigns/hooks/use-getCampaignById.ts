@@ -24,6 +24,7 @@ type TReturn = {
     name: string
     assignedAgents: number[]
     leadLists: number[]
+    holdTime: number
   }
   isLoading: boolean
 }
@@ -48,13 +49,14 @@ export const useGetCampaignById = (): TReturn => {
   const initialFormData = useMemo(() => {
     if (!data?.data) return undefined
 
-    const { name, assignedAgents, leadLists } = data.data
+    const { name, assignedAgents, leadLists, holdTime } = data.data
 
     return {
       id,
       name,
       assignedAgents: assignedAgents.map((agent: TAgent) => agent?.id),
       leadLists: leadLists.map((list: TLeadList) => list?.id),
+      holdTime,
     }
   }, [data?.data, id])
 
