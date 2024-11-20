@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { shallowEqual } from 'react-redux'
 import { useFormik } from 'formik'
 import { createStructuredSelector } from 'reselect'
@@ -36,6 +36,7 @@ type TFormValues = {
   name: string
   assignedAgentIds: number[]
   leadListIds: number[]
+  holdTime: number
 }
 
 export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
@@ -72,6 +73,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
       name: '',
       assignedAgentIds: [],
       leadListIds: [],
+      holdTime: 0,
     },
     validationSchema: createCampaignValidationSchema,
     onSubmit: (formData) => {
@@ -85,6 +87,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
         name: data.name,
         assignedAgentIds: data?.assignedAgents,
         leadListIds: data?.leadLists,
+        holdTime: data?.holdTime,
       })
     }
   }, [data])
@@ -153,6 +156,16 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
             options={leadListOptions}
             onMenuScrollToBottom={onLeadsScrollToBottom}
             isSearchable
+          />
+          <FormikInput
+            size="s"
+            name="holdTime"
+            placeholder="10"
+            label={{ label: t('edit-campaign.hold-time') }}
+            formik={formik}
+            maxWidth="424px"
+            width="100%"
+            styles={{ padding: '0 14px' }}
           />
         </Flex>
         <Flex align="center" justify="center" gap={24}>

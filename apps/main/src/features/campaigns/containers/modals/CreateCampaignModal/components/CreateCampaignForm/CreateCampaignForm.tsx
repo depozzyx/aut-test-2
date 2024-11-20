@@ -55,6 +55,7 @@ export const CreateCampaignForm = (): JSX.Element => {
   const formik = useFormik({
     initialValues: {
       name: '',
+      holdTime: 0,
     },
     validationSchema: createCampaignValidationSchema,
     onSubmit: (formData) => {
@@ -142,6 +143,16 @@ export const CreateCampaignForm = (): JSX.Element => {
             options={leadListOptions}
             onMenuScrollToBottom={onLeadsScrollToBottom}
             isSearchable
+          />
+          <FormikInput
+            size="s"
+            name="holdTime"
+            placeholder="10"
+            label={{ label: t('create-campaign.hold-time') }}
+            formik={formik}
+            maxWidth="424px"
+            width="100%"
+            styles={{ padding: '0 14px' }}
           />
         </Flex>
         <Flex align="center" justify="center" gap={24}>

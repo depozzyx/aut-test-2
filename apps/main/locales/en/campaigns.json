@@ -39,7 +39,8 @@
     "call-frequency": "Call Frequency",
     "time-for-calls": "Time for Call",
     "review": "Review",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "hold-time": "Agent Hold Time (seconds)"
   },
   "edit-campaign": {
     "title": "Edit Campaign",
@@ -49,7 +50,8 @@
     "call-frequency": "Call Frequency",
     "time-for-calls": "Time for Call",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "hold-time": "Agent Hold Time (seconds)"
   },
   "review-campaign": {
     "title": "Review New Campaign",
