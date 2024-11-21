@@ -176,7 +176,7 @@ export const Calls: FC = () => {
   return (
     <>
       <Flex justify="center" align="center" styles={{ flex: 1 }}>
-        {lead?.requestId && endedCall && (
+        {lead?.requestId && endedCall && pbxStatus.status === 'system_pause' && (
           <Card
             padding="32px 60px"
             maxWidth="440px"
