@@ -176,46 +176,42 @@ export const Calls: FC = () => {
   return (
     <>
       <Flex justify="center" align="center" styles={{ flex: 1 }}>
-        {lead &&
-          lead.requestId &&
-          endedCall &&
-          callDuration > 0 &&
-          pbxStatus.status === 'system_pause' && (
-            <Card
-              padding="32px 60px"
-              maxWidth="440px"
-              fullWidth
-              styles={{ textAlign: 'center' }}
-            >
-              <Text variant="f2">{t('newCall')}</Text>
-              <Flex justify="center" gap="32px" styles={{ marginTop: '48px' }}>
-                <div>
-                  <FeedbackButton
-                    isLoading={isFeedbackLoading}
-                    status="success"
-                    onClick={() => onCallFeedback('successful')}
-                  >
-                    <Thumb />
-                  </FeedbackButton>
-                  <Text styles={{ marginTop: '4px' }} variant="f8">
-                    {t('success')}
-                  </Text>
-                </div>
-                <div>
-                  <FeedbackButton
-                    isLoading={isFeedbackLoading}
-                    status="failure"
-                    onClick={() => onCallFeedback('unsuccessful')}
-                  >
-                    <Thumb direction="right" />
-                  </FeedbackButton>
-                  <Text styles={{ marginTop: '4px' }} variant="f8">
-                    {t('failure')}
-                  </Text>
-                </div>
-              </Flex>
-            </Card>
-          )}
+        {lead?.requestId && endedCall && (
+          <Card
+            padding="32px 60px"
+            maxWidth="440px"
+            fullWidth
+            styles={{ textAlign: 'center' }}
+          >
+            <Text variant="f2">{t('newCall')}</Text>
+            <Flex justify="center" gap="32px" styles={{ marginTop: '48px' }}>
+              <div>
+                <FeedbackButton
+                  isLoading={isFeedbackLoading}
+                  status="success"
+                  onClick={() => onCallFeedback('successful')}
+                >
+                  <Thumb />
+                </FeedbackButton>
+                <Text styles={{ marginTop: '4px' }} variant="f8">
+                  {t('success')}
+                </Text>
+              </div>
+              <div>
+                <FeedbackButton
+                  isLoading={isFeedbackLoading}
+                  status="failure"
+                  onClick={() => onCallFeedback('unsuccessful')}
+                >
+                  <Thumb direction="right" />
+                </FeedbackButton>
+                <Text styles={{ marginTop: '4px' }} variant="f8">
+                  {t('failure')}
+                </Text>
+              </div>
+            </Flex>
+          </Card>
+        )}
         {!(pbxStatus.status === 'oncall') && !lead && !endedCall && !callDuration && (
           <Text styles={{ textAlign: 'center' }} variant="f4">
             {t('noCalls')}
