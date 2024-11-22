@@ -8,6 +8,7 @@
   "selectCampaignTitle": "Select campaign",
   "selectPlaceholder": "Select...",
   "noCampaignError": "Contact your admin, because your campaign is inactive or don’t exist!",
+  "onCompleteCampaignMessage": "Your lead queue for calls is empty. Thank you for your work!",
   "campaign": "Campaign",
   "lead": "Lead",
   "phone": "Phone",

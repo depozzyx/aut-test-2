@@ -49,6 +49,7 @@ export const Calls: FC = () => {
     useSIPService()
   const { user } = useAuth()
   const { modalState, setModal } = useModals()
+  const [campaignCompleted, setCampaignCompleted] = useState(false)
 
   const selectedCampaignId = select(selectSelectedCampaignId)
 
@@ -63,7 +64,10 @@ export const Calls: FC = () => {
       if (['online', 'system_pause'].includes(pbxStatus.status)) {
         dispatch(agentActions.setStatusAsync('finish'))
       }
-      if (pbxStatus.status !== 'oncall') {
+      if (!['oncall', 'system_pause'].includes(pbxStatus.status)) {
+        if (selectedCampaignId) {
+          setCampaignCompleted(true)
+        }
         dispatch(setSelectedCampaignId(null))
       }
     }
@@ -244,6 +248,8 @@ export const Calls: FC = () => {
               setOnSelectedCampaign(false)
             }
           }}
+          campaignCompleted={campaignCompleted}
+          onClose={() => campaignCompleted && setCampaignCompleted(false)}
         />
       )}
     </>

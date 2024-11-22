@@ -68,7 +68,12 @@ export const CreateCampaignForm = (): JSX.Element => {
     dispatch(resetAgentsList())
     Promise.all([
       dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_CREATE)),
-      dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS_CREATE)),
+      dispatch(
+        asyncGetLeadListCatalog({
+          ...INITIAL_REQUEST_PARAMS_CREATE,
+          withoutCampaigns: true,
+        }),
+      ),
     ])
   }, [])
 
@@ -82,6 +87,7 @@ export const CreateCampaignForm = (): JSX.Element => {
               page: leadsPage + 1,
               limit: leadsLimit,
               orderBy: ORDER_BY.DESC,
+              withoutCampaigns: true,
             },
             true,
           ),

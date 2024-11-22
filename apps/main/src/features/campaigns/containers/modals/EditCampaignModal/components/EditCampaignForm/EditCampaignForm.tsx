@@ -22,6 +22,7 @@ import {
   selectAgentsPagination,
 } from '@/features/agents/store/agents'
 import { ORDER_BY } from '@/constants/orderBy'
+import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { asyncEditCampaign } from '../../../../../store/edit-campaign'
 import { TCampaignTableType } from '../../../../../types'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
@@ -43,6 +44,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
   const { t } = useTranslation('campaigns')
   const { resetModals } = useModals()
   const { dispatch, select } = useRedux()
+  const campaignId = select(selectSelectedCampaignId)
 
   const {
     leadsPagination: { page: leadsPage, limit: leadsLimit, total: leadsTotal },
@@ -64,7 +66,13 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
   useEffect(() => {
     Promise.all([
       dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_EDIT)),
-      dispatch(asyncGetLeadListCatalog(INITIAL_REQUEST_PARAMS_EDIT)),
+      dispatch(
+        asyncGetLeadListCatalog({
+          ...INITIAL_REQUEST_PARAMS_EDIT,
+          withoutCampaigns: true,
+          campaignId: campaignId && +campaignId,
+        }),
+      ),
     ])
   }, [])
 
@@ -101,6 +109,8 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
             page: leadsPage + 1,
             limit: leadsLimit,
             orderBy: ORDER_BY.DESC,
+            withoutCampaigns: true,
+            campaignId: campaignId && +campaignId,
           },
           true,
         ),

@@ -7,6 +7,8 @@ import { statusColor } from './StatusChip'
 const bgColor: Record<TLeadListStatus, keyof TDefaultPalette> = {
   active: 'base300',
   inactive: 'base400',
+  successful: 'base300',
+  unsuccessful: 'base400',
 }
 
 export const StyledChip = styled(FilledChip)<{ status: TLeadListStatus }>((props) => {
@@ -15,11 +17,11 @@ export const StyledChip = styled(FilledChip)<{ status: TLeadListStatus }>((props
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 100px;
+    max-width: ${['unsuccessful', 'successful'].includes(status) ? '110px' : '100px'};
     width: 100%;
     height: 28px;
     background-color: ${theme.palette[bgColor[status]]};
-    border-color: ${status === 'active'
+    border-color: ${['active', 'successful'].includes(status)
       ? 'transparent'
       : theme.palette[statusColor[status]]};
   `

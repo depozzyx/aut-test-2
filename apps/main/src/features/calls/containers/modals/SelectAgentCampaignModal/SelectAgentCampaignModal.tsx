@@ -19,12 +19,16 @@ type TProps = {
   campaigns: Partial<TCampaign>[]
   onSelectedCampaign: boolean
   callback: (value: string) => void
+  onClose: () => void
+  campaignCompleted: boolean
 }
 
 export const SelectAgentCampaignModal = ({
   campaigns,
   callback,
   onSelectedCampaign,
+  campaignCompleted,
+  onClose,
 }: TProps): JSX.Element => {
   const { t } = useTranslation('calls')
   const { modalState, resetModals } = useModals()
@@ -52,6 +56,7 @@ export const SelectAgentCampaignModal = ({
   })
 
   const handleClose = () => {
+    onClose()
     if (campaigns.length === 0) {
       resetModals()
     }
@@ -69,7 +74,11 @@ export const SelectAgentCampaignModal = ({
       containerWidth="100%"
       onClose={handleClose}
     >
-      {campaigns.length === 0 && <Text>{t('noCampaignError')}</Text>}
+      {campaigns.length === 0 && (
+        <Text>
+          {campaignCompleted ? t('onCompleteCampaignMessage') : t('noCampaignError')}
+        </Text>
+      )}
       {campaigns.length > 1 && (
         <Flex direction="column" align="center" gap={40} margin="40px 0 0 0">
           <Flex align="center" justify="center">

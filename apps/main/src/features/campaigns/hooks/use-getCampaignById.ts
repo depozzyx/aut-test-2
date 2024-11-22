@@ -5,6 +5,7 @@ import { useRedux } from '@/hooks/use-redux'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { handleRestError } from '@/features/common/error'
+import { TCampaign } from '@/features/campaigns/types'
 
 export type TAgent = {
   id: number
@@ -16,6 +17,7 @@ export type TLeadList = {
   name: string
   createdAt: string
   updatedAt: string
+  campaign: TCampaign
 }
 
 type TReturn = {

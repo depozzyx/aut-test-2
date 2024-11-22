@@ -17,6 +17,8 @@ export enum ELeadsSortBy {
   STATUS = 'status',
   PHONE = 'phone',
   SOURCE = 'source',
+  FEEDBACK_STATUS = 'feedbackStatus',
+  CAMPAIGN = 'campaign',
 }
 
 export type TLeadsListReq = {
