@@ -90,6 +90,7 @@ export const CreateCampaignForm = (): JSX.Element => {
               withoutCampaigns: true,
             },
             true,
+            true,
           ),
         )
     }, PAGINATION_REQUEST_TIME),

@@ -29,8 +29,15 @@ const leadList = createSlice({
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
       state.pagination = action.payload
     },
-    setLeadListCatalog(state, action: PayloadAction<TInit['leadListCatalog']>) {
-      state.leadListCatalog = action.payload
+    setLeadListCatalog(
+      state,
+      action: PayloadAction<{ data: TInit['leadListCatalog']; append?: boolean }>,
+    ) {
+      if (action.payload.append) {
+        state.leadListCatalog = [...state.leadListCatalog, ...action.payload.data]
+      } else {
+        state.leadListCatalog = action.payload.data
+      }
     },
     setIsLoading(state, action: PayloadAction<TInit['isLoading']>) {
       state.isLoading = action.payload
@@ -65,7 +72,7 @@ export const selectLeadListCatalogAsOptions = createSelector(
 export default leadList.reducer
 
 export const asyncGetLeadListCatalog =
-  (params: TLeadListCatalogReq, withLoading = true): TAsyncAction =>
+  (params: TLeadListCatalogReq, append = false, withLoading = true): TAsyncAction =>
   async (dispatch) => {
     try {
       if (withLoading) {
@@ -73,7 +80,7 @@ export const asyncGetLeadListCatalog =
       }
       const { data } = await apiLeadList.getLeadListCatalog(params)
 
-      dispatch(setLeadListCatalog(data.data))
+      dispatch(setLeadListCatalog({ data: data.data, append }))
       dispatch(setPagination(data.pagination))
     } catch (e) {
       handleRestError({ e, dispatch })

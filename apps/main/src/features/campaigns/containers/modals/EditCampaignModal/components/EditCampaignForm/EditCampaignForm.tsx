@@ -113,6 +113,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
             campaignId: campaignId && +campaignId,
           },
           true,
+          true,
         ),
       )
   }, [leadsPage, leadsTotal, leadsLimit])
