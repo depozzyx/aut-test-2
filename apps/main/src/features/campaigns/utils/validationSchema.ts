@@ -14,5 +14,5 @@ export const createCampaignValidationSchema = yup.object().shape({
     .of(yup.number())
     .min(1, 'This field must have at least 1 item')
     .default([]),
-  holdTime: yup.number().positive().required('This field is required'),
+  holdTime: yup.number().min(5).required('This field is required'),
 })

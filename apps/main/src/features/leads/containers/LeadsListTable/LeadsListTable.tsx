@@ -21,7 +21,9 @@ type TLeadsRowKeys =
   | 'phone'
   | 'timezone'
   | 'status'
+  | 'feedbackStatus'
   | 'source'
+  | 'campaign'
   | 'selectLeads'
   | 'leadId'
 
@@ -92,6 +94,24 @@ export const LeadsListTable = memo((): JSX.Element => {
       ),
       value: 'source',
     },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('headers.feedback-status')}
+          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.FEEDBACK_STATUS))}
+        />
+      ),
+      value: 'feedbackStatus',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('headers.campaign')}
+          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.CAMPAIGN))}
+        />
+      ),
+      value: 'campaign',
+    },
     { label: <LeadsSelect maxMenuHeight={200} width="213px" />, value: 'selectLeads' },
   ]
 
@@ -104,6 +124,12 @@ export const LeadsListTable = memo((): JSX.Element => {
       timezone: <InfoColumn title={lead.timezone} />,
       status: <StatusChip status={lead.status} />,
       source: <InfoColumn title={lead.source} />,
+      feedbackStatus: lead.feedbackStatus ? (
+        <StatusChip status={lead?.feedbackStatus} />
+      ) : (
+        ''
+      ),
+      campaign: <InfoColumn title={lead.leadList.campaign?.name} />,
       selectLeads: <></>,
     },
   }))

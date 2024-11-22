@@ -30,7 +30,7 @@ const leadList = createSlice({
       state.pagination = action.payload
     },
     setLeadListCatalog(state, action: PayloadAction<TInit['leadListCatalog']>) {
-      state.leadListCatalog = [...state.leadListCatalog, ...action.payload]
+      state.leadListCatalog = action.payload
     },
     setIsLoading(state, action: PayloadAction<TInit['isLoading']>) {
       state.isLoading = action.payload

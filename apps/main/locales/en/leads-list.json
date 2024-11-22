@@ -5,13 +5,17 @@
     "lead-phone": "Lead Phone",
     "lead-timezone": "Lead Timezone",
     "lead-status": "Status",
+    "feedback-status": "Feedback Status",
+    "campaign": "Campaign",
     "lead-source": "Source",
     "createNewList": "Create new list",
     "select": "Select lead list"
   },
   "statuses": {
     "active": "ACTIVE",
-    "inactive": "INACTIVE"
+    "inactive": "INACTIVE",
+    "successful": "SUCCESSFUL",
+    "unsuccessful": "UNSUCCESSFUL"
   },
   "createLeadsGroup": {
     "cancel": "Cancel",

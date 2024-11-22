@@ -11,6 +11,8 @@ interface IStatusChipProps {
 export const statusColor: Record<TLeadListStatus, keyof DefaultTheme['palette']> = {
   active: 'main7-100',
   inactive: 'main8-100',
+  successful: 'main7-100',
+  unsuccessful: 'main8-100',
 }
 
 export const StatusChip = ({ status }: IStatusChipProps): JSX.Element => {
