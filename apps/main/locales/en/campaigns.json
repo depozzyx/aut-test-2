@@ -40,7 +40,8 @@
     "time-for-calls": "Time for Call",
     "review": "Review",
     "cancel": "Cancel",
-    "hold-time": "Agent Hold Time (seconds)"
+    "hold-time": "Agent Hold Time (seconds)",
+    "hold-time-placeholder": "from 5 to 60 seconds"
   },
   "edit-campaign": {
     "title": "Edit Campaign",
@@ -51,7 +52,8 @@
     "time-for-calls": "Time for Call",
     "save": "Save",
     "cancel": "Cancel",
-    "hold-time": "Agent Hold Time (seconds)"
+    "hold-time": "Agent Hold Time (seconds)",
+    "hold-time-placeholder": "from 5 to 60 seconds"
   },
   "review-campaign": {
     "title": "Review New Campaign",
