@@ -154,7 +154,7 @@ export const CreateCampaignForm = (): JSX.Element => {
           <FormikInput
             size="s"
             name="holdTime"
-            placeholder="10"
+            placeholder={t('create-campaign.hold-time-placeholder')}
             label={{ label: t('create-campaign.hold-time') }}
             formik={formik}
             maxWidth="424px"

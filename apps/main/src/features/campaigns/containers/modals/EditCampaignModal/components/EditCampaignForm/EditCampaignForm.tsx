@@ -171,7 +171,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
           <FormikInput
             size="s"
             name="holdTime"
-            placeholder="10"
+            placeholder={t('edit-campaign.hold-time-placeholder')}
             label={{ label: t('edit-campaign.hold-time') }}
             formik={formik}
             maxWidth="424px"
