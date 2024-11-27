@@ -16,5 +16,11 @@
     "repeatNewPasswordPlaceholder": "Enter new password here",
     "save": "Save changes",
     "passwordConditions": "Your new  password must contain 8 symbols (numbers and letters, with different capitalization with no space between them)"
+  },
+  "change-campaign-settings": {
+    "title": "Change Campaigns Settings",
+    "mode-label": "Mode",
+    "coefficient-label": "Coefficient",
+    "save": "Save changes"
   }
 }

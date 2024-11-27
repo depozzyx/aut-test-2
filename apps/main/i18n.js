@@ -66,5 +66,6 @@ module.exports = {
       'activity-log',
     ],
     '/cabinet/settings/api-key-management': ['user', 'routing', 'api-key', 'validation'],
+    '/cabinet/settings/campaigns-management': ['settings', 'routing'],
   },
 }

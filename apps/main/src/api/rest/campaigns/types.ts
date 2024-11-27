@@ -25,6 +25,8 @@ export type TCreateCampaignReq = {
   reserveAgentIds?: number[] | []
   leadListIds?: number[] | []
   holdTime: number
+  mode: string
+  coefficient: string
 }
 
 export type TEditCampaignReq = TCreateCampaignReq & { id: number }
