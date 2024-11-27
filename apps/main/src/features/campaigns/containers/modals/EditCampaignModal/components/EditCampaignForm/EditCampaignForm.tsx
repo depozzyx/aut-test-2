@@ -23,6 +23,8 @@ import {
 } from '@/features/agents/store/agents'
 import { ORDER_BY } from '@/constants/orderBy'
 import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
+import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
+import { coefficients, modes } from '@/constants/settings'
 import { asyncEditCampaign } from '../../../../../store/edit-campaign'
 import { TCampaignTableType } from '../../../../../types'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
@@ -38,6 +40,8 @@ type TFormValues = {
   assignedAgentIds: number[]
   leadListIds: number[]
   holdTime: number
+  mode: string
+  coefficient: string
 }
 
 export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
@@ -82,6 +86,8 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
       assignedAgentIds: [],
       leadListIds: [],
       holdTime: 0,
+      mode: '',
+      coefficient: '',
     },
     validationSchema: createCampaignValidationSchema,
     onSubmit: (formData) => {
@@ -96,6 +102,8 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
         assignedAgentIds: data?.assignedAgents,
         leadListIds: data?.leadLists,
         holdTime: data?.holdTime,
+        mode: data?.mode,
+        coefficient: data?.coefficient,
       })
     }
   }, [data])
@@ -177,6 +185,26 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
             maxWidth="424px"
             width="100%"
             styles={{ padding: '0 14px' }}
+          />
+          <FormikSelect
+            formik={formik}
+            options={modes.map((mode) => ({
+              label: String(mode),
+              value: String(mode),
+            }))}
+            width={424}
+            name="mode"
+            label={{ label: t('create-campaign.mode-label') }}
+          />
+          <FormikSelect
+            formik={formik}
+            options={coefficients.map((number) => ({
+              label: String(number),
+              value: String(number),
+            }))}
+            width={424}
+            name="coefficient"
+            label={{ label: t('create-campaign.coefficient-label') }}
           />
         </Flex>
         <Flex align="center" justify="center" gap={24}>

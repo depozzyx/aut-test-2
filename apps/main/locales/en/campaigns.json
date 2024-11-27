@@ -41,7 +41,9 @@
     "review": "Review",
     "cancel": "Cancel",
     "hold-time": "Agent Hold Time (seconds)",
-    "hold-time-placeholder": "from 5 to 60 seconds"
+    "hold-time-placeholder": "from 5 to 60 seconds",
+    "mode-label": "Mode",
+    "coefficient-label": "Coefficient"
   },
   "edit-campaign": {
     "title": "Edit Campaign",
@@ -53,7 +55,9 @@
     "save": "Save",
     "cancel": "Cancel",
     "hold-time": "Agent Hold Time (seconds)",
-    "hold-time-placeholder": "from 5 to 60 seconds"
+    "hold-time-placeholder": "from 5 to 60 seconds",
+    "mode-label": "Mode",
+    "coefficient-label": "Coefficient"
   },
   "review-campaign": {
     "title": "Review New Campaign",

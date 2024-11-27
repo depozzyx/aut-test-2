@@ -25,6 +25,10 @@ import {
 } from '@/features/agents/store/agents'
 import { ORDER_BY } from '@/constants/orderBy'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
+import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
+import { modes, coefficients, campaignSettingKeys } from '@/constants/settings'
+import { TFormik } from '@peiko/types/formik'
+import { useSettings } from '@/features/settings/hooks/useSettings'
 import { reviewFormData } from '../../../../../store/create-campaign'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
 import {
@@ -52,10 +56,14 @@ export const CreateCampaignForm = (): JSX.Element => {
     shallowEqual,
   )
 
+  const { getSettingsAsync } = useSettings()
+
   const formik = useFormik({
     initialValues: {
       name: '',
       holdTime: 0,
+      mode: '',
+      coefficient: '',
     },
     validationSchema: createCampaignValidationSchema,
     onSubmit: (formData) => {
@@ -63,7 +71,17 @@ export const CreateCampaignForm = (): JSX.Element => {
     },
   })
 
+  const getSettings = async (form: TFormik) => {
+    const { data } = await getSettingsAsync([
+      campaignSettingKeys.mode,
+      campaignSettingKeys.coefficient,
+    ])
+    await form.setFieldValue('mode', data.campaignMode)
+    await form.setFieldValue('coefficient', data.campaignCoefficient)
+  }
+
   useEffect(() => {
+    getSettings(formik)
     dispatch(resetLeadsList())
     dispatch(resetAgentsList())
     Promise.all([
@@ -160,6 +178,26 @@ export const CreateCampaignForm = (): JSX.Element => {
             maxWidth="424px"
             width="100%"
             styles={{ padding: '0 14px' }}
+          />
+          <FormikSelect
+            formik={formik}
+            options={modes.map((mode) => ({
+              label: String(mode),
+              value: String(mode),
+            }))}
+            width={424}
+            name="mode"
+            label={{ label: t('create-campaign.mode-label') }}
+          />
+          <FormikSelect
+            formik={formik}
+            options={coefficients.map((number) => ({
+              label: String(number),
+              value: String(number),
+            }))}
+            width={424}
+            name="coefficient"
+            label={{ label: t('create-campaign.coefficient-label') }}
           />
         </Flex>
         <Flex align="center" justify="center" gap={24}>
