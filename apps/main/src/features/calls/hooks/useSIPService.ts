@@ -37,8 +37,11 @@ export const useSIPService = (): {
   const { dispatch } = useRedux()
   const [endedCall, setEndedCall] = useState(false)
   const [lead, setLead] = useState<TCallsInit | null>(null)
-  const setStatus = (status: TAgentWorkStatus) =>
+  const setStatus = (status: TAgentWorkStatus) => {
+    // eslint-disable-next-line no-console
+    console.debug(`set status ${status}`)
     dispatch(agentActions.setStatusAsync(status))
+  }
 
   const sipOptions: AnswerOptions = {
     pcConfig: {

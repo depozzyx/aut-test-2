@@ -24,11 +24,11 @@ export const PBXStatus: FC = () => {
         handleRestError({ e, dispatch })
       }
     }
-    getStatusAsync(selectedCampaignId)
-    //   const interval = setInterval(() => getStatusAsync(selectedCampaignId), 5000)
-    //   return () => {
-    //     clearInterval(interval)
-    //   }
+    // getStatusAsync(selectedCampaignId)
+    const interval = setInterval(() => getStatusAsync(selectedCampaignId), 5000)
+    return () => {
+      clearInterval(interval)
+    }
   }, [])
 
   const statusColors = (status: TAgentStatus['data']['status']): keyof TPalette => {
