@@ -29,7 +29,7 @@ export const PBXStatus: FC = () => {
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [selectedCampaignId])
 
   const statusColors = (status: TAgentStatus['data']['status']): keyof TPalette => {
     if (status === 'offline') return 'main25'
