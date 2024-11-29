@@ -14,8 +14,6 @@ import { agentSocket } from 'api/socket/agent'
 import { socket } from 'api/socket/Socket'
 import { TCallsInit } from 'api/socket/call/types'
 import { apiAgents } from '@/api-rest/agents'
-import { agentActions } from '@/features/common/agentStatus/store'
-import { TAgentWorkStatus } from '@/features/agents/types'
 
 const TEXTS = {
   SUBSCRIBE_CALLS: 'Subscribe calls',
@@ -37,11 +35,6 @@ export const useSIPService = (): {
   const { dispatch } = useRedux()
   const [endedCall, setEndedCall] = useState(false)
   const [lead, setLead] = useState<TCallsInit | null>(null)
-  const setStatus = (status: TAgentWorkStatus) => {
-    // eslint-disable-next-line no-console
-    console.debug(`set status ${status}`)
-    dispatch(agentActions.setStatusAsync(status))
-  }
 
   const sipOptions: AnswerOptions = {
     pcConfig: {
@@ -94,7 +87,9 @@ export const useSIPService = (): {
     agentSocket.agentStatusUpdate({
       id: TEXTS.SUBSCRIBE_AGENT_STATUS,
       callback: (e) => {
-        setStatus(e.status)
+        // setStatus(e.status)
+        // eslint-disable-next-line no-console
+        console.debug({ e })
       },
     })
   }
