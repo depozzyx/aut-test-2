@@ -10,13 +10,17 @@ import { useAuth } from '@/features/common/user'
 import { useRedux } from '@/hooks/use-redux'
 import { errorActions, handleRestError } from '@/features/common/error'
 import { callSocket } from 'api/socket/call'
+import { agentSocket } from 'api/socket/agent'
 import { socket } from 'api/socket/Socket'
 import { TCallsInit } from 'api/socket/call/types'
 import { apiAgents } from '@/api-rest/agents'
+import { agentActions } from '@/features/common/agentStatus/store'
+import { TAgentWorkStatus } from '@/features/agents/types'
 
 const TEXTS = {
   SUBSCRIBE_CALLS: 'Subscribe calls',
   SUBSCRIBE_CALLS_END: 'Subscribe calls end',
+  SUBSCRIBE_AGENT_STATUS: 'Subscribe agent status',
 }
 
 export const useSIPService = (): {
@@ -33,6 +37,8 @@ export const useSIPService = (): {
   const { dispatch } = useRedux()
   const [endedCall, setEndedCall] = useState(false)
   const [lead, setLead] = useState<TCallsInit | null>(null)
+  const setStatus = (status: TAgentWorkStatus) =>
+    dispatch(agentActions.setStatusAsync(status))
 
   const sipOptions: AnswerOptions = {
     pcConfig: {
@@ -81,19 +87,34 @@ export const useSIPService = (): {
     })
   }
 
+  const onSubscribeAgentStatus = () => {
+    agentSocket.agentStatusUpdate({
+      id: TEXTS.SUBSCRIBE_AGENT_STATUS,
+      callback: (e) => {
+        setStatus(e.status)
+      },
+    })
+  }
+
   const onUnsubscribeCalls = () => {
     socket.unsubscribe(TEXTS.SUBSCRIBE_CALLS)
     socket.unsubscribe(TEXTS.SUBSCRIBE_CALLS_END)
   }
 
+  const onUnsubscribeAgentStatus = () => {
+    socket.unsubscribe(TEXTS.SUBSCRIBE_AGENT_STATUS)
+  }
+
   const connect = () => {
     ua?.start()
     onSubscribeCalls()
+    onSubscribeAgentStatus()
   }
 
   const disconnect = () => {
     ua?.stop()
     onUnsubscribeCalls()
+    onUnsubscribeAgentStatus()
   }
 
   useEffect(() => {
