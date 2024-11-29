@@ -14,5 +14,6 @@
   "phone": "Phone",
   "timezone": "Timezone",
   "status": "Status",
-  "source": "Source"
+  "source": "Source",
+  "save": "Save"
 }
