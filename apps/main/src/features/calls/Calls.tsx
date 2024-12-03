@@ -64,14 +64,10 @@ export const Calls: FC = () => {
     socket.unsubscribe(SUBSCRIBE_CAMPAIGN_STATUS)
   }
 
-  const getStatus = () => pbxStatus
   const checkIfAllCampaignsCompleted = async () => {
     const campaignsData = await getActiveCampaigns()
     if (!campaignsData.length) {
-      // console.warn({ status: getStatus() })
-      if (getStatus() === 'online') {
-        dispatch(agentActions.setStatusAsync('finish'))
-      }
+      dispatch(agentActions.setStatusAsync('finish'))
       setCampaignCompleted(true)
     }
   }
@@ -119,6 +115,7 @@ export const Calls: FC = () => {
     } else {
       disconnect()
       onUnsubscribeCampaignStatus()
+      dispatch(agentActions.setStatusAsync('finish'))
     }
   })
 
