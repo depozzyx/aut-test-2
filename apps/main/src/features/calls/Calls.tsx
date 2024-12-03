@@ -67,7 +67,6 @@ export const Calls: FC = () => {
   const checkIfAllCampaignsCompleted = async () => {
     const campaignsData = await getActiveCampaigns()
     if (!campaignsData.length) {
-      dispatch(agentActions.setStatusAsync('finish'))
       setCampaignCompleted(true)
     }
   }
@@ -77,6 +76,7 @@ export const Calls: FC = () => {
         id: SUBSCRIBE_CAMPAIGN_STATUS,
         callback: (e) => {
           if (e.status === 'complete') {
+            dispatch(agentActions.setStatusAsync('finish'))
             checkIfAllCampaignsCompleted()
             dispatch(setSelectedCampaignId(null))
             onUnsubscribeCampaignStatus()
