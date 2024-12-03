@@ -97,8 +97,5 @@ export type TDeletedAgentData = {
 }
 
 export type TAgentStatus = {
-  data: {
-    status: 'offline' | 'online' | 'oncall' | 'system_pause' | 'manual_pause' | 'ringing'
-    campaignNotCompleted?: boolean
-  }
+  data: 'offline' | 'online' | 'oncall' | 'system_pause' | 'manual_pause' | 'ringing'
 }

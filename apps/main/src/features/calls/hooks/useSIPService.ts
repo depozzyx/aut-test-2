@@ -14,6 +14,7 @@ import { agentSocket } from 'api/socket/agent'
 import { socket } from 'api/socket/Socket'
 import { TCallsInit } from 'api/socket/call/types'
 import { apiAgents } from '@/api-rest/agents'
+import { agentActions } from '@/features/common/agentStatus/store'
 
 const TEXTS = {
   SUBSCRIBE_CALLS: 'Subscribe calls',
@@ -87,9 +88,7 @@ export const useSIPService = (): {
     agentSocket.agentStatusUpdate({
       id: TEXTS.SUBSCRIBE_AGENT_STATUS,
       callback: (e) => {
-        // setStatus(e.status)
-        // eslint-disable-next-line no-console
-        console.debug({ e })
+        dispatch(agentActions.setPBXStatus(e.status))
       },
     })
   }

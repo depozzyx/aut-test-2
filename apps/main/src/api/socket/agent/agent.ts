@@ -1,11 +1,11 @@
+import { TAgentStatus } from '@/api-rest/agents/types'
 import { socket } from '../Socket'
 import { TSubscribeProps } from '../types'
-import { TAgentStatusUpdate } from './types'
 
 const agentStatusUpdate = ({
   id,
   callback,
-}: TSubscribeProps<TAgentStatusUpdate>): void => {
+}: TSubscribeProps<{ status: TAgentStatus['data'] }>): void => {
   socket.subscribe({
     id,
     callback,

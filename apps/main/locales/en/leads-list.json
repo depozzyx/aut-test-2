@@ -15,7 +15,17 @@
     "active": "ACTIVE",
     "inactive": "INACTIVE",
     "successful": "SUCCESSFUL",
-    "unsuccessful": "UNSUCCESSFUL"
+    "unsuccessful": "UNSUCCESSFUL",
+    "A": "Answering Machine",
+    "DEAD": "Dead",
+    "CALLBK": "Call Back",
+    "DNCL": "Do Not Call (local)",
+    "DNCG": "Do Not Call (global)",
+    "NI": "Not Interested",
+    "AA": "Answering Machine Auto",
+    "BA": "Busy Auto",
+    "NA": "No Answer",
+    "NNA": "Number Not Available"
   },
   "createLeadsGroup": {
     "cancel": "Cancel",

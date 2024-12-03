@@ -30,3 +30,7 @@ export type TCreateCampaignReq = {
 }
 
 export type TEditCampaignReq = TCreateCampaignReq & { id: number }
+
+export type TCampaignWSStatus = {
+  data: TCampaignStatus
+}

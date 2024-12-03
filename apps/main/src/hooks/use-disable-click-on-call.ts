@@ -11,7 +11,7 @@ export const useDisableClickOnCall = (): {
   const { pbxStatus } = select(agentStatusSelector)
   const dispatch = useDispatch()
 
-  const menuDisabled = pbxStatus.status === 'oncall' || pbxStatus.status === 'ringing'
+  const menuDisabled = pbxStatus === 'oncall' || pbxStatus === 'ringing'
   const showErrorMessage = () => {
     if (menuDisabled) {
       dispatch(

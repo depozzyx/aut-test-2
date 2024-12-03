@@ -1,4 +1,4 @@
-export type TCallStatuses = 'successful' | 'unsuccessful' | 'undetermined'
+export type TCallStatuses = 'A' | 'DEAD' | 'CALLBK' | 'DNCL' | 'DNCG' | 'NI'
 
 export type TFeedbackReq = {
   status: TCallStatuses

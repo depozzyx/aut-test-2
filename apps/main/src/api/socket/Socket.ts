@@ -31,6 +31,7 @@ type TSubscribe<T> = {
   eventName: string
   scope: string
   callback: (data: T) => void
+  campaignId?: string
 }
 
 type TSubscriptionType = 'subscribe' | 'unsubscribe'
@@ -40,6 +41,7 @@ export type TEvent<T> = {
   callback: (data: T) => void
   name: string
   emit?: string
+  campaignId?: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -165,7 +167,11 @@ class SocketClass {
       if (!subscribed && !scope.subscribed) return
       this.scope.set(scopeName, { subscribed, events: scope.events })
       if (!this.isConnected()) return
-      this.io?.emit(emitAction, { scope: scopeName })
+
+      const campaignId = Array.from(scope.events.values()).find(
+        (event) => event.campaignId,
+      )?.campaignId
+      this.io?.emit(emitAction, { scope: scopeName, campaignId })
     })
   }
 
@@ -207,6 +213,7 @@ class SocketClass {
       emit: data.emit,
       subscribed: false,
       callback: data.callback,
+      campaignId: data?.campaignId,
     }
 
     if (!scope) {
