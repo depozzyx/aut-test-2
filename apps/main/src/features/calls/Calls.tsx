@@ -67,6 +67,7 @@ export const Calls: FC = () => {
   const checkIfAllCampaignsCompleted = async () => {
     const campaignsData = await getActiveCampaigns()
     if (!campaignsData.length) {
+      console.warn({ status: pbxStatus })
       if (pbxStatus === 'online') {
         dispatch(agentActions.setStatusAsync('finish'))
       }
