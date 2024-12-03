@@ -64,11 +64,12 @@ export const Calls: FC = () => {
     socket.unsubscribe(SUBSCRIBE_CAMPAIGN_STATUS)
   }
 
+  const getStatus = () => pbxStatus
   const checkIfAllCampaignsCompleted = async () => {
     const campaignsData = await getActiveCampaigns()
     if (!campaignsData.length) {
-      console.warn({ status: pbxStatus })
-      if (pbxStatus === 'online') {
+      // console.warn({ status: getStatus() })
+      if (getStatus() === 'online') {
         dispatch(agentActions.setStatusAsync('finish'))
       }
       setCampaignCompleted(true)
