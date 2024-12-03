@@ -57,11 +57,11 @@ export const AgentStatus: FC = () => {
   }, [user])
 
   useEffect(() => {
-    if (pbxStatus.status === 'offline') {
+    if (pbxStatus === 'offline') {
       setOptions(INIT_OPTIONS(t).filter(({ value }) => value === 'start'))
       return
     }
-    if (pbxStatus.status === 'manual_pause') {
+    if (pbxStatus === 'manual_pause') {
       setOptions(
         INIT_OPTIONS(t).filter(
           ({ value }) =>
@@ -71,22 +71,22 @@ export const AgentStatus: FC = () => {
       )
       return
     }
-    if (pbxStatus.status === 'system_pause') {
+    if (pbxStatus === 'system_pause') {
       setOptions(
         INIT_OPTIONS(t).filter(({ value }) => value === 'pause' || value === 'finish'),
       )
       return
     }
-    if (pbxStatus.status === 'oncall' || pbxStatus.status === 'ringing') {
+    if (pbxStatus === 'oncall' || pbxStatus === 'ringing') {
       setOptions([])
       return
     }
-    if (pbxStatus.status === 'online') {
+    if (pbxStatus === 'online') {
       setOptions(
         INIT_OPTIONS(t).filter(({ value }) => value === 'pause' || value === 'finish'),
       )
     }
-  }, [pbxStatus.status])
+  }, [pbxStatus])
 
   return (
     <Box styles={{ display: 'flex', alignItems: 'center', gap: '0' }}>
@@ -96,7 +96,7 @@ export const AgentStatus: FC = () => {
         name="workStatus"
         options={options}
         readOnlySelection
-        disabled={pbxStatus.status === 'oncall' || pbxStatus.status === 'ringing'}
+        disabled={pbxStatus === 'oncall' || pbxStatus === 'ringing'}
         onChange={(e) => {
           if (e?.value && typeof e.value === 'string') {
             if (e?.value === 'start' && !selectedCampaignId) {

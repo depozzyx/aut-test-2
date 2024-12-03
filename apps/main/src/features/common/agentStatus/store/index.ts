@@ -15,10 +15,7 @@ export type TInit = {
 const init: TInit = {
   status: null,
   loading: false,
-  pbxStatus: {
-    status: 'offline',
-    campaignNotCompleted: undefined,
-  },
+  pbxStatus: 'offline',
   checkCampaignId: false,
 }
 

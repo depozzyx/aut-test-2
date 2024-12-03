@@ -15,5 +15,17 @@
   "timezone": "Timezone",
   "status": "Status",
   "source": "Source",
-  "save": "Save"
+  "save": "Save",
+  "feedBackStatuses": {
+    "A": "Answering Machine",
+    "DEAD": "Dead",
+    "CALLBK": "Call Back",
+    "DNCL": "Do Not Call (local)",
+    "DNCG": "Do Not Call (global)",
+    "NI": "Not Interested",
+    "AA": "Answering Machine Auto",
+    "BA": "Busy Auto",
+    "NA": "No Answer",
+    "NNA": "Number Not Available"
+  }
 }

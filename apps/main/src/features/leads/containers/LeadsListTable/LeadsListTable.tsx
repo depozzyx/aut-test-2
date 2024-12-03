@@ -125,7 +125,7 @@ export const LeadsListTable = memo((): JSX.Element => {
       status: <StatusChip status={lead.status} />,
       source: <InfoColumn title={lead.source} />,
       feedbackStatus: lead.feedbackStatus ? (
-        <StatusChip status={lead?.feedbackStatus} />
+        <InfoColumn title={t(`statuses.${lead?.feedbackStatus}`)} />
       ) : (
         ''
       ),
