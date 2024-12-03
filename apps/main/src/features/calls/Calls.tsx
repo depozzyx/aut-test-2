@@ -139,6 +139,7 @@ export const Calls: FC = () => {
           const campaignId = campaignsData[0].id
           if (campaignId) {
             dispatch(setSelectedCampaignId(String(campaignId)))
+            dispatch(agentActions.setStatusAsync('start'))
             onSubscribeCampaignStatus(String(campaignId))
             return campaignId
           }
