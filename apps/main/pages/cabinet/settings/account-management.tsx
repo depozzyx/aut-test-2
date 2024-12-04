@@ -23,7 +23,9 @@ const AccountManagementPage: NextPage = () => {
       user?.role === ERoles.AGENT &&
       !['offline', 'finish', 'pause', 'manual_pause'].includes(pbxStatus)
     ) {
-      dispatch(agentActions.setStatusAsync('pause'))
+      setTimeout(() => {
+        dispatch(agentActions.setStatusAsync('pause'))
+      }, 500)
     }
   })
   return (
