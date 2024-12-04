@@ -8,12 +8,22 @@ import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { LogoutIcon } from '@/icons/LogoutIcon'
 import { BaseButton } from '@peiko/components/buttons/BaseButton'
 import { useDisableClickOnCall } from 'main/src/hooks/use-disable-click-on-call'
+import { agentActions, agentStatusSelector } from '@/features/common/agentStatus/store'
+import { useRedux } from '@/hooks/use-redux'
+import { useUnmount } from 'react-use'
+import { ERoles } from '@/constants/profile'
+import { useEffect } from 'react'
 import { SidebarItem } from './components/SidebarItem'
 import { Accordion, Container, MenuItem } from './styles/Sidebar.styled'
+import { agentSocket } from '../../../api/socket/agent'
+import { socket } from '../../../api/socket/Socket'
 
 export const Sidebar = (): JSX.Element => {
   const { t } = useTranslation('auth')
-  const { logoutAsync } = useAuth()
+  const { dispatch, select } = useRedux()
+  const { pbxStatus } = select(agentStatusSelector)
+
+  const { logoutAsync, user } = useAuth()
   const links = useMenuLinks()
   const { pathname } = useRouter()
   const { menuDisabled, showErrorMessage } = useDisableClickOnCall()
@@ -21,10 +31,49 @@ export const Sidebar = (): JSX.Element => {
   const handleLogout = () => {
     if (menuDisabled) {
       showErrorMessage()
-    } else {
-      logoutAsync()
-    }
+    } else if (pbxStatus !== 'offline')
+      dispatch(agentActions.setStatusAsync('finish', logoutAsync))
+    else logoutAsync()
   }
+
+  const onSubscribeAgentStatus = () =>
+    agentSocket.agentStatusUpdate({
+      id: 'Subscribe agent status',
+      callback: (e) => {
+        dispatch(agentActions.setPBXStatus(e.status))
+      },
+    })
+
+  const onUnsubscribeAgentStatus = () => {
+    socket.unsubscribe('Subscribe agent status')
+  }
+
+  useEffect(() => {
+    if (user?.role === ERoles.AGENT) {
+      setTimeout(() => onSubscribeAgentStatus(), 500)
+    }
+  }, [])
+
+  useUnmount(() => {
+    if (user?.role === ERoles.AGENT) {
+      onUnsubscribeAgentStatus()
+    }
+  })
+
+  useEffect(() => {
+    if (user?.role === ERoles.AGENT) {
+      const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+        event.preventDefault()
+        dispatch(agentActions.setStatusAsync('finish'))
+      }
+
+      window.addEventListener('beforeunload', handleBeforeUnload)
+
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload)
+      }
+    }
+  }, [])
 
   return (
     <Container>

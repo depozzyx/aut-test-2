@@ -43,7 +43,7 @@ export const Calls: FC = () => {
   const { t } = useTranslation('calls')
 
   const { dispatch, select } = useRedux()
-  const { pbxStatus, status, checkCampaignId } = select(agentStatusSelector)
+  const { pbxStatus, checkCampaignId } = select(agentStatusSelector)
   const [callDuration, setCallDuration] = useState(0)
   const { connect, disconnect, ua, endCall, lead, endedCall, setEndedCall, setLead } =
     useSIPService()
@@ -105,18 +105,10 @@ export const Calls: FC = () => {
   })
 
   useUnmount(() => {
-    if (
-      pbxStatus !== 'offline' &&
-      status !== 'finish' &&
-      status !== 'pause' &&
-      pbxStatus !== 'manual_pause'
-    ) {
-      dispatch(agentActions.setStatusAsync('pause'))
-    } else {
+    if (['offline', 'finish', 'pause', 'manual_pause'].includes(pbxStatus)) {
       disconnect()
-      onUnsubscribeCampaignStatus()
-      dispatch(agentActions.setStatusAsync('finish'))
     }
+    onUnsubscribeCampaignStatus()
   })
 
   const [campaigns, setCampaigns] = useState<Partial<TCampaign>[]>([])
@@ -139,7 +131,7 @@ export const Calls: FC = () => {
           const campaignId = campaignsData[0].id
           if (campaignId) {
             dispatch(setSelectedCampaignId(String(campaignId)))
-            dispatch(agentActions.setStatusAsync('start'))
+            // dispatch(agentActions.setStatusAsync('start'))
             onSubscribeCampaignStatus(String(campaignId))
             return campaignId
           }

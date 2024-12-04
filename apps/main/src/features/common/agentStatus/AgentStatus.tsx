@@ -58,7 +58,11 @@ export const AgentStatus: FC = () => {
 
   useEffect(() => {
     if (pbxStatus === 'offline') {
-      setOptions(INIT_OPTIONS(t).filter(({ value }) => value === 'start'))
+      setOptions(
+        INIT_OPTIONS(t).filter(
+          ({ value }) => router.pathname === ROUTES.AGENT_CALLS && value === 'start',
+        ),
+      )
       return
     }
     if (pbxStatus === 'manual_pause') {
