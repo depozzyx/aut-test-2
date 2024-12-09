@@ -19,6 +19,7 @@ export type TCallsInit = {
     status: string
     name: string
     preferredCallTime: string
+    holdTime: number
     createdAt: string
     updatedAt: string
     deletedAt: string

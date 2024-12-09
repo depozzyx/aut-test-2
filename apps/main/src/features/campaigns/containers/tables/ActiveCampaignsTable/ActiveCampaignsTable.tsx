@@ -16,6 +16,7 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useCampaignSort } from '@/features/campaigns/hooks/use-campaignSort'
 import { SORT_BY } from '@/features/campaigns/constants'
 import { HeaderWithSort } from 'components/HeaderWithSort'
+import { StatisticsTypeResponse } from '@/features/campaigns/types'
 import { InfoCell } from '../../../components/InfoCell'
 import {
   selectActiveCampaignsForView,
@@ -23,14 +24,14 @@ import {
   setSelectedId,
 } from '../../../store/campaigns'
 import { formatCreatedAt } from '../../../utils/formatCreateAt'
-import { useCallFrequency } from '../../../hooks/use-callFrequency'
 
 type TActiveCampaignsRowKeys =
   | 'name'
   | 'date'
-  | 'callVolume'
-  | 'callAnswerRate'
-  | 'conversionRate'
+  | 'totalCalls'
+  | 'onCallAgents'
+  | 'waitingClients'
+  | 'ringingClients'
   | 'edit'
   | 'delete'
 
@@ -49,7 +50,17 @@ export const ActiveCampaignsTable = (): JSX.Element => {
   )
 
   const { handleSort } = useCampaignSort()
-  const { getCallFrequencyLabel } = useCallFrequency()
+  // const { getCallFrequencyLabel } = useCallFrequency()
+  const getTotalCalls = (statistic?: StatisticsTypeResponse): number => {
+    if (statistic) {
+      return (
+        +(statistic.oncall_agents || 0) +
+        +(statistic.ringing_clients || 0) +
+        +(statistic.waiting_clients || 0)
+      )
+    }
+    return 0
+  }
 
   const handleDelete = useCallback((id: number) => {
     dispatch(setSelectedId(id))
@@ -80,9 +91,10 @@ export const ActiveCampaignsTable = (): JSX.Element => {
       ),
       value: 'date',
     },
-    { label: t('active-campaigns-headers.call-volume'), value: 'callVolume' },
-    { label: t('active-campaigns-headers.response-rate'), value: 'callAnswerRate' },
-    { label: t('active-campaigns-headers.conversion-rate'), value: 'conversionRate' },
+    { label: t('active-campaigns-headers.total-calls'), value: 'totalCalls' },
+    { label: t('active-campaigns-headers.on-call-agents'), value: 'onCallAgents' },
+    { label: t('active-campaigns-headers.waiting-clients'), value: 'waitingClients' },
+    { label: t('active-campaigns-headers.ringing-clients'), value: 'ringingClients' },
     { label: t('active-campaigns-headers.edit'), value: 'edit' },
     { label: t('active-campaigns-headers.delete'), value: 'delete' },
   ]
@@ -92,9 +104,10 @@ export const ActiveCampaignsTable = (): JSX.Element => {
       id: campaign.id,
       name: <InfoCell title={campaign.name} />,
       date: <InfoCell title={formatCreatedAt(campaign.createdAt)} />,
-      callVolume: <InfoCell title={getCallFrequencyLabel(campaign.intensity)} />,
-      callAnswerRate: <InfoCell title={`${campaign.callAnswerRate}%`} />,
-      conversionRate: <InfoCell title={`${campaign.conversionRate}%`} />,
+      totalCalls: <InfoCell title={`${getTotalCalls(campaign?.statistic)}`} />,
+      onCallAgents: <InfoCell title={`${campaign?.statistic?.oncall_agents}`} />,
+      waitingClients: <InfoCell title={`${campaign?.statistic?.waiting_clients}`} />,
+      ringingClients: <InfoCell title={`${campaign?.statistic?.ringing_clients}`} />,
       edit: (
         <IconButton
           onClick={() => handleEditCampaign(campaign.id)}

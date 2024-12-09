@@ -14,6 +14,7 @@ import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { EManagerPermissions } from '@/constants/profile'
 import { FeaturePermission } from '@/features/common/permissions/FeaturePermissions'
+import { useCampaignUpdates } from '@/features/campaigns/hooks/use-active-campaigns-update'
 import { ActiveCampaignsTable } from './containers/tables/ActiveCampaignsTable'
 import { CampaignNameFilter } from './containers/filters/CampaignNameFilter'
 import { useCampaignsManager } from './hooks/use-campaignsManager'
@@ -61,6 +62,8 @@ const NewCampaignReviewModal = dynamic(
 export const ActiveCampaigns = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
   const { modalState } = useModals()
+
+  useCampaignUpdates()
 
   const {
     handleCreateCampaign,

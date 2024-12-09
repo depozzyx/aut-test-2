@@ -31,8 +31,8 @@ export const Sidebar = (): JSX.Element => {
   const handleLogout = () => {
     if (menuDisabled) {
       showErrorMessage()
-    } else if (pbxStatus !== 'offline')
-      dispatch(agentActions.setStatusAsync('finish', logoutAsync))
+    } else if (pbxStatus.status !== 'offline')
+      dispatch(agentActions.setStatusAsync('finish', undefined, logoutAsync))
     else logoutAsync()
   }
 
