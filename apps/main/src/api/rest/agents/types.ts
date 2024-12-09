@@ -72,6 +72,7 @@ export type TPbxAuthRes = {
 export type TChangeWorkStatusReq = {
   workStatus: TAgentWorkStatus
   campaignId?: string
+  reason?: string
 }
 
 export type TChangeWorkStatusRes = TCreateAgentRes
@@ -97,5 +98,9 @@ export type TDeletedAgentData = {
 }
 
 export type TAgentStatus = {
-  data: 'offline' | 'online' | 'oncall' | 'system_pause' | 'manual_pause' | 'ringing'
+  data: {
+    status: 'offline' | 'online' | 'oncall' | 'pause' | 'ringing'
+    exten: string
+    reason?: string
+  }
 }

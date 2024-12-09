@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TPagination } from '@/types/entities/pagination'
-import { TCampaignStatus } from '@/features/campaigns/types'
+import { StatisticsTypeResponse, TCampaignStatus } from '@/features/campaigns/types'
 import { TOrderBy } from '@/types/entities/orderBy'
 
 export type TSortBy = 'createdAt' | 'status' | 'name'
@@ -33,4 +33,11 @@ export type TEditCampaignReq = TCreateCampaignReq & { id: number }
 
 export type TCampaignWSStatus = {
   data: TCampaignStatus
+}
+
+export type TCampaignWSStatistic = {
+  data: {
+    campaignId: number
+    statistic: StatisticsTypeResponse
+  }
 }

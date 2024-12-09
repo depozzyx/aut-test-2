@@ -12,13 +12,35 @@ export const PBXStatus: FC = () => {
   const { pbxStatus } = select(agentStatusSelector)
 
   const statusColors = (status: TAgentStatus['data']): keyof TPalette => {
-    if (status === 'offline') return 'main25'
-    if (status === 'online') return 'main26'
-    if (status === 'oncall') return 'main14'
-    if (status === 'ringing') return 'main10'
-    if (status === 'manual_pause') return 'main17'
-    if (status === 'system_pause') return 'main16'
+    if (status.status === 'offline') return 'main25'
+    if (status.status === 'online') return 'main26'
+    if (status.status === 'oncall') return 'main14'
+    if (status.status === 'ringing') return 'main10'
+    if (status.status === 'pause') return 'main17'
+    if (status.status === 'pause' && status.reason === 'feedback') return 'main16'
     return 'main20'
+  }
+
+  const reasonToNameMap = {
+    manual: 'Manual Pause',
+    system: 'System Pause',
+    hold: 'On Hold',
+  }
+  const getStatusName = () => {
+    if (
+      pbxStatus.status === 'pause' &&
+      pbxStatus.reason &&
+      Object.keys(reasonToNameMap).includes(pbxStatus.reason)
+    ) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return reasonToNameMap[pbxStatus.reason]
+    }
+
+    return pbxStatus.status
+      .split('_')
+      .map((item) => item.charAt(0).toUpperCase() + item.slice(1))
+      .join(' ')
   }
 
   return (
@@ -32,10 +54,7 @@ export const PBXStatus: FC = () => {
     >
       <BlinkingButton bgColor={statusColors(pbxStatus)} />
       <Text variant="f10" tag="span" color={statusColors(pbxStatus)}>
-        {pbxStatus
-          .split('_')
-          .map((item) => item.charAt(0).toUpperCase() + item.slice(1))
-          .join(' ')}
+        {getStatusName()}
       </Text>
     </Box>
   )

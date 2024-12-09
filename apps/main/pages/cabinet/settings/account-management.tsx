@@ -21,10 +21,10 @@ const AccountManagementPage: NextPage = () => {
   useMount(() => {
     if (
       user?.role === ERoles.AGENT &&
-      !['offline', 'finish', 'pause', 'manual_pause'].includes(pbxStatus)
+      !['offline', 'finish', 'pause'].includes(pbxStatus.status)
     ) {
       setTimeout(() => {
-        dispatch(agentActions.setStatusAsync('pause'))
+        dispatch(agentActions.setStatusAsync('pause', 'manual'))
       }, 500)
     }
   })

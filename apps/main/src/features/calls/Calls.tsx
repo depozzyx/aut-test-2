@@ -97,7 +97,7 @@ export const Calls: FC = () => {
     const checkStatus = async () => {
       const { data } = await apiAgents.getAgentStatus({})
       dispatch(agentActions.setPBXStatus(data.data))
-      if (data.data === 'online') {
+      if (data.data.status === 'online') {
         dispatch(agentActions.setStatusAsync('finish'))
       }
     }
@@ -105,7 +105,7 @@ export const Calls: FC = () => {
   })
 
   useUnmount(() => {
-    if (['offline', 'finish', 'pause', 'manual_pause'].includes(pbxStatus)) {
+    if (['offline', 'finish', 'pause'].includes(pbxStatus.status)) {
       disconnect()
     }
     onUnsubscribeCampaignStatus()
@@ -167,21 +167,28 @@ export const Calls: FC = () => {
   const onCallFeedback = async (status: TCallStatuses) => {
     try {
       if (!lead) return
+      const holdTimeSec = lead?.campaign?.holdTime
       await apiCalls.feedback({
         status,
         requestId: lead.requestId,
       })
       await resetAllData()
+      if (holdTimeSec) {
+        dispatch(agentActions.setStatusAsync('pause', 'hold'))
+        setTimeout(() => {
+          dispatch(agentActions.setStatusAsync('unpause'))
+        }, holdTimeSec * 1000)
+      }
     } catch (e) {
       handleRestError({ e, dispatch })
     }
   }
 
   useEffect(() => {
-    if (['online'].includes(pbxStatus) && endedCall) {
+    if (['online'].includes(pbxStatus.status) && endedCall) {
       resetAllData()
     }
-  }, [pbxStatus])
+  }, [pbxStatus.status])
 
   useEffect(() => {
     setCampaignId()
@@ -190,64 +197,67 @@ export const Calls: FC = () => {
   const showModal =
     modalState?.modalName === MODAL_NAMES.SELECT_AGENT_CAMPAIGN &&
     modalState.isOpen &&
-    !['oncall', 'ringing'].includes(pbxStatus)
+    !['oncall', 'ringing'].includes(pbxStatus.status)
 
   return (
     <>
       <Flex justify="center" align="center" styles={{ flex: 1 }}>
-        {lead?.requestId && endedCall && pbxStatus === 'system_pause' && (
-          <Card
-            padding="32px 60px"
-            maxWidth="440px"
-            fullWidth
-            styles={{ textAlign: 'center' }}
-          >
-            <Text variant="f2">{t('newCall')}</Text>
-            <Flex justify="center" styles={{ marginTop: '48px' }}>
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(3, 1fr)',
-                  gridRowGap: '24px',
-                  gridColumnGap: '32px',
-                }}
-              >
-                {['A', 'DEAD', 'CALLBK', 'DNCL', 'DNCG', 'NI'].map((key: string) => (
-                  <div key={key}>
-                    <Text
-                      styles={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        textAlign: 'center',
-                        cursor: 'pointer',
-                        padding: '6px',
-                        border: '1px solid',
-                        borderColor: palette.overlay,
-                        borderRadius: '4px',
-                        width: '100px',
-                        height: '55px',
-                        ':hover': {
-                          borderColor: palette.main21,
-                        },
-                      }}
-                      variant="f8"
-                      onClick={() => onCallFeedback(key as TCallStatuses)}
-                    >
-                      {t(`feedBackStatuses.${key}`)}
-                    </Text>
-                  </div>
-                ))}
-              </div>
-            </Flex>
-          </Card>
-        )}
-        {!(pbxStatus === 'oncall') && !lead && !endedCall && !callDuration && (
+        {lead?.requestId &&
+          endedCall &&
+          pbxStatus.status === 'pause' &&
+          pbxStatus.reason === 'feedback' && (
+            <Card
+              padding="32px 60px"
+              maxWidth="440px"
+              fullWidth
+              styles={{ textAlign: 'center' }}
+            >
+              <Text variant="f2">{t('newCall')}</Text>
+              <Flex justify="center" styles={{ marginTop: '48px' }}>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gridRowGap: '24px',
+                    gridColumnGap: '32px',
+                  }}
+                >
+                  {['A', 'DEAD', 'CALLBK', 'DNCL', 'DNCG', 'NI'].map((key: string) => (
+                    <div key={key}>
+                      <Text
+                        styles={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          textAlign: 'center',
+                          cursor: 'pointer',
+                          padding: '6px',
+                          border: '1px solid',
+                          borderColor: palette.overlay,
+                          borderRadius: '4px',
+                          width: '100px',
+                          height: '55px',
+                          ':hover': {
+                            borderColor: palette.main21,
+                          },
+                        }}
+                        variant="f8"
+                        onClick={() => onCallFeedback(key as TCallStatuses)}
+                      >
+                        {t(`feedBackStatuses.${key}`)}
+                      </Text>
+                    </div>
+                  ))}
+                </div>
+              </Flex>
+            </Card>
+          )}
+        {!(pbxStatus.status === 'oncall') && !lead && !endedCall && !callDuration && (
           <Text styles={{ textAlign: 'center' }} variant="f4">
             {t('noCalls')}
           </Text>
         )}
-        {pbxStatus === 'oncall' && lead && (
+        {pbxStatus.status === 'oncall' && lead && (
           <Card padding="32px 68px" fullWidth maxWidth={582}>
             <Text styles={{ textAlign: 'center', marginBottom: '40px' }} variant="f2">
               {t('newCall')}

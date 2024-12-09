@@ -24,7 +24,11 @@
     "response-rate": "Response Rate",
     "conversion-rate": "Conversion Rate",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "total-calls": "Total Calls",
+    "on-call-agents": "Agents On Call ",
+    "waiting-clients": "Waiting Clients",
+    "ringing-clients": "Ringing Clients"
   },
   "delete-campaign": {
     "title": "<translate>Are you sure you want to delete <value>{{ campaignName }}</value>?</translate>",

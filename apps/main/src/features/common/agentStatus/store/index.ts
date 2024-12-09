@@ -15,7 +15,11 @@ export type TInit = {
 const init: TInit = {
   status: null,
   loading: false,
-  pbxStatus: 'offline',
+  pbxStatus: {
+    status: 'offline',
+    exten: '',
+    reason: '',
+  },
   checkCampaignId: false,
 }
 
@@ -44,12 +48,12 @@ const { setStatus, setLoading, setPBXStatus, setCheckCampaignId, reset } =
   agentStatus.actions
 
 const setStatusAsync =
-  (workStatus: TAgentWorkStatus, onSuccess?: () => void): TAsyncAction =>
+  (workStatus: TAgentWorkStatus, reason?: string, onSuccess?: () => void): TAsyncAction =>
   async (dispatch, getState) => {
     try {
       dispatch(setLoading(true))
       const campaignId = getState().agents.selectedCampaignId
-      const payload: TChangeWorkStatusReq = { workStatus }
+      const payload: TChangeWorkStatusReq = { workStatus, reason }
       payload.campaignId = campaignId || '-1'
       const { data } = await apiAgents.changeWorkStatus(payload)
       dispatch(setStatus(data.data.workStatus))

@@ -1,4 +1,4 @@
-import { TCampaignWSStatus } from '@/api-rest/campaigns/types'
+import { TCampaignWSStatistic, TCampaignWSStatus } from '@/api-rest/campaigns/types'
 import { socket } from '../Socket'
 import { TSubscribeProps } from '../types'
 
@@ -15,6 +15,19 @@ const campaignStatusUpdate = (
   })
 }
 
+const campaignStatisticUpdate = ({
+  id,
+  callback,
+}: TSubscribeProps<TCampaignWSStatistic['data']>): void => {
+  socket.subscribe({
+    id,
+    callback,
+    scope: `campaign:campaignStatisticUpdate`,
+    eventName: `campaign:campaignStatisticUpdate`,
+  })
+}
+
 export const campaignSocket = {
   campaignStatusUpdate,
+  campaignStatisticUpdate,
 }

@@ -27,18 +27,19 @@ export const AgentLogout: FC = () => {
       logoutAsync()
       resetModals()
     }
-    if (pbxStatus !== 'offline') dispatch(agentActions.setStatusAsync('finish', logout))
+    if (pbxStatus.status !== 'offline')
+      dispatch(agentActions.setStatusAsync('finish', undefined, logout))
     else logout()
   }
 
   const handleBeforeUnload = useCallback(
     (e: BeforeUnloadEvent) => {
-      if (!(pbxStatus === 'offline')) {
+      if (!(pbxStatus.status === 'offline')) {
         e.preventDefault()
         return ''
       }
     },
-    [pbxStatus],
+    [pbxStatus.status],
   )
 
   useEffect(() => {
