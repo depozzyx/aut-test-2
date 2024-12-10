@@ -23,6 +23,7 @@ export type TInit = {
   leadsGroupsPagination: TPagination
   selectedLeadsGroup?: TLeadsGroup['id']
   checkNumberUnique: boolean
+  useDefaultStatus: string
   selectError?: string
   filesForImport: TPreparedFiles[]
   sortBy?: ELeadsSortBy
@@ -42,6 +43,7 @@ const init: TInit = {
     total: 1,
   },
   checkNumberUnique: false,
+  useDefaultStatus: 'fromFile',
   isLoading: true,
   leadsGroups: [],
   filesForImport: [],
@@ -88,6 +90,9 @@ const leads = createSlice({
     setCheckNumberUnique(state, action: PayloadAction<boolean>) {
       state.checkNumberUnique = action.payload
     },
+    setUseDefaultStatus(state, action: PayloadAction<string>) {
+      state.useDefaultStatus = action.payload
+    },
     setLeadsSortBy(state, action: PayloadAction<TInit['sortBy']>) {
       if (action.payload === state.sortBy)
         state.orderBy = state.orderBy === 'DESC' ? 'ASC' : 'DESC'
@@ -125,6 +130,7 @@ export const {
   reset,
   resetLeadGroups,
   setCheckNumberUnique,
+  setUseDefaultStatus,
 } = leads.actions
 // selectors
 
@@ -170,6 +176,11 @@ export const selectFilesForImport = createSelector(
 export const selectCheckNumberUnique = createSelector(
   selectLeads,
   ({ checkNumberUnique }) => checkNumberUnique,
+)
+
+export const selectUseDefaultStatus = createSelector(
+  selectLeads,
+  ({ useDefaultStatus }) => useDefaultStatus,
 )
 
 export default leads.reducer
@@ -241,7 +252,8 @@ export const createLeadsGroups =
 export const importFilesAsync =
   (fileId: string, setController: (controller: AbortController) => void): TAsyncAction =>
   async (dispatch, _store) => {
-    const { filesForImport, selectedLeadsGroup, checkNumberUnique } = _store().leads
+    const { filesForImport, selectedLeadsGroup, checkNumberUnique, useDefaultStatus } =
+      _store().leads
 
     const file = filesForImport.find((item) => item.id === fileId)
     if (!file) return
@@ -267,6 +279,7 @@ export const importFilesAsync =
       if (selectedLeadsGroup) formData.append('leadListId', selectedLeadsGroup.toString())
       if (checkNumberUnique)
         formData.append('checkNumberUnique', checkNumberUnique.toString())
+      if (useDefaultStatus === 'default') formData.append('useDefaultStatus', 'true')
 
       await leadsApi.importLeads(formData, controller)
 

@@ -3,6 +3,8 @@
   "preselectText": "Before initiating file upload, please select a leads list.",
   "selectLabel": "Select lead list",
   "checkNumberUnique": "Check duplicate numbers",
+  "fromFile": "Set status from import file",
+  "default": "Set default status",
   "selectPlaceholder": "Select",
   "dragFiles": "Drag and drop your file or",
   "browse": "browse",

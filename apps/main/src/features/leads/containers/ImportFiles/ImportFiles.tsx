@@ -12,14 +12,17 @@ import { nanoid } from '@reduxjs/toolkit'
 import { ROUTES } from '@/constants/routes'
 import Trans from 'next-translate/Trans'
 import { Checkbox } from '@peiko/components/inputs/checkboxes/Checkbox/Checkbox'
+import { RadioButton } from '@peiko/components/inputs/RadioButton/RadioButton'
 import { LeadsSelect } from '../LeadsSelect'
 import { BottomText } from './ImportFiles.styled'
 import {
   selectCheckNumberUnique,
   selectFilesForImport,
   selectLeadsGroup,
+  selectUseDefaultStatus,
   setCheckNumberUnique,
   setImportFiles,
+  setUseDefaultStatus,
 } from '../../store/leads'
 import { TPreparedFiles } from '../../types/files'
 import { ImportFilesList } from '../ImportFilesList'
@@ -34,6 +37,8 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   const allFilesImported = select(selectFilesForImport).every((item) => item.imported)
   const filesForImport = select(selectFilesForImport)
   const checkNumberUnique = select(selectCheckNumberUnique)
+  const useDefaultStatus = select(selectUseDefaultStatus)
+  const setStatusSource = (value: string) => dispatch(setUseDefaultStatus(value))
 
   const onDrop = async (files: File[]) => {
     const preparedFilesPromises: Promise<TPreparedFiles>[] = files.map(async (file) => {
@@ -84,13 +89,8 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
         <Text variant="f7" styles={{ marginBottom: '24px', textAlign: 'center' }}>
           {t('preselectText')}
         </Text>
-        <Flex styles={{ marginBottom: '24px' }} justify="center">
-          <Flex
-            styles={{ marginBottom: '24px' }}
-            justify="start"
-            direction="column"
-            gap="12px"
-          >
+        <Flex styles={{ marginBottom: '12px' }} justify="center">
+          <Flex justify="start" direction="column" gap="12px">
             <LeadsSelect
               width="100%"
               label={{ label: t('selectLabel') }}
@@ -104,6 +104,38 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
               onChange={(e) => dispatch(setCheckNumberUnique(e.value))}
               name="numbers"
             />
+          </Flex>
+        </Flex>
+        <Flex gap="12px" justify="center" styles={{ marginBottom: '24px' }}>
+          <Flex
+            gap="4px"
+            styles={{ cursor: 'pointer' }}
+            onClick={() => setStatusSource('fromFile')}
+          >
+            <RadioButton
+              name="fromFile"
+              onChange={(e) => setStatusSource(e.target.value)}
+              inputProps={{
+                value: 'fromFile',
+                checked: useDefaultStatus === 'fromFile',
+              }}
+            />
+            <Text>{t('fromFile')}</Text>
+          </Flex>
+          <Flex
+            gap="4px"
+            styles={{ cursor: 'pointer' }}
+            onClick={() => setStatusSource('default')}
+          >
+            <RadioButton
+              name="default"
+              onChange={(e) => setStatusSource(e.target.value)}
+              inputProps={{
+                value: 'default',
+                checked: useDefaultStatus === 'default',
+              }}
+            />
+            <Text>{t('default')}</Text>
           </Flex>
         </Flex>
         <ImportFilesList />
