@@ -22,6 +22,7 @@ export type TInit = {
   leadsGroups: TLeadsGroup[]
   leadsGroupsPagination: TPagination
   selectedLeadsGroup?: TLeadsGroup['id']
+  checkNumberUnique: boolean
   selectError?: string
   filesForImport: TPreparedFiles[]
   sortBy?: ELeadsSortBy
@@ -40,6 +41,7 @@ const init: TInit = {
     limit: 10,
     total: 1,
   },
+  checkNumberUnique: false,
   isLoading: true,
   leadsGroups: [],
   filesForImport: [],
@@ -83,6 +85,9 @@ const leads = createSlice({
     setLeadsGroup(state, action: PayloadAction<TLeadsGroup['id']>) {
       state.selectedLeadsGroup = action.payload
     },
+    setCheckNumberUnique(state, action: PayloadAction<boolean>) {
+      state.checkNumberUnique = action.payload
+    },
     setLeadsSortBy(state, action: PayloadAction<TInit['sortBy']>) {
       if (action.payload === state.sortBy)
         state.orderBy = state.orderBy === 'DESC' ? 'ASC' : 'DESC'
@@ -119,6 +124,7 @@ export const {
   setLeadsSortBy,
   reset,
   resetLeadGroups,
+  setCheckNumberUnique,
 } = leads.actions
 // selectors
 
@@ -159,6 +165,11 @@ export const selectIsLoading = createSelector(selectLeads, ({ isLoading }) => is
 export const selectFilesForImport = createSelector(
   selectLeads,
   ({ filesForImport }) => filesForImport,
+)
+
+export const selectCheckNumberUnique = createSelector(
+  selectLeads,
+  ({ checkNumberUnique }) => checkNumberUnique,
 )
 
 export default leads.reducer
@@ -230,7 +241,7 @@ export const createLeadsGroups =
 export const importFilesAsync =
   (fileId: string, setController: (controller: AbortController) => void): TAsyncAction =>
   async (dispatch, _store) => {
-    const { filesForImport, selectedLeadsGroup } = _store().leads
+    const { filesForImport, selectedLeadsGroup, checkNumberUnique } = _store().leads
 
     const file = filesForImport.find((item) => item.id === fileId)
     if (!file) return
@@ -254,6 +265,8 @@ export const importFilesAsync =
       if (typeof file.data === 'string')
         formData.append('file', dataURIToBlob(file.data), file.name)
       if (selectedLeadsGroup) formData.append('leadListId', selectedLeadsGroup.toString())
+      if (checkNumberUnique)
+        formData.append('checkNumberUnique', checkNumberUnique.toString())
 
       await leadsApi.importLeads(formData, controller)
 
