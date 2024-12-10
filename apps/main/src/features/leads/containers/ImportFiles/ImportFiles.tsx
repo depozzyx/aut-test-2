@@ -11,9 +11,16 @@ import { useRedux } from '@/hooks/use-redux'
 import { nanoid } from '@reduxjs/toolkit'
 import { ROUTES } from '@/constants/routes'
 import Trans from 'next-translate/Trans'
+import { Checkbox } from '@peiko/components/inputs/checkboxes/Checkbox/Checkbox'
 import { LeadsSelect } from '../LeadsSelect'
 import { BottomText } from './ImportFiles.styled'
-import { selectFilesForImport, selectLeadsGroup, setImportFiles } from '../../store/leads'
+import {
+  selectCheckNumberUnique,
+  selectFilesForImport,
+  selectLeadsGroup,
+  setCheckNumberUnique,
+  setImportFiles,
+} from '../../store/leads'
 import { TPreparedFiles } from '../../types/files'
 import { ImportFilesList } from '../ImportFilesList'
 
@@ -26,6 +33,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   const leadsGroup = select(selectLeadsGroup)
   const allFilesImported = select(selectFilesForImport).every((item) => item.imported)
   const filesForImport = select(selectFilesForImport)
+  const checkNumberUnique = select(selectCheckNumberUnique)
 
   const onDrop = async (files: File[]) => {
     const preparedFilesPromises: Promise<TPreparedFiles>[] = files.map(async (file) => {
@@ -77,12 +85,26 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
           {t('preselectText')}
         </Text>
         <Flex styles={{ marginBottom: '24px' }} justify="center">
-          <LeadsSelect
-            width="calc(50% - 12px)"
-            label={{ label: t('selectLabel') }}
-            placeholder={t('selectPlaceholder')}
-            maxMenuHeight={200}
-          />
+          <Flex
+            styles={{ marginBottom: '24px' }}
+            justify="start"
+            direction="column"
+            gap="12px"
+          >
+            <LeadsSelect
+              width="100%"
+              label={{ label: t('selectLabel') }}
+              placeholder={t('selectPlaceholder')}
+              maxMenuHeight={200}
+            />
+            <Checkbox
+              size="s"
+              label={t('checkNumberUnique')}
+              value={checkNumberUnique}
+              onChange={(e) => dispatch(setCheckNumberUnique(e.value))}
+              name="numbers"
+            />
+          </Flex>
         </Flex>
         <ImportFilesList />
         <UploadFiles

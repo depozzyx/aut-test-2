@@ -2,6 +2,7 @@
   "uploadFiles": "Upload file",
   "preselectText": "Before initiating file upload, please select a leads list.",
   "selectLabel": "Select lead list",
+  "checkNumberUnique": "Check duplicate numbers",
   "selectPlaceholder": "Select",
   "dragFiles": "Drag and drop your file or",
   "browse": "browse",
