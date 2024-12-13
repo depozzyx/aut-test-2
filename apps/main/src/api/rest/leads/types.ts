@@ -39,3 +39,24 @@ export type TCreateLeadGroupRes = {
   statusCode: TGeneratedSuccessStatuses
   data: TLeadsGroup
 }
+
+export type TLeadCustomStatusRes = {
+  statusCode: TGeneratedSuccessStatuses
+}
+
+export type TLeadStatusData = {
+  id?: number
+  name: string
+  value: string
+  isSystem?: boolean
+}
+
+export type TLeadStatusRes = {
+  statusCode: TGeneratedSuccessStatuses
+  data: TLeadStatusData[]
+}
+
+export type TUpsertCustomStatusReq = {
+  name: string
+  value: string
+}

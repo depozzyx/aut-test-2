@@ -22,5 +22,13 @@
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
     "save": "Save changes"
+  },
+  "change-lead-settings": {
+    "status": {
+      "title": "Change Lead Statuses",
+      "addNew": "Add new",
+      "valuePlaceholder": "status code",
+      "namePlaceholder": "status name"
+    }
   }
 }

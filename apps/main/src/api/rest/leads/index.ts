@@ -9,6 +9,9 @@ import {
   TLeadsGroupReq,
   TCreateLeadGroupReq,
   TCreateLeadGroupRes,
+  TLeadCustomStatusRes,
+  TLeadStatusRes,
+  TUpsertCustomStatusReq,
 } from './types'
 
 const importLeads = (
@@ -32,9 +35,27 @@ const createLeadGroup = (
   body: TCreateLeadGroupReq,
 ): TAxiosResponse<TCreateLeadGroupRes> => api.post('/lead-list', body)
 
+const getStatuses = (): TAxiosResponse<TLeadStatusRes> => api.get('/leads/statuses')
+
+const createCustomStatus = (
+  body: TUpsertCustomStatusReq,
+): TAxiosResponse<TLeadCustomStatusRes> => api.post('/leads/statuses/custom', body)
+
+const updateCustomStatus = (
+  id: number,
+  body: TUpsertCustomStatusReq,
+): TAxiosResponse<TLeadCustomStatusRes> => api.patch(`/leads/statuses/custom/${id}`, body)
+
+const deleteCustomStatus = (id: number): TAxiosResponse<TLeadCustomStatusRes> =>
+  api.delete(`/leads/statuses/custom/${id}`)
+
 export const leadsApi = {
   importLeads,
   leadsList,
   leadsGroup,
   createLeadGroup,
+  getStatuses,
+  createCustomStatus,
+  updateCustomStatus,
+  deleteCustomStatus,
 }

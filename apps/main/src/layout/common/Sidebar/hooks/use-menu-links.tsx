@@ -173,6 +173,12 @@ export const useMenuLinks = (): TMenuItem[] => {
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
         },
         {
+          title: t('settings_leads_management'),
+          link: ROUTES.SETTINGS_LEADS_MANAGEMENT,
+          disabled: false,
+          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+        },
+        {
           title: t('settings_api_key_management'),
           link: ROUTES.SETTINGS_API_KEY_MANAGEMENT,
           disabled: false,
