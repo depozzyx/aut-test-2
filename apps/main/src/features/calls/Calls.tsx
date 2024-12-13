@@ -9,7 +9,6 @@ import dynamic from 'next/dynamic'
 import { CallIcon } from '@/icons/CallIcon'
 import { useRedux } from '@/hooks/use-redux'
 import { apiCalls } from '@/api-rest/calls'
-import { TCallStatuses } from '@/api-rest/calls/types'
 import { useAuth } from '@/features/common/user'
 import {
   selectSelectedCampaignId,
@@ -21,6 +20,7 @@ import { apiCampaigns } from '@/api-rest/campaigns'
 import { TCampaign } from '@/features/campaigns/types'
 import { apiAgents } from '@/api-rest/agents'
 import { palette } from '@peiko/styles/palette'
+import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
 import { CallButton } from './components/CallButton/CallButton'
 import { CallWindow } from './components/CallWindow'
 import { useSIPService } from './hooks/useSIPService'
@@ -52,6 +52,7 @@ export const Calls: FC = () => {
   const [campaignCompleted, setCampaignCompleted] = useState(false)
 
   const selectedCampaignId = select(selectSelectedCampaignId)
+  const leadStatuses = select(selectLeadStatuses)
 
   const SUBSCRIBE_CAMPAIGN_STATUS = 'Subscribe campaign status'
 
@@ -101,6 +102,7 @@ export const Calls: FC = () => {
         dispatch(agentActions.setStatusAsync('finish'))
       }
     }
+    dispatch(getLeadStatuses())
     checkStatus()
   })
 
@@ -164,7 +166,7 @@ export const Calls: FC = () => {
     setLead(null)
   }
 
-  const onCallFeedback = async (status: TCallStatuses) => {
+  const onCallFeedback = async (status: string) => {
     try {
       if (!lead) return
       const holdTimeSec = lead?.campaign?.holdTime
@@ -199,6 +201,12 @@ export const Calls: FC = () => {
     modalState.isOpen &&
     !['oncall', 'ringing'].includes(pbxStatus.status)
 
+  const gridRepeatCount = (length: number) => {
+    if (length <= 9) return 3
+    if (length > 9) return 4
+    if (length > 12) return 5
+  }
+
   return (
     <>
       <Flex justify="center" align="center" styles={{ flex: 1 }}>
@@ -208,22 +216,24 @@ export const Calls: FC = () => {
           pbxStatus.reason === 'feedback' && (
             <Card
               padding="32px 60px"
-              maxWidth="440px"
               fullWidth
               styles={{ textAlign: 'center' }}
+              maxWidth="max-content"
             >
               <Text variant="f2">{t('newCall')}</Text>
               <Flex justify="center" styles={{ marginTop: '48px' }}>
                 <div
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gridTemplateColumns: `repeat(${gridRepeatCount(
+                      leadStatuses.length,
+                    )}, 1fr)`,
                     gridRowGap: '24px',
                     gridColumnGap: '32px',
                   }}
                 >
-                  {['A', 'DEAD', 'CALLBK', 'DNCL', 'DNCG', 'NI'].map((key: string) => (
-                    <div key={key}>
+                  {leadStatuses.map(({ name, value }) => (
+                    <div key={value}>
                       <Text
                         styles={{
                           display: 'flex',
@@ -242,9 +252,9 @@ export const Calls: FC = () => {
                           },
                         }}
                         variant="f8"
-                        onClick={() => onCallFeedback(key as TCallStatuses)}
+                        onClick={() => onCallFeedback(value)}
                       >
-                        {t(`feedBackStatuses.${key}`)}
+                        {name}
                       </Text>
                     </div>
                   ))}

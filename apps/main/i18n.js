@@ -67,5 +67,6 @@ module.exports = {
     ],
     '/cabinet/settings/api-key-management': ['user', 'routing', 'api-key', 'validation'],
     '/cabinet/settings/campaigns-management': ['settings', 'routing'],
+    '/cabinet/settings/leads-management': ['settings', 'routing'],
   },
 }

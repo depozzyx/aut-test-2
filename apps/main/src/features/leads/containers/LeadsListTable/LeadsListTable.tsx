@@ -10,7 +10,6 @@ import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import { ELeadsSortBy } from '@/api-rest/leads/types'
 import { HeaderWithSort } from '@/components/HeaderWithSort'
-import { StatusChip } from '../../components/StatusChip'
 import { InfoColumn } from '../../components/InfoColumn'
 import { selectIsLoading, selectLeadsList, setLeadsSortBy } from '../../store/leads'
 import { LeadsSelect } from '../LeadsSelect'
@@ -21,7 +20,6 @@ type TLeadsRowKeys =
   | 'phone'
   | 'timezone'
   | 'status'
-  | 'feedbackStatus'
   | 'source'
   | 'campaign'
   | 'selectLeads'
@@ -97,15 +95,6 @@ export const LeadsListTable = memo((): JSX.Element => {
     {
       label: (
         <HeaderWithSort
-          title={t('headers.feedback-status')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.FEEDBACK_STATUS))}
-        />
-      ),
-      value: 'feedbackStatus',
-    },
-    {
-      label: (
-        <HeaderWithSort
           title={t('headers.campaign')}
           onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.CAMPAIGN))}
         />
@@ -122,19 +111,8 @@ export const LeadsListTable = memo((): JSX.Element => {
       name: <InfoColumn title={lead.name} />,
       phone: <InfoColumn title={lead.phone} />,
       timezone: <InfoColumn title={lead.timezone} />,
-      status: <StatusChip status={lead.status} />,
+      status: <InfoColumn title={lead?.status} />,
       source: <InfoColumn title={lead.source} />,
-      feedbackStatus: lead.feedbackStatus ? (
-        <InfoColumn
-          title={
-            lead?.feedbackStatus.startsWith('Error')
-              ? lead?.feedbackStatus
-              : t(`statuses.${lead?.feedbackStatus}`)
-          }
-        />
-      ) : (
-        ''
-      ),
       campaign: <InfoColumn title={lead.leadList.campaign?.name} />,
       selectLeads: <></>,
     },

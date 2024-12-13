@@ -9,6 +9,8 @@ import {
   TCreateLeadGroupReq,
   TLeadsGroupReq,
   TLeadsListReq,
+  TLeadStatusData,
+  TUpsertCustomStatusReq,
 } from '@/api-rest/leads/types'
 import { TFormik } from '@peiko/types/formik'
 import { TOrderBy } from '@/types/entities/orderBy'
@@ -28,6 +30,7 @@ export type TInit = {
   filesForImport: TPreparedFiles[]
   sortBy?: ELeadsSortBy
   orderBy: TOrderBy
+  statuses: TLeadStatusData[]
 }
 
 const init: TInit = {
@@ -48,6 +51,7 @@ const init: TInit = {
   leadsGroups: [],
   filesForImport: [],
   orderBy: 'DESC',
+  statuses: [],
 }
 
 const leads = createSlice({
@@ -111,6 +115,9 @@ const leads = createSlice({
     resetLeadGroups(state) {
       state.leadsGroups = []
     },
+    setStatuses(state, action: PayloadAction<TLeadStatusData[]>) {
+      state.statuses = action.payload
+    },
   },
 })
 
@@ -131,6 +138,7 @@ export const {
   resetLeadGroups,
   setCheckNumberUnique,
   setUseDefaultStatus,
+  setStatuses,
 } = leads.actions
 // selectors
 
@@ -182,6 +190,8 @@ export const selectUseDefaultStatus = createSelector(
   selectLeads,
   ({ useDefaultStatus }) => useDefaultStatus,
 )
+
+export const selectLeadStatuses = createSelector(selectLeads, ({ statuses }) => statuses)
 
 export default leads.reducer
 
@@ -319,5 +329,44 @@ export const importFilesAsync =
           return true
         },
       })
+    }
+  }
+
+export const getLeadStatuses = (): TAsyncAction => async (dispatch) => {
+  try {
+    const data = await leadsApi.getStatuses()
+    dispatch(setStatuses(data.data.data))
+  } catch (e) {
+    handleRestError({ e, dispatch })
+  }
+}
+
+export const createLeadStatus =
+  (status: TUpsertCustomStatusReq): TAsyncAction =>
+  async (dispatch) => {
+    try {
+      await leadsApi.createCustomStatus(status)
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    }
+  }
+
+export const updateLeadStatus =
+  (id: number, status: TUpsertCustomStatusReq): TAsyncAction =>
+  async (dispatch) => {
+    try {
+      await leadsApi.updateCustomStatus(id, status)
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    }
+  }
+
+export const deleteLeadStatus =
+  (id: number): TAsyncAction =>
+  async (dispatch) => {
+    try {
+      await leadsApi.deleteCustomStatus(id)
+    } catch (e) {
+      handleRestError({ e, dispatch })
     }
   }
