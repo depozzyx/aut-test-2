@@ -7,7 +7,7 @@ import { TrashIcon } from '@peiko/components/icons/TrashIcon'
 import { Input } from '@peiko/components/inputs/Input'
 import { CloseIcon } from '@peiko/components/icons/CloseIcon/CloseIcon'
 import { SaveIcon } from '@peiko/components/icons/SaveIcon/SaveIcon'
-import { deleteLeadStatus, getLeadStatuses } from '@/features/leads/store/leads'
+import { getLeadStatuses } from '@/features/leads/store/leads'
 import { useRedux } from '@/hooks/use-redux'
 import { leadsApi } from '@/api-rest/leads'
 import { handleRestError } from '@/features/common/error'
@@ -51,9 +51,13 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
     }
   }
 
-  const handleDelete = (id: number) => {
-    dispatch(deleteLeadStatus(id))
-    dispatch(getLeadStatuses())
+  const handleDelete = async (id: number) => {
+    try {
+      await leadsApi.deleteCustomStatus(id)
+      dispatch(getLeadStatuses())
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    }
   }
 
   return (
