@@ -8,6 +8,7 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton/FilledButto
 import { TLeadStatusData } from '@/api-rest/leads/types'
 import { LeadStatusRow } from '@/features/settings/components/LeadStatusRow/LeadStatusRow'
 import { Flex } from '@/components/Flex'
+import { PlusIcon } from '@peiko/components/icons/PlusIcon/PlusIcon'
 import { CardTile } from './components/CardTile'
 
 export const LeadStatuses: FC = () => {
@@ -52,6 +53,7 @@ export const LeadStatuses: FC = () => {
         <FilledButton
           size="s"
           width="120px"
+          startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
           onClick={addNew}
           disabled={addNewIsDisabled()}
         >

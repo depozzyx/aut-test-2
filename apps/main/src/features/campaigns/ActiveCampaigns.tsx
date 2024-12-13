@@ -4,16 +4,12 @@ import dynamic from 'next/dynamic'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { Flex } from '@/components/Flex'
-import { FilledButton } from '@peiko/components/buttons/FilledButton'
-import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { DashboardTabs } from '@/components/DashboardTabs'
 import { Pagination } from '@peiko/components/Pagination'
 import { CAMPAIGN_TABLE_TYPES, FILTER_TYPE } from '@/features/campaigns/constants'
 import { RangeDayPicker } from '@/inputs/RangeDayPicker'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
-import { EManagerPermissions } from '@/constants/profile'
-import { FeaturePermission } from '@/features/common/permissions/FeaturePermissions'
 import { useCampaignUpdates } from '@/features/campaigns/hooks/use-active-campaigns-update'
 import { ActiveCampaignsTable } from './containers/tables/ActiveCampaignsTable'
 import { CampaignNameFilter } from './containers/filters/CampaignNameFilter'
@@ -66,7 +62,6 @@ export const ActiveCampaigns = (): JSX.Element => {
   useCampaignUpdates()
 
   const {
-    handleCreateCampaign,
     handleChangePage,
     handleChangeDate,
     pagination: { page, total, limit },
@@ -89,17 +84,6 @@ export const ActiveCampaigns = (): JSX.Element => {
             <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
             <RangeDayPicker onChange={handleChangeDate} />
           </Flex>
-          <FeaturePermission permissions={[EManagerPermissions.CREATE_CAMPAIGN]}>
-            <FilledButton
-              size="m"
-              maxWidth="236px"
-              width="100%"
-              startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
-              onClick={handleCreateCampaign}
-            >
-              {t('add-campaign')}
-            </FilledButton>
-          </FeaturePermission>
         </Flex>
         <Flex
           gap={16}

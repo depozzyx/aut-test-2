@@ -199,7 +199,7 @@ export const Calls: FC = () => {
   const showModal =
     modalState?.modalName === MODAL_NAMES.SELECT_AGENT_CAMPAIGN &&
     modalState.isOpen &&
-    !['oncall', 'ringing'].includes(pbxStatus.status)
+    !['oncall', 'ringing', 'pause'].includes(pbxStatus.status)
 
   const gridRepeatCount = (length: number) => {
     if (length <= 9) return 3

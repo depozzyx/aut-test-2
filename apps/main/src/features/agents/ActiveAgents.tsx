@@ -1,11 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import useTranslation from 'next-translate/useTranslation'
-import { useRouter } from 'next/router'
 import { Flex } from '@/components/Flex'
-import { FilledButton } from '@peiko/components/buttons/FilledButton'
-import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { DashboardTabs } from '@/components/DashboardTabs'
-import { ROUTES } from '@/constants/routes'
 import { createStructuredSelector } from 'reselect'
 import {
   asyncGetActiveAgents,
@@ -21,14 +17,11 @@ import { Pagination } from '@peiko/components/Pagination'
 import { StatusFilter } from '@/features/agents/containers/filters/StatusFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton/OutlinedButton'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
-import { EManagerPermissions } from '@/constants/profile'
-import { FeaturePermission } from '@/features/common/permissions/FeaturePermissions'
 import { ActiveAgentsTable } from './containers/tables/ActiveAgentsTable'
 import { AgentSearchField } from './components/AgentSearchField'
 
 export const ActiveAgents = (): JSX.Element => {
   const { t } = useTranslation('agents')
-  const router = useRouter()
   const { select, dispatch } = useRedux()
 
   const {
@@ -45,10 +38,6 @@ export const ActiveAgents = (): JSX.Element => {
     }),
     shallowEqual,
   )
-
-  const createCampaignHandler = () => {
-    router.push(ROUTES.CREATE_AGENT)
-  }
 
   useEffect(() => {
     dispatch(
@@ -91,17 +80,6 @@ export const ActiveAgents = (): JSX.Element => {
           <AgentSearchField />
           <StatusFilter />
         </Flex>
-        <FeaturePermission permissions={[EManagerPermissions.CREATE_AGENT]}>
-          <FilledButton
-            size="m"
-            maxWidth="236px"
-            width="100%"
-            startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
-            onClick={createCampaignHandler}
-          >
-            {t('add-agent')}
-          </FilledButton>
-        </FeaturePermission>
       </Flex>
       <Flex
         gap={16}
