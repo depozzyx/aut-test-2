@@ -80,6 +80,31 @@ export const useMenuLinks = (): TMenuItem[] => {
       ],
     },
     {
+      title: t('leads'),
+      icon: <LeadsIcon />,
+      availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+      links: [
+        {
+          title: t('leads_list'),
+          link: ROUTES.LEADS_LIST,
+          disabled: false,
+          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+        },
+        {
+          title: t('import_leads'),
+          link: ROUTES.IMPORT_LEADS,
+          disabled: false,
+          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+        },
+        {
+          title: t('import_leads_instructions'),
+          link: ROUTES.IMPORT_LEADS_INSTRUCTIONS,
+          disabled: false,
+          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+        },
+      ],
+    },
+    {
       title: t('agents'),
       icon: <AgentsIcon />,
       availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.AGENT],
@@ -107,31 +132,6 @@ export const useMenuLinks = (): TMenuItem[] => {
           link: ROUTES.AGENT_CALLS,
           disabled: false,
           availableRoles: [ERoles.AGENT],
-        },
-      ],
-    },
-    {
-      title: t('leads'),
-      icon: <LeadsIcon />,
-      availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
-      links: [
-        {
-          title: t('leads_list'),
-          link: ROUTES.LEADS_LIST,
-          disabled: false,
-          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
-        },
-        {
-          title: t('import_leads'),
-          link: ROUTES.IMPORT_LEADS,
-          disabled: false,
-          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
-        },
-        {
-          title: t('import_leads_instructions'),
-          link: ROUTES.IMPORT_LEADS_INSTRUCTIONS,
-          disabled: false,
-          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
         },
       ],
     },

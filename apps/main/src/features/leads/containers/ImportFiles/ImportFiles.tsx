@@ -138,9 +138,13 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             <Text>{t('default')}</Text>
           </Flex>
         </Flex>
-        <ImportFilesList />
         <UploadFiles
-          styles={{ maxWidth: '552px', width: '100%', textAlign: 'center' }}
+          styles={{
+            maxWidth: '552px',
+            width: '100%',
+            textAlign: 'center',
+            marginBottom: '14px',
+          }}
           maxFiles={20}
           maxSize={1024 * 1024 * 20}
           disabled={!leadsGroup}
@@ -177,6 +181,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             </Text>
           </Flex>
         </UploadFiles>
+        <ImportFilesList />
         <Flex justify="space-between" gap="24px" margin="48px 0 0">
           <OutlinedButton link={{ href: ROUTES.DASHBOARD_ACTIVE_CAMPAIGNS }} width="100%">
             {t('cancel')}
