@@ -154,36 +154,53 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             trigger={
               <Trigger startAdornment={<SmallInfoIcon />}>
                 <Text variant="f8" color="base">
-                  {t('tooltipTitle')}
+                  {t('tooltip.title')}
                 </Text>
               </Trigger>
             }
             renderMenu={() => (
-              <Flex
-                direction="column"
-                gap="12px"
-                styles={{
-                  margin: '2px 0 2px',
-                  maxHeight: '350px',
-                  overflowY: 'scroll',
-                  padding: '16px 24px',
-                }}
-              >
-                {leadStatuses.map((status) => (
-                  <Flex
-                    key={status.value}
-                    direction="row"
-                    justify="start"
-                    styles={{ borderBottom: '1px solid white' }}
-                  >
-                    <Text variant="f8" color="base" styles={{ minWidth: '12rem' }}>
-                      {status.value}
-                    </Text>
-                    <Text variant="f8" color="base">
-                      {status.name}
-                    </Text>
-                  </Flex>
-                ))}
+              <Flex direction="column" gap="12px">
+                <Flex
+                  direction="row"
+                  justify="start"
+                  margin="0 0 8px"
+                  gap="12px"
+                  padding="16px 24px 0"
+                >
+                  <Text variant="f8" color="base" styles={{ minWidth: '12rem' }}>
+                    {t('tooltip.code')}
+                  </Text>
+                  <Text variant="f8" color="base">
+                    {t('tooltip.description')}
+                  </Text>
+                </Flex>
+                <Flex
+                  direction="column"
+                  gap="12px"
+                  styles={{
+                    maxHeight: '300px',
+                    overflowY: 'scroll',
+                    padding: '0 24px',
+                    marginBottom: '2px',
+                  }}
+                >
+                  {leadStatuses.map((status) => (
+                    <Flex
+                      key={status.value}
+                      direction="row"
+                      justify="start"
+                      gap="12px"
+                      styles={{ borderBottom: '1px solid white' }}
+                    >
+                      <Text variant="f8" color="base" styles={{ minWidth: '12rem' }}>
+                        {status.value}
+                      </Text>
+                      <Text variant="f8" color="base">
+                        {status.name}
+                      </Text>
+                    </Flex>
+                  ))}
+                </Flex>
               </Flex>
             )}
             closeOnDocumentClick

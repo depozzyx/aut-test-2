@@ -5,7 +5,11 @@
   "checkNumberUnique": "Check duplicate numbers",
   "fromFile": "Set status from import file",
   "default": "Set default status",
-  "tooltipTitle": "See the status descriptions",
+  "tooltip": {
+    "title": "See the status descriptions",
+    "code": "Code:",
+    "description": "Description:"
+  },
   "selectPlaceholder": "Select",
   "dragFiles": "Drag and drop your file or",
   "browse": "browse",
