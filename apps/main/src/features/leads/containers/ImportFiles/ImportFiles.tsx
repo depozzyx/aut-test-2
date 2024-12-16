@@ -5,7 +5,7 @@ import { Text } from '@peiko/components/Text'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { CloudIcon } from '@/icons/CloudIcon'
 import { useRedux } from '@/hooks/use-redux'
 import { nanoid } from '@reduxjs/toolkit'
@@ -13,12 +13,17 @@ import { ROUTES } from '@/constants/routes'
 import Trans from 'next-translate/Trans'
 import { Checkbox } from '@peiko/components/inputs/checkboxes/Checkbox/Checkbox'
 import { RadioButton } from '@peiko/components/inputs/RadioButton/RadioButton'
+import { Tooltip } from '@peiko/components/Tooltip'
+import { Trigger } from '@/features/agents/components/CampaignsTooltip/CampaignsTooltip.styled'
+import { SmallInfoIcon } from '@peiko/components/icons/SmallInfoIcon/SmallInfoIcon'
 import { LeadsSelect } from '../LeadsSelect'
 import { BottomText } from './ImportFiles.styled'
 import {
+  getLeadStatuses,
   selectCheckNumberUnique,
   selectFilesForImport,
   selectLeadsGroup,
+  selectLeadStatuses,
   selectUseDefaultStatus,
   setCheckNumberUnique,
   setImportFiles,
@@ -38,7 +43,13 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   const filesForImport = select(selectFilesForImport)
   const checkNumberUnique = select(selectCheckNumberUnique)
   const useDefaultStatus = select(selectUseDefaultStatus)
+  const leadStatuses = select(selectLeadStatuses)
+
   const setStatusSource = (value: string) => dispatch(setUseDefaultStatus(value))
+
+  useEffect(() => {
+    dispatch(getLeadStatuses())
+  }, [dispatch])
 
   const onDrop = async (files: File[]) => {
     const preparedFilesPromises: Promise<TPreparedFiles>[] = files.map(async (file) => {
@@ -78,7 +89,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     <Flex
       justify="center"
       align="center"
-      styles={{ flex: 1, marginTop: '82px' }}
+      styles={{ flex: 1, marginTop: '62px' }}
       direction="column"
       gap="12px"
     >
@@ -106,7 +117,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             />
           </Flex>
         </Flex>
-        <Flex gap="12px" justify="center" styles={{ marginBottom: '24px' }}>
+        <Flex gap="12px" justify="center" styles={{ marginBottom: '14px' }}>
           <Flex
             gap="4px"
             styles={{ cursor: 'pointer' }}
@@ -137,6 +148,50 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             />
             <Text>{t('default')}</Text>
           </Flex>
+        </Flex>
+        <Flex justify="center" styles={{ marginBottom: '14px' }}>
+          <Tooltip
+            trigger={
+              <Trigger startAdornment={<SmallInfoIcon />}>
+                <Text variant="f8" color="base">
+                  {t('tooltipTitle')}
+                </Text>
+              </Trigger>
+            }
+            renderMenu={() => (
+              <Flex
+                direction="column"
+                gap="12px"
+                styles={{
+                  margin: '2px 0 2px',
+                  maxHeight: '350px',
+                  overflowY: 'scroll',
+                  padding: '16px 24px',
+                }}
+              >
+                {leadStatuses.map((status) => (
+                  <Flex
+                    key={status.value}
+                    direction="row"
+                    justify="start"
+                    styles={{ borderBottom: '1px solid white' }}
+                  >
+                    <Text variant="f8" color="base" styles={{ minWidth: '12rem' }}>
+                      {status.value}
+                    </Text>
+                    <Text variant="f8" color="base">
+                      {status.name}
+                    </Text>
+                  </Flex>
+                ))}
+              </Flex>
+            )}
+            closeOnDocumentClick
+            contentBackgroundColor="main3"
+            arrowColor="main3"
+            contentBorderColor="main3"
+            padding="0"
+          />
         </Flex>
         <UploadFiles
           styles={{

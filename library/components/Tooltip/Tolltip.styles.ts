@@ -4,9 +4,10 @@ import { CSSProperties } from 'react'
 
 type TTooltip = {
   maxWidth?: CSSProperties['maxWidth']
+  padding?: CSSProperties['padding']
   contentBackgroundColor?: keyof DefaultTheme['palette']
   arrowColor?: keyof DefaultTheme['palette']
-  contenBorderColor?: keyof DefaultTheme['palette']
+  contentBorderColor?: keyof DefaultTheme['palette']
 }
 
 export const Tooltip = styled(Popup)<TTooltip>`
@@ -22,9 +23,9 @@ export const Tooltip = styled(Popup)<TTooltip>`
     background-color: ${(props) =>
       props.theme.palette[props.contentBackgroundColor || 'base3']};
     border: 1px solid
-      ${(props) => props.theme.palette[props.contenBorderColor || 'main8']};
+      ${(props) => props.theme.palette[props.contentBorderColor || 'main8']};
     border-radius: 8px;
-    padding: 16px 24px;
+    padding: ${(props) => props.padding || '16px 24px'};
     max-width: ${(props) => props.maxWidth || 'auto'};
   }
 `
