@@ -22,6 +22,11 @@ export type TTooltipProps = {
    * Define the background color of the tooltip content.
    * @default base3
    */
+  padding?: CSSProperties['padding']
+  /**
+   * Define the padding of the tooltip content.
+   * @default '16px 24px'
+   */
   contentBackgroundColor?: keyof DefaultTheme['palette']
   /**
    * Define the color of the tooltip arrow.
@@ -32,5 +37,5 @@ export type TTooltipProps = {
    * Define the border color of the tooltip content.
    * @default main8
    */
-  contenBorderColor?: keyof DefaultTheme['palette']
+  contentBorderColor?: keyof DefaultTheme['palette']
 } & Omit<PopupProps, 'children'>

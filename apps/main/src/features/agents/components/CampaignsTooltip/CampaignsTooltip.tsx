@@ -53,7 +53,7 @@ export const CampaignsTooltip = ({ campaigns }: ICampaignTooltipProps): JSX.Elem
       closeOnDocumentClick
       contentBackgroundColor="main3"
       arrowColor="main3"
-      contenBorderColor="main3"
+      contentBorderColor="main3"
       arrow
     />
   )

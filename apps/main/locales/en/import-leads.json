@@ -5,6 +5,7 @@
   "checkNumberUnique": "Check duplicate numbers",
   "fromFile": "Set status from import file",
   "default": "Set default status",
+  "tooltipTitle": "See the status descriptions",
   "selectPlaceholder": "Select",
   "dragFiles": "Drag and drop your file or",
   "browse": "browse",
