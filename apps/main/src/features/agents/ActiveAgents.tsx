@@ -52,24 +52,32 @@ export const ActiveAgents = (): JSX.Element => {
     )
   }, [limit, searchTerm, sortBy, orderBy, statusFilter])
 
+  const fetchAgents = (newPage: number) =>
+    dispatch(
+      asyncGetActiveAgents({
+        page: newPage,
+        limit: limit ?? 7,
+        orderBy,
+        ...(sortBy && { sortBy }),
+        ...(searchTerm && { search: searchTerm }),
+        ...(statusFilter && { workStatus: statusFilter }),
+      }),
+    )
   const handleChangePage = useCallback(
-    (newPage) => {
-      dispatch(
-        asyncGetActiveAgents({
-          page: newPage,
-          limit: limit ?? 7,
-          orderBy,
-          ...(sortBy && { sortBy }),
-          ...(searchTerm && { search: searchTerm }),
-          ...(statusFilter && { workStatus: statusFilter }),
-        }),
-      )
-    },
+    (newPage) => fetchAgents(newPage),
     [searchTerm, sortBy, orderBy, statusFilter],
   )
 
   const handleResetStatusFilter = useCallback(() => {
     dispatch(setStatusFilter(undefined))
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchAgents(page)
+    }, 5000)
+
+    return () => clearInterval(interval)
   }, [])
 
   return (

@@ -44,12 +44,15 @@ export const selectCreateAgentsIsLoading = createSelector(
 export default createAgent.reducer
 
 export const asyncCreateAgent =
-  ({
-    formData,
-    formik,
-  }: TFormPropsAsync<TCreateAgentFormData> & {
-    formik?: FormikHelpers<TCreateAgentFormData>
-  }): TAsyncAction =>
+  (
+    {
+      formData,
+      formik,
+    }: TFormPropsAsync<TCreateAgentFormData> & {
+      formik?: FormikHelpers<TCreateAgentFormData>
+    },
+    onSuccess?: () => void,
+  ): TAsyncAction =>
   async (dispatch) => {
     try {
       dispatch(setIsLoading(true))
@@ -72,6 +75,7 @@ export const asyncCreateAgent =
         }),
       )
       formik?.resetForm()
+      onSuccess?.()
     } catch (e) {
       handleRestError({ e, dispatch, formik })
     } finally {

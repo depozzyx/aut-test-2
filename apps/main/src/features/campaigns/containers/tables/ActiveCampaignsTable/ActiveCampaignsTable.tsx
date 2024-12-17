@@ -29,6 +29,7 @@ type TActiveCampaignsRowKeys =
   | 'name'
   | 'date'
   | 'totalCalls'
+  | 'onlineAgents'
   | 'onCallAgents'
   | 'waitingClients'
   | 'ringingClients'
@@ -50,7 +51,6 @@ export const ActiveCampaignsTable = (): JSX.Element => {
   )
 
   const { handleSort } = useCampaignSort()
-  // const { getCallFrequencyLabel } = useCallFrequency()
   const getTotalCalls = (statistic?: StatisticsTypeResponse): number => {
     if (statistic) {
       return (
@@ -93,6 +93,7 @@ export const ActiveCampaignsTable = (): JSX.Element => {
     },
     { label: t('active-campaigns-headers.total-calls'), value: 'totalCalls' },
     { label: t('active-campaigns-headers.on-call-agents'), value: 'onCallAgents' },
+    { label: t('active-campaigns-headers.online-agents'), value: 'onlineAgents' },
     { label: t('active-campaigns-headers.waiting-clients'), value: 'waitingClients' },
     { label: t('active-campaigns-headers.ringing-clients'), value: 'ringingClients' },
     { label: t('active-campaigns-headers.edit'), value: 'edit' },
@@ -104,10 +105,21 @@ export const ActiveCampaignsTable = (): JSX.Element => {
       id: campaign.id,
       name: <InfoCell title={campaign.name} />,
       date: <InfoCell title={formatCreatedAt(campaign.createdAt)} />,
-      totalCalls: <InfoCell title={`${getTotalCalls(campaign?.statistic)}`} />,
-      onCallAgents: <InfoCell title={`${campaign?.statistic?.oncall_agents}`} />,
-      waitingClients: <InfoCell title={`${campaign?.statistic?.waiting_clients}`} />,
-      ringingClients: <InfoCell title={`${campaign?.statistic?.ringing_clients}`} />,
+      totalCalls: (
+        <InfoCell title={`${getTotalCalls(campaign?.statistic)}`} highlightZero />
+      ),
+      onlineAgents: (
+        <InfoCell title={`${campaign?.statistic?.online_agents}`} highlightZero />
+      ),
+      onCallAgents: (
+        <InfoCell title={`${campaign?.statistic?.oncall_agents}`} highlightZero />
+      ),
+      waitingClients: (
+        <InfoCell title={`${campaign?.statistic?.waiting_clients}`} highlightZero />
+      ),
+      ringingClients: (
+        <InfoCell title={`${campaign?.statistic?.ringing_clients}`} highlightZero />
+      ),
       edit: (
         <IconButton
           onClick={() => handleEditCampaign(campaign.id)}
