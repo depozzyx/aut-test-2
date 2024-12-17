@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react'
 import { useFormik } from 'formik'
-import { shallowEqual } from 'react-redux'
+import { shallowEqual, useStore } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import useTranslation from 'next-translate/useTranslation'
 import debounce from 'lodash/debounce'
@@ -29,7 +29,12 @@ import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSel
 import { modes, coefficients, campaignSettingKeys } from '@/constants/settings'
 import { TFormik } from '@peiko/types/formik'
 import { useSettings } from '@/features/settings/hooks/useSettings'
-import { reviewFormData } from '../../../../../store/create-campaign'
+import {
+  reset,
+  reviewFormData,
+  selectFormDataForReview,
+} from '@/features/campaigns/store/create-campaign'
+import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
 import {
   INITIAL_REQUEST_PARAMS_CREATE,
@@ -38,8 +43,10 @@ import {
 
 export const CreateCampaignForm = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
-  const { resetModals } = useModals()
+  const { resetModals, modalState } = useModals()
   const { select, dispatch } = useRedux()
+  const formDataForReview = select(selectFormDataForReview, shallowEqual)
+  const store = useStore()
 
   const {
     leadsPagination: { page: leadsPage, limit: leadsLimit, total: leadsTotal },
@@ -81,19 +88,47 @@ export const CreateCampaignForm = (): JSX.Element => {
   }
 
   useEffect(() => {
-    getSettings(formik)
-    dispatch(resetLeadsList())
-    dispatch(resetAgentsList())
-    Promise.all([
-      dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_CREATE)),
-      dispatch(
-        asyncGetLeadListCatalog({
-          ...INITIAL_REQUEST_PARAMS_CREATE,
-          withoutCampaigns: true,
-        }),
-      ),
-    ])
-  }, [])
+    if (!formDataForReview) {
+      getSettings(formik)
+      dispatch(resetLeadsList())
+      dispatch(resetAgentsList())
+      Promise.all([
+        dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_CREATE)),
+        dispatch(
+          asyncGetLeadListCatalog({
+            ...INITIAL_REQUEST_PARAMS_CREATE,
+            withoutCampaigns: true,
+          }),
+        ),
+      ])
+    }
+  }, [formDataForReview])
+
+  useEffect(() => {
+    if (
+      formDataForReview &&
+      modalState?.isOpen &&
+      modalState?.modalName === MODAL_NAMES.CREATE_CAMPAIGN
+    ) {
+      const { name, mode, coefficient, holdTime, leadListIds } = formDataForReview
+      formik.setFieldValue('name', name)
+      formik.setFieldValue('mode', mode)
+      formik.setFieldValue('coefficient', coefficient)
+      formik.setFieldValue('holdTime', holdTime)
+      const assignedAgentIds = store.getState().createCampaign.formData?.assignedAgentIds
+      if (assignedAgentIds.length) {
+        formik.setFieldValue('assignedAgentIds', assignedAgentIds)
+      }
+      formik.setFieldValue('leadListIds', leadListIds)
+    } else {
+      dispatch(reset())
+    }
+  }, [formDataForReview])
+
+  const handleCancel = () => {
+    dispatch(reset())
+    resetModals()
+  }
 
   const onLeadsScrollToBottom = useCallback(
     debounce(() => {
@@ -201,7 +236,7 @@ export const CreateCampaignForm = (): JSX.Element => {
           />
         </Flex>
         <Flex align="center" justify="center" gap={24}>
-          <OutlinedButton onClick={resetModals} width="202px">
+          <OutlinedButton onClick={handleCancel} width="202px">
             {t('create-campaign.cancel')}
           </OutlinedButton>
           <FilledButton
