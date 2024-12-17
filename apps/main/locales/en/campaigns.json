@@ -26,7 +26,8 @@
     "edit": "Edit",
     "delete": "Delete",
     "total-calls": "Total Calls",
-    "on-call-agents": "Agents On Call ",
+    "online-agents": "Online Agents",
+    "on-call-agents": "Agents On Call",
     "waiting-clients": "Waiting Clients",
     "ringing-clients": "Ringing Clients"
   },

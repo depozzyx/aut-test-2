@@ -9,6 +9,7 @@ export type TCampaignStatus = 'active' | 'pause' | 'complete'
 
 export type StatisticsTypeResponse = {
   oncall_agents: number
+  online_agents: number
   ringing_clients: number
   waiting_clients: number
 }

@@ -122,12 +122,6 @@ export const useMenuLinks = (): TMenuItem[] => {
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
         },
         {
-          title: t('create_agent'),
-          link: ROUTES.CREATE_AGENT,
-          disabled: false,
-          availableRoles: [ERoles.MANAGER],
-        },
-        {
           title: t('agents_calls'),
           link: ROUTES.AGENT_CALLS,
           disabled: false,

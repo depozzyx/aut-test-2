@@ -9,7 +9,10 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { validation } from '@/utils/validation'
 import { useRedux } from '@/hooks/use-redux'
 import { Snackbar } from '@/components/Snackbar'
-import { asyncCreateAgent, selectCreateAgentsIsLoading } from './store/create-agent'
+import {
+  asyncCreateAgent,
+  selectCreateAgentsIsLoading,
+} from '@/features/agents/store/create-agent'
 
 const FormikCheckbox = dynamic(
   () =>
@@ -31,7 +34,7 @@ const FormikInput = dynamic(
   },
 )
 
-export const CreateAgent = (): JSX.Element => {
+export const CreateNewAgentForm = (): JSX.Element => {
   const [showMessage, setShowMessage] = useState(true)
   const { t } = useTranslation('agents')
   const { select, dispatch } = useRedux()

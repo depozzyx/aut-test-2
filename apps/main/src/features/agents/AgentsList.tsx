@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
-import { useRouter } from 'next/router'
 import { shallowEqual } from 'react-redux'
 import { useUnmount } from 'react-use'
 import dynamic from 'next/dynamic'
@@ -10,9 +9,11 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
 import { useRedux } from '@/hooks/use-redux'
-import { ROUTES } from '@/constants/routes'
 import { FeaturePermission } from '@/features/common/permissions/FeaturePermissions'
 import { EManagerPermissions } from '@/constants/profile'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
+import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { CreateNewAgentModal } from '@/features/agents/containers/modals/CreateNewAgentModal'
 import {
   Container,
   Panel,
@@ -52,9 +53,9 @@ const CampaignInfoModal = dynamic(
 )
 
 export const AgentsList = (): JSX.Element => {
-  const router = useRouter()
   const { t } = useTranslation('agents')
   const { select, dispatch } = useRedux()
+  const { setModal } = useModals()
 
   const {
     pagination: { total, page, limit },
@@ -69,8 +70,8 @@ export const AgentsList = (): JSX.Element => {
     shallowEqual,
   )
 
-  const goToCreateAgentPage = () => {
-    router.push(ROUTES.CREATE_AGENT)
+  const openCreateNewAgentModal = () => {
+    setModal({ modalName: MODAL_NAMES.CREATE_AGENT, isOpen: true })
   }
 
   useEffect(() => {
@@ -114,7 +115,7 @@ export const AgentsList = (): JSX.Element => {
               maxWidth="236px"
               width="100%"
               startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
-              onClick={goToCreateAgentPage}
+              onClick={openCreateNewAgentModal}
             >
               {t('add-agent')}
             </FilledButton>
@@ -134,6 +135,7 @@ export const AgentsList = (): JSX.Element => {
       <DeleteAgentModal />
       <EditAgentModal />
       <CampaignInfoModal />
+      <CreateNewAgentModal />
     </>
   )
 }

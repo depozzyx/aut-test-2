@@ -67,7 +67,7 @@ export const ActiveCampaigns = (): JSX.Element => {
     pagination: { page, total, limit },
     filters,
     handlerResetFilters,
-  } = useCampaignsManager(asyncGetActiveCampaigns)
+  } = useCampaignsManager(asyncGetActiveCampaigns, 5000)
 
   const reviewModalIsOpen =
     modalState?.modalName === MODAL_NAMES.REVIEW_CAMPAIGN && modalState.isOpen

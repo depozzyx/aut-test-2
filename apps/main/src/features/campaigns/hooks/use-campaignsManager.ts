@@ -45,7 +45,10 @@ type TCampaignThunk = (
   params: TActiveCampaignsReq,
 ) => ThunkAction<void, TRootState, unknown, AnyAction>
 
-export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
+export const useCampaignsManager = (
+  fetcher: TCampaignThunk,
+  refetchTimeout?: number,
+): TReturn => {
   const { select, dispatch } = useRedux()
   const { setModal } = useModals()
 
@@ -68,7 +71,7 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
     shallowEqual,
   )
 
-  useEffect(() => {
+  const fetchWithParams = () => {
     const currentParams = {
       page,
       limit,
@@ -82,6 +85,32 @@ export const useCampaignsManager = (fetcher: TCampaignThunk): TReturn => {
     }
 
     dispatch(fetcher(currentParams))
+  }
+
+  useEffect(() => {
+    if (refetchTimeout) {
+      const interval = setInterval(() => {
+        fetchWithParams()
+      }, refetchTimeout)
+
+      return () => clearInterval(interval)
+    }
+  }, [
+    refetchTimeout,
+    dispatch,
+    page,
+    limit,
+    orderBy,
+    searchTerm,
+    filterCampaignName,
+    filterStatus,
+    filterDate,
+    sortBy,
+    fetcher,
+  ])
+
+  useEffect(() => {
+    fetchWithParams()
   }, [
     dispatch,
     page,
