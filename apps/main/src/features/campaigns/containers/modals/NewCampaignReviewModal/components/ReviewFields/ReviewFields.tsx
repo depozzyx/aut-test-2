@@ -9,7 +9,6 @@ import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import {
   selectFormDataForReview,
-  reset,
   asyncCreateCampaign,
 } from '@/features/campaigns/store/create-campaign'
 import { TCampaignTableType } from '@/features/campaigns/types'
@@ -26,7 +25,6 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
   const formDataForReview = select(selectFormDataForReview, shallowEqual)
 
   const handleBack = () => {
-    dispatch(reset())
     setModal({ modalName: MODAL_NAMES.CREATE_CAMPAIGN, isOpen: true })
   }
 
