@@ -140,12 +140,6 @@ export const useMenuLinks = (): TMenuItem[] => {
           disabled: false,
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
         },
-        {
-          title: t('create_manager'),
-          link: ROUTES.CREATE_MANAGER,
-          disabled: false,
-          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
-        },
       ],
     },
     {

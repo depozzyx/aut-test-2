@@ -23,5 +23,4 @@ export const ROUTES = {
   SETTINGS_ACTIVITY_LOG_GENERAL: '/cabinet/settings/activity-log/general',
   SETTINGS_ACTIVITY_LOG_CAMPAIGN: '/cabinet/settings/activity-log/campaign',
   MANAGERS_LIST: '/cabinet/managers/list',
-  CREATE_MANAGER: '/cabinet/managers/create',
 }

@@ -1,16 +1,16 @@
 import { useCallback } from 'react'
 import useTranslation from 'next-translate/useTranslation'
-import { useRouter } from 'next/router'
 import { useUnmount } from 'react-use'
 import dynamic from 'next/dynamic'
 import { shallowEqual } from 'react-redux'
 
 import { useRedux } from '@/hooks/use-redux'
-import { ROUTES } from '@/constants/routes'
 import { Flex } from '@/components/Flex'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
+import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { ManagerListTable } from './containers/ManagerListTable'
 import { reset, selectPagination, setPagination } from './store/managers'
 
@@ -21,15 +21,23 @@ const EditManagerModal = dynamic(
   },
 )
 
+const CreateNewManagerModal = dynamic(
+  () =>
+    import('./containers/CreateNewManagerModal').then((mod) => mod.CreateNewManagerModal),
+  {
+    ssr: false,
+  },
+)
+
 export const ManagersList = (): JSX.Element => {
   const { t } = useTranslation('managers')
-  const router = useRouter()
   const { select, dispatch } = useRedux()
+  const { setModal } = useModals()
 
   const { total, page, limit } = select(selectPagination, shallowEqual)
 
-  const navigateToAddManager = () => {
-    router.replace(ROUTES.CREATE_MANAGER)
+  const addManager = () => {
+    setModal({ modalName: MODAL_NAMES.CREATE_MANAGER, isOpen: true })
   }
 
   const handleChangePage = useCallback((newPage) => {
@@ -55,7 +63,7 @@ export const ManagersList = (): JSX.Element => {
             maxWidth="236px"
             width="100%"
             startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
-            onClick={navigateToAddManager}
+            onClick={addManager}
           >
             {t('add-manager')}
           </FilledButton>
@@ -72,6 +80,7 @@ export const ManagersList = (): JSX.Element => {
         </Flex>
       </Flex>
       <EditManagerModal />
+      <CreateNewManagerModal />
     </>
   )
 }

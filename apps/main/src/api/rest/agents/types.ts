@@ -43,7 +43,7 @@ export type TAgentsReq = {
   orderBy: TOrderBy
   workStatus?: TAgentWorkStatus
   search?: string
-  sort?: TAgentSortBy
+  sortBy?: TAgentSortBy
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TAgentCampaignStatus = {

@@ -21,6 +21,7 @@ import { TCampaign } from '@/features/campaigns/types'
 import { apiAgents } from '@/api-rest/agents'
 import { palette } from '@peiko/styles/palette'
 import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
+import countryCodeLookup from 'country-code-lookup'
 import { CallButton } from './components/CallButton/CallButton'
 import { CallWindow } from './components/CallWindow'
 import { useSIPService } from './hooks/useSIPService'
@@ -133,7 +134,6 @@ export const Calls: FC = () => {
           const campaignId = campaignsData[0].id
           if (campaignId) {
             dispatch(setSelectedCampaignId(String(campaignId)))
-            // dispatch(agentActions.setStatusAsync('start'))
             onSubscribeCampaignStatus(String(campaignId))
             return campaignId
           }
@@ -207,6 +207,11 @@ export const Calls: FC = () => {
     if (length > 12) return 5
   }
 
+  const getCountryName = (code: string) => {
+    const c = countryCodeLookup.countries.find((c) => c.iso2 === code)
+    return c?.country
+  }
+
   return (
     <>
       <Flex justify="center" align="center" styles={{ flex: 1 }}>
@@ -259,6 +264,16 @@ export const Calls: FC = () => {
                     </div>
                   ))}
                 </div>
+              </Flex>
+              <Flex justify="center" direction="row" margin="32px 0 0">
+                <Flex align="start" direction="column">
+                  <Text>
+                    {`${t('lead')}: `} {lead.lead.name}
+                  </Text>
+                  <Text>
+                    {`${t('country')}: `} {getCountryName(lead.leadCountryCode)}
+                  </Text>
+                </Flex>
               </Flex>
             </Card>
           )}
