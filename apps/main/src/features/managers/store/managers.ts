@@ -1,9 +1,12 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { TSelector } from '@/store'
+import { TAsyncAction, TSelector } from '@/store'
 import { ORDER_BY } from '@/constants/orderBy'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { TPagination } from '@/types/entities/pagination'
-import { TManager, TManagerSortBy } from '@/api-rest/manager/types'
+import { TManager, TManagerSortBy, TManagersReq } from '@/api-rest/manager/types'
+import { managerApi } from '@/api-rest/manager'
+import { modalsActions } from '@/features/common/modals'
+import { handleRestError } from '@/features/common/error'
 import { SORT_BY } from '../constants'
 
 export type TInit = {
@@ -78,3 +81,19 @@ export const selectSelectedId = createSelector(
 )
 
 export default managers.reducer
+
+export const asyncGetManagerList =
+  (params: TManagersReq, onsuccess?: () => void): TAsyncAction =>
+  async (dispatch) => {
+    try {
+      dispatch(setIsLoading(true))
+      const { data } = await managerApi.getManagers(params)
+      dispatch(setManagersList(data.data))
+      dispatch(modalsActions.resetModalsState())
+      onsuccess?.()
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    } finally {
+      dispatch(setIsLoading(false))
+    }
+  }

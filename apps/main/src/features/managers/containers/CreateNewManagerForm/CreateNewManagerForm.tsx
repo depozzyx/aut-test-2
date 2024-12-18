@@ -6,9 +6,13 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { validation } from '@/utils/validation'
 import { useRedux } from '@/hooks/use-redux'
-import { asyncCreateManager, selectCreateManagerIsLoading } from './store/create-manager'
+import {
+  asyncCreateManager,
+  selectCreateManagerIsLoading,
+} from '@/features/managers/store/create-manager'
+import { asyncGetManagerList } from '@/features/managers/store/managers'
 
-export const CreateManager = (): JSX.Element => {
+export const CreateNewManagerForm = (): JSX.Element => {
   const { t } = useTranslation('managers')
   const { select, dispatch } = useRedux()
   const isLoading = select(selectCreateManagerIsLoading)
@@ -25,7 +29,18 @@ export const CreateManager = (): JSX.Element => {
       password: validation.password,
     }),
     onSubmit: (formData) => {
-      dispatch(asyncCreateManager({ formData, formik }))
+      dispatch(
+        asyncCreateManager({ formData, formik }, () =>
+          dispatch(
+            asyncGetManagerList({
+              page: 1,
+              limit: 8,
+              orderBy: 'DESC',
+              sortBy: 'createdAt',
+            }),
+          ),
+        ),
+      )
     },
   })
 

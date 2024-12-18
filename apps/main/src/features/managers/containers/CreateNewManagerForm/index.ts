@@ -1,0 +1,1 @@
+export { CreateNewManagerForm } from './CreateNewManagerForm'

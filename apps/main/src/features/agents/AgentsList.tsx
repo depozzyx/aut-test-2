@@ -13,7 +13,6 @@ import { FeaturePermission } from '@/features/common/permissions/FeaturePermissi
 import { EManagerPermissions } from '@/constants/profile'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { CreateNewAgentModal } from '@/features/agents/containers/modals/CreateNewAgentModal'
 import {
   Container,
   Panel,
@@ -47,6 +46,16 @@ const EditAgentModal = dynamic(
 const CampaignInfoModal = dynamic(
   () =>
     import('./containers/modals/CampaignInfoModal').then((mod) => mod.CampaignInfoModal),
+  {
+    ssr: false,
+  },
+)
+
+const CreateNewAgentModal = dynamic(
+  () =>
+    import('./containers/modals/CreateNewAgentModal').then(
+      (mod) => mod.CreateNewAgentModal,
+    ),
   {
     ssr: false,
   },
@@ -86,18 +95,19 @@ export const AgentsList = (): JSX.Element => {
     )
   }, [limit, sortBy, orderBy, statusFilter])
 
+  const fetchAgentsList = (newPage?: number) =>
+    dispatch(
+      asyncGetAgentsList({
+        page: newPage || 1,
+        limit: limit ?? 8,
+        orderBy,
+        workStatus: statusFilter,
+        ...(sortBy && { sortBy }),
+      }),
+    )
+
   const handleChangePage = useCallback(
-    (newPage) => {
-      dispatch(
-        asyncGetAgentsList({
-          page: newPage,
-          limit: limit ?? 8,
-          orderBy,
-          workStatus: statusFilter,
-          ...(sortBy && { sortBy }),
-        }),
-      )
-    },
+    (newPage) => fetchAgentsList(newPage),
     [sortBy, orderBy, statusFilter],
   )
 

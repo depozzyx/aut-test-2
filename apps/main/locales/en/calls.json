@@ -11,6 +11,7 @@
   "onCompleteCampaignMessage": "Your lead queue for calls is empty. Thank you for your work!",
   "campaign": "Campaign",
   "lead": "Lead",
+  "country": "Country",
   "phone": "Phone",
   "timezone": "Timezone",
   "status": "Status",

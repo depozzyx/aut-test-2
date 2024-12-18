@@ -6,6 +6,7 @@ import { managerApi } from '@/api-rest/manager'
 import { handleRestError } from '@/features/common/error'
 import { notificationActions } from '@/features/common/notifications/store'
 import { TFormPropsAsync } from '@peiko/types/formik'
+import { modalsActions } from '@/features/common/modals'
 
 export type TInit = {
   isLoading: boolean
@@ -48,12 +49,15 @@ export const selectCreatedManagerData = createSelector(
 export default createManager.reducer
 
 export const asyncCreateManager =
-  ({
-    formData,
-    formik,
-  }: TFormPropsAsync<TPostManagerReq> & {
-    formik?: FormikHelpers<TPostManagerReq>
-  }): TAsyncAction =>
+  (
+    {
+      formData,
+      formik,
+    }: TFormPropsAsync<TPostManagerReq> & {
+      formik?: FormikHelpers<TPostManagerReq>
+    },
+    onsuccess?: () => void,
+  ): TAsyncAction =>
   async (dispatch) => {
     try {
       dispatch(setIsLoading(true))
@@ -68,6 +72,8 @@ export const asyncCreateManager =
         }),
       )
       formik?.resetForm()
+      dispatch(modalsActions.resetModalsState())
+      onsuccess?.()
     } catch (e) {
       handleRestError({ e, dispatch, formik })
     } finally {

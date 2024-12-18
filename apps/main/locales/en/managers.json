@@ -12,6 +12,7 @@
   },
   "sort-by": "Sort By",
   "create-manager": {
+    "title": "Create new Manager",
     "email": "Email",
     "username": "User Name",
     "password": "Password",

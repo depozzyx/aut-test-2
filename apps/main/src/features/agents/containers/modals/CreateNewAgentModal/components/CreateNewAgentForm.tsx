@@ -13,6 +13,7 @@ import {
   asyncCreateAgent,
   selectCreateAgentsIsLoading,
 } from '@/features/agents/store/create-agent'
+import { asyncGetAgentsList } from '@/features/agents/store/agents'
 
 const FormikCheckbox = dynamic(
   () =>
@@ -60,7 +61,18 @@ export const CreateNewAgentForm = (): JSX.Element => {
     },
     validationSchema,
     onSubmit: (formData) => {
-      dispatch(asyncCreateAgent({ formData, formik }))
+      dispatch(
+        asyncCreateAgent({ formData, formik }, () =>
+          dispatch(
+            asyncGetAgentsList({
+              page: 1,
+              limit: 8,
+              orderBy: 'DESC',
+              sortBy: 'createdAt',
+            }),
+          ),
+        ),
+      )
     },
   })
 
