@@ -24,7 +24,9 @@
       "delete": "{{value1}} deleted api key"
     },
     "lead": {
-      "import-lead": "{{value1}} imported leads"
+      "import-lead": "{{value1}} imported leads",
+      "update": "{{value1}} updated lead",
+      "delete": "{{value1}} deleted lead"
     },
     "default": "Unknown message"
   },

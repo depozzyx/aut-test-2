@@ -65,6 +65,10 @@ export const useCreateLogMessage = (): {
         switch (actionType) {
           case 'import-lead':
             return message(userName)
+          case 'update':
+            return message(userName, targetUser?.username ?? '')
+          case 'delete':
+            return message(userName, targetUser?.username ?? '')
           default:
             return unknownMessage
         }

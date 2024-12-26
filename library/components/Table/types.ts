@@ -129,4 +129,5 @@ export type TTableProps<R, H> = {
    * */
   buttonCollapse?: TRenderElement<TButtonCollapseProps>
   minHeight?: string
+  maxHeight?: string
 }

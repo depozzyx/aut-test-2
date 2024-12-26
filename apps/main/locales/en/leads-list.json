@@ -9,7 +9,34 @@
     "campaign": "Campaign",
     "lead-source": "Source",
     "createNewList": "Create new list",
-    "select": "Select lead list"
+    "select": "Select lead list",
+    "view": "View"
+  },
+  "view-lead": {
+    "title": "Lead",
+    "fields": {
+      "name": "name",
+      "status": "status",
+      "timezone": "timezone",
+      "phone": "phone",
+      "source": "source",
+      "campaign": "campaign",
+      "lastCallAt": "last call",
+      "country": "country"
+    },
+    "placeholders": {
+      "name": "name",
+      "status": "status"
+    },
+    "logs": {
+      "date": "Date",
+      "oldStatus": "Old Status",
+      "newStatus": "New Status",
+      "user": "User"
+    },
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete lead"
   },
   "statuses": {
     "active": "ACTIVE",
