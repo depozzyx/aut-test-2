@@ -21,7 +21,7 @@ import { TCampaign } from '@/features/campaigns/types'
 import { apiAgents } from '@/api-rest/agents'
 import { palette } from '@peiko/styles/palette'
 import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
-import countryCodeLookup from 'country-code-lookup'
+import { getCountryName } from '@/features/campaigns/utils/getCountryByCode'
 import { CallButton } from './components/CallButton/CallButton'
 import { CallWindow } from './components/CallWindow'
 import { useSIPService } from './hooks/useSIPService'
@@ -205,11 +205,6 @@ export const Calls: FC = () => {
     if (length <= 9) return 3
     if (length > 9) return 4
     if (length > 12) return 5
-  }
-
-  const getCountryName = (code: string) => {
-    const c = countryCodeLookup.countries.find((c) => c.iso2 === code)
-    return c?.country
   }
 
   return (

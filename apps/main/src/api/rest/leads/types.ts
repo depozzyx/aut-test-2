@@ -60,3 +60,45 @@ export type TUpsertCustomStatusReq = {
   name: string
   value: string
 }
+
+export type TLeadStatusLog = {
+  id: number
+  createdAt: string
+  details: Record<string, Record<string, string>>
+  user: { username: string }
+}
+
+export type TLeadData = {
+  id: number
+  name: string
+  phone: string
+  timezone: string
+  status: string
+  source: string
+  leadListId?: number
+  createdAt: Date
+  updatedAt: Date
+  deletedAt: Date
+  leadList: {
+    is: number
+    campaign: {
+      id: number
+      name: string
+    }
+  }
+  countryCode: string
+  lastCallAt: string
+  logs: TLeadStatusLog[]
+  leadData?: TLeadData
+}
+
+export type TUpdateLeadReq = {
+  name?: string
+  status?: string
+  timezone?: string
+}
+
+export type TLeadRes = {
+  statusCode: TGeneratedSuccessStatuses
+  data: TLeadData
+}

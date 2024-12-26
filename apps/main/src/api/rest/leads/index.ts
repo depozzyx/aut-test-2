@@ -12,6 +12,8 @@ import {
   TLeadCustomStatusRes,
   TLeadStatusRes,
   TUpsertCustomStatusReq,
+  TLeadRes,
+  TUpdateLeadReq,
 } from './types'
 
 const importLeads = (
@@ -49,6 +51,14 @@ const updateCustomStatus = (
 const deleteCustomStatus = (id: number): TAxiosResponse<TLeadCustomStatusRes> =>
   api.delete(`/leads/statuses/custom/${id}`)
 
+const getLead = (id: number): TAxiosResponse<TLeadRes> => api.get(`/leads/${id}`)
+
+const updateLead = (id: number, body: TUpdateLeadReq): TAxiosResponse<TLeadRes> =>
+  api.patch(`/leads/${id}`, body)
+
+const deleteLead = (id: number): TAxiosResponse<TLeadCustomStatusRes> =>
+  api.delete(`/leads/${id}`)
+
 export const leadsApi = {
   importLeads,
   leadsList,
@@ -58,4 +68,7 @@ export const leadsApi = {
   createCustomStatus,
   updateCustomStatus,
   deleteCustomStatus,
+  getLead,
+  updateLead,
+  deleteLead,
 }

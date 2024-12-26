@@ -75,7 +75,7 @@ export const ImportLeads: FC = () => {
             <CreateLeads />
           </Box>
           <Box styles={{ marginTop: '8px' }}>
-            <LeadsListTable />
+            <LeadsListTable reFetch={() => onChangePage(page)} />
           </Box>
           <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
             <Pagination
