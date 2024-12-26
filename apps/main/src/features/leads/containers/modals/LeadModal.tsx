@@ -280,13 +280,13 @@ export const LeadModal = ({
             {t('view-lead.save')}
           </FilledButton>
         </Flex>
-        {!!leadData.logs.length && (
+        {!!leadData.logs?.length && (
           <Flex width="100%">
             <LeadStatusLogTable logs={leadData.logs} />
           </Flex>
         )}
         <FilledButton
-          styles={{ marginBottom: leadData.logs.length ? '-24px' : '0' }}
+          styles={{ marginBottom: leadData.logs?.length ? '-24px' : '0' }}
           onClick={handleDelete}
         >
           {t('view-lead.delete')}
