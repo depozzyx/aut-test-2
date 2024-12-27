@@ -242,7 +242,11 @@ export const Calls: FC = () => {
               maxWidth="max-content"
             >
               <Text variant="f2">{t('newCall')}</Text>
-              <Flex justify="center" direction="row">
+              <Flex
+                justify="center"
+                direction="row"
+                styles={{ marginTop: '24px', marginBottom: '24px' }}
+              >
                 <Flex align="start" direction="column">
                   <Text>
                     {`${t('lead')}: `} {lead.lead.name}
@@ -252,7 +256,7 @@ export const Calls: FC = () => {
                   </Text>
                 </Flex>
               </Flex>
-              <Flex justify="center" styles={{ marginTop: '48px' }}>
+              <Flex justify="center">
                 <div
                   style={{
                     display: 'grid',
