@@ -47,7 +47,7 @@ export const UserData: FC = () => {
 
   return (
     <Card
-      margin="32px 0 40px"
+      margin="32px 0 0"
       maxWidth="980px"
       padding="24px 61px"
       styles={{ width: '100%' }}
@@ -78,17 +78,15 @@ export const UserData: FC = () => {
             placeholder={t('changeName.username')}
             {...agentInputProps}
           />
-          {!isAgent && (
-            <FilledButton
-              size="s"
-              styles={{ marginLeft: '24px', marginTop: '22px' }}
-              width="134px"
-              type="submit"
-              isLoading={formik.isSubmitting}
-            >
-              {t('changeName.save')}
-            </FilledButton>
-          )}
+          <FilledButton
+            size="s"
+            styles={{ marginLeft: '24px', marginTop: '22px' }}
+            width="134px"
+            type="submit"
+            isLoading={formik.isSubmitting}
+          >
+            {t('changeName.save')}
+          </FilledButton>
         </Box>
       </form>
     </Card>

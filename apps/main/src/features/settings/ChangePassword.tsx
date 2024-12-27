@@ -32,7 +32,11 @@ export const ChangePassword: FC = () => {
   })
 
   return (
-    <Card maxWidth="980px" padding="24px 61px" styles={{ width: '100%' }}>
+    <Card
+      maxWidth="980px"
+      padding="24px 61px"
+      styles={{ width: '100%', marginTop: '40px' }}
+    >
       <CardTile>{t('changePassword.title')}</CardTile>
       <form onSubmit={formik.handleSubmit}>
         <Box

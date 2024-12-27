@@ -22,6 +22,7 @@ import { apiAgents } from '@/api-rest/agents'
 import { palette } from '@peiko/styles/palette'
 import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
 import { getCountryName } from '@/features/campaigns/utils/getCountryByCode'
+import { useStore } from 'react-redux'
 import { CallButton } from './components/CallButton/CallButton'
 import { CallWindow } from './components/CallWindow'
 import { useSIPService } from './hooks/useSIPService'
@@ -44,6 +45,7 @@ export const Calls: FC = () => {
   const { t } = useTranslation('calls')
 
   const { dispatch, select } = useRedux()
+  const store = useStore()
   const { pbxStatus, checkCampaignId } = select(agentStatusSelector)
   const [callDuration, setCallDuration] = useState(0)
   const { connect, disconnect, ua, endCall, lead, endedCall, setEndedCall, setLead } =
@@ -72,15 +74,30 @@ export const Calls: FC = () => {
       setCampaignCompleted(true)
     }
   }
+
+  const onCompleteCampaign = () => {
+    console.warn('run oncomplete callback')
+    dispatch(agentActions.setStatusAsync('finish'))
+    checkIfAllCampaignsCompleted()
+    dispatch(setSelectedCampaignId(null))
+  }
+
+  const [completed, setCompleted] = useState(false)
+
   const onSubscribeCampaignStatus = (campaignId: string) => {
     campaignSocket.campaignStatusUpdate(
       {
         id: SUBSCRIBE_CAMPAIGN_STATUS,
         callback: (e) => {
           if (e.status === 'complete') {
-            dispatch(agentActions.setStatusAsync('finish'))
-            checkIfAllCampaignsCompleted()
-            dispatch(setSelectedCampaignId(null))
+            const { status } = store.getState().agentStatus.pbxStatus
+            console.warn({ status })
+            if (status === 'pause') {
+              console.warn('set completed callback')
+              setCompleted(true)
+            } else if (status !== 'offline') {
+              onCompleteCampaign()
+            }
             onUnsubscribeCampaignStatus()
           }
         },
@@ -179,6 +196,10 @@ export const Calls: FC = () => {
         dispatch(agentActions.setStatusAsync('pause', 'hold'))
         setTimeout(() => {
           dispatch(agentActions.setStatusAsync('unpause'))
+          if (completed) {
+            onCompleteCampaign()
+            setCompleted(false)
+          }
         }, holdTimeSec * 1000)
       }
     } catch (e) {
@@ -221,6 +242,16 @@ export const Calls: FC = () => {
               maxWidth="max-content"
             >
               <Text variant="f2">{t('newCall')}</Text>
+              <Flex justify="center" direction="row">
+                <Flex align="start" direction="column">
+                  <Text>
+                    {`${t('lead')}: `} {lead.lead.name}
+                  </Text>
+                  <Text>
+                    {`${t('country')}: `} {getCountryName(lead.leadCountryCode)}
+                  </Text>
+                </Flex>
+              </Flex>
               <Flex justify="center" styles={{ marginTop: '48px' }}>
                 <div
                   style={{
@@ -259,16 +290,6 @@ export const Calls: FC = () => {
                     </div>
                   ))}
                 </div>
-              </Flex>
-              <Flex justify="center" direction="row" margin="32px 0 0">
-                <Flex align="start" direction="column">
-                  <Text>
-                    {`${t('lead')}: `} {lead.lead.name}
-                  </Text>
-                  <Text>
-                    {`${t('country')}: `} {getCountryName(lead.leadCountryCode)}
-                  </Text>
-                </Flex>
               </Flex>
             </Card>
           )}
