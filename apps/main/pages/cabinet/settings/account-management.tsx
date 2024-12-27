@@ -9,6 +9,7 @@ import { ERoles } from '@/constants/profile'
 import { agentActions, agentStatusSelector } from '@/features/common/agentStatus/store'
 import { useRedux } from '@/hooks/use-redux'
 import { useAuth } from '@/features/common/user'
+import { USER_ROLES } from '@/types/roles'
 
 const AccountManagementPage: NextPage = () => {
   const { t } = useTranslation('routing')
@@ -31,7 +32,7 @@ const AccountManagementPage: NextPage = () => {
   return (
     <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER, ERoles.AGENT]}>
       <CabinetLayout title={t('settings_account_management')}>
-        <UserData />
+        {user?.role !== USER_ROLES.AGENT && <UserData />}
         <ChangePassword />
       </CabinetLayout>
     </Permissions>
