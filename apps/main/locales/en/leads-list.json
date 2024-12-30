@@ -18,6 +18,7 @@
       "campaignName": "Campaign Name",
       "campaignStatus": "Campaign Status",
       "lastCallDate": "Last Call",
+      "actions": "Actions",
       "view": "View",
       "edit": "Edit",
       "delete": "Delete"
