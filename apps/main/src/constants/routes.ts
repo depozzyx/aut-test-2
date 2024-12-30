@@ -13,6 +13,7 @@ export const ROUTES = {
   AGENTS_LIST: '/cabinet/agents/list',
   AGENTS_ANALYTICS: '/cabinet/agents/analytics',
   AGENT_CALLS: '/cabinet/agents/calls',
+  LEADS: '/cabinet/leads',
   LEADS_LIST: '/cabinet/leads/list',
   IMPORT_LEADS: '/cabinet/leads/import',
   IMPORT_LEADS_INSTRUCTIONS: '/cabinet/leads/import-instructions',

@@ -7,7 +7,7 @@ import { useUnmount } from 'react-use'
 
 import { Pagination } from '@peiko/components/Pagination'
 import { Box } from '@peiko/components/Box'
-import { LeadsListTable } from './containers/LeadsListTable'
+import { LeadsTable } from './containers/LeadsTable'
 import {
   getLeadList,
   getLeadsGroups,
@@ -26,7 +26,7 @@ const CreateLeadsGroup = dynamic(
   },
 )
 
-export const LeadsList: FC = () => {
+export const Leads: FC = () => {
   const { select, dispatch } = useRedux()
   const [secondMount, setSecondMount] = useState(false)
 
@@ -48,7 +48,7 @@ export const LeadsList: FC = () => {
   )
 
   useEffect(() => {
-    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy: 'DESC' }))
+    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy }))
   }, [])
 
   useEffect(() => {
@@ -65,12 +65,12 @@ export const LeadsList: FC = () => {
   }, [leadsGroup])
 
   const onChangePage = (page: number) =>
-    dispatch(getLeadList({ page, limit, orderBy: 'DESC', leadListId: leadsGroup }))
+    dispatch(getLeadList({ page, limit, orderBy, leadListId: leadsGroup }))
 
   return (
     <>
       <Box styles={{ marginTop: '24px' }}>
-        <LeadsListTable reFetch={() => onChangePage(page)} />
+        <LeadsTable reFetch={() => onChangePage(page)} />
       </Box>
       <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
         <Pagination

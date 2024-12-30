@@ -6,13 +6,14 @@ import { Box } from '@peiko/components/Box'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import dynamic from 'next/dynamic'
-import { LeadsListTable } from './containers/LeadsListTable'
+import { LeadsTable } from './containers/LeadsTable'
 import {
   getLeadList,
   getLeadsGroups,
   reset,
   selectLeadsGroup,
   selectLeadsGroupPagination,
+  selectLeadsOrderBy,
   selectLeadsPagination,
   selectLeadsSortBy,
 } from './store/leads'
@@ -35,35 +36,35 @@ export const ImportLeads: FC = () => {
     groupsPagination,
     leadsGroup,
     sortBy,
+    orderBy,
   } = select(
     createStructuredSelector({
       pagination: selectLeadsPagination,
       groupsPagination: selectLeadsGroupPagination,
       leadsGroup: selectLeadsGroup,
       sortBy: selectLeadsSortBy,
+      orderBy: selectLeadsOrderBy,
     }),
     shallowEqual,
   )
 
   useEffect(() => {
-    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy: 'DESC' }))
+    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy }))
   }, [])
 
   useUnmount(() => dispatch(reset()))
 
   const onImportSubmit = () => {
     setStep('list')
-    dispatch(getLeadList({ page, limit, orderBy: 'DESC', leadListId: leadsGroup }))
+    dispatch(getLeadList({ page, limit, orderBy, leadListId: leadsGroup }))
   }
 
   const onChangePage = (page: number) =>
-    dispatch(getLeadList({ page, limit, orderBy: 'DESC', leadListId: leadsGroup }))
+    dispatch(getLeadList({ page, limit, orderBy, leadListId: leadsGroup }))
 
   useEffect(() => {
     if (leadsGroup && step === 'list')
-      dispatch(
-        getLeadList({ page, limit, orderBy: 'DESC', leadListId: leadsGroup, sortBy }),
-      )
+      dispatch(getLeadList({ page, limit, orderBy, leadListId: leadsGroup, sortBy }))
   }, [leadsGroup, sortBy])
 
   return (
@@ -75,7 +76,7 @@ export const ImportLeads: FC = () => {
             <CreateLeads />
           </Box>
           <Box styles={{ marginTop: '8px' }}>
-            <LeadsListTable reFetch={() => onChangePage(page)} />
+            <LeadsTable reFetch={() => onChangePage(page)} />
           </Box>
           <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
             <Pagination

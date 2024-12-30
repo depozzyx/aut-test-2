@@ -91,6 +91,12 @@ export const useMenuLinks = (): TMenuItem[] => {
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
         },
         {
+          title: t('leads'),
+          link: ROUTES.LEADS,
+          disabled: false,
+          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+        },
+        {
           title: t('import_leads'),
           link: ROUTES.IMPORT_LEADS,
           disabled: false,

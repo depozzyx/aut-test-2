@@ -10,7 +10,26 @@
     "lead-source": "Source",
     "createNewList": "Create new list",
     "select": "Select lead list",
-    "view": "View"
+    "view": "View",
+    "list": {
+      "id": "№",
+      "name": "Name",
+      "leadCount": "Leads",
+      "campaignName": "Campaign Name",
+      "campaignStatus": "Campaign Status",
+      "lastCallDate": "Last Call",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete"
+    }
+  },
+  "view-lead-list": {
+    "title": "Lead list",
+    "name": "Name",
+    "campaignName": "Campaign name",
+    "campaignStatus": "Campaign status",
+    "leadCount": "Leads",
+    "lastCallDate": "Last call"
   },
   "view-lead": {
     "title": "Lead",

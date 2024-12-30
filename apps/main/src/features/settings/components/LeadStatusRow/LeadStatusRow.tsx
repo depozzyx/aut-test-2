@@ -65,8 +65,7 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
       <Input
         name="value"
         readOnly={editableItem.isSystem || !isEditing}
-        maxWidth="374px"
-        width="100%"
+        width="174px"
         size="s"
         placeholder={t('change-lead-settings.status.valuePlaceholder')}
         onChange={(v) => handleChange('value', v)}
@@ -75,8 +74,7 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
       <Input
         name="name"
         readOnly={editableItem.isSystem || !isEditing}
-        maxWidth="374px"
-        width="100%"
+        width="174px"
         size="s"
         placeholder={t('change-lead-settings.status.namePlaceholder')}
         onChange={(v) => handleChange('name', v)}
