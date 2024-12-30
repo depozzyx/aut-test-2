@@ -1,0 +1,52 @@
+import React, { FC, useEffect } from 'react'
+
+import { Box } from '@peiko/components/Box'
+import { LeadListTable } from '@/features/leads/containers/LeadListTable'
+import { useRedux } from '@/hooks/use-redux'
+import { asyncGetLeadLists } from '@/features/leads/store/lead-list'
+import { createStructuredSelector } from 'reselect'
+import {
+  selectLeadsOrderBy,
+  selectLeadsPagination,
+  selectLeadsSortBy,
+} from '@/features/leads/store/leads'
+import { shallowEqual } from 'react-redux'
+import { Pagination } from '@peiko/components/Pagination/Pagination'
+
+export const LeadList: FC = () => {
+  const { dispatch, select } = useRedux()
+
+  const {
+    pagination: { total, page, limit },
+    orderBy,
+    sortBy,
+  } = select(
+    createStructuredSelector({
+      pagination: selectLeadsPagination,
+      sortBy: selectLeadsSortBy,
+      orderBy: selectLeadsOrderBy,
+    }),
+    shallowEqual,
+  )
+
+  useEffect(() => {
+    dispatch(asyncGetLeadLists({ page, limit, orderBy, sortBy }))
+  }, [orderBy, sortBy])
+
+  const onChangePage = (page: number) =>
+    dispatch(asyncGetLeadLists({ page, limit, orderBy, sortBy }))
+  return (
+    <>
+      <Box styles={{ marginTop: '24px' }}>
+        <LeadListTable reFetch={() => onChangePage(page)} />
+      </Box>
+      <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
+        <Pagination
+          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
+          currentPage={page}
+          onChange={onChangePage}
+        />
+      </Box>
+    </>
+  )
+}

@@ -35,7 +35,8 @@ module.exports = {
     '/cabinet/agents/list': ['user', 'routing', 'agents', 'campaigns'],
     '/cabinet/agents/create': ['user', 'routing', 'agents'],
     '/cabinet/agents/analytics': ['user', 'routing', 'agents'],
-    '/cabinet/leads/list': ['user', 'routing', 'validation', 'leads-list'],
+    '/cabinet/leads/list': ['user', 'routing', 'validation', 'leads-list', 'campaigns'],
+    '/cabinet/leads': ['user', 'routing', 'validation', 'leads-list'],
     '/cabinet/leads/import': [
       'user',
       'routing',
