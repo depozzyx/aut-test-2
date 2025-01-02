@@ -1,7 +1,6 @@
 import React from 'react'
 
 import useTranslation from 'next-translate/useTranslation'
-import { InfoCell } from '@/features/managers/components/InfoCell'
 import { TLeadCallStatusStatisticRawData } from '@/api-rest/lead-list/types'
 import { Text } from '@peiko/components/Text'
 import { useTheme } from 'styled-components'
@@ -68,7 +67,7 @@ export const LeadListCallStatisticTable = ({
           >
             {columns.map(({ key }) => (
               <div key={key} style={{ flex: key === 'status' ? 2 : 1, padding: '8px' }}>
-                <InfoCell title={item[key as keyof typeof item]} />
+                <Text>{item[key as keyof typeof item]}</Text>
               </div>
             ))}
           </div>
@@ -78,7 +77,6 @@ export const LeadListCallStatisticTable = ({
             display: 'flex',
             alignItems: 'center',
             width: '100%',
-            fontWeight: 'bold',
             backgroundColor: `${theme.palette.base2}`,
             borderBottom: `1px solid ${theme.palette.main22}`,
           }}
