@@ -4,6 +4,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { InfoCell } from '@/features/managers/components/InfoCell'
 import { TLeadCallStatusStatisticRawData } from '@/api-rest/lead-list/types'
 import { Text } from '@peiko/components/Text'
+import { useTheme } from 'styled-components'
 
 export const LeadListCallStatisticTable = ({
   data,
@@ -11,6 +12,8 @@ export const LeadListCallStatisticTable = ({
   data: TLeadCallStatusStatisticRawData
 }): JSX.Element => {
   const { t } = useTranslation('leads-list')
+
+  const theme = useTheme()
 
   const columns: { label: string; key: string }[] = [
     { label: t('view-lead-list.statistic.statusCode'), key: 'statusCode' },
@@ -31,7 +34,7 @@ export const LeadListCallStatisticTable = ({
         style={{
           display: 'flex',
           width: '100%',
-          background: '#28587B',
+          background: theme.palette.main4,
           color: 'white',
           borderRadius: '5px',
         }}
@@ -60,7 +63,7 @@ export const LeadListCallStatisticTable = ({
               display: 'flex',
               alignItems: 'center',
               width: '100%',
-              borderBottom: '1px solid #ccc',
+              borderBottom: `1px solid ${theme.palette.main22}`,
             }}
           >
             {columns.map(({ key }) => (
@@ -76,8 +79,8 @@ export const LeadListCallStatisticTable = ({
             alignItems: 'center',
             width: '100%',
             fontWeight: 'bold',
-            backgroundColor: '#f5f5f5',
-            borderBottom: '1px solid #ccc',
+            backgroundColor: `${theme.palette.base2}`,
+            borderBottom: `1px solid ${theme.palette.main22}`,
           }}
         >
           <div style={{ flex: 1, padding: '8px' }}>
@@ -102,10 +105,10 @@ export const LeadListCallStatisticTable = ({
             display: 'flex',
             alignItems: 'center',
             width: '100%',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: `${theme.palette.base2}`,
             borderBottomLeftRadius: '5px',
             borderBottomRightRadius: '5px',
-            borderBottom: '1px solid #ccc',
+            borderBottom: `1px solid ${theme.palette.main22}`,
           }}
         >
           <div style={{ flex: 1, padding: '8px' }}>
