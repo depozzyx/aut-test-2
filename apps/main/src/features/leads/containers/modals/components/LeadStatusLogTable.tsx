@@ -3,9 +3,11 @@ import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { TLeadStatusLog } from '@/api-rest/leads/types'
 import { InfoCell } from '@/features/managers/components/InfoCell'
 import React from 'react'
+import { useTheme } from 'styled-components'
 
 export const LeadStatusLogTable = ({ logs }: { logs: TLeadStatusLog[] }): JSX.Element => {
   const { t } = useTranslation('leads-list')
+  const theme = useTheme()
 
   const columns: { label: string; key: string }[] = [
     { label: t('view-lead.logs.date'), key: 'date' },
@@ -34,7 +36,7 @@ export const LeadStatusLogTable = ({ logs }: { logs: TLeadStatusLog[] }): JSX.El
         style={{
           display: 'flex',
           width: '100%',
-          background: '#28587B',
+          background: theme.palette.main4,
           color: 'white',
           borderRadius: '5px',
         }}
@@ -61,7 +63,7 @@ export const LeadStatusLogTable = ({ logs }: { logs: TLeadStatusLog[] }): JSX.El
             style={{
               display: 'flex',
               width: '100%',
-              borderBottom: '1px solid #ccc',
+              borderBottom: `1px solid ${theme.palette.main22}`,
             }}
           >
             {columns.map(({ key }) => (

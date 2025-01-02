@@ -20,6 +20,7 @@ import { handleRestError } from '@/features/common/error'
 import { useRedux } from '@/hooks/use-redux'
 import { timezones } from '@/features/leads/containers/modals/index'
 import { selectLeadStatuses } from '@/features/leads/store/leads'
+import { useTheme } from 'styled-components'
 import { LeadStatusLogTable } from './components/LeadStatusLogTable'
 
 type Field = {
@@ -49,6 +50,8 @@ export const LeadModal = ({
   onClose: () => void
 }): JSX.Element => {
   const { t } = useTranslation('leads-list')
+  const theme = useTheme()
+
   const { modalState, resetModals } = useModals()
   const { dispatch, select } = useRedux()
 
@@ -192,7 +195,7 @@ export const LeadModal = ({
               <Flex
                 key={key}
                 styles={{
-                  borderBottom: '1px solid #ccc',
+                  borderBottom: `1px solid ${theme.palette.main22}`,
                 }}
               >
                 <Flex justify="start" align="center" width="35%" padding="8px">

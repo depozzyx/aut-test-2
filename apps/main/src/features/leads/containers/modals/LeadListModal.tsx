@@ -11,10 +11,11 @@ import {
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text/Text'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
-import { LeadListCallStatisticTable } from '@/features/leads/containers/modals/components/LeadListCallStatisticTable'
 import { apiLeadList } from '@/api-rest/lead-list'
 import { handleRestError } from '@/features/common/error'
 import { useRedux } from '@/hooks/use-redux'
+import { useTheme } from 'styled-components'
+import { LeadListCallStatisticTable } from './components/LeadListCallStatisticTable'
 
 export const LeadListModal = ({
   leadListData,
@@ -24,6 +25,8 @@ export const LeadListModal = ({
   onClose: () => void
 }): JSX.Element => {
   const { t } = useTranslation('leads-list')
+  const theme = useTheme()
+
   const { t: campaign } = useTranslation('campaigns')
 
   const { modalState, resetModals } = useModals()
@@ -102,7 +105,7 @@ export const LeadListModal = ({
                 display: 'flex',
                 width: '100%',
                 padding: '8px 0',
-                borderBottom: '1px solid #ccc',
+                borderBottom: `1px solid ${theme.palette.main22}`,
               }}
             >
               <Flex
