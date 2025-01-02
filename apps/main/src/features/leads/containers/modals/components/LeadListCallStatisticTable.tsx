@@ -49,12 +49,14 @@ export const LeadListCallStatisticTable = ({
               paddingRight: '16px',
             }}
           >
-            <span>{label}</span>
+            <Text variant="f10" color="base">
+              {label}
+            </Text>
           </div>
         ))}
       </div>
 
-      <div style={{ overflowY: 'scroll' }}>
+      <div style={{ maxHeight: '260px', overflowY: 'scroll' }}>
         {data.data.map((item) => (
           <div
             key={item.statusCode}
@@ -67,7 +69,7 @@ export const LeadListCallStatisticTable = ({
           >
             {columns.map(({ key }) => (
               <div key={key} style={{ flex: key === 'status' ? 2 : 1, padding: '8px' }}>
-                <Text>{item[key as keyof typeof item]}</Text>
+                <Text variant="f8">{item[key as keyof typeof item]}</Text>
               </div>
             ))}
           </div>
@@ -82,20 +84,14 @@ export const LeadListCallStatisticTable = ({
           }}
         >
           <div style={{ flex: 1, padding: '8px' }}>
-            <Text variant="f8" styles={{ lineHeight: '22px' }}>
-              {t('view-lead-list.statistic.subtotals')}
-            </Text>
+            <Text variant="f8">{t('view-lead-list.statistic.subtotals')}</Text>
           </div>
           <div style={{ flex: 2, padding: '8px' }} />
           <div style={{ flex: 1, padding: '8px', justifyItems: 'start' }}>
-            <Text variant="f8" styles={{ lineHeight: '22px' }}>
-              {data.subtotal.called}
-            </Text>
+            <Text variant="f8">{data.subtotal.called}</Text>
           </div>
           <div style={{ flex: 1, padding: '8px', justifyItems: 'start' }}>
-            <Text variant="f8" styles={{ lineHeight: '22px' }}>
-              {data.subtotal.notCalled}
-            </Text>
+            <Text variant="f8">{data.subtotal.notCalled}</Text>
           </div>
         </div>
         <div
@@ -110,12 +106,12 @@ export const LeadListCallStatisticTable = ({
           }}
         >
           <div style={{ flex: 1, padding: '8px' }}>
-            <Text variant="f8" styles={{ lineHeight: '22px', fontWeight: 'bold' }}>
+            <Text variant="f8" styles={{ fontWeight: 'bold' }}>
               {t('view-lead-list.statistic.total')}
             </Text>
           </div>
           <div style={{ flex: 1, padding: '8px', justifyItems: 'start' }}>
-            <Text variant="f8" styles={{ lineHeight: '22px', fontWeight: 'bold' }}>
+            <Text variant="f8" styles={{ fontWeight: 'bold' }}>
               {data.total}
             </Text>
           </div>

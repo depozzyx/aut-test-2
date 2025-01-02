@@ -1,9 +1,11 @@
+import React from 'react'
+
 import useTranslation from 'next-translate/useTranslation'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { TLeadStatusLog } from '@/api-rest/leads/types'
 import { InfoCell } from '@/features/managers/components/InfoCell'
-import React from 'react'
 import { useTheme } from 'styled-components'
+import { Text } from '@peiko/components/Text'
 
 export const LeadStatusLogTable = ({ logs }: { logs: TLeadStatusLog[] }): JSX.Element => {
   const { t } = useTranslation('leads-list')
@@ -49,9 +51,12 @@ export const LeadStatusLogTable = ({ logs }: { logs: TLeadStatusLog[] }): JSX.El
               justifyContent: 'flex-start',
               alignItems: 'center',
               padding: '8px',
+              marginRight: '20px',
             }}
           >
-            <span style={{ marginRight: '20px' }}>{label}</span>
+            <Text variant="f10" color="base">
+              {label}
+            </Text>
           </div>
         ))}
       </div>

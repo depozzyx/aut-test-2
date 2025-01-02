@@ -199,7 +199,7 @@ export const LeadModal = ({
                 }}
               >
                 <Flex justify="start" align="center" width="35%" padding="8px">
-                  <Text>{t(`view-lead.fields.${key}`)}</Text>
+                  <Text variant="f8">{t(`view-lead.fields.${key}`)}</Text>
                 </Flex>
                 <Flex justify="start" align="center" width="45%">
                   {fields[typedKey].isEditing && key === 'timezone' && (
@@ -234,7 +234,9 @@ export const LeadModal = ({
                       onChange={(e) => handleInputChange(typedKey, e)}
                     />
                   )}
-                  {!fields[typedKey].isEditing && <Text>{fields[typedKey].value}</Text>}
+                  {!fields[typedKey].isEditing && (
+                    <Text variant="f8">{fields[typedKey].value}</Text>
+                  )}
                 </Flex>
                 <Flex justify="end" align="center" width="20%">
                   {fields[typedKey].isEditable && fields[typedKey].isEditing && (

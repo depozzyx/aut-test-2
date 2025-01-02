@@ -23,7 +23,10 @@ import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { handleRestError } from '@/features/common/error'
 import { apiLeadList } from '@/api-rest/lead-list'
 import { StatusChip } from '@/features/campaigns/components/StatusChip'
-import { TLeadListData } from '@/api-rest/lead-list/types'
+import {
+  TLeadCallStatusStatisticRawData,
+  TLeadListData,
+} from '@/api-rest/lead-list/types'
 import { InfoColumn } from '../../components/InfoColumn'
 
 type TLeadListRowKeys =
@@ -59,6 +62,20 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
 
   const [leadList, setLeadList] = useState<TLeadListData>()
 
+  const [leadListCallStatisticData, setLeadListCallStatisticData] =
+    useState<TLeadCallStatusStatisticRawData>()
+
+  const getStatData = async (id: number) => {
+    try {
+      const { data } = await apiLeadList.getLeadListCallStatistic(id)
+      if (data?.data) {
+        setLeadListCallStatisticData(data.data)
+      }
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    }
+  }
+
   // const getLeadList = async (id: number) => {
   //   try {
   //     const { data } = await apiLeadList.getLeadList(id)
@@ -74,6 +91,7 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
     const targetLeadList = data.find((list) => list.id === id)
     if (targetLeadList) {
       setLeadList(targetLeadList)
+      await getStatData(id)
       setModal({ modalName: MODAL_NAMES.VIEW_LEAD_LIST, isOpen: true })
     }
   }
@@ -174,7 +192,11 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
         headerCell={(props) => <HeaderCell {...props} whiteSpace="nowrap" />}
       />
       {isViewModalOpen && leadList && (
-        <LeadListModal onClose={reFetch} leadListData={leadList} />
+        <LeadListModal
+          onClose={reFetch}
+          leadListData={leadList}
+          stats={leadListCallStatisticData}
+        />
       )}
     </>
   )
