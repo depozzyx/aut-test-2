@@ -30,7 +30,15 @@
     "campaignName": "Campaign name",
     "campaignStatus": "Campaign status",
     "leadCount": "Leads",
-    "lastCallDate": "Last call"
+    "lastCallDate": "Last call",
+    "statistic": {
+      "statusCode": "Status",
+      "status": "Status Name",
+      "called": "Called",
+      "notCalled": "Not Called",
+      "subtotals": "Subtotals",
+      "total": "Total"
+    }
   },
   "view-lead": {
     "title": "Lead",

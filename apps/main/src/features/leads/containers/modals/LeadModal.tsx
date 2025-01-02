@@ -20,7 +20,7 @@ import { handleRestError } from '@/features/common/error'
 import { useRedux } from '@/hooks/use-redux'
 import { timezones } from '@/features/leads/containers/modals/index'
 import { selectLeadStatuses } from '@/features/leads/store/leads'
-import { LeadStatusLogTable } from './LeadStatusLogTable'
+import { LeadStatusLogTable } from './components/LeadStatusLogTable'
 
 type Field = {
   isEditable: boolean

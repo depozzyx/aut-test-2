@@ -46,13 +46,25 @@ export type TLeadListsRes = {
   }
 }
 
-export type TLeadListItemData = {
-  id: number
+export type LeadCallStatusStatisticData = {
+  status: string
+  statusCode: string
+  called: number
+  notCalled: number
 }
 
-export type TLeadListRes = {
+export type TLeadCallStatusStatisticRawData = {
+  data: LeadCallStatusStatisticData[]
+  subtotal: {
+    called: number
+    notCalled: number
+  }
+  total: number
+}
+
+export type TLeadCallStatusStatisticRes = {
+  data: TLeadCallStatusStatisticRawData
   statusCode: TGeneratedSuccessStatuses
-  data: TLeadListItemData
 }
 
 export type TDeleteLeadListRes = {
