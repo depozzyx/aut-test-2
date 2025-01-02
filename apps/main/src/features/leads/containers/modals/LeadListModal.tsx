@@ -1,13 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import useTranslation from 'next-translate/useTranslation'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
-import { TLeadListData } from '@/api-rest/lead-list/types'
+import {
+  TLeadCallStatusStatisticRawData,
+  TLeadListData,
+} from '@/api-rest/lead-list/types'
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text/Text'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
+import { LeadListCallStatisticTable } from '@/features/leads/containers/modals/components/LeadListCallStatisticTable'
+import { apiLeadList } from '@/api-rest/lead-list'
+import { handleRestError } from '@/features/common/error'
+import { useRedux } from '@/hooks/use-redux'
 
 export const LeadListModal = ({
   leadListData,
@@ -20,7 +27,7 @@ export const LeadListModal = ({
   const { t: campaign } = useTranslation('campaigns')
 
   const { modalState, resetModals } = useModals()
-  // const { dispatch, select } = useRedux()
+  const { dispatch } = useRedux()
 
   const onCloseModal = () => {
     resetModals()
@@ -45,6 +52,25 @@ export const LeadListModal = ({
       value: leadListData.lastCallDate && formatCreatedAt(leadListData.lastCallDate),
     },
   ]
+
+  const [leadListCallStatisticData, setLeadListCallStatisticData] =
+    useState<TLeadCallStatusStatisticRawData>()
+
+  const getStatData = async (id: number) => {
+    try {
+      const { data } = await apiLeadList.getLeadListCallStatistic(id)
+      if (data?.data) {
+        setLeadListCallStatisticData(data.data)
+      }
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    }
+  }
+  useEffect(() => {
+    if (showModal) {
+      getStatData(leadListData.id)
+    }
+  }, [showModal])
 
   return (
     <ModalMessage
@@ -75,7 +101,7 @@ export const LeadListModal = ({
               styles={{
                 display: 'flex',
                 width: '100%',
-                padding: '10px 0',
+                padding: '8px 0',
                 borderBottom: '1px solid #ccc',
               }}
             >
@@ -98,6 +124,11 @@ export const LeadListModal = ({
             </Flex>
           ))}
         </Flex>
+        {leadListCallStatisticData && (
+          <Flex styles={{ marginTop: '40px', width: '100%' }}>
+            <LeadListCallStatisticTable data={leadListCallStatisticData} />
+          </Flex>
+        )}
       </Flex>
     </ModalMessage>
   )

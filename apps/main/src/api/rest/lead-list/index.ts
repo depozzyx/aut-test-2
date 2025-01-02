@@ -2,9 +2,9 @@ import { api } from '../instance'
 import { TAxiosResponse } from '../types'
 import {
   TDeleteLeadListRes,
+  TLeadCallStatusStatisticRes,
   TLeadListCatalogReq,
   TLeadListCatalogRes,
-  TLeadListRes,
   TLeadListsReq,
   TLeadListsRes,
 } from './types'
@@ -16,11 +16,12 @@ const getLeadListCatalog = (
 const getLeadLists = (params: TLeadListsReq): TAxiosResponse<TLeadListsRes> =>
   api.get('/lead-list/list', { params })
 
-const getLeadList = (id: number): TAxiosResponse<TLeadListRes> =>
-  api.get(`/lead-list/${id}`)
+const getLeadListCallStatistic = (
+  id: number,
+): TAxiosResponse<TLeadCallStatusStatisticRes> =>
+  api.get(`/lead-list/${id}/calls-statistic`)
 
-const updateLeadList = (id: number): TAxiosResponse<TLeadListRes> =>
-  api.patch(`/lead-list/${id}`)
+// const updateLeadList = (id: number): TAxiosResponse<any> => api.patch(`/lead-list/${id}`)
 
 const deleteLeadList = (id: number): TAxiosResponse<TDeleteLeadListRes> =>
   api.delete(`/lead-list/${id}`)
@@ -28,7 +29,7 @@ const deleteLeadList = (id: number): TAxiosResponse<TDeleteLeadListRes> =>
 export const apiLeadList = {
   getLeadListCatalog,
   getLeadLists,
-  getLeadList,
-  updateLeadList,
+  getLeadListCallStatistic,
+  // updateLeadList,
   deleteLeadList,
 }
