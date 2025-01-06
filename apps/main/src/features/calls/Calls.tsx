@@ -241,7 +241,7 @@ export const Calls: FC = () => {
               styles={{ textAlign: 'center' }}
               maxWidth="max-content"
             >
-              <Text variant="f2">{t('newCall')}</Text>
+              <Text variant="f2">{t('feedback')}</Text>
               <Flex
                 justify="center"
                 direction="row"

@@ -7,7 +7,6 @@ import { Flex } from '@/components/Flex'
 import { DashboardTabs } from '@/components/DashboardTabs'
 import { Pagination } from '@peiko/components/Pagination'
 import { CAMPAIGN_TABLE_TYPES, FILTER_TYPE } from '@/features/campaigns/constants'
-import { RangeDayPicker } from '@/inputs/RangeDayPicker'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { useCampaignUpdates } from '@/features/campaigns/hooks/use-active-campaigns-update'
@@ -63,7 +62,7 @@ export const ActiveCampaigns = (): JSX.Element => {
 
   const {
     handleChangePage,
-    handleChangeDate,
+    // handleChangeDate,
     pagination: { page, total, limit },
     filters,
     handlerResetFilters,
@@ -82,7 +81,7 @@ export const ActiveCampaigns = (): JSX.Element => {
           <Flex gap={16} align="center" width="100%" padding="0 16px 0 0">
             <CampaignSearchField placeholder={t('inputs:placeholder.search-campaign')} />
             <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
-            <RangeDayPicker onChange={handleChangeDate} />
+            {/* <RangeDayPicker onChange={handleChangeDate} /> */}
           </Flex>
         </Flex>
         <Flex
