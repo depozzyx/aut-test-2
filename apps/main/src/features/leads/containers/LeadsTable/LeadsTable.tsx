@@ -17,11 +17,13 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { leadsApi } from '@/api-rest/leads'
 import { handleRestError } from '@/features/common/error'
 import dynamic from 'next/dynamic'
+import { getLeadStatus } from '@/features/leads/containers/LeadsTable'
 import { InfoColumn } from '../../components/InfoColumn'
 import {
   getLeadStatuses,
   selectIsLoading,
   selectLeadsList,
+  selectLeadStatuses,
   setLeadsSortBy,
 } from '../../store/leads'
 import { LeadsSelect } from '../LeadsSelect'
@@ -59,6 +61,8 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
     dispatch(getLeadStatuses())
   }, [dispatch])
 
+  const leadStatuses = select(selectLeadStatuses)
+
   const [leadData, setLeadData] = useState<TLeadData>()
 
   const getLeadData = async (id: number): Promise<boolean> => {
@@ -66,6 +70,7 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
     setLeadData(undefined)
     const { data } = response
     if (data?.data) {
+      data.data.status = getLeadStatus(leadStatuses, data.data.status)
       setLeadData(data.data)
       return true
     }
@@ -161,9 +166,9 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
       name: <InfoColumn title={lead.name} />,
       phone: <InfoColumn title={lead.phone} />,
       timezone: <InfoColumn title={lead.timezone} />,
-      status: <InfoColumn title={lead?.status} />,
+      status: <InfoColumn title={getLeadStatus(leadStatuses, lead?.status)} />,
       source: <InfoColumn title={lead.source} />,
-      campaign: <InfoColumn title={lead.leadList.campaign?.name} />,
+      campaign: <InfoColumn title={lead?.leadList?.campaign?.name} />,
       view: (
         <IconButton onClick={() => handleView(lead.id)} iconColor="main3">
           <EyeIcon width="24px" height="24px" />
