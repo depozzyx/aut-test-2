@@ -2,12 +2,19 @@ import React from 'react'
 
 import useTranslation from 'next-translate/useTranslation'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
-import { TLeadStatusLog } from '@/api-rest/leads/types'
+import { TLeadStatusData, TLeadStatusLog } from '@/api-rest/leads/types'
 import { InfoCell } from '@/features/managers/components/InfoCell'
 import { useTheme } from 'styled-components'
 import { Text } from '@peiko/components/Text'
+import { getLeadStatus } from '@/features/leads/containers/LeadsTable'
 
-export const LeadStatusLogTable = ({ logs }: { logs: TLeadStatusLog[] }): JSX.Element => {
+export const LeadStatusLogTable = ({
+  logs,
+  leadStatuses,
+}: {
+  logs: TLeadStatusLog[]
+  leadStatuses: TLeadStatusData[]
+}): JSX.Element => {
   const { t } = useTranslation('leads-list')
   const theme = useTheme()
 
@@ -21,8 +28,8 @@ export const LeadStatusLogTable = ({ logs }: { logs: TLeadStatusLog[] }): JSX.El
   const data = logs.map((log) => ({
     id: log.id,
     date: formatCreatedAt(log.createdAt),
-    oldStatus: log.details.status.old,
-    newStatus: log.details.status.new,
+    oldStatus: getLeadStatus(leadStatuses, log.details.status.old),
+    newStatus: getLeadStatus(leadStatuses, log.details.status.new),
     user: log.user.username,
   }))
 

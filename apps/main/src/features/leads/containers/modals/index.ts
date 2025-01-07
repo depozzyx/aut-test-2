@@ -16,7 +16,7 @@ export const timezones = [
   'UTC-03:00',
   'UTC-02:00',
   'UTC-01:00',
-  'UTC±00:00',
+  'UTC+00:00',
   'UTC+01:00',
   'UTC+02:00',
   'UTC+03:00',

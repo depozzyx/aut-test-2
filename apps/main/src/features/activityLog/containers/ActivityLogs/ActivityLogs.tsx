@@ -74,7 +74,11 @@ export const ActivityLogs: FC<{
                 <Flex direction="column" gap="18px" styles={{ flex: '1' }}>
                   {data.map((log) => (
                     <Flex key={log.id} fullWidth justify="space-between" align="center">
-                      <Text variant="f8" color="main5">
+                      <Text
+                        variant="f8"
+                        color="main5"
+                        styles={{ justifyContent: 'center' }}
+                      >
                         {createLogMessage(log)}
                       </Text>
                       <Text variant="f10" color="main22">

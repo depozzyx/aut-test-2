@@ -9,6 +9,7 @@ import { Box } from '@peiko/components/Box'
 import { Flex } from '@/components/Flex'
 import { useRedux } from '@/hooks/use-redux'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
+import { getLeadStatuses } from '@/features/leads/store/leads'
 import { ActivityTabs } from './containers/ActivityTabs'
 import { useFilters } from './hooks/useFilters'
 import { ActivityLogs } from './containers/ActivityLogs'
@@ -77,6 +78,10 @@ export const GeneralLog: FC = () => {
     const { limit } = managerPagination
     getManagers({ page: 1, limit, orderBy: 'DESC' })
   }, [])
+
+  useEffect(() => {
+    dispatch(getLeadStatuses())
+  }, [dispatch])
 
   const onExport = () => {
     setModal({ modalName: MODAL_NAMES.EXPORT_ACTIVITY_LOGS, isOpen: true })

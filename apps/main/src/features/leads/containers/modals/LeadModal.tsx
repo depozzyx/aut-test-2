@@ -214,9 +214,9 @@ export const LeadModal = ({
                   {fields[typedKey].isEditing && key === 'status' && (
                     <Select
                       name={key}
-                      options={leadStatuses.map((status) => ({
-                        label: status.name,
-                        value: status.name,
+                      options={leadStatuses.map(({ name: label, value }) => ({
+                        label,
+                        value,
                       }))}
                       value={fields[key].value}
                       width="100%"
@@ -287,7 +287,7 @@ export const LeadModal = ({
         </Flex>
         {!!leadData.logs?.length && (
           <Flex width="100%">
-            <LeadStatusLogTable logs={leadData.logs} />
+            <LeadStatusLogTable logs={leadData.logs} leadStatuses={leadStatuses} />
           </Flex>
         )}
         <FilledButton
