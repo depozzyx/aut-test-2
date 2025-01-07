@@ -1,10 +1,48 @@
 import { TActivityLog } from '@/types/activity-logs'
 import useTranslation from 'next-translate/useTranslation'
+import { getLeadStatus } from '@/features/leads/containers/LeadsTable'
+import { selectLeadStatuses } from '@/features/leads/store/leads'
+import { useRedux } from '@/hooks/use-redux'
+
+const detailedMessage = (
+  id: number,
+  details: TActivityLog['details'],
+  mapper: Record<string, string>,
+  formatter: Record<string, (value: string) => string>,
+): string =>
+  Object.keys(details).length
+    ? `${id ? ` (id ${id})` : ''} - ${Object.keys(details)
+        .map((key) =>
+          formatter[key]
+            ? `${mapper[key]}: ${formatter[key](details[key].old)} > ${formatter[key](
+                details[key].new,
+              )}`
+            : `${mapper[key]}: ${details[key].old} > ${details[key].new}`,
+        )
+        .join('; ')}`
+    : ''
 
 export const useCreateLogMessage = (): {
   createLogMessage: (log: TActivityLog) => string
 } => {
   const { t } = useTranslation('activity-log')
+  const { select } = useRedux()
+
+  const leadStatuses = select(selectLeadStatuses)
+
+  const keyMaps = {
+    lead: {
+      name: t(`logs.lead.keys.name`),
+      status: t(`logs.lead.keys.status`),
+      timezone: t(`logs.lead.keys.timezone`),
+    },
+  }
+
+  const formatters = {
+    lead: {
+      status: (statusCode: string) => getLeadStatus(leadStatuses, statusCode),
+    },
+  }
 
   const createLogMessage = ({
     user,
@@ -12,6 +50,8 @@ export const useCreateLogMessage = (): {
     targetUser,
     actionType,
     entityType,
+    details,
+    entityId,
   }: TActivityLog): string => {
     const unknownMessage = t('logs.default')
     const userName = user.role === 'admin' ? t('admin') : user.username ?? ''
@@ -66,7 +106,10 @@ export const useCreateLogMessage = (): {
           case 'import-lead':
             return message(userName)
           case 'update':
-            return message(userName, targetUser?.username ?? '')
+            return (
+              message(userName, targetUser?.username ?? '') +
+              detailedMessage(entityId, details, keyMaps.lead, formatters.lead)
+            )
           case 'delete':
             return message(userName, targetUser?.username ?? '')
           default:
@@ -76,5 +119,6 @@ export const useCreateLogMessage = (): {
         return unknownMessage
     }
   }
+
   return { createLogMessage }
 }

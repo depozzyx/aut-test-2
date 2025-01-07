@@ -26,7 +26,12 @@
     "lead": {
       "import-lead": "{{value1}} imported leads",
       "update": "{{value1}} updated lead",
-      "delete": "{{value1}} deleted lead"
+      "delete": "{{value1}} deleted lead",
+      "keys": {
+        "name": "name",
+        "status": "status",
+        "timezone": "timezone"
+      }
     },
     "default": "Unknown message"
   },

@@ -24,6 +24,7 @@ export type TActivityLog = {
   id: number
   actionType: TEntityActions
   entityType: TEntityType
+  entityId: number
   details: {
     [key in string]: { [key in string]: string }
   }
