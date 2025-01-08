@@ -33,6 +33,26 @@ export const LeadStatusLogTable = ({
     user: log.user.username,
   }))
 
+  const getColumnFlexWidth = (key: string) =>
+    key.toLowerCase().includes('status') ? 2 : 1
+
+  const renderEmptyTable = () => (
+    <div
+      key={0}
+      style={{
+        display: 'flex',
+        width: '100%',
+        borderBottom: `1px solid ${theme.palette.main22}`,
+      }}
+    >
+      <div style={{ justifyItems: 'center', flex: 4 }}>
+        <Text variant="f5" color="main4">
+          {t('view-lead.logs.noLogs')}
+        </Text>
+      </div>
+    </div>
+  )
+
   return (
     <div
       style={{
@@ -54,11 +74,11 @@ export const LeadStatusLogTable = ({
           <div
             key={key}
             style={{
-              flex: 1,
+              flex: getColumnFlexWidth(key),
               justifyContent: 'flex-start',
               alignItems: 'center',
               padding: '8px',
-              marginRight: '20px',
+              marginRight: '2px',
             }}
           >
             <Text variant="f10" color="base">
@@ -67,8 +87,8 @@ export const LeadStatusLogTable = ({
           </div>
         ))}
       </div>
-
       <div style={{ maxHeight: '150px', overflowY: 'scroll' }}>
+        {data.length === 0 && renderEmptyTable()}
         {data.map((item) => (
           <div
             key={item.id}
@@ -79,7 +99,13 @@ export const LeadStatusLogTable = ({
             }}
           >
             {columns.map(({ key }) => (
-              <div key={key} style={{ flex: 1, padding: '8px' }}>
+              <div
+                key={key}
+                style={{
+                  flex: getColumnFlexWidth(key),
+                  padding: '8px',
+                }}
+              >
                 <InfoCell title={item[key as keyof typeof item]} />
               </div>
             ))}

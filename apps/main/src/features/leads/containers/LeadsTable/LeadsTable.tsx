@@ -70,7 +70,6 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
     setLeadData(undefined)
     const { data } = response
     if (data?.data) {
-      data.data.status = getLeadStatus(leadStatuses, data.data.status)
       setLeadData(data.data)
       return true
     }

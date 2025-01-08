@@ -33,6 +33,15 @@
         "timezone": "timezone"
       }
     },
+    "lead-list": {
+      "create": "{{value1}} created lead list",
+      "update": "{{value1}} updated lead list",
+      "delete": "{{value1}} deleted lead list",
+      "keys": {
+        "name": "name",
+        "leadIds": "lead ids"
+      }
+    },
     "default": "Unknown message"
   },
   "filters": {

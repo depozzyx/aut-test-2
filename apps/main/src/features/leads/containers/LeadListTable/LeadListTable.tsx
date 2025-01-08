@@ -8,7 +8,7 @@ import { THeader } from '@peiko/components/Table/types'
 import { useRedux } from '@/hooks/use-redux'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
-import { ELeadsSortBy } from '@/api-rest/leads/types'
+import { ELeadsSortBy, TLeadOption } from '@/api-rest/leads/types'
 import { HeaderWithSort } from '@/components/HeaderWithSort'
 import { IconButton } from '@peiko/components/buttons/IconButton/IconButton'
 import { EyeIcon } from '@peiko/components/icons/EyeIcon'
@@ -27,6 +27,7 @@ import {
   TLeadCallStatusStatisticRawData,
   TLeadListData,
 } from '@/api-rest/lead-list/types'
+import { leadsApi } from '@/api-rest/leads'
 import { InfoColumn } from '../../components/InfoColumn'
 
 type TLeadListRowKeys =
@@ -42,6 +43,13 @@ type TLeadListRowKeys =
 
 const LeadListModal = dynamic(
   () => import('../modals').then((mod) => mod.LeadListModal),
+  {
+    ssr: false,
+  },
+)
+
+const EditLeadListModal = dynamic(
+  () => import('../modals').then((mod) => mod.EditLeadListModal),
   {
     ssr: false,
   },
@@ -76,18 +84,7 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
     }
   }
 
-  // const getLeadList = async (id: number) => {
-  //   try {
-  //     const { data } = await apiLeadList.getLeadList(id)
-  //     if (data?.data) {
-  //       setLeadList(data.data)
-  //     }
-  //   } catch (e) {
-  //     handleRestError({ e, dispatch })
-  //   }
-  // }
   const handleView = async (id: number) => {
-    // await getLeadList(id)
     const targetLeadList = data.find((list) => list.id === id)
     if (targetLeadList) {
       setLeadList(targetLeadList)
@@ -96,13 +93,31 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
     }
   }
 
+  const [assignedLeads, setAssignedLeads] = useState<TLeadOption[]>([])
+
+  const getAllLeadsOptions = async (id: number) => {
+    try {
+      const { data } = await leadsApi.getLeadsForSelect(id)
+      if (data?.data) {
+        setAssignedLeads(data.data)
+      }
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    }
+  }
+
   const handleEdit = async (id: number) => {
-    // todo
-    console.warn(id)
-    // await getLeadList(id)
-    // if (leadList) {
-    //   setModal({ modalName: MODAL_NAMES.VIEW_LEAD_LIST, isOpen: true })
-    // }
+    const targetLeadList = data.find((list) => list.id === id)
+    if (targetLeadList) {
+      await getAllLeadsOptions(id)
+      setLeadList(targetLeadList)
+      setModal({ modalName: MODAL_NAMES.EDIT_LEAD_LIST, isOpen: true })
+    }
+  }
+
+  const onCloseEditLeadListModal = () => {
+    setAssignedLeads([])
+    reFetch()
   }
 
   const handleDelete = async (id: number) => {
@@ -116,6 +131,9 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
 
   const isViewModalOpen =
     modalState?.modalName === MODAL_NAMES.VIEW_LEAD_LIST && modalState.isOpen
+
+  const isEditModalOpen =
+    modalState?.modalName === MODAL_NAMES.EDIT_LEAD_LIST && modalState.isOpen
 
   const headers: THeader<TLeadListRowKeys>[] = [
     {
@@ -165,11 +183,7 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
         </IconButton>
       ),
       edit: (
-        <IconButton
-          onClick={() => handleEdit(leadList.id)}
-          iconColor="transparent"
-          disabled
-        >
+        <IconButton onClick={() => handleEdit(leadList.id)} iconColor="transparent">
           <EditIcon width="24px" height="24px" />
         </IconButton>
       ),
@@ -196,6 +210,13 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
           onClose={reFetch}
           leadListData={leadList}
           stats={leadListCallStatisticData}
+        />
+      )}
+      {isEditModalOpen && leadList && (
+        <EditLeadListModal
+          leadListData={leadList}
+          assignedLeads={assignedLeads}
+          onClose={onCloseEditLeadListModal}
         />
       )}
     </>

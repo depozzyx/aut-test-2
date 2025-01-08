@@ -11,7 +11,13 @@ export type TEntityActions =
   | 'campaign-stop'
   | 'export-activity-log'
 
-export type TEntityType = 'user' | 'campaign' | 'lead' | 'activity-log' | 'api-key'
+export type TEntityType =
+  | 'user'
+  | 'campaign'
+  | 'lead'
+  | 'lead-list'
+  | 'activity-log'
+  | 'api-key'
 
 export type TSortBy = 'createdAt' | 'username' | 'role' | 'actionType'
 
