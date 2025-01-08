@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
 import { ActivityIcon } from '@/icons/ActivityIcon'
-import { BusinessIcon } from '@/icons/BusinessIcon'
 import { LoudSpeakerIcon } from '@/icons/LoudSpeakerIcon'
 import { ROUTES } from '@/routes'
 
@@ -23,12 +22,6 @@ export const ActivityTabs = (): JSX.Element => {
       value: 'campaign',
       route: ROUTES.SETTINGS_ACTIVITY_LOG_CAMPAIGN,
       icon: (color) => <LoudSpeakerIcon color={color} />,
-    },
-    {
-      label: t('tabs.business'),
-      value: 'business',
-      icon: (color) => <BusinessIcon color={color} />,
-      disabled: true,
     },
   ]
 

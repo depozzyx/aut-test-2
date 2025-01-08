@@ -14,6 +14,7 @@ import {
   TUpsertCustomStatusReq,
   TLeadRes,
   TUpdateLeadReq,
+  TLeadOptionsRes,
 } from './types'
 
 const importLeads = (
@@ -53,6 +54,11 @@ const deleteCustomStatus = (id: number): TAxiosResponse<TLeadCustomStatusRes> =>
 
 const getLead = (id: number): TAxiosResponse<TLeadRes> => api.get(`/leads/${id}`)
 
+const getLeadsForSelect = (leadListId?: number): TAxiosResponse<TLeadOptionsRes> =>
+  api.get(`/leads/options`, {
+    params: leadListId ? { leadListId } : {},
+  })
+
 const updateLead = (id: number, body: TUpdateLeadReq): TAxiosResponse<TLeadRes> =>
   api.patch(`/leads/${id}`, body)
 
@@ -71,4 +77,5 @@ export const leadsApi = {
   getLead,
   updateLead,
   deleteLead,
+  getLeadsForSelect,
 }

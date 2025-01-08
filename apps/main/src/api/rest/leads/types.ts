@@ -49,6 +49,7 @@ export type TLeadStatusData = {
   name: string
   value: string
   isSystem?: boolean
+  feedbackDisabled?: boolean
 }
 
 export type TLeadStatusRes = {
@@ -101,4 +102,14 @@ export type TUpdateLeadReq = {
 export type TLeadRes = {
   statusCode: TGeneratedSuccessStatuses
   data: TLeadData
+}
+
+export type TLeadOption = {
+  label: string
+  value: number
+}
+
+export type TLeadOptionsRes = {
+  statusCode: TGeneratedSuccessStatuses
+  data: TLeadOption[]
 }

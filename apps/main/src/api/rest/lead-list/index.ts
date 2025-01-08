@@ -21,7 +21,10 @@ const getLeadListCallStatistic = (
 ): TAxiosResponse<TLeadCallStatusStatisticRes> =>
   api.get(`/lead-list/${id}/calls-statistic`)
 
-// const updateLeadList = (id: number): TAxiosResponse<any> => api.patch(`/lead-list/${id}`)
+const updateLeadList = (id: number, ids: number[]): TAxiosResponse<TDeleteLeadListRes> =>
+  api.patch(`/lead-list/${id}`, {
+    ids,
+  })
 
 const deleteLeadList = (id: number): TAxiosResponse<TDeleteLeadListRes> =>
   api.delete(`/lead-list/${id}`)
@@ -30,6 +33,6 @@ export const apiLeadList = {
   getLeadListCatalog,
   getLeadLists,
   getLeadListCallStatistic,
-  // updateLeadList,
+  updateLeadList,
   deleteLeadList,
 }

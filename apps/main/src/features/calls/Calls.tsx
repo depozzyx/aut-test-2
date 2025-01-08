@@ -267,32 +267,34 @@ export const Calls: FC = () => {
                     gridColumnGap: '32px',
                   }}
                 >
-                  {leadStatuses.map(({ name, value }) => (
-                    <div key={value}>
-                      <Text
-                        styles={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          textAlign: 'center',
-                          cursor: 'pointer',
-                          padding: '6px',
-                          border: '1px solid',
-                          borderColor: palette.overlay,
-                          borderRadius: '4px',
-                          width: '100px',
-                          height: '55px',
-                          ':hover': {
-                            borderColor: palette.main21,
-                          },
-                        }}
-                        variant="f8"
-                        onClick={() => onCallFeedback(value)}
-                      >
-                        {name}
-                      </Text>
-                    </div>
-                  ))}
+                  {leadStatuses
+                    .filter((status) => !status.feedbackDisabled)
+                    .map(({ name, value }) => (
+                      <div key={value}>
+                        <Text
+                          styles={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            textAlign: 'center',
+                            cursor: 'pointer',
+                            padding: '6px',
+                            border: '1px solid',
+                            borderColor: palette.overlay,
+                            borderRadius: '4px',
+                            width: '100px',
+                            height: '55px',
+                            ':hover': {
+                              borderColor: palette.main21,
+                            },
+                          }}
+                          variant="f8"
+                          onClick={() => onCallFeedback(value)}
+                        >
+                          {name}
+                        </Text>
+                      </div>
+                    ))}
                 </div>
               </Flex>
             </Card>
@@ -312,6 +314,7 @@ export const Calls: FC = () => {
                 endedCall={endedCall}
                 setDuration={(duration) => setCallDuration(duration)}
                 callData={lead}
+                leadStatuses={leadStatuses}
               />
               <CallButton onClick={() => endCall(true)} isLoading={endedCall}>
                 <CallIcon />

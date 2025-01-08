@@ -32,7 +32,7 @@ const getAgentAssignedActiveCampaigns = (): Promise<TAxiosResponse<any>> =>
 const stopCampaign = (data: { id: string }): TAxiosResponse<any> =>
   api.post('/campaign/stop', data)
 
-const startCampaign = (data: { id: string; debugging?: boolean }): TAxiosResponse<any> =>
+const startCampaign = (data: { id: string }): TAxiosResponse<any> =>
   api.post('/campaign/start', data)
 
 export const apiCampaigns = {

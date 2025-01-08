@@ -36,12 +36,17 @@ export const useCreateLogMessage = (): {
       status: t(`logs.lead.keys.status`),
       timezone: t(`logs.lead.keys.timezone`),
     },
+    leadList: {
+      name: t(`logs.lead-list.keys.name`),
+      leadIds: t(`logs.lead-list.keys.leadIds`),
+    },
   }
 
   const formatters = {
     lead: {
       status: (statusCode: string) => getLeadStatus(leadStatuses, statusCode),
     },
+    leadList: {},
   }
 
   const createLogMessage = ({
@@ -109,6 +114,23 @@ export const useCreateLogMessage = (): {
             return (
               message(userName, targetUser?.username ?? '') +
               detailedMessage(entityId, details, keyMaps.lead, formatters.lead)
+            )
+          case 'delete':
+            return message(userName, targetUser?.username ?? '')
+          default:
+            return unknownMessage
+        }
+      case 'lead-list':
+        switch (actionType) {
+          case 'create':
+            return (
+              message(userName, targetUser?.username ?? '') +
+              detailedMessage(entityId, details, keyMaps.leadList, formatters.leadList)
+            )
+          case 'update':
+            return (
+              message(userName, targetUser?.username ?? '') +
+              detailedMessage(entityId, details, keyMaps.leadList, formatters.leadList)
             )
           case 'delete':
             return message(userName, targetUser?.username ?? '')

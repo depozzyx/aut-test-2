@@ -29,7 +29,8 @@
     "name": "Name",
     "campaignName": "Campaign name",
     "campaignStatus": "Campaign status",
-    "leadCount": "Leads",
+    "leadCount": "Leads count",
+    "leads": "Leads",
     "lastCallDate": "Last call",
     "statistic": {
       "statusCode": "Status",
@@ -60,7 +61,8 @@
       "date": "Date",
       "oldStatus": "Old Status",
       "newStatus": "New Status",
-      "user": "User"
+      "user": "User",
+      "noLogs": "No logs to display"
     },
     "save": "Save",
     "cancel": "Cancel",

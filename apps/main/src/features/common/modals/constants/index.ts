@@ -22,6 +22,7 @@ export const MODAL_NAMES = {
   SELECT_AGENT_CAMPAIGN: 'SELECT_AGENT_CAMPAIGN',
   VIEW_LEAD: 'VIEW_LEAD',
   VIEW_LEAD_LIST: 'VIEW_LEAD_LIST',
+  EDIT_LEAD_LIST: 'EDIT_LEAD_LIST',
 } as const
 
 export type TModalNames = typeof MODAL_NAMES[keyof typeof MODAL_NAMES]

@@ -4,6 +4,8 @@ import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
 import { useStopwatch } from 'react-timer-hook'
 import useTranslation from 'next-translate/useTranslation'
+import { TLeadStatusData } from '@/api-rest/leads/types'
+import { getLeadStatus } from '@/features/leads/containers/LeadsTable'
 import { Wrapper } from './CallWindow.styled'
 import { TCallsInit } from '../../../../api/socket/call/types'
 
@@ -11,7 +13,8 @@ export const CallWindow: FC<{
   callData: TCallsInit
   endedCall: boolean
   setDuration: (duration: number) => void
-}> = ({ callData, endedCall, setDuration }) => {
+  leadStatuses: TLeadStatusData[]
+}> = ({ callData, endedCall, setDuration, leadStatuses }) => {
   const { t } = useTranslation('calls')
   const { seconds, minutes, hours, totalSeconds } = useStopwatch({
     autoStart: true,
@@ -45,7 +48,7 @@ export const CallWindow: FC<{
           {t('timezone')}: {callData.lead.timezone}
         </Text>
         <Text>
-          {t('status')}: {callData.lead.status}
+          {t('status')}: {getLeadStatus(leadStatuses, callData.lead.status)}
         </Text>
         <Text>
           {t('source')}: {callData.lead.source}

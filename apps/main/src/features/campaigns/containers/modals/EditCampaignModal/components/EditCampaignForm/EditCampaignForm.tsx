@@ -215,7 +215,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
           >
             {t('edit-campaign.save')}
           </FilledButton>
-          <OutlinedButton onClick={resetModals} width="202px">
+          <OutlinedButton onClick={resetModals} width="202px" type="button">
             {t('edit-campaign.cancel')}
           </OutlinedButton>
         </Flex>

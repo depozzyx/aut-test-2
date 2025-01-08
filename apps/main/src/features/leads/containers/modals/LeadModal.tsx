@@ -4,7 +4,7 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text/Text'
-import { TLeadData } from '@/api-rest/leads/types'
+import { TLeadData, TUpdateLeadReq } from '@/api-rest/leads/types'
 import React, { useEffect, useState } from 'react'
 import { Input } from '@peiko/components/inputs/Input'
 import { IconButton } from '@peiko/components/buttons/IconButton/IconButton'
@@ -21,6 +21,7 @@ import { useRedux } from '@/hooks/use-redux'
 import { timezones } from '@/features/leads/containers/modals/index'
 import { selectLeadStatuses } from '@/features/leads/store/leads'
 import { useTheme } from 'styled-components'
+import { getLeadStatus } from '@/features/leads/containers/LeadsTable'
 import { LeadStatusLogTable } from './components/LeadStatusLogTable'
 
 type Field = {
@@ -146,11 +147,19 @@ export const LeadModal = ({
   }
 
   const handleSave = async (): Promise<void> => {
-    const payload = {
-      name: fields.name.value,
-      status: fields.status.value,
-      timezone: fields.timezone.value,
+    const payload: TUpdateLeadReq = {
+      name: leadData.name !== fields.name.value ? fields.name.value : undefined,
+      status: leadData.status !== fields.status.value ? fields.status.value : undefined,
+      timezone:
+        leadData.timezone !== fields.timezone.value ? fields.timezone.value : undefined,
     }
+    Object.keys(payload).forEach((key) => {
+      const typedKey = key as keyof TUpdateLeadReq
+      if (!payload[typedKey]) {
+        delete payload[typedKey]
+      }
+    })
+
     try {
       await leadsApi.updateLead(leadData.id, payload)
       await onSave(leadData.id)
@@ -235,7 +244,11 @@ export const LeadModal = ({
                     />
                   )}
                   {!fields[typedKey].isEditing && (
-                    <Text variant="f8">{fields[typedKey].value}</Text>
+                    <Text variant="f8">
+                      {typedKey === 'status'
+                        ? getLeadStatus(leadStatuses, fields[typedKey].value)
+                        : fields[typedKey].value}
+                    </Text>
                   )}
                 </Flex>
                 <Flex justify="end" align="center" width="20%">
@@ -278,18 +291,16 @@ export const LeadModal = ({
             marginBottom: '10px',
           }}
         >
-          <OutlinedButton onClick={resetFields} width="202px">
-            {t('view-lead.cancel')}
-          </OutlinedButton>
           <FilledButton disabled={!canSave} width="202px" onClick={handleSave}>
             {t('view-lead.save')}
           </FilledButton>
+          <OutlinedButton onClick={resetFields} width="202px">
+            {t('view-lead.cancel')}
+          </OutlinedButton>
         </Flex>
-        {!!leadData.logs?.length && (
-          <Flex width="100%">
-            <LeadStatusLogTable logs={leadData.logs} leadStatuses={leadStatuses} />
-          </Flex>
-        )}
+        <Flex width="100%">
+          <LeadStatusLogTable logs={leadData.logs} leadStatuses={leadStatuses} />
+        </Flex>
         <FilledButton
           styles={{ marginBottom: leadData.logs?.length ? '-24px' : '0' }}
           onClick={handleDelete}
