@@ -102,7 +102,7 @@ export const useSIPService = (): {
     if (pbxAuth)
       setUA(() => {
         const password = decrypt(pbxAuth?.password, API_SECRET_KEY)
-
+        console.warn({ enc: password, k: API_SECRET_KEY }) // todo remove tmp debug
         const configuration: UAConfiguration = {
           uri: `sip:${pbxAuth?.username}@${pbxAuth?.domain}`,
           password,
