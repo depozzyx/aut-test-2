@@ -18,7 +18,7 @@
   "limit": "Download limit: <0>{{value}} files</0>",
   "cancel": "Cancel",
   "submit": "Submit",
-  "downloadTemplateText": "For better data export please download our template",
+  "downloadTemplateText": "For better data import please download our template",
   "downloadTemplate": "Download now",
   "duplicate": "Duplicate",
   "error": "Error",
