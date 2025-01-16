@@ -13,6 +13,8 @@ import { callSocket } from 'api/socket/call'
 import { socket } from 'api/socket/Socket'
 import { TCallsInit } from 'api/socket/call/types'
 import { apiAgents } from '@/api-rest/agents'
+import { API_SECRET_KEY } from '@/constants/config'
+import { decrypt } from '@peiko/utils/crypto-js'
 
 const TEXTS = {
   SUBSCRIBE_CALLS: 'Subscribe calls',
@@ -99,9 +101,11 @@ export const useSIPService = (): {
   useEffect(() => {
     if (pbxAuth)
       setUA(() => {
+        const password = decrypt(pbxAuth?.password, API_SECRET_KEY)
+
         const configuration: UAConfiguration = {
           uri: `sip:${pbxAuth?.username}@${pbxAuth?.domain}`,
-          password: pbxAuth?.password,
+          password,
           sockets: jsSIPSocket,
           register: true,
           ...sipOptions,

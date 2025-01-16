@@ -1,6 +1,6 @@
 ## Install
 
-- Install globaly **node.js**
+- Install globally **node.js 18.17.1**
 - Install dependencies: **yarn install**
 
 ## Commands
