@@ -22,6 +22,7 @@ import { Input } from '@peiko/components/inputs/Input'
 import { TSelectOption } from '@/components/MutliSelect/types'
 import { SingleValue } from 'react-select'
 import { LimitSelect } from '@/components/limit-select'
+import { SearchFieldIcon } from '@/icons/SearchFieldIcon'
 
 type Props = {
   filters: TFormik
@@ -93,7 +94,6 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
   return (
     <Flex gap={10} align="center">
       <Input
-        // label={{ label: 'Lead Name' }}
         type="number"
         name="id"
         size="s"
@@ -102,6 +102,8 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
         debounce={600}
         onChange={onChangeId}
         value={filters.values.id}
+        startAdornment={<SearchFieldIcon />}
+        startAdornmentStyles={{ paddingRight: '0 !important' }}
         endAdornment={
           filters.values.id && (
             <BaseIconButton onClick={() => filters.setFieldValue('id', '')}>
@@ -118,6 +120,8 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
         width="200px"
         size="s"
         debounce={600}
+        startAdornment={<SearchFieldIcon />}
+        startAdornmentStyles={{ paddingRight: '0 !important' }}
         endAdornment={
           filters.values.name && (
             <BaseIconButton onClick={() => filters.setFieldValue('name', '')}>
@@ -135,6 +139,8 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
         size="s"
         debounce={600}
         onChange={onChangePhone}
+        startAdornment={<SearchFieldIcon />}
+        startAdornmentStyles={{ paddingRight: '0 !important' }}
         endAdornment={
           filters.values.phone && (
             <BaseIconButton onClick={() => filters.setFieldValue('phone', '')}>
@@ -164,6 +170,8 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
         width="200px"
         size="s"
         debounce={600}
+        startAdornment={<SearchFieldIcon />}
+        startAdornmentStyles={{ paddingRight: '0 !important' }}
         endAdornment={
           filters.values.campaignName && (
             <BaseIconButton onClick={() => filters.setFieldValue('campaignName', '')}>

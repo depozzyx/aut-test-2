@@ -8,6 +8,7 @@
     "feedback-status": "Feedback Status",
     "campaign": "Campaign",
     "lead-source": "Source",
+    "lead-list": "Lead List",
     "createNewList": "Create new list",
     "select": "Select lead list",
     "view": "View",
@@ -50,6 +51,7 @@
       "phone": "phone",
       "source": "source",
       "campaign": "campaign",
+      "leadList": "lead list",
       "lastCallAt": "last call",
       "country": "country"
     },

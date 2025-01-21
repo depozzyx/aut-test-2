@@ -37,6 +37,7 @@ type Fields = {
   phone: Field
   source: Field
   campaign: Field
+  leadList: Field
   lastCallAt: Field
   country: Field
 }
@@ -92,6 +93,10 @@ export const LeadModal = ({
     campaign: {
       isEditable: false,
       value: leadData.leadList?.campaign?.name,
+    },
+    leadList: {
+      isEditable: false,
+      value: leadData.leadList?.name,
     },
     lastCallAt: {
       isEditable: false,
