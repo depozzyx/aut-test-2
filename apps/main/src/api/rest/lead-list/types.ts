@@ -2,7 +2,7 @@ import { TGeneratedSuccessStatuses } from '@/constants/success-status'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { TPagination } from '@/types/entities/pagination'
 import { TCampaignStatus } from '@/features/campaigns/types'
-import { ELeadsSortBy } from '@/api-rest/leads/types'
+import { ELeadsSortBy, TLeadListFilters } from '@/api-rest/leads/types'
 
 export type TLeadListCatalogReq = {
   orderBy: TOrderBy
@@ -14,7 +14,8 @@ export type TLeadListCatalogReq = {
 export type TLeadListsReq = {
   orderBy: TOrderBy
   sortBy?: ELeadsSortBy
-} & Pick<TPagination, 'page' | 'limit'>
+} & Pick<TPagination, 'page' | 'limit'> &
+  TLeadListFilters
 
 export type TLeadListCatalog = {
   id: number

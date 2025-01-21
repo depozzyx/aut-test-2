@@ -48,7 +48,7 @@ const init: TInit = {
   checkNumberUnique: false,
   useDefaultStatus: 'fromFile',
   isLoading: true,
-  leadsGroups: [],
+  leadsGroups: [{ name: '-', id: 0 }],
   filesForImport: [],
   orderBy: 'DESC',
   statuses: [],

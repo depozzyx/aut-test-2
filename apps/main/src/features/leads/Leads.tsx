@@ -7,7 +7,12 @@ import { useUnmount } from 'react-use'
 
 import { Pagination } from '@peiko/components/Pagination'
 import { Box } from '@peiko/components/Box'
+import { LeadFilters } from '@/features/leads/containers/Filters/LeadFilters'
+import { useFormik } from 'formik'
+import { TFormik } from '@peiko/types/formik'
+import { cleanObject } from '@/utils/object'
 import { LeadsTable } from './containers/LeadsTable'
+
 import {
   getLeadList,
   getLeadsGroups,
@@ -64,12 +69,42 @@ export const Leads: FC = () => {
     if (!leadsGroup) setSecondMount(true)
   }, [leadsGroup])
 
+  const filters: TFormik = useFormik({
+    initialValues: {
+      id: '',
+      name: '',
+      phone: '',
+      status: '',
+      campaignName: '',
+      leadListId: '',
+      limit,
+    },
+    onSubmit: () => undefined,
+  })
+
   const onChangePage = (page: number) =>
-    dispatch(getLeadList({ page, limit, orderBy, leadListId: leadsGroup }))
+    dispatch(
+      getLeadList({
+        page,
+        limit,
+        orderBy,
+        leadListId: leadsGroup,
+        ...cleanObject(filters.values),
+      }),
+    )
+
+  const onChangeFilters = () => onChangePage(page)
+
+  useEffect(() => {
+    onChangeFilters()
+  }, [filters.values])
 
   return (
     <>
       <Box styles={{ marginTop: '24px' }}>
+        <LeadFilters filters={filters} onResetFilters={filters.resetForm} />
+      </Box>
+      <Box styles={{ marginTop: '6px' }}>
         <LeadsTable reFetch={() => onChangePage(page)} />
       </Box>
       <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
