@@ -12,6 +12,10 @@ import {
 } from '@/features/leads/store/leads'
 import { shallowEqual } from 'react-redux'
 import { Pagination } from '@peiko/components/Pagination/Pagination'
+import { useFormik } from 'formik'
+import { cleanObject } from '@/utils/object'
+import { TFormik } from '@peiko/types/formik'
+import { LeadListFilters } from '@/features/leads/containers/Filters/LeadListFilters'
 
 export const LeadList: FC = () => {
   const { dispatch, select } = useRedux()
@@ -33,11 +37,34 @@ export const LeadList: FC = () => {
     dispatch(asyncGetLeadLists({ page, limit, orderBy, sortBy }))
   }, [orderBy, sortBy])
 
+  const filters: TFormik = useFormik({
+    initialValues: {
+      id: '',
+      name: '',
+      campaignStatus: '',
+      campaignName: '',
+      limit,
+    },
+    onSubmit: () => undefined,
+  })
+
   const onChangePage = (page: number) =>
-    dispatch(asyncGetLeadLists({ page, limit, orderBy, sortBy }))
+    dispatch(
+      asyncGetLeadLists({ page, limit, orderBy, sortBy, ...cleanObject(filters.values) }),
+    )
+
+  const onChangeFilters = () => onChangePage(page)
+
+  useEffect(() => {
+    onChangeFilters()
+  }, [filters.values])
+
   return (
     <>
       <Box styles={{ marginTop: '24px' }}>
+        <LeadListFilters filters={filters} onResetFilters={filters.resetForm} />
+      </Box>
+      <Box styles={{ marginTop: '6px' }}>
         <LeadListTable reFetch={() => onChangePage(page)} />
       </Box>
       <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>

@@ -21,11 +21,27 @@ export enum ELeadsSortBy {
   CAMPAIGN = 'campaign',
 }
 
+export type TLeadFilters = {
+  id?: number
+  name?: string
+  phone?: string
+  status?: string
+  campaignName?: string
+}
+
+export type TLeadListFilters = {
+  id?: number
+  name?: string
+  campaignName?: string
+  campaignStatus?: string
+}
+
 export type TLeadsListReq = {
   orderBy: TOrderBy
   leadListId?: number
   sortBy?: ELeadsSortBy
-} & Pick<TPagination, 'page' | 'limit'>
+} & Pick<TPagination, 'page' | 'limit'> &
+  TLeadFilters
 
 export type TLeadsGroupReq = {
   orderBy: TOrderBy

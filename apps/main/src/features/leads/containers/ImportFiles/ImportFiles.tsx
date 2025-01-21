@@ -16,7 +16,11 @@ import { RadioButton } from '@peiko/components/inputs/RadioButton/RadioButton'
 import { Tooltip } from '@peiko/components/Tooltip'
 import { Trigger } from '@/features/agents/components/CampaignsTooltip/CampaignsTooltip.styled'
 import { SmallInfoIcon } from '@peiko/components/icons/SmallInfoIcon/SmallInfoIcon'
-import { LeadsSelect } from '../LeadsSelect'
+import { LeadListSelect } from '@/features/leads/containers/LeadListSelect'
+import { PlusIcon } from '@peiko/components/icons/PlusIcon'
+import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
+import { Button } from '@/features/leads/containers/LeadListSelect/LeadListSelect.styled'
 import { BottomText } from './ImportFiles.styled'
 import {
   getLeadStatuses,
@@ -37,6 +41,7 @@ const MAX_WIDTH = '616px'
 export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   const { t } = useTranslation('import-leads')
   const { select, dispatch } = useRedux()
+  const { setModal } = useModals()
 
   const leadsGroup = select(selectLeadsGroup)
   const allFilesImported = select(selectFilesForImport).every((item) => item.imported)
@@ -85,6 +90,10 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     })
   }
 
+  const onCreate = () => {
+    setModal({ modalName: MODAL_NAMES.CREATE_LEADS_GROUP, isOpen: true })
+  }
+
   return (
     <Flex
       justify="center"
@@ -102,11 +111,28 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
         </Text>
         <Flex styles={{ marginBottom: '12px' }} justify="center">
           <Flex justify="start" direction="column" gap="12px">
-            <LeadsSelect
+            <LeadListSelect
               width="100%"
               label={{ label: t('selectLabel') }}
               placeholder={t('selectPlaceholder')}
               maxMenuHeight={200}
+              menuContent={{
+                place: 'append',
+                element: (
+                  <Button width="100%" onClick={onCreate}>
+                    <Flex
+                      padding="7px 16px"
+                      align="center"
+                      justify="space-between"
+                      cursor="pointer"
+                      width="100%"
+                    >
+                      <Text variant="f8">{t('headers.createNewList')}</Text>
+                      <PlusIcon width="24px" height="24px" />
+                    </Flex>
+                  </Button>
+                ),
+              }}
             />
             <Checkbox
               size="s"

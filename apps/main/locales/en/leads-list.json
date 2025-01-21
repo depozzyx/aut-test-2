@@ -1,6 +1,6 @@
 {
   "headers": {
-    "lead-id": "№",
+    "lead-id": "ID",
     "lead-name": "Lead Name",
     "lead-phone": "Lead Phone",
     "lead-timezone": "Lead Timezone",
@@ -12,7 +12,7 @@
     "select": "Select lead list",
     "view": "View",
     "list": {
-      "id": "№",
+      "id": "ID",
       "name": "Name",
       "leadCount": "Leads",
       "campaignName": "Campaign Name",
@@ -91,5 +91,25 @@
     "title": "Create new Lead List",
     "label": "Lead List Name",
     "placeholder": "Enter Lead List Name"
+  },
+  "filters": {
+    "placeholders": {
+      "id": "ID",
+      "name": "Lead list name",
+      "campaignStatus": "Select campaign status",
+      "campaignName": "Campaign name"
+    }
+  },
+  "leads": {
+    "filters": {
+      "placeholders": {
+        "id": "ID",
+        "name": "Lead name",
+        "phone": "Lead phone",
+        "status": "Select lead status",
+        "campaignName": "Campaign name",
+        "leadList": "Select lead list"
+      }
+    }
   }
 }

@@ -26,7 +26,6 @@ import {
   selectLeadStatuses,
   setLeadsSortBy,
 } from '../../store/leads'
-import { LeadsSelect } from '../LeadsSelect'
 
 type TLeadsRowKeys =
   | 'id'
@@ -36,7 +35,6 @@ type TLeadsRowKeys =
   | 'status'
   | 'source'
   | 'campaign'
-  | 'selectLeads'
   | 'view'
   | 'leadId'
 
@@ -155,7 +153,6 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
       value: 'campaign',
     },
     { label: t('headers.view'), value: 'view' },
-    { label: <LeadsSelect maxMenuHeight={200} width="213px" />, value: 'selectLeads' },
   ]
 
   const rows = data.map((lead) => ({
@@ -173,7 +170,6 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
           <EyeIcon width="24px" height="24px" />
         </IconButton>
       ),
-      selectLeads: <></>,
     },
   }))
 
