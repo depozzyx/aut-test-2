@@ -37,6 +37,7 @@ type TLeadsRowKeys =
   | 'campaign'
   | 'view'
   | 'leadId'
+  | 'leadList'
 
 const LeadModal = dynamic(() => import('../modals').then((mod) => mod.LeadModal), {
   ssr: false,
@@ -152,6 +153,15 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
       ),
       value: 'campaign',
     },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('headers.lead-list')}
+          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.LEAD_LIST))}
+        />
+      ),
+      value: 'leadList',
+    },
     { label: t('headers.view'), value: 'view' },
   ]
 
@@ -165,6 +175,7 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
       status: <InfoColumn title={getLeadStatus(leadStatuses, lead?.status)} />,
       source: <InfoColumn title={lead.source} />,
       campaign: <InfoColumn title={lead?.leadList?.campaign?.name} />,
+      leadList: <InfoColumn title={lead?.leadList?.name} />,
       view: (
         <IconButton onClick={() => handleView(lead.id)} iconColor="main3">
           <EyeIcon width="24px" height="24px" />

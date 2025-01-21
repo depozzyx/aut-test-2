@@ -19,6 +19,7 @@ export enum ELeadsSortBy {
   SOURCE = 'source',
   FEEDBACK_STATUS = 'feedbackStatus',
   CAMPAIGN = 'campaign',
+  LEAD_LIST = 'leadList',
 }
 
 export type TLeadFilters = {
@@ -97,7 +98,8 @@ export type TLeadData = {
   updatedAt: Date
   deletedAt: Date
   leadList: {
-    is: number
+    id: number
+    name: string
     campaign: {
       id: number
       name: string

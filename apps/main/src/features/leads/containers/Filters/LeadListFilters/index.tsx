@@ -8,6 +8,7 @@ import { CloseIcon } from '@peiko/components/icons/CloseIcon/CloseIcon'
 import { BaseIconButton } from '@peiko/components/buttons/BaseIconButton'
 import { Input } from '@peiko/components/inputs/Input'
 import { LimitSelect } from '@/components/limit-select'
+import { SearchFieldIcon } from '@/icons/SearchFieldIcon'
 
 type Props = {
   filters: TFormik
@@ -58,6 +59,8 @@ export const LeadListFilters: FC<Props> = ({ filters, onResetFilters }: Props) =
         debounce={600}
         onChange={onChangeId}
         value={filters.values.id}
+        startAdornment={<SearchFieldIcon />}
+        startAdornmentStyles={{ paddingRight: '0 !important' }}
         endAdornment={
           filters.values.id && (
             <BaseIconButton onClick={() => filters.setFieldValue('id', '')}>
@@ -74,6 +77,8 @@ export const LeadListFilters: FC<Props> = ({ filters, onResetFilters }: Props) =
         width="200px"
         size="s"
         debounce={600}
+        startAdornment={<SearchFieldIcon />}
+        startAdornmentStyles={{ paddingRight: '0 !important' }}
         endAdornment={
           filters.values.name && (
             <BaseIconButton onClick={() => filters.setFieldValue('name', '')}>
@@ -90,6 +95,8 @@ export const LeadListFilters: FC<Props> = ({ filters, onResetFilters }: Props) =
         width="200px"
         size="s"
         debounce={600}
+        startAdornment={<SearchFieldIcon />}
+        startAdornmentStyles={{ paddingRight: '0 !important' }}
         endAdornment={
           filters.values.campaignName && (
             <BaseIconButton onClick={() => filters.setFieldValue('campaignName', '')}>

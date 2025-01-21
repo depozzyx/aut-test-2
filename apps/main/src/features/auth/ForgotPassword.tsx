@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import React, { FC } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
@@ -11,6 +11,9 @@ import { EmailIcon } from '@peiko/components/icons/EmailIcon'
 import { useRedux } from '@/hooks/use-redux'
 import { Snackbar } from '@/components/Snackbar'
 import { Flex } from '@/components/Flex'
+import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton/OutlinedButton'
+import { ROUTES } from '@/routes'
+import { useRouter } from 'next/router'
 import {
   forgotPasswordAsync,
   reset,
@@ -22,6 +25,8 @@ import { AuthFormCard } from './components/AuthFormCard'
 export const ForgotPassword: FC = () => {
   const { t } = useTranslation('auth')
   const { select, dispatch } = useRedux()
+  const router = useRouter()
+
   const { statusCode } = select(selectForgotPassword)
 
   useUnmount(() => {
@@ -68,15 +73,26 @@ export const ForgotPassword: FC = () => {
               maxWidth="248px"
               startAdornment={<EmailIcon width="24px" height="24px" />}
             />
-            <FilledButton
-              type="submit"
-              size="s"
-              width="100%"
-              disabled={!formik.isValid || !formik.dirty}
-              styles={{ marginTop: '24px', maxWidth: '248px' }}
-            >
-              {t('forgot-password.action')}
-            </FilledButton>
+            <Flex justify="space-between" align="center" gap={10}>
+              <OutlinedButton
+                onClick={() => router.push(ROUTES.SIGN_IN)}
+                width="100%"
+                type="button"
+                size="s"
+                styles={{ marginTop: '24px', maxWidth: '248px' }}
+              >
+                {t('forgot-password.back')}
+              </OutlinedButton>
+              <FilledButton
+                type="submit"
+                size="s"
+                width="100%"
+                disabled={!formik.isValid || !formik.dirty}
+                styles={{ marginTop: '24px', maxWidth: '248px' }}
+              >
+                {t('forgot-password.action')}
+              </FilledButton>
+            </Flex>
           </Flex>
         </form>
       </AuthFormCard>
