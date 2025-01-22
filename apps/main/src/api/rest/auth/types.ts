@@ -52,3 +52,8 @@ export type TCheckResetPasswordTokenReq = {
   statusCode: number
   data: boolean
 }
+
+export type TCheckResetPasswordTimerRes = {
+  statusCode: number
+  data: number
+}

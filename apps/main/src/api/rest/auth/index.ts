@@ -8,6 +8,7 @@ import {
   TForgotPasswordReq,
   TLoginWSRes,
   TCheckResetPasswordTokenReq,
+  TCheckResetPasswordTimerRes,
 } from './types'
 
 const login = (data: TLoginReq): TAxiosResponse<TLoginRes> =>
@@ -28,6 +29,11 @@ const checkResetPasswordToken = (
 ): TAxiosResponse<TCheckResetPasswordTokenReq> =>
   api.get(`/auth/reset-password/check/${token}`)
 
+const checkResetPasswordTimer = (
+  email: string,
+): TAxiosResponse<TCheckResetPasswordTimerRes> =>
+  api.get(`/auth/reset-password/check/timer`, { params: { email } })
+
 export const apiAuth = {
   login,
   loginWS,
@@ -35,4 +41,5 @@ export const apiAuth = {
   forgotPassword,
   resetPassword,
   checkResetPasswordToken,
+  checkResetPasswordTimer,
 }
