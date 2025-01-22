@@ -31,7 +31,9 @@ export const useCampaignNameFilter = (
   useIdForValue = false,
 ): TReturn => {
   const { dispatch } = useRedux()
-  const [campaignOptions, setCampaignOptions] = useState<TCampaignOption[]>([])
+  const [campaignOptions, setCampaignOptions] = useState<TCampaignOption[]>([
+    { label: '-', value: '' },
+  ])
   const [pagination, setPagination] = useState<TPagination>({
     page: 1,
     limit: 10,

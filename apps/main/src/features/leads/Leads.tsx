@@ -75,7 +75,7 @@ export const Leads: FC = () => {
       name: '',
       phone: '',
       status: '',
-      campaignName: '',
+      campaignId: '',
       leadListId: '',
       limit,
     },

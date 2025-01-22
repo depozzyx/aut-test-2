@@ -27,13 +27,13 @@ export type TLeadFilters = {
   name?: string
   phone?: string
   status?: string
-  campaignName?: string
+  campaignId?: number
 }
 
 export type TLeadListFilters = {
   id?: number
   name?: string
-  campaignName?: string
+  campaignId?: number
   campaignStatus?: string
 }
 

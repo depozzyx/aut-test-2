@@ -99,7 +99,7 @@
       "id": "ID",
       "name": "Lead list name",
       "campaignStatus": "Select campaign status",
-      "campaignName": "Campaign name"
+      "campaignName": "Select campaign"
     }
   },
   "leads": {
@@ -109,7 +109,7 @@
         "name": "Lead name",
         "phone": "Lead phone",
         "status": "Select lead status",
-        "campaignName": "Campaign name",
+        "campaignName": "Select campaign",
         "leadList": "Select lead list"
       }
     }

@@ -9,6 +9,7 @@ import { BaseIconButton } from '@peiko/components/buttons/BaseIconButton'
 import { Input } from '@peiko/components/inputs/Input'
 import { LimitSelect } from '@/components/limit-select'
 import { SearchFieldIcon } from '@/icons/SearchFieldIcon'
+import { useCampaignNameFilter } from '@/features/campaigns/hooks/use-campaignNameFilter'
 
 type Props = {
   filters: TFormik
@@ -33,8 +34,10 @@ export const LeadListFilters: FC<Props> = ({ filters, onResetFilters }: Props) =
     },
   ]
 
+  const { campaignOptions, loadMoreCampaigns } = useCampaignNameFilter('list', true)
+
   const onChangeId = (v: string) => {
-    if (Number.isInteger(+v)) {
+    if (Number.isInteger(+v) && v.length < 11) {
       filters.setFieldValue('id', v)
     }
   }
@@ -54,7 +57,7 @@ export const LeadListFilters: FC<Props> = ({ filters, onResetFilters }: Props) =
         type="number"
         name="id"
         size="s"
-        width="70px"
+        width="120px"
         placeholder={t('filters.placeholders.id')}
         debounce={600}
         onChange={onChangeId}
@@ -88,23 +91,18 @@ export const LeadListFilters: FC<Props> = ({ filters, onResetFilters }: Props) =
         }
         endAdornmentStyles={{ paddingRight: '0 !important' }}
       />
-      <FormikInput
+      <FormikSelect
         formik={filters}
-        name="campaignName"
+        name="campaignId"
         placeholder={t('filters.placeholders.campaignName')}
+        options={campaignOptions.filter((v) =>
+          [undefined, '', '0'].includes(filters.values.campaignId)
+            ? v.label !== '-'
+            : true,
+        )}
+        onMenuScrollToBottom={loadMoreCampaigns}
+        maxMenuHeight={200}
         width="200px"
-        size="s"
-        debounce={600}
-        startAdornment={<SearchFieldIcon />}
-        startAdornmentStyles={{ paddingRight: '0 !important' }}
-        endAdornment={
-          filters.values.campaignName && (
-            <BaseIconButton onClick={() => filters.setFieldValue('campaignName', '')}>
-              <CloseIcon />
-            </BaseIconButton>
-          )
-        }
-        endAdornmentStyles={{ paddingRight: '0 !important' }}
       />
       <FormikSelect
         formik={filters}

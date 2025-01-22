@@ -42,7 +42,7 @@ export const LeadList: FC = () => {
       id: '',
       name: '',
       campaignStatus: '',
-      campaignName: '',
+      campaignId: '',
       limit,
     },
     onSubmit: () => undefined,
