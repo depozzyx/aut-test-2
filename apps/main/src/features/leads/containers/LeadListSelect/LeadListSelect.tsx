@@ -14,9 +14,11 @@ import {
   setLeadsGroup,
 } from '../../store/leads'
 
-export const LeadListSelect: FC<Omit<TSelectProps, 'name' | 'onChange' | 'value'>> = (
-  props,
-) => {
+type LeadListSelectProps = Omit<TSelectProps, 'name' | 'onChange' | 'value'> & {
+  withoutEmpty?: boolean
+}
+
+export const LeadListSelect: FC<LeadListSelectProps> = ({ withoutEmpty, ...props }) => {
   const { select, dispatch } = useRedux()
   const { t } = useTranslation('leads-list')
 
@@ -44,7 +46,9 @@ export const LeadListSelect: FC<Omit<TSelectProps, 'name' | 'onChange' | 'value'
   return (
     <Select
       name="leads-group"
-      options={leadsGroups.map(({ id, name }) => ({ label: name, value: id.toString() }))}
+      options={leadsGroups
+        .map(({ id, name }) => ({ label: name, value: id.toString() }))
+        .filter((item) => (withoutEmpty ? item.label !== '-' : true))}
       value={leadsGroup !== undefined ? leadsGroup.toString() : ''}
       error={error}
       onChange={(data) => {

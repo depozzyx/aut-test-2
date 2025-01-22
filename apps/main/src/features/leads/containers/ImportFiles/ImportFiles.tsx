@@ -116,6 +116,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
               label={{ label: t('selectLabel') }}
               placeholder={t('selectPlaceholder')}
               maxMenuHeight={200}
+              withoutEmpty
               menuContent={{
                 place: 'append',
                 element: (
@@ -127,7 +128,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
                       cursor="pointer"
                       width="100%"
                     >
-                      <Text variant="f8">{t('headers.createNewList')}</Text>
+                      <Text variant="f8">{t('createNewList')}</Text>
                       <PlusIcon width="24px" height="24px" />
                     </Flex>
                   </Button>
