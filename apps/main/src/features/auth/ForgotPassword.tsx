@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
@@ -14,6 +14,7 @@ import { Flex } from '@/components/Flex'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton/OutlinedButton'
 import { ROUTES } from '@/routes'
 import { useRouter } from 'next/router'
+import { apiAuth } from '@/api-rest/auth'
 import {
   forgotPasswordAsync,
   reset,
@@ -33,21 +34,62 @@ export const ForgotPassword: FC = () => {
     dispatch(reset())
   })
 
+  const [timer, setTimer] = useState(0)
+  const [startTimer, setStartTimer] = useState(false)
+
   const formik = useFormik({
     initialValues: {
       email: '',
     },
     validationSchema: yup.object().shape({
-      email: validation.required,
+      email: validation.email.required(),
     }),
-    onSubmit: (formData) => {
-      dispatch(forgotPasswordAsync({ formData, formik }))
+    onSubmit: async (formData) => {
+      if (timer > 0) {
+        dispatch(setStatusCode('error'))
+        return
+      }
+
+      const { data } = await apiAuth.checkResetPasswordTimer(formData.email)
+      if (data?.data > 0) {
+        setTimer(data.data)
+        setStartTimer(true)
+        dispatch(setStatusCode('error'))
+      } else {
+        dispatch(forgotPasswordAsync({ formData, formik }))
+      }
     },
   })
 
   const handleHideNotification = () => {
     dispatch(setStatusCode(''))
   }
+
+  const handleInputChange = async (email: string) => {
+    setTimer(0)
+    setStartTimer(false)
+    await formik.setFieldValue('email', email)
+    await formik.setFieldTouched('email', true)
+  }
+
+  const formatData = (value: number) => value.toString().padStart(2, '0')
+
+  useEffect(() => {
+    if (timer > 0 && startTimer) {
+      const interval = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval)
+            setStartTimer(false)
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+
+      return () => clearInterval(interval)
+    }
+  }, [startTimer])
 
   return (
     <Flex direction="column" align="center" maxWidth={552} gap={12}>
@@ -63,6 +105,12 @@ export const ForgotPassword: FC = () => {
             <Text variant="f7" styles={{ whiteSpace: 'nowrap' }}>
               {t('forgot-password.subtitle-annotation')}
             </Text>
+            {timer > 0 && (
+              <Text variant="f5">
+                <span>{formatData(Math.floor(timer / 60))}:</span>
+                <span>{formatData(timer % 60)}</span>
+              </Text>
+            )}
             <FormikInput
               size="s"
               name="email"
@@ -70,7 +118,9 @@ export const ForgotPassword: FC = () => {
               placeholder={t('inputs:placeholder.email')}
               id="email"
               formik={formik}
+              onChange={handleInputChange}
               maxWidth="248px"
+              debounce={600}
               startAdornment={<EmailIcon width="24px" height="24px" />}
             />
             <Flex justify="space-between" align="center" gap={10}>
@@ -87,7 +137,7 @@ export const ForgotPassword: FC = () => {
                 type="submit"
                 size="s"
                 width="100%"
-                disabled={!formik.isValid || !formik.dirty}
+                disabled={!formik.isValid || timer > 0 || !formik.dirty}
                 styles={{ marginTop: '24px', maxWidth: '248px' }}
               >
                 {t('forgot-password.action')}
@@ -98,8 +148,12 @@ export const ForgotPassword: FC = () => {
       </AuthFormCard>
       {statusCode && (
         <Snackbar
-          status="info"
-          title={t('forgot-password.notification.title')}
+          status={statusCode === 'error' ? 'error' : 'info'}
+          title={
+            statusCode === 'error'
+              ? t('forgot-password.notification.error')
+              : t('forgot-password.notification.title')
+          }
           onClose={handleHideNotification}
         />
       )}
