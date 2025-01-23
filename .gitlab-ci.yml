@@ -6,8 +6,6 @@ do_nothing:
   stage: noop
   script:
     - echo "This pipeline does nothing"
-
-
 # #---------------------------------------------------------------
 # #-- Common --
 # #---------------------------------------------------------------
@@ -91,8 +89,6 @@ do_nothing:
 #         - "cd ~ && git clone --branch $CI_COMMIT_REF_NAME git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git www-frnt"
 #     when: on_success
 
-
-
 # #---------------------------------------------------------------
 # #-- Git deploy --
 # #---------------------------------------------------------------
@@ -115,8 +111,6 @@ do_nothing:
 #   script:
 #     - 'cd ~/www-frnt && git stash && git pull'
 #   when: on_success
-
-
 
 # #---------------------------------------------------------------
 # #-- Compouser update --
@@ -141,8 +135,6 @@ do_nothing:
 #     - 'cd ~/www-frnt && yarn install'
 #   when: on_success
 
-
-
 # #---------------------------------------------------------------
 # #-- Node Build --
 # #---------------------------------------------------------------
@@ -165,8 +157,6 @@ do_nothing:
 #   script:
 #     - 'cd ~/www-frnt && yarn build-main'
 #   when: on_success
-
-
 
 # #---------------------------------------------------------------
 # #-- Node Restart --

@@ -3,9 +3,18 @@ import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
 import { reset } from '@/features/campaigns/store/create-campaign'
 import { useRedux } from '@/hooks/use-redux'
+import { FC } from 'react'
 import { CreateCampaignForm } from './components/CreateCampaignForm'
 
-export const CreateCampaignModal = (): JSX.Element => {
+type Props = {
+  selectedCampaignId: string
+  setSelectedCampaignId: (id: string) => void
+}
+
+export const CreateCampaignModal: FC<Props> = ({
+  selectedCampaignId,
+  setSelectedCampaignId,
+}: Props) => {
   const { t } = useTranslation('campaigns')
   const { resetModals } = useModals()
   const { dispatch } = useRedux()
@@ -25,7 +34,10 @@ export const CreateCampaignModal = (): JSX.Element => {
       maxWidth="612px"
       containerWidth="100%"
     >
-      <CreateCampaignForm />
+      <CreateCampaignForm
+        selectedCampaignId={selectedCampaignId}
+        setSelectedCampaignId={setSelectedCampaignId}
+      />
     </ModalMessage>
   )
 }

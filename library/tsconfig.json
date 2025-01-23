@@ -3,8 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "composite": true,
-    "typeRoots": [
-      "./styles/types", "../node_modules/@types"]
+    "typeRoots": ["./styles/types", "../node_modules/@types"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "dist"]

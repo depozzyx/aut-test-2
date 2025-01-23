@@ -16,7 +16,7 @@
     "title": "New API key",
     "field-label": "API key",
     "done": "Done"
-  }, 
+  },
   "revoke-api-key": {
     "title": "Are you sure you want to revoke API key?",
     "revoke": "Revoke",

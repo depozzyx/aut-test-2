@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, FC } from 'react'
 import { useFormik } from 'formik'
 import { shallowEqual, useStore } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
@@ -22,6 +22,7 @@ import {
   selectAgentsPagination,
   selectAgentsOptions,
   reset as resetAgentsList,
+  setAgentsList,
 } from '@/features/agents/store/agents'
 import { ORDER_BY } from '@/constants/orderBy'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
@@ -35,18 +36,34 @@ import {
   selectFormDataForReview,
 } from '@/features/campaigns/store/create-campaign'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { useCampaignNameFilter } from '@/features/campaigns/hooks/use-campaignNameFilter'
+import { Select } from '@peiko/components/inputs/Select/Select'
+import { SingleValue } from 'react-select'
+import { TSelectOption } from '@/components/MutliSelect/types'
+import { apiCampaigns } from '@/api-rest/campaigns'
+import { TAgent } from '@/api-rest/agents/types'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
 import {
   INITIAL_REQUEST_PARAMS_CREATE,
   PAGINATION_REQUEST_TIME,
 } from '../../../../../constants'
 
-export const CreateCampaignForm = (): JSX.Element => {
+type Props = {
+  selectedCampaignId: string
+  setSelectedCampaignId: (id: string) => void
+}
+
+export const CreateCampaignForm: FC<Props> = ({
+  selectedCampaignId,
+  setSelectedCampaignId,
+}: Props) => {
   const { t } = useTranslation('campaigns')
   const { resetModals, modalState } = useModals()
   const { select, dispatch } = useRedux()
   const formDataForReview = select(selectFormDataForReview, shallowEqual)
   const store = useStore()
+
+  const { campaignOptions, loadMoreCampaigns } = useCampaignNameFilter('list', true)
 
   const {
     leadsPagination: { page: leadsPage, limit: leadsLimit, total: leadsTotal },
@@ -130,6 +147,44 @@ export const CreateCampaignForm = (): JSX.Element => {
     resetModals()
   }
 
+  const handleCampaignSelect = async (option: SingleValue<TSelectOption>) => {
+    setSelectedCampaignId(option?.value ? String(option?.value) : '')
+    if (option?.value) {
+      const id = String(option?.value)
+      const {
+        data: { data: campaign },
+      } = await apiCampaigns.getCampaignById(id)
+
+      if (campaign) {
+        ;['mode', 'coefficient', 'holdTime'].forEach((field) => {
+          if (campaign[field]) {
+            formik.setFieldValue(field, campaign[field])
+          }
+        })
+
+        if (campaign?.assignedAgents?.length) {
+          const newAssignedAgentIds = campaign.assignedAgents.map(
+            (agent: TAgent) => agent.id,
+          )
+          const newOptions: TAgent[] = []
+          campaign.assignedAgents.forEach((agent: TAgent) => {
+            if (!agentsOptions.some((option) => option.value === agent.id)) {
+              newOptions.push(agent)
+            }
+          })
+          if (newOptions.length) {
+            dispatch(setAgentsList({ data: newOptions, append: true }))
+          }
+          await formik.setFieldValue('assignedAgentIds', newAssignedAgentIds)
+        }
+      }
+    } else if (option?.label === '-') {
+      formik.setFieldValue('holdTime', '')
+      formik.setFieldValue('assignedAgentIds', [])
+      await getSettings(formik)
+    }
+  }
+
   const onLeadsScrollToBottom = useCallback(
     debounce(() => {
       const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 10))
@@ -175,6 +230,22 @@ export const CreateCampaignForm = (): JSX.Element => {
     <form onSubmit={formik.handleSubmit} autoComplete="off" style={{ width: '100%' }}>
       <Flex width="100%" direction="column" align="center" gap={48} margin="40px 0 0 0">
         <Flex maxWidth="424px" width="100%" direction="column" gap={16}>
+          <Select
+            name="campaignId"
+            onChange={handleCampaignSelect}
+            placeholder={t('create-campaign.select-campaign-placeholder')}
+            label={{ label: t('create-campaign.select-campaign-label') }}
+            options={campaignOptions.filter((v) =>
+              String(selectedCampaignId) === '' ? v.label !== '-' : true,
+            )}
+            value={
+              campaignOptions.find((i) => String(i.value) === String(selectedCampaignId))
+                ?.value
+            }
+            onMenuScrollToBottom={loadMoreCampaigns}
+            maxMenuHeight={200}
+            width="100%"
+          />
           <FormikInput
             size="s"
             name="name"

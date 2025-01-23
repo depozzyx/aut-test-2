@@ -3,7 +3,7 @@ import type { Preview } from '@storybook/react'
 import { ThemeProvider } from 'styled-components'
 import { theming } from '@peiko/styles/theme'
 import 'react-day-picker/dist/style.css'
-import { GlobalStyles } from "@/styles/global-styles"
+import { GlobalStyles } from '@/styles/global-styles'
 
 export const decorators = [
   withThemeFromJSXProvider({

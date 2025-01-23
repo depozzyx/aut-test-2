@@ -1,3 +1,4 @@
+---
 #---------------------------------------------------------------
 #-- Variables Section --
 #---------------------------------------------------------------
@@ -62,8 +63,6 @@ test_dir_prod:
     #-- Clone project--
     - 'cd ~ && git clone --branch $CI_COMMIT_REF_NAME git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git www'
 
-
-
 #---------------------------------------------------------------
 #-- Git deploy --
 #---------------------------------------------------------------
@@ -87,8 +86,6 @@ git_pull_prod:
     - 'cd ~/www && git stash && git pull'
   when: on_success
 
-
-
 #---------------------------------------------------------------
 #-- Compouser update --
 #---------------------------------------------------------------
@@ -111,8 +108,6 @@ update_npm_prod:
   script:
     - 'cd ~/www && yarn install'
   when: on_success
-
-
 
 #---------------------------------------------------------------
 #-- Node Build --
@@ -157,7 +152,6 @@ build_v2_prod:
     - 'cd ~/www && yarn build'
   when: on_success
 
-
 #---------------------------------------------------------------
 #-- Node Restart --
 #---------------------------------------------------------------
@@ -184,4 +178,3 @@ restart_npm_prod:
     - 'pm2 info BUILDv2-PRODUCTION && pm2 delete BUILDv2-PRODUCTION || true'
     - 'cd ~/www && /usr/bin/pm2 start yarn --interpreter bash --name BUILDv2-PRODUCTION -- start'
   when: on_success
-

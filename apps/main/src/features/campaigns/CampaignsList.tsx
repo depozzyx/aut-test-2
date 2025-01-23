@@ -17,6 +17,7 @@ import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { StatusFilter } from '@/features/campaigns/containers/filters/StatusFilter'
 import { FeaturePermission } from '@/features/common/permissions/FeaturePermissions'
 import { EManagerPermissions } from '@/constants/profile'
+import { useState } from 'react'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import {
   Container,
@@ -81,6 +82,13 @@ export const CampaignsList = (): JSX.Element => {
   const createModalIsOpen =
     modalState?.modalName === MODAL_NAMES.CREATE_CAMPAIGN && modalState.isOpen
 
+  const [selectedCampaignId, setSelectedCampaignId] = useState('')
+
+  const createNew = () => {
+    setSelectedCampaignId('')
+    handleCreateCampaign()
+  }
+
   return (
     <>
       <Container>
@@ -97,7 +105,7 @@ export const CampaignsList = (): JSX.Element => {
               maxWidth="236px"
               width="100%"
               startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
-              onClick={handleCreateCampaign}
+              onClick={createNew}
             >
               {t('add-campaign')}
             </FilledButton>
@@ -144,9 +152,18 @@ export const CampaignsList = (): JSX.Element => {
           />
         </PaginationContainer>
       </Container>
-      <EditCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
-      <DeleteCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
-      {createModalIsOpen && <CreateCampaignModal />}
+      {modalState?.modalName === MODAL_NAMES.EDIT_CAMPAIGN && modalState.isOpen && (
+        <EditCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
+      )}
+      {modalState?.modalName === MODAL_NAMES.DELETE_CAMPAIGN && modalState.isOpen && (
+        <DeleteCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
+      )}
+      {createModalIsOpen && (
+        <CreateCampaignModal
+          selectedCampaignId={selectedCampaignId}
+          setSelectedCampaignId={setSelectedCampaignId}
+        />
+      )}
       {reviewModalIsOpen && <NewCampaignReviewModal type={CAMPAIGN_TABLE_TYPES.LIST} />}
     </>
   )
