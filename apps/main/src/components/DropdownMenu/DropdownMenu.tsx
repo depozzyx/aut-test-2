@@ -37,8 +37,9 @@ const Menu: FC<
   const handleMenuScroll = () => {
     const menu = menuRef.current
     if (menu) {
-      const threshold = 1; 
-      const isEndReached = menu.scrollHeight - menu.scrollTop <= menu.clientHeight + threshold;
+      const threshold = 1
+      const isEndReached =
+        menu.scrollHeight - menu.scrollTop <= menu.clientHeight + threshold
 
       if (isEndReached) {
         onMenuScrollToBottom?.()

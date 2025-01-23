@@ -16,16 +16,6 @@ import { useCampaignsManager } from './hooks/use-campaignsManager'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import { asyncGetActiveCampaigns } from './store/campaigns'
 
-const CreateCampaignModal = dynamic(
-  () =>
-    import('./containers/modals/CreateCampaignModal').then(
-      (mod) => mod.CreateCampaignModal,
-    ),
-  {
-    ssr: false,
-  },
-)
-
 const DeleteCampaignModal = dynamic(
   () =>
     import('./containers/modals/DeleteCampaignModal').then(
@@ -70,8 +60,6 @@ export const ActiveCampaigns = (): JSX.Element => {
 
   const reviewModalIsOpen =
     modalState?.modalName === MODAL_NAMES.REVIEW_CAMPAIGN && modalState.isOpen
-  const createModalIsOpen =
-    modalState?.modalName === MODAL_NAMES.CREATE_CAMPAIGN && modalState.isOpen
 
   return (
     <>
@@ -120,7 +108,6 @@ export const ActiveCampaigns = (): JSX.Element => {
       </Flex>
       <EditCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
       <DeleteCampaignModal type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
-      {createModalIsOpen && <CreateCampaignModal />}
       {reviewModalIsOpen && <NewCampaignReviewModal type={CAMPAIGN_TABLE_TYPES.ACTIVE} />}
     </>
   )

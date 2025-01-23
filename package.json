@@ -14,6 +14,7 @@
     "storybook-docs-main": "yarn workspace main storybook dev --docs",
     "build-storybook-main": "yarn workspace main storybook build",
     "lint": "eslint .",
+    "prettify": "npx prettier --write .",
     "lint-deploy": "eslint . --max-warnings 0",
     "lint-format": "eslint . --quiet --fix",
     "lint-commit": "eslint . --quiet --fix --max-warnings 0",

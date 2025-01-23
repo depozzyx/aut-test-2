@@ -11,5 +11,4 @@
 
 - Build configuration in file: **next.config.js**
 
-
 docker-compose up
