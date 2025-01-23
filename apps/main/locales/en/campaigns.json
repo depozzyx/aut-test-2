@@ -38,8 +38,8 @@
   "create-campaign": {
     "title": "Create new Campaign",
     "campaign-name": "Campaign Name",
-    "select-campaign-label": "Settings by campaign",
-    "select-campaign-placeholder": "Select campaign for applying settings",
+    "select-campaign-label": "Copy Settings from Campaign",
+    "select-campaign-placeholder": "Choose the campaign to use as a template",
     "agent-assignment": "Agent Assignment",
     "lead-selection": "Lead List Selection",
     "call-frequency": "Call Frequency",
