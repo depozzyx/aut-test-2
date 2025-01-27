@@ -15,7 +15,7 @@ import { setFilterCampaignName } from '@/features/campaigns/store/campaigns'
 
 type TUniversalCampaign = TActiveCampaign | TCampaign
 
-type TCampaignOption = {
+export type TCampaignOption = {
   label: string
   value: string | number
 }

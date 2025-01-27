@@ -223,4 +223,4 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
   )
 }, deepEqual)
 
-LeadListTable.displayName = 'LeadsTable'
+LeadListTable.displayName = 'LeadsListTable'

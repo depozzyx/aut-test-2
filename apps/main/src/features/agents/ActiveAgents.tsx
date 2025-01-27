@@ -78,7 +78,7 @@ export const ActiveAgents = (): JSX.Element => {
     }, 5000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [page, limit, searchTerm, sortBy, orderBy, statusFilter])
 
   return (
     <Flex direction="column" padding="12px 0 0 0">

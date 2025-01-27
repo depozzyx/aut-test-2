@@ -49,11 +49,9 @@ export const LeadList: FC = () => {
   })
 
   const onChangePage = (page: number) =>
-    dispatch(
-      asyncGetLeadLists({ page, limit, orderBy, sortBy, ...cleanObject(filters.values) }),
-    )
+    dispatch(asyncGetLeadLists({ page, orderBy, sortBy, ...cleanObject(filters.values) }))
 
-  const onChangeFilters = () => onChangePage(page)
+  const onChangeFilters = () => onChangePage(1)
 
   useEffect(() => {
     onChangeFilters()

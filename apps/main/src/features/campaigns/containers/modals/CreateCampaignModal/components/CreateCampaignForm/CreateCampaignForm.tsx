@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, FC } from 'react'
+import React, { useEffect, useCallback, FC, useState } from 'react'
 import { useFormik } from 'formik'
 import { shallowEqual, useStore } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
@@ -36,12 +36,15 @@ import {
   selectFormDataForReview,
 } from '@/features/campaigns/store/create-campaign'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { useCampaignNameFilter } from '@/features/campaigns/hooks/use-campaignNameFilter'
+import { TCampaignOption } from '@/features/campaigns/hooks/use-campaignNameFilter'
 import { Select } from '@peiko/components/inputs/Select/Select'
 import { SingleValue } from 'react-select'
 import { TSelectOption } from '@/components/MutliSelect/types'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { TAgent } from '@/api-rest/agents/types'
+import { TPagination } from '@/types/entities/pagination'
+import { handleRestError } from '@/features/common/error'
+import { TCampaign } from '@/features/campaigns/types'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
 import {
   INITIAL_REQUEST_PARAMS_CREATE,
@@ -63,7 +66,47 @@ export const CreateCampaignForm: FC<Props> = ({
   const formDataForReview = select(selectFormDataForReview, shallowEqual)
   const store = useStore()
 
-  const { campaignOptions, loadMoreCampaigns } = useCampaignNameFilter('list', true)
+  const [campaignOptions, setCampaignOptions] = useState<TCampaignOption[]>([
+    { label: '-', value: '' },
+  ])
+  const [campaignsPagination, setCampaignsPagination] = useState<TPagination>({
+    page: 1,
+    limit: 10,
+    total: 1,
+  })
+
+  const getAndSetCampaignParams = async () => {
+    try {
+      const { data } = await apiCampaigns.getCampaignList({
+        page: campaignsPagination.page,
+        limit: campaignsPagination.limit,
+        orderBy: 'DESC',
+      })
+      setCampaignOptions((prev) => [
+        ...prev,
+        ...data.data.map((campaign: TCampaign) => ({
+          label: campaign.name,
+          value: campaign.id,
+        })),
+      ])
+      setCampaignsPagination(data.pagination)
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    }
+  }
+  useEffect(() => {
+    getAndSetCampaignParams()
+  }, [campaignsPagination.page, campaignsPagination.limit])
+
+  const loadMoreCampaigns = useCallback(() => {
+    const nextPage = campaignsPagination.page + 1
+    const lastPage = Math.ceil(
+      campaignsPagination.total / (campaignsPagination.limit ?? 10),
+    )
+    if (campaignsPagination.page < lastPage) {
+      setCampaignsPagination((prev) => ({ ...prev, page: nextPage }))
+    }
+  }, [campaignsPagination])
 
   const {
     leadsPagination: { page: leadsPage, limit: leadsLimit, total: leadsTotal },

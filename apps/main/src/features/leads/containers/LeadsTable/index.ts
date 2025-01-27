@@ -7,7 +7,7 @@ export const getLeadStatus = (
   statusCode: string,
 ): string => {
   let statusName = leadStatuses.find((status) => status.value === statusCode)?.name
-  if (!statusName && statusCode.startsWith('E('))
+  if (!statusName && statusCode && statusCode.startsWith('E('))
     statusName = statusCode.replace('E', 'Error')
   return statusName || ''
 }

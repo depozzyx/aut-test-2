@@ -26,6 +26,9 @@ const createCampaign = (data: TCreateCampaignReq): TAxiosResponse<any> =>
 
 const getCampaignById = (id: string): TAxiosResponse<any> => api.get(`/campaign/${id}`)
 
+const getCampaignStatusById = (id: string): TAxiosResponse<any> =>
+  api.get(`/campaign/${id}/status`)
+
 const getAgentAssignedActiveCampaigns = (): Promise<TAxiosResponse<any>> =>
   api.get('/campaign/agent-assigned')
 
@@ -40,6 +43,7 @@ export const apiCampaigns = {
   getCampaignList,
   deleteCampaign,
   getCampaignById,
+  getCampaignStatusById,
   getAgentAssignedActiveCampaigns,
   stopCampaign,
   startCampaign,

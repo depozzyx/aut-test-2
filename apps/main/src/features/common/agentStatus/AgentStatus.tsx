@@ -6,9 +6,16 @@ import { TAgentWorkStatus } from '@/features/agents/types'
 import styled from 'styled-components'
 import { Box } from '@peiko/components/Box'
 import { Translate } from 'next-translate'
-import { selectSelectedCampaignId } from '@/features/agents/store/agents'
+import {
+  selectSelectedCampaignId,
+  setSelectedCampaignId,
+} from '@/features/agents/store/agents'
 import { useRouter } from 'next/router'
 import { ROUTES } from '@/routes'
+import { apiCampaigns } from '@/api-rest/campaigns'
+import { CAMPAIGN_STATUSES } from '@/features/campaigns/constants'
+import { SingleValue } from 'react-select'
+import { TSelectOption } from '@/components/MutliSelect/types'
 import { useAuth } from '../user'
 import { PBXStatus } from './containers/PBXStatus'
 import { agentActions, agentStatusSelector } from './store'
@@ -92,6 +99,25 @@ export const AgentStatus: FC = () => {
     }
   }, [pbxStatus.status])
 
+  const checkAndSetCampaign = async (e: SingleValue<TSelectOption>) => {
+    if (e?.value && typeof e.value === 'string') {
+      if (e?.value === 'start') {
+        if (!selectedCampaignId) {
+          dispatch(agentActions.setCheckCampaignId(true))
+        } else {
+          const { data } = await apiCampaigns.getCampaignStatusById(selectedCampaignId)
+          if (data?.data === CAMPAIGN_STATUSES.COMPLETE) {
+            dispatch(setSelectedCampaignId(null))
+          } else {
+            dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
+          }
+        }
+      } else {
+        dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
+      }
+    }
+  }
+
   return (
     <Box styles={{ display: 'flex', alignItems: 'center', gap: '0' }}>
       <PBXStatus />
@@ -101,15 +127,7 @@ export const AgentStatus: FC = () => {
         options={options}
         readOnlySelection
         disabled={pbxStatus.status === 'oncall' || pbxStatus.status === 'ringing'}
-        onChange={(e) => {
-          if (e?.value && typeof e.value === 'string') {
-            if (e?.value === 'start' && !selectedCampaignId) {
-              dispatch(agentActions.setCheckCampaignId(true))
-            } else {
-              dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
-            }
-          }
-        }}
+        onChange={checkAndSetCampaign}
       />
     </Box>
   )
