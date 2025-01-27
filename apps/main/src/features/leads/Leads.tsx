@@ -86,14 +86,13 @@ export const Leads: FC = () => {
     dispatch(
       getLeadList({
         page,
-        limit,
         orderBy,
         leadListId: leadsGroup,
         ...cleanObject(filters.values),
       }),
     )
 
-  const onChangeFilters = () => onChangePage(page)
+  const onChangeFilters = () => onChangePage(1)
 
   useEffect(() => {
     onChangeFilters()

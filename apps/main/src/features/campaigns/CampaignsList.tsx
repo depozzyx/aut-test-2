@@ -77,11 +77,6 @@ export const CampaignsList = (): JSX.Element => {
     handlerResetFilters,
   } = useCampaignsManager(asyncGetCampaignsList)
 
-  const reviewModalIsOpen =
-    modalState?.modalName === MODAL_NAMES.REVIEW_CAMPAIGN && modalState.isOpen
-  const createModalIsOpen =
-    modalState?.modalName === MODAL_NAMES.CREATE_CAMPAIGN && modalState.isOpen
-
   const [selectedCampaignId, setSelectedCampaignId] = useState('')
 
   const createNew = () => {
@@ -158,13 +153,15 @@ export const CampaignsList = (): JSX.Element => {
       {modalState?.modalName === MODAL_NAMES.DELETE_CAMPAIGN && modalState.isOpen && (
         <DeleteCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
       )}
-      {createModalIsOpen && (
+      {modalState?.modalName === MODAL_NAMES.CREATE_CAMPAIGN && modalState.isOpen && (
         <CreateCampaignModal
           selectedCampaignId={selectedCampaignId}
           setSelectedCampaignId={setSelectedCampaignId}
         />
       )}
-      {reviewModalIsOpen && <NewCampaignReviewModal type={CAMPAIGN_TABLE_TYPES.LIST} />}
+      {modalState?.modalName === MODAL_NAMES.REVIEW_CAMPAIGN && modalState.isOpen && (
+        <NewCampaignReviewModal type={CAMPAIGN_TABLE_TYPES.LIST} />
+      )}
     </>
   )
 }

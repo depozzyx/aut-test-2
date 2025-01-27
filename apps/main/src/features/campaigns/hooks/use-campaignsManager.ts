@@ -71,9 +71,9 @@ export const useCampaignsManager = (
     shallowEqual,
   )
 
-  const fetchWithParams = () => {
+  const fetchWithParams = (newPage?: number) => {
     const currentParams = {
-      page,
+      page: newPage || page,
       limit,
       orderBy,
       ...(searchTerm && { search: searchTerm }),
@@ -110,10 +110,9 @@ export const useCampaignsManager = (
   ])
 
   useEffect(() => {
-    fetchWithParams()
+    fetchWithParams(1)
   }, [
     dispatch,
-    page,
     limit,
     orderBy,
     searchTerm,
