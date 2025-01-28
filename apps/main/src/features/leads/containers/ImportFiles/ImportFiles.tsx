@@ -94,6 +94,8 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     setModal({ modalName: MODAL_NAMES.CREATE_LEADS_GROUP, isOpen: true })
   }
 
+  const resetFiles = () => dispatch(setImportFiles([]))
+
   return (
     <Flex
       justify="center"
@@ -282,7 +284,11 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
         </UploadFiles>
         <ImportFilesList />
         <Flex justify="space-between" gap="24px" margin="48px 0 0">
-          <OutlinedButton link={{ href: ROUTES.DASHBOARD_ACTIVE_CAMPAIGNS }} width="100%">
+          <OutlinedButton
+            link={{ href: ROUTES.DASHBOARD_ACTIVE_CAMPAIGNS }}
+            onClick={resetFiles}
+            width="100%"
+          >
             {t('cancel')}
           </OutlinedButton>
           <FilledButton

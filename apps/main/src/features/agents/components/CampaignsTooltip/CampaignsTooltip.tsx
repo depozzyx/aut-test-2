@@ -28,6 +28,7 @@ export const CampaignsTooltip = ({ campaigns }: ICampaignTooltipProps): JSX.Elem
   return (
     <Tooltip
       position="bottom center"
+      keepTooltipInside
       trigger={
         <Trigger startAdornment={<SmallInfoIcon />} disabled={!campaignsAmount}>
           <Text variant="f8" color="base">
@@ -36,18 +37,26 @@ export const CampaignsTooltip = ({ campaigns }: ICampaignTooltipProps): JSX.Elem
         </Trigger>
       }
       renderMenu={() => (
-        <Menu>
-          {campaigns.map((campaign) => (
-            <MenuItem
-              key={campaign.id}
-              onClick={() => handleOpenCampaignInfoModal(campaign)}
-            >
-              <Text variant="f10" color="base">
-                {campaign.name}
-              </Text>
-            </MenuItem>
-          ))}
-        </Menu>
+        <div
+          style={{
+            overflowY: 'scroll',
+            maxHeight: '150px',
+            padding: '0 8px',
+          }}
+        >
+          <Menu>
+            {campaigns.map((campaign) => (
+              <MenuItem
+                key={campaign.id}
+                onClick={() => handleOpenCampaignInfoModal(campaign)}
+              >
+                <Text variant="f10" color="base">
+                  {campaign.name}
+                </Text>
+              </MenuItem>
+            ))}
+          </Menu>
+        </div>
       )}
       offsetY={8}
       closeOnDocumentClick
@@ -55,6 +64,7 @@ export const CampaignsTooltip = ({ campaigns }: ICampaignTooltipProps): JSX.Elem
       arrowColor="main3"
       contentBorderColor="main3"
       arrow
+      padding="2px"
     />
   )
 }
