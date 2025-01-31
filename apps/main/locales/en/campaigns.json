@@ -93,5 +93,26 @@
   "custom-report": "Custom Report",
   "conversion-rate": "Conversion rate",
   "callAnswer-rate": "Answer rate",
-  "average-callDuration": "Average call duration"
+  "average-callDuration": "Average call duration",
+  "view": {
+    "info": {
+      "title": "Campaign Info"
+    },
+    "agentsCalls": {
+      "title": "Agent Calls"
+    },
+    "callsByLeadStatuses": {
+      "title": "Calls By Lead Statuses"
+    },
+    "campaignLeadLists": {
+      "title": "Campaign Lead Lists"
+    },
+    "name": "Name",
+    "status": "Status",
+    "callsToday": "Calls today",
+    "breadCrumbs": {
+      "campaigns": "Campaigns",
+      "campaign": "Campaign"
+    }
+  }
 }

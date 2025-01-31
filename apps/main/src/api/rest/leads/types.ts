@@ -13,6 +13,7 @@ export enum ELeadsSortBy {
   CREATED_AT = 'createdAt',
   ID = 'id',
   NAME = 'name',
+  ACTIVE = 'active',
   TIMEZONE = 'timezone',
   STATUS = 'status',
   PHONE = 'phone',

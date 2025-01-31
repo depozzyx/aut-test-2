@@ -8,6 +8,7 @@ export const ROUTES = {
   DASHBOARD_ACTIVE_AGENTS: '/cabinet/dashboard/active-agents',
   DASHBOARD_CAMPAIGN_EFFECTIVENESS: '/cabinet/dashboard/campaigns-effectiveness',
   CAMPAIGNS_LIST: '/cabinet/campaigns/list',
+  CAMPAIGN_VIEW: (campaignId: number): string => `/cabinet/campaigns/view/${campaignId}`,
   CAMPAIGNS_ANALYTICS: '/cabinet/campaigns/analytics',
 
   AGENTS_LIST: '/cabinet/agents/list',

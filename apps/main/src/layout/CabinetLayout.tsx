@@ -14,6 +14,7 @@ type TProps = {
   justifyContent?: CSSProperties['justifyContent']
   title?: string
   titlePaddingTop?: string
+  breadCrumbs?: React.ReactNode
 }
 
 type TCabinetLayoutProps = TProps & Partial<TDefaultBreakpoints<TProps>>
@@ -74,6 +75,7 @@ export const CabinetLayout: React.FC<TCabinetLayoutProps> = ({
   children,
   title,
   titlePaddingTop = '12px',
+  breadCrumbs,
   ...props
 }) => (
   <>
@@ -82,6 +84,7 @@ export const CabinetLayout: React.FC<TCabinetLayoutProps> = ({
     <ContentWrapper>
       <Sidebar />
       <Content padding="12px 26px 26px 40px" {...props}>
+        {breadCrumbs && breadCrumbs}
         <CustomPopupOverlay id="customPopupOverlay" />
         <Flex align="center" justify="space-between">
           <Text variant="f2" styles={{ paddingTop: titlePaddingTop }}>

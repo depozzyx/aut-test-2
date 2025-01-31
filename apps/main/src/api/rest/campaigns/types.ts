@@ -2,6 +2,8 @@
 import { TPagination } from '@/types/entities/pagination'
 import { StatisticsTypeResponse, TCampaignStatus } from '@/features/campaigns/types'
 import { TOrderBy } from '@/types/entities/orderBy'
+import { TLeadCallStatusStatisticRawData } from '@/api-rest/lead-list/types'
+import { TGeneratedSuccessStatuses } from '@/constants/success-status'
 
 export type TSortBy = 'createdAt' | 'status' | 'name'
 
@@ -40,4 +42,24 @@ export type TCampaignWSStatistic = {
     campaignId: number
     statistic: StatisticsTypeResponse
   }
+}
+
+export type TAgentCalls = {
+  userId: number
+  agentName: string
+  total: string
+}
+
+export type TCampaignInfo = {
+  id: number
+  name: string
+  status: string
+  callsToday: number
+  agentsCalls: TAgentCalls[]
+  byLeadStatuses: TLeadCallStatusStatisticRawData
+}
+
+export type TCampaignInfoRes = {
+  statusCode: TGeneratedSuccessStatuses
+  data: TCampaignInfo
 }
