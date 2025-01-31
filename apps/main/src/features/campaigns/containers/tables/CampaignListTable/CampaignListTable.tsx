@@ -9,7 +9,6 @@ import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { TCampaignStatus } from '@/features/campaigns/types'
 import { IconButton } from '@peiko/components/buttons/IconButton'
-import { ViewIcon } from '@peiko/components/icons/ViewIcon'
 import { EditIcon } from '@peiko/components/icons/EditIcon'
 import { TrashIcon } from '@peiko/components/icons/TrashIcon'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
@@ -18,7 +17,8 @@ import { THeader } from '@peiko/components/Table/types'
 import { HeaderWithSort } from 'components/HeaderWithSort'
 import { SORT_BY } from '@/features/campaigns/constants'
 import { useCampaignSort } from '@/features/campaigns/hooks/use-campaignSort'
-import { ROUTES } from '@/constants/routes'
+import { EyeIcon } from '@peiko/components/icons/EyeIcon/EyeIcon'
+import { ROUTES } from '@/routes'
 import { InfoCell } from '../../../components/InfoCell'
 import { StatusChip } from '../../../components/StatusChip'
 import { ActionBtn } from '../../../components/ActionBtn'
@@ -56,11 +56,6 @@ export const CampaignListTable = (): JSX.Element => {
   )
 
   const { handleSort } = useCampaignSort()
-
-  const handleView = useCallback((id: number) => {
-    dispatch(setSelectedId(id))
-    push(ROUTES.CAMPAIGNS_ANALYTICS)
-  }, [])
 
   const handleDelete = useCallback((id: number) => {
     dispatch(setSelectedId(id))
@@ -127,8 +122,11 @@ export const CampaignListTable = (): JSX.Element => {
         />
       ),
       view: (
-        <IconButton onClick={() => handleView(campaign.id)} iconColor="main3">
-          <ViewIcon width="24px" height="24px" />
+        <IconButton
+          onClick={() => push(ROUTES.CAMPAIGN_VIEW(campaign.id))}
+          iconColor="main3"
+        >
+          <EyeIcon width="24px" height="24px" />
         </IconButton>
       ),
       edit: (

@@ -6,6 +6,8 @@ do_nothing:
   stage: noop
   script:
     - echo "This pipeline does nothing"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
 # #---------------------------------------------------------------
 # #-- Common --
 # #---------------------------------------------------------------

@@ -7,8 +7,10 @@ import { useTheme } from 'styled-components'
 
 export const LeadListCallStatisticTable = ({
   data,
+  maxHeight = '260px',
 }: {
   data: TLeadCallStatusStatisticRawData
+  maxHeight?: string
 }): JSX.Element => {
   const { t } = useTranslation('leads-list')
 
@@ -46,7 +48,6 @@ export const LeadListCallStatisticTable = ({
               justifyContent: 'flex-start',
               alignItems: 'center',
               padding: '8px',
-              paddingRight: '16px',
             }}
           >
             <Text variant="f10" color="base">
@@ -56,7 +57,7 @@ export const LeadListCallStatisticTable = ({
         ))}
       </div>
 
-      <div style={{ maxHeight: '260px', overflowY: 'scroll' }}>
+      <div style={{ maxHeight, overflowY: 'auto' }}>
         {data.data.map((item) => (
           <div
             key={item.statusCode}

@@ -150,8 +150,8 @@ export function Table<R extends TRow, H extends THeader<keyof R['row']>>({
         <S.Table gridTemplateColumns={gridTemplateColumns}>
           {renderHeader()}
           {!isFallback && renderRows()}
-          {isFallback && emptyComponent}
         </S.Table>
+        {isFallback && emptyComponent}
         <InlineLoader variant="table" loading={loading} borderRadius={4} />
       </Box>
     </HorizontalScroll>

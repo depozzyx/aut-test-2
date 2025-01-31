@@ -11,11 +11,9 @@ interface IStatusChipProps {
 export const statusColor: Record<TLeadListStatus, keyof DefaultTheme['palette']> = {
   active: 'main7-100',
   inactive: 'main8-100',
-  successful: 'main7-100',
-  unsuccessful: 'main8-100',
 }
 
-export const StatusChip = ({ status }: IStatusChipProps): JSX.Element => {
+export const LeadListStatusChip = ({ status }: IStatusChipProps): JSX.Element => {
   const { t } = useTranslation('leads-list')
 
   return (
@@ -25,7 +23,7 @@ export const StatusChip = ({ status }: IStatusChipProps): JSX.Element => {
         color={statusColor[status]}
         styles={{ textTransform: 'uppercase' }}
       >
-        {t(`statuses.${status}`)}
+        {t(`statuses.lead-list.${status}`)}
       </Text>
     </StyledChip>
   )
