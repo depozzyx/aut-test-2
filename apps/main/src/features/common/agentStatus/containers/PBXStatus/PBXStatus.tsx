@@ -25,7 +25,7 @@ export const PBXStatus: FC = () => {
     manual: 'Manual Pause',
     system: 'System Pause',
     hold: 'On Hold',
-    feedback: 'Feedback Pause',
+    feedback: 'Feedback',
   }
   const getStatusName = () => {
     if (

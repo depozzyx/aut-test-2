@@ -3,26 +3,27 @@ import styled, { css } from 'styled-components'
 import { FilledChip } from '@peiko/components/chips/FilledChip'
 import { TDefaultPalette } from '@peiko/styles/types/palette'
 import { statusColor } from './AgentStatusChip'
-import { TAgentWorkStatus } from '../../types'
+import { TAgentActiveWorkStatus } from '../../types'
 
-const bgColor: Record<TAgentWorkStatus, keyof TDefaultPalette> = {
-  start: 'main8',
-  pause: 'main6',
-  unpause: 'main7',
-  finish: 'main10',
-  'on-call': 'main9',
+const bgColor: Record<TAgentActiveWorkStatus, keyof TDefaultPalette> = {
+  online: 'base300',
+  'on-hold': 'base500',
+  feedback: 'base',
+  'on-call': 'base600',
 }
 
-export const StyledChip = styled(FilledChip)<{ status: TAgentWorkStatus }>((props) => {
-  const { theme, status } = props
-  return css`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 100px;
-    width: 100%;
-    height: 28px;
-    background-color: ${theme.palette[bgColor[status]]};
-    border-color: ${theme.palette[statusColor[status]]};
-  `
-})
+export const StyledChip = styled(FilledChip)<{ status: TAgentActiveWorkStatus }>(
+  (props) => {
+    const { theme, status } = props
+    return css`
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 100px;
+      width: 100%;
+      height: 28px;
+      background-color: ${theme.palette[bgColor[status]]};
+      border-color: ${theme.palette[statusColor[status]]};
+    `
+  },
+)

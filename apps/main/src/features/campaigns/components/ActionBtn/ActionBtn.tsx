@@ -6,10 +6,15 @@ import { CAMPAIGN_STATUSES } from '../../constants'
 
 interface IActionBtnProps {
   status: TCampaignStatus
+  disabled: boolean
   onClick: () => void
 }
 
-export const ActionBtn = ({ status, onClick }: IActionBtnProps): JSX.Element => {
+export const ActionBtn = ({
+  status,
+  disabled,
+  onClick,
+}: IActionBtnProps): JSX.Element => {
   let icon
 
   switch (status) {
@@ -27,7 +32,6 @@ export const ActionBtn = ({ status, onClick }: IActionBtnProps): JSX.Element => 
   }
 
   const iconColor = status === CAMPAIGN_STATUSES.COMPLETE ? 'main22' : 'main3'
-  const disabled = status === CAMPAIGN_STATUSES.COMPLETE
 
   return (
     <IconButton disabled={disabled} iconColor={iconColor} onClick={onClick}>

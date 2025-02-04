@@ -2,19 +2,19 @@ import useTranslation from 'next-translate/useTranslation'
 import { Text } from '@peiko/components/Text'
 import { DefaultTheme } from 'styled-components'
 import { StyledChip } from './AgentStatusChip.styled'
-import { TAgentWorkStatus } from '../../types'
+import { TAgentActiveWorkStatus } from '../../types'
 
 interface IStatusChipProps {
-  status: TAgentWorkStatus
+  status: TAgentActiveWorkStatus
 }
 
-export const statusColor: Record<TAgentWorkStatus, keyof DefaultTheme['palette']> = {
-  start: 'main8-100',
-  pause: 'main6-100',
-  unpause: 'main7-100',
-  finish: 'main10-100',
-  'on-call': 'main9-100',
-}
+export const statusColor: Record<TAgentActiveWorkStatus, keyof DefaultTheme['palette']> =
+  {
+    online: 'main7-100',
+    'on-hold': 'main',
+    feedback: 'main6-100',
+    'on-call': 'main10-100',
+  }
 
 export const AgentStatusChip = ({ status }: IStatusChipProps): JSX.Element => {
   const { t } = useTranslation('agents')
@@ -26,7 +26,7 @@ export const AgentStatusChip = ({ status }: IStatusChipProps): JSX.Element => {
         color={statusColor[status]}
         styles={{ textTransform: 'uppercase' }}
       >
-        {t(`statuses.${status}`)}
+        {t(`work-statuses.${status}`)}
       </Text>
     </StyledChip>
   )
