@@ -139,7 +139,7 @@ export const CampaignListTable = (): JSX.Element => {
         <IconButton
           onClick={() => handleEditCampaign(campaign.id)}
           iconColor="transparent"
-          disabled={campaign.status === CAMPAIGN_STATUSES.COMPLETE}
+          disabled={campaign.status !== CAMPAIGN_STATUSES.PAUSE}
         >
           <EditIcon width="24px" height="24px" />
         </IconButton>
@@ -148,7 +148,7 @@ export const CampaignListTable = (): JSX.Element => {
         <IconButton
           onClick={() => handleDelete(campaign.id)}
           iconColor="main13"
-          disabled={campaign.status === CAMPAIGN_STATUSES.COMPLETE}
+          disabled={campaign.status !== CAMPAIGN_STATUSES.PAUSE}
         >
           <TrashIcon width="24px" height="24px" />
         </IconButton>

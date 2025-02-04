@@ -14,7 +14,7 @@ import { THeader } from '@peiko/components/Table/types'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useCampaignSort } from '@/features/campaigns/hooks/use-campaignSort'
-import { SORT_BY } from '@/features/campaigns/constants'
+import { CAMPAIGN_STATUSES, SORT_BY } from '@/features/campaigns/constants'
 import { HeaderWithSort } from 'components/HeaderWithSort'
 import { StatisticsTypeResponse } from '@/features/campaigns/types'
 import { InfoCell } from '../../../components/InfoCell'
@@ -123,13 +123,18 @@ export const ActiveCampaignsTable = (): JSX.Element => {
       edit: (
         <IconButton
           onClick={() => handleEditCampaign(campaign.id)}
+          disabled={campaign.status !== CAMPAIGN_STATUSES.PAUSE}
           iconColor="transparent"
         >
           <EditIcon width="24px" height="24px" />
         </IconButton>
       ),
       delete: (
-        <IconButton onClick={() => handleDelete(campaign.id)} iconColor="main13">
+        <IconButton
+          onClick={() => handleDelete(campaign.id)}
+          disabled={campaign.status !== CAMPAIGN_STATUSES.PAUSE}
+          iconColor="main13"
+        >
           <TrashIcon width="24px" height="24px" />
         </IconButton>
       ),
