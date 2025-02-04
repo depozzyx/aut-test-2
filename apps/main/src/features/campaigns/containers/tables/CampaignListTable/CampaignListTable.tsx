@@ -7,7 +7,7 @@ import { Table } from '@peiko/components/Table'
 import { useRedux } from '@/hooks/use-redux'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { TCampaignStatus } from '@/features/campaigns/types'
+import { TCampaign, TCampaignStatus } from '@/features/campaigns/types'
 import { IconButton } from '@peiko/components/buttons/IconButton'
 import { EditIcon } from '@peiko/components/icons/EditIcon'
 import { TrashIcon } from '@peiko/components/icons/TrashIcon'
@@ -15,7 +15,7 @@ import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import { HeaderWithSort } from 'components/HeaderWithSort'
-import { SORT_BY } from '@/features/campaigns/constants'
+import { CAMPAIGN_STATUSES, SORT_BY } from '@/features/campaigns/constants'
 import { useCampaignSort } from '@/features/campaigns/hooks/use-campaignSort'
 import { EyeIcon } from '@peiko/components/icons/EyeIcon/EyeIcon'
 import { ROUTES } from '@/routes'
@@ -71,6 +71,11 @@ export const CampaignListTable = (): JSX.Element => {
     setModal({ modalName: MODAL_NAMES.EDIT_CAMPAIGN, isOpen: true })
   }, [])
 
+  const disabled = (campaign: TCampaign) =>
+    campaign.status === CAMPAIGN_STATUSES.COMPLETE ||
+    campaign.leadCount === 0 ||
+    campaign.leadLists.filter((l) => l.active).length === 0
+
   const headers: THeader<TCampaignRowKeys>[] = [
     {
       label: (
@@ -117,6 +122,7 @@ export const CampaignListTable = (): JSX.Element => {
       agents: <InfoCell title={campaign.agentCount} />,
       action: (
         <ActionBtn
+          disabled={disabled(campaign)}
           status={campaign.status}
           onClick={() => handleAction(campaign.id, campaign.status)}
         />

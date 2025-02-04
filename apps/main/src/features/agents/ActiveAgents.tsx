@@ -101,7 +101,7 @@ export const ActiveAgents = (): JSX.Element => {
           <Flex gap="16px" align="center">
             {statusFilter && (
               <PikedFilter onClose={() => handleResetStatusFilter()}>
-                {t(`statuses.${statusFilter}`)}
+                {t(`work-statuses.${statusFilter}`)}
               </PikedFilter>
             )}
           </Flex>

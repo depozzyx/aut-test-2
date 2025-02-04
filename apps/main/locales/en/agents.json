@@ -10,12 +10,10 @@
   },
   "active-agents-headers": {
     "agent-name": "Agent Name",
-    "agent-status": "Agent Status",
+    "work-status": "Agent Status",
+    "current-campaign": "Campaign",
     "calls-handled": "Calls Handled",
-    "calls-duration": "Calls Duration (avg)",
-    "rating": "Rating",
-    "time-online": "Time Online",
-    "sum-call-duration": "Sum Call Duration"
+    "time-online": "Time Online"
   },
   "create-agent": {
     "title": "Create new agent",
@@ -52,12 +50,15 @@
     "unsuccessful-calls": "Unsuccessful calls",
     "undetermined-calls": "Undefined calls"
   },
-  "statuses": {
-    "start": "Start",
+  "work-statuses": {
+    "online": "Online",
+    "start": "Offline",
     "pause": "Pause",
     "unpause": "Unpause",
     "finish": "Finished",
-    "on-call": "On Call"
+    "on-call": "On Call",
+    "on-hold": "On Hold",
+    "feedback": "Feedback"
   },
   "campaign-info": {
     "title": "Campaign Info",

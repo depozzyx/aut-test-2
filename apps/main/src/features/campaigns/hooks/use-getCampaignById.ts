@@ -15,6 +15,7 @@ export type TAgent = {
 export type TLeadList = {
   id: number
   name: string
+  active: boolean
   createdAt: string
   updatedAt: string
   campaign: TCampaign

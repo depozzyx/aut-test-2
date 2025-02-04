@@ -2,6 +2,7 @@ import {
   TGeneratedCallTime,
   TGeneratedCallFrequency,
 } from '@/features/campaigns/constants'
+import { TLeadList } from '@/features/campaigns/hooks/use-getCampaignById'
 
 export type TCampaignTableType = 'active' | 'list'
 
@@ -31,7 +32,7 @@ export type TCampaign = {
   createdAt: string
   agentCount: number
   leadCount: number
-  leadLists: []
+  leadLists: TLeadList[]
   assignedAgents: []
   intensity: TGeneratedCallFrequency
   intensityPerAgent: TGeneratedCallFrequency

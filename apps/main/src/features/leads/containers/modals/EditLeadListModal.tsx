@@ -80,7 +80,7 @@ export const EditLeadListModal = ({
   const formik = useFormik<TFormValues>({
     initialValues: {
       assignedLeadIds: [],
-      active: false,
+      active: leadListData.active,
     },
     onSubmit: async (values) => {
       const payload: TUpdateLeadListReq = {}

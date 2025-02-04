@@ -1,13 +1,13 @@
 import { useRedux } from '@/hooks/use-redux'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback } from 'react'
-import { TAgentWorkStatus } from '@/features/agents/types'
-import { AGENT_WORK_STATUS } from '@/features/agents/constants'
+import { TAgentActiveWorkStatus } from '@/features/agents/types'
+import { AGENT_ACTIVE_WORK_STATUS } from '@/features/agents/constants'
 import { setStatusFilter } from '@/features/agents/store/agents'
 
 type TReturn = {
-  handleOnChange: (value: TAgentWorkStatus) => void
-  statusOptions: { value: TAgentWorkStatus; label: string }[]
+  handleOnChange: (value: TAgentActiveWorkStatus) => void
+  statusOptions: { value: TAgentActiveWorkStatus; label: string }[]
 }
 
 export const useStatusFilter = (): TReturn => {
@@ -15,14 +15,16 @@ export const useStatusFilter = (): TReturn => {
   const { dispatch } = useRedux()
 
   const statusOptions = [
-    { value: AGENT_WORK_STATUS.START, label: t('statuses.start') },
-    { value: AGENT_WORK_STATUS.PAUSE, label: t('statuses.pause') },
-    { value: AGENT_WORK_STATUS.UNPAUSE, label: t('statuses.unpause') },
-    { value: AGENT_WORK_STATUS.FINISH, label: t('statuses.finish') },
-    { value: AGENT_WORK_STATUS.ON_CALL, label: t('statuses.on-call') },
+    { value: AGENT_ACTIVE_WORK_STATUS.ONLINE, label: t('work-statuses.online') },
+    { value: AGENT_ACTIVE_WORK_STATUS.ON_HOLD, label: t('work-statuses.on-hold') },
+    {
+      value: AGENT_ACTIVE_WORK_STATUS.FEEDBACK,
+      label: t('work-statuses.feedback'),
+    },
+    { value: AGENT_ACTIVE_WORK_STATUS.ON_CALL, label: t('work-statuses.on-call') },
   ]
 
-  const handleOnChange = useCallback((value: TAgentWorkStatus) => {
+  const handleOnChange = useCallback((value: TAgentActiveWorkStatus) => {
     dispatch(setStatusFilter(value))
   }, [])
 
