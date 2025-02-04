@@ -201,7 +201,9 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
         <IconButton
           onClick={() => handleEdit(leadList.id)}
           iconColor="transparent"
-          disabled={leadList.campaignStatus === CAMPAIGN_STATUSES.COMPLETE}
+          disabled={
+            leadList.campaignStatus && leadList.campaignStatus !== CAMPAIGN_STATUSES.PAUSE
+          }
         >
           <EditIcon width="24px" height="24px" />
         </IconButton>
@@ -210,7 +212,9 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
         <IconButton
           onClick={() => handleDelete(leadList.id)}
           iconColor="main13"
-          disabled={leadList.campaignStatus === CAMPAIGN_STATUSES.COMPLETE}
+          disabled={
+            leadList.campaignStatus && leadList.campaignStatus !== CAMPAIGN_STATUSES.PAUSE
+          }
         >
           <TrashIcon width="24px" height="24px" />
         </IconButton>
