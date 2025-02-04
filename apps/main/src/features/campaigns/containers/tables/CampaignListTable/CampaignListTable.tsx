@@ -139,12 +139,17 @@ export const CampaignListTable = (): JSX.Element => {
         <IconButton
           onClick={() => handleEditCampaign(campaign.id)}
           iconColor="transparent"
+          disabled={campaign.status === CAMPAIGN_STATUSES.COMPLETE}
         >
           <EditIcon width="24px" height="24px" />
         </IconButton>
       ),
       delete: (
-        <IconButton onClick={() => handleDelete(campaign.id)} iconColor="main13">
+        <IconButton
+          onClick={() => handleDelete(campaign.id)}
+          iconColor="main13"
+          disabled={campaign.status === CAMPAIGN_STATUSES.COMPLETE}
+        >
           <TrashIcon width="24px" height="24px" />
         </IconButton>
       ),
