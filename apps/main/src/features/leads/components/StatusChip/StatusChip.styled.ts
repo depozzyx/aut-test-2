@@ -19,8 +19,6 @@ export const StyledChip = styled(FilledChip)<{ status: TLeadListStatus }>((props
     width: 100%;
     height: 28px;
     background-color: ${theme.palette[bgColor[status]]};
-    border-color: ${status === 'active'
-      ? 'transparent'
-      : theme.palette[statusColor[status]]};
+    border-color: ${theme.palette[statusColor[status]]};
   `
 })

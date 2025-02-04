@@ -31,6 +31,7 @@ import {
   TLeadListData,
 } from '@/api-rest/lead-list/types'
 import { leadsApi } from '@/api-rest/leads'
+import { CAMPAIGN_STATUSES } from '@/features/campaigns/constants'
 import { InfoColumn } from '../../components/InfoColumn'
 
 type TLeadListRowKeys =
@@ -197,12 +198,20 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
         </IconButton>
       ),
       edit: (
-        <IconButton onClick={() => handleEdit(leadList.id)} iconColor="transparent">
+        <IconButton
+          onClick={() => handleEdit(leadList.id)}
+          iconColor="transparent"
+          disabled={leadList.campaignStatus === CAMPAIGN_STATUSES.COMPLETE}
+        >
           <EditIcon width="24px" height="24px" />
         </IconButton>
       ),
       delete: (
-        <IconButton onClick={() => handleDelete(leadList.id)} iconColor="main13">
+        <IconButton
+          onClick={() => handleDelete(leadList.id)}
+          iconColor="main13"
+          disabled={leadList.campaignStatus === CAMPAIGN_STATUSES.COMPLETE}
+        >
           <TrashIcon width="24px" height="24px" />
         </IconButton>
       ),
