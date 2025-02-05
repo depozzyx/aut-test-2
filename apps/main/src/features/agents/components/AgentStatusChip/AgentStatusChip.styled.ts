@@ -7,9 +7,11 @@ import { TAgentActiveWorkStatus } from '../../types'
 
 const bgColor: Record<TAgentActiveWorkStatus, keyof TDefaultPalette> = {
   online: 'base300',
-  'on-hold': 'base500',
+  'on-hold': 'main20',
   feedback: 'base',
   'on-call': 'base600',
+  pause: 'base500',
+  'manual pause': 'main20',
 }
 
 export const StyledChip = styled(FilledChip)<{ status: TAgentActiveWorkStatus }>(

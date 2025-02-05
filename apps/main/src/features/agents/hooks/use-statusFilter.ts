@@ -16,12 +16,20 @@ export const useStatusFilter = (): TReturn => {
 
   const statusOptions = [
     { value: AGENT_ACTIVE_WORK_STATUS.ONLINE, label: t('work-statuses.online') },
-    { value: AGENT_ACTIVE_WORK_STATUS.ON_HOLD, label: t('work-statuses.on-hold') },
+    { value: AGENT_ACTIVE_WORK_STATUS.ON_CALL, label: t('work-statuses.on-call') },
     {
       value: AGENT_ACTIVE_WORK_STATUS.FEEDBACK,
       label: t('work-statuses.feedback'),
     },
-    { value: AGENT_ACTIVE_WORK_STATUS.ON_CALL, label: t('work-statuses.on-call') },
+    { value: AGENT_ACTIVE_WORK_STATUS.ON_HOLD, label: t('work-statuses.on-hold') },
+    {
+      value: AGENT_ACTIVE_WORK_STATUS.PAUSE,
+      label: t('work-statuses.pause'),
+    },
+    {
+      value: AGENT_ACTIVE_WORK_STATUS.MANUAL_PAUSE,
+      label: t('work-statuses.manual pause'),
+    },
   ]
 
   const handleOnChange = useCallback((value: TAgentActiveWorkStatus) => {

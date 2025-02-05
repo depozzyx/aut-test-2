@@ -17,4 +17,6 @@ export const AGENT_ACTIVE_WORK_STATUS = {
   FEEDBACK: 'feedback',
   ON_HOLD: 'on-hold',
   ON_CALL: 'on-call',
+  PAUSE: 'pause',
+  MANUAL_PAUSE: 'manual pause',
 } as const

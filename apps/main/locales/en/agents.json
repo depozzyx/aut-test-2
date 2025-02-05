@@ -58,7 +58,8 @@
     "finish": "Finished",
     "on-call": "On Call",
     "on-hold": "On Hold",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "manual pause": "Manual Pause"
   },
   "campaign-info": {
     "title": "Campaign Info",
