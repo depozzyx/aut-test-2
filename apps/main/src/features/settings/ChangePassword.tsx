@@ -78,6 +78,7 @@ export const ChangePassword: FC = () => {
             width="134px"
             type="submit"
             isLoading={formik.isSubmitting}
+            disabled={!formik.dirty || !formik.isValid}
           >
             {t('changePassword.save')}
           </FilledButton>

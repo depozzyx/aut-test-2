@@ -16,12 +16,14 @@ interface LeadStatusRowProps {
   originalItem: { id?: number; name: string; value: string; isSystem?: boolean }
   item: { id?: number; name: string; value: string; isSystem?: boolean }
   onReset: (id?: number) => void
+  index: number
 }
 
 export const LeadStatusRow: FC<LeadStatusRowProps> = ({
   originalItem,
   item,
   onReset,
+  index,
 }) => {
   const { t } = useTranslation('settings')
   const { dispatch } = useRedux()
@@ -63,6 +65,13 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
   return (
     <Flex gap="14px" styles={{ marginBottom: '10px' }}>
       <Input
+        label={
+          index === 0
+            ? {
+                label: t('change-lead-settings.status.valueLabel'),
+              }
+            : undefined
+        }
         name="value"
         readOnly={editableItem.isSystem || !isEditing}
         width="174px"
@@ -72,6 +81,13 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
         value={editableItem.value}
       />
       <Input
+        label={
+          index === 0
+            ? {
+                label: t('change-lead-settings.status.nameLabel'),
+              }
+            : undefined
+        }
         name="name"
         readOnly={editableItem.isSystem || !isEditing}
         width="174px"

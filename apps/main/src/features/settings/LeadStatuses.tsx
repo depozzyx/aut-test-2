@@ -61,8 +61,9 @@ export const LeadStatuses: FC = () => {
         </FilledButton>
       </Flex>
       <div style={{ marginLeft: '14px' }}>
-        {copy.map((item) => (
+        {copy.map((item, index) => (
           <LeadStatusRow
+            index={index}
             key={item.id || item.value}
             originalItem={leadStatuses.find((status) => status.id === item.id) || item}
             item={item}
