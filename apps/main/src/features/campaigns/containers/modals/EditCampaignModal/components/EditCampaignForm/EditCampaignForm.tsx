@@ -154,6 +154,16 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     }
   }, [agentsPage, agentsLimit, agentsTotal])
 
+  const isChanged = () =>
+    data &&
+    (data.name !== formik.values.name ||
+      hasArrayChanged(data.assignedAgents, formik.values.assignedAgentIds) ||
+      hasArrayChanged(data.leadLists, formik.values.leadListIds) ||
+      data.holdTime !== formik.values.holdTime ||
+      data.mode !== formik.values.mode ||
+      data.coefficient !== formik.values.coefficient ||
+      hasArrayChanged(data.filterLeadStatuses, formik.values.filterLeadStatuses))
+
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
       <Flex direction="column" align="center" gap={48} margin="40px 0 0 0">
@@ -230,14 +240,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
         <Flex align="center" justify="center" gap={24}>
           <FilledButton
             type="submit"
-            disabled={
-              !formik.isValid ||
-              !formik.dirty ||
-              !hasArrayChanged<string>(
-                data?.filterLeadStatuses || [],
-                formik.getFieldProps('filterLeadStatuses').value,
-              )
-            }
+            disabled={!isChanged() || !formik.isValid}
             width="202px"
           >
             {t('edit-campaign.save')}
