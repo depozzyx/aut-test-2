@@ -52,6 +52,16 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
     return `${formDataForReview.leadListIdsLabel}`
   }, [formDataForReview?.leadListIdsLabel])
 
+  const leadStatuses = useMemo(() => {
+    if (!formDataForReview) return
+    if (formDataForReview.filterLeadStatuses.length > 1) {
+      return t('review-campaign.lead-statuses', {
+        count: formDataForReview.filterLeadStatuses.length,
+      })
+    }
+    return t('review-campaign.lead-status')
+  }, [formDataForReview?.filterLeadStatuses])
+
   if (!formDataForReview) {
     return null
   }
@@ -74,6 +84,7 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
           label={t('create-campaign.coefficient-label')}
           value={formDataForReview.coefficient}
         />
+        <Field label={t('create-campaign.lead-statuses-review')} value={leadStatuses} />
       </Flex>
       <Flex align="center" justify="center" gap={24}>
         <OutlinedButton onClick={handleBack} width="236px">
