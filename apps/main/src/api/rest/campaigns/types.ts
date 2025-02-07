@@ -29,6 +29,7 @@ export type TCreateCampaignReq = {
   holdTime: number
   mode: string
   coefficient: string
+  filterLeadStatuses: string[]
 }
 
 export type TEditCampaignReq = TCreateCampaignReq & { id: number }

@@ -30,6 +30,7 @@ type TReturn = {
     holdTime: number
     mode: string
     coefficient: string
+    filterLeadStatuses: string[]
   }
   isLoading: boolean
 }
@@ -54,7 +55,15 @@ export const useGetCampaignById = (): TReturn => {
   const initialFormData = useMemo(() => {
     if (!data?.data) return undefined
 
-    const { name, assignedAgents, leadLists, holdTime, mode, coefficient } = data.data
+    const {
+      name,
+      assignedAgents,
+      leadLists,
+      holdTime,
+      mode,
+      coefficient,
+      filterLeadStatuses,
+    } = data.data
 
     return {
       id,
@@ -64,6 +73,7 @@ export const useGetCampaignById = (): TReturn => {
       holdTime,
       mode,
       coefficient,
+      filterLeadStatuses,
     }
   }, [data?.data, id])
 

@@ -49,7 +49,9 @@
     "hold-time": "Agent Hold Time (seconds)",
     "hold-time-placeholder": "from 5 to 60 seconds",
     "mode-label": "Mode",
-    "coefficient-label": "Coefficient"
+    "coefficient-label": "Coefficient",
+    "lead-statuses": "Select lead statuses for calls",
+    "lead-statuses-review": "Lead statuses filter for calls"
   },
   "edit-campaign": {
     "title": "Edit Campaign",
@@ -63,14 +65,18 @@
     "hold-time": "Agent Hold Time (seconds)",
     "hold-time-placeholder": "from 5 to 60 seconds",
     "mode-label": "Mode",
-    "coefficient-label": "Coefficient"
+    "coefficient-label": "Coefficient",
+    "lead-statuses": "Select lead statuses for calls",
+    "lead-statuses-review": "Filtered lead statuses for calls"
   },
   "review-campaign": {
     "title": "Review New Campaign",
     "submit-btn": "Submit",
     "back-btn": "Back",
     "leads": "{{ count }} leads",
-    "agents": "{{ count }} agents"
+    "agents": "{{ count }} agents",
+    "lead-status": "1 lead status",
+    "lead-statuses": "{{ count }} lead statuses"
   },
   "active-campaigns": "Active Campaigns",
   "campaign-effectiveness": "Campaign Effectiveness",

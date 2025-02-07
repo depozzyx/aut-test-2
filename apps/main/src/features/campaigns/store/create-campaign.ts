@@ -107,6 +107,7 @@ export const asyncCreateCampaign =
           leadListIds: formData.leadListIds || [],
           assignedAgentIds: formData.assignedAgentIds || [],
           reserveAgentIds: formData.assignedAgentIds || [],
+          filterLeadStatuses: formData.filterLeadStatuses || [],
         }
 
         await apiCampaigns.createCampaign(dataForRequest)
