@@ -9,6 +9,7 @@ import { TLeadStatusData } from '@/api-rest/leads/types'
 import { LeadStatusRow } from '@/features/settings/components/LeadStatusRow/LeadStatusRow'
 import { Flex } from '@/components/Flex'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon/PlusIcon'
+import { Text } from '@peiko/components/Text'
 import { CardTile } from './components/CardTile'
 
 export const LeadStatuses: FC = () => {
@@ -61,9 +62,14 @@ export const LeadStatuses: FC = () => {
         </FilledButton>
       </Flex>
       <div style={{ marginLeft: '14px' }}>
-        {copy.map((item, index) => (
+        <Flex gap="14px" styles={{ marginBottom: '10px' }}>
+          <Text styles={{ width: '174px' }}>
+            {t('change-lead-settings.status.valueLabel')}
+          </Text>
+          <Text>{t('change-lead-settings.status.nameLabel')}</Text>
+        </Flex>
+        {copy.map((item) => (
           <LeadStatusRow
-            index={index}
             key={item.id || item.value}
             originalItem={leadStatuses.find((status) => status.id === item.id) || item}
             item={item}

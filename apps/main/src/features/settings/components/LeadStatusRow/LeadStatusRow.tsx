@@ -1,29 +1,31 @@
-import { Flex } from '@/components/Flex'
 import React, { FC, useState } from 'react'
+import * as yup from 'yup'
+import { useFormik } from 'formik'
 import useTranslation from 'next-translate/useTranslation'
+
+import { Flex } from '@/components/Flex'
 import { IconButton } from '@peiko/components/buttons/IconButton/IconButton'
 import { EditIcon } from '@peiko/components/icons/EditIcon/EditIcon'
 import { TrashIcon } from '@peiko/components/icons/TrashIcon'
-import { Input } from '@peiko/components/inputs/Input'
 import { CloseIcon } from '@peiko/components/icons/CloseIcon/CloseIcon'
 import { SaveIcon } from '@peiko/components/icons/SaveIcon/SaveIcon'
 import { getLeadStatuses } from '@/features/leads/store/leads'
 import { useRedux } from '@/hooks/use-redux'
 import { leadsApi } from '@/api-rest/leads'
 import { handleRestError } from '@/features/common/error'
+import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput/FormikInput'
+import { validation } from '@/utils/validation'
 
 interface LeadStatusRowProps {
   originalItem: { id?: number; name: string; value: string; isSystem?: boolean }
   item: { id?: number; name: string; value: string; isSystem?: boolean }
   onReset: (id?: number) => void
-  index: number
 }
 
 export const LeadStatusRow: FC<LeadStatusRowProps> = ({
   originalItem,
   item,
   onReset,
-  index,
 }) => {
   const { t } = useTranslation('settings')
   const { dispatch } = useRedux()
@@ -62,16 +64,26 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
     }
   }
 
+  const formik = useFormik({
+    initialValues: {
+      value: editableItem.value,
+      name: editableItem.name,
+    },
+    validationSchema: yup.object().shape({
+      value: yup
+        .string()
+        .matches(/^[A-Z]*$/, 'Only uppercase letters (A-Z)')
+        .max(10, '10 characters maximum')
+        .required('This field is required'),
+      name: validation.required.max(30, '30 characters maximum'),
+    }),
+    onSubmit: () => undefined,
+  })
+
   return (
     <Flex gap="14px" styles={{ marginBottom: '10px' }}>
-      <Input
-        label={
-          index === 0
-            ? {
-                label: t('change-lead-settings.status.valueLabel'),
-              }
-            : undefined
-        }
+      <FormikInput
+        formik={formik}
         name="value"
         readOnly={editableItem.isSystem || !isEditing}
         width="174px"
@@ -80,14 +92,8 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
         onChange={(v) => handleChange('value', v)}
         value={editableItem.value}
       />
-      <Input
-        label={
-          index === 0
-            ? {
-                label: t('change-lead-settings.status.nameLabel'),
-              }
-            : undefined
-        }
+      <FormikInput
+        formik={formik}
         name="name"
         readOnly={editableItem.isSystem || !isEditing}
         width="174px"
@@ -102,7 +108,9 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
             <IconButton
               onClick={handleSave}
               iconColor="transparent"
-              disabled={!editableItem.name || !editableItem.value || !isChanged}
+              disabled={
+                !editableItem.name || !editableItem.value || !isChanged || !formik.isValid
+              }
             >
               <SaveIcon width="24px" height="24px" />
             </IconButton>
