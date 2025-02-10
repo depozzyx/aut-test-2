@@ -118,6 +118,7 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
               onClick={() => {
                 setEditableItem(originalItem)
                 onReset(editableItem?.id)
+                formik.resetForm()
                 if (isEditing) setIsEditing(false)
               }}
               iconColor="main13"
