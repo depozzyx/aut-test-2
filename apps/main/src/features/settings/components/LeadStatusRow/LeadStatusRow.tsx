@@ -14,7 +14,6 @@ import { useRedux } from '@/hooks/use-redux'
 import { leadsApi } from '@/api-rest/leads'
 import { handleRestError } from '@/features/common/error'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput/FormikInput'
-import { validation } from '@/utils/validation'
 
 interface LeadStatusRowProps {
   originalItem: { id?: number; name: string; value: string; isSystem?: boolean }
@@ -66,8 +65,8 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
 
   const formik = useFormik({
     initialValues: {
-      value: editableItem.value,
-      name: editableItem.name,
+      value: originalItem.value,
+      name: originalItem.name,
     },
     validationSchema: yup.object().shape({
       value: yup
@@ -75,7 +74,11 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
         .matches(/^[A-Z]*$/, 'Only uppercase letters (A-Z)')
         .max(10, '10 characters maximum')
         .required('This field is required'),
-      name: validation.required.max(30, '30 characters maximum'),
+      name: yup
+        .string()
+        .trim()
+        .max(30, '30 characters maximum')
+        .required('This field is required'),
     }),
     onSubmit: () => undefined,
   })
