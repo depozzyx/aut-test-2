@@ -9,7 +9,7 @@
   "scripts": {
     "dev-main": "ts-node scripts/combine-locales/main && yarn workspace main dev -p 3001",
     "build-main": "ts-node scripts/combine-locales/main && yarn workspace main build",
-    "start-main": "yarn workspace main next start -p 3100",
+    "start-main": "yarn workspace main next start -p 3001",
     "storybook-main": "yarn workspace main storybook dev -p 6006",
     "storybook-docs-main": "yarn workspace main storybook dev --docs",
     "build-storybook-main": "yarn workspace main storybook build",
