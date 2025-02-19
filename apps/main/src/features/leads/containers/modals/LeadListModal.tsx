@@ -40,6 +40,12 @@ export const LeadListModal = ({
 
   const rows = [
     { name: t('view-lead-list.name'), value: leadListData.name },
+    {
+      name: t('view-lead-list.status'),
+      value: leadListData.active
+        ? t('statuses.lead-list.active')
+        : t('statuses.lead-list.inactive'),
+    },
     { name: t('view-lead-list.leadCount'), value: leadListData.leadCount },
     { name: t('view-lead-list.campaignName'), value: leadListData.campaignName },
     {

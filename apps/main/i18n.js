@@ -31,6 +31,12 @@ module.exports = {
     ],
     '/cabinet/campaigns/list': ['user', 'routing', 'campaigns', 'validation'],
     '/cabinet/campaigns/analytics': ['user', 'routing', 'campaigns'],
+    '/cabinet/campaigns/view/[campaignId]': [
+      'routing',
+      'campaigns',
+      'leads-list',
+      'page-titles',
+    ],
     '/cabinet/dashboard/active-agents': ['user', 'routing', 'agents', 'campaigns'],
     '/cabinet/agents/list': ['user', 'routing', 'agents', 'campaigns'],
     '/cabinet/agents/create': ['user', 'routing', 'agents'],

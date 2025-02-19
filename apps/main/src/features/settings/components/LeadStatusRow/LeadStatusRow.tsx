@@ -1,16 +1,19 @@
-import { Flex } from '@/components/Flex'
 import React, { FC, useState } from 'react'
+import * as yup from 'yup'
+import { useFormik } from 'formik'
 import useTranslation from 'next-translate/useTranslation'
+
+import { Flex } from '@/components/Flex'
 import { IconButton } from '@peiko/components/buttons/IconButton/IconButton'
 import { EditIcon } from '@peiko/components/icons/EditIcon/EditIcon'
 import { TrashIcon } from '@peiko/components/icons/TrashIcon'
-import { Input } from '@peiko/components/inputs/Input'
 import { CloseIcon } from '@peiko/components/icons/CloseIcon/CloseIcon'
 import { SaveIcon } from '@peiko/components/icons/SaveIcon/SaveIcon'
 import { getLeadStatuses } from '@/features/leads/store/leads'
 import { useRedux } from '@/hooks/use-redux'
 import { leadsApi } from '@/api-rest/leads'
 import { handleRestError } from '@/features/common/error'
+import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput/FormikInput'
 
 interface LeadStatusRowProps {
   originalItem: { id?: number; name: string; value: string; isSystem?: boolean }
@@ -60,9 +63,30 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
     }
   }
 
+  const formik = useFormik({
+    initialValues: {
+      value: originalItem.value,
+      name: originalItem.name,
+    },
+    validationSchema: yup.object().shape({
+      value: yup
+        .string()
+        .matches(/^[A-Z]*$/, 'Only uppercase letters (A-Z)')
+        .max(10, '10 characters maximum')
+        .required('This field is required'),
+      name: yup
+        .string()
+        .trim()
+        .max(30, '30 characters maximum')
+        .required('This field is required'),
+    }),
+    onSubmit: () => undefined,
+  })
+
   return (
     <Flex gap="14px" styles={{ marginBottom: '10px' }}>
-      <Input
+      <FormikInput
+        formik={formik}
         name="value"
         readOnly={editableItem.isSystem || !isEditing}
         width="174px"
@@ -71,7 +95,8 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
         onChange={(v) => handleChange('value', v)}
         value={editableItem.value}
       />
-      <Input
+      <FormikInput
+        formik={formik}
         name="name"
         readOnly={editableItem.isSystem || !isEditing}
         width="174px"
@@ -86,7 +111,9 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
             <IconButton
               onClick={handleSave}
               iconColor="transparent"
-              disabled={!editableItem.name || !editableItem.value || !isChanged}
+              disabled={
+                !editableItem.name || !editableItem.value || !isChanged || !formik.isValid
+              }
             >
               <SaveIcon width="24px" height="24px" />
             </IconButton>
@@ -94,6 +121,7 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
               onClick={() => {
                 setEditableItem(originalItem)
                 onReset(editableItem?.id)
+                formik.resetForm()
                 if (isEditing) setIsEditing(false)
               }}
               iconColor="main13"

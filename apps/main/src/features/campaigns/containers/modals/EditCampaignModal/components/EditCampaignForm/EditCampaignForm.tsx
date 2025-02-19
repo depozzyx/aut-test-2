@@ -25,6 +25,8 @@ import { ORDER_BY } from '@/constants/orderBy'
 import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 import { coefficients, modes } from '@/constants/settings'
+import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
+import { hasArrayChanged } from '@/utils/array'
 import { asyncEditCampaign } from '../../../../../store/edit-campaign'
 import { TCampaignTableType } from '../../../../../types'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
@@ -42,6 +44,7 @@ type TFormValues = {
   holdTime: number
   mode: string
   coefficient: string
+  filterLeadStatuses: string[]
 }
 
 export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
@@ -80,6 +83,12 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     ])
   }, [])
 
+  const leadStatuses = select(selectLeadStatuses)
+
+  useEffect(() => {
+    dispatch(getLeadStatuses())
+  }, [dispatch])
+
   const formik = useFormik<TFormValues>({
     initialValues: {
       name: '',
@@ -88,6 +97,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
       holdTime: 0,
       mode: '',
       coefficient: '',
+      filterLeadStatuses: [],
     },
     validationSchema: createCampaignValidationSchema,
     onSubmit: (formData) => {
@@ -104,6 +114,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
         holdTime: data?.holdTime,
         mode: data?.mode,
         coefficient: data?.coefficient,
+        filterLeadStatuses: data?.filterLeadStatuses,
       })
     }
   }, [data])
@@ -142,6 +153,16 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
       )
     }
   }, [agentsPage, agentsLimit, agentsTotal])
+
+  const isChanged = () =>
+    data &&
+    (data.name !== formik.values.name ||
+      hasArrayChanged(data.assignedAgents, formik.values.assignedAgentIds) ||
+      hasArrayChanged(data.leadLists, formik.values.leadListIds) ||
+      data.holdTime !== formik.values.holdTime ||
+      data.mode !== formik.values.mode ||
+      data.coefficient !== formik.values.coefficient ||
+      hasArrayChanged(data.filterLeadStatuses, formik.values.filterLeadStatuses))
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
@@ -206,11 +227,20 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
             name="coefficient"
             label={{ label: t('create-campaign.coefficient-label') }}
           />
+          <FormikMultiSelect
+            formik={formik}
+            name="filterLeadStatuses"
+            label={{ label: t('edit-campaign.lead-statuses') }}
+            size="s"
+            width={424}
+            options={leadStatuses.map(({ name: label, value }) => ({ label, value }))}
+            isSearchable
+          />
         </Flex>
         <Flex align="center" justify="center" gap={24}>
           <FilledButton
             type="submit"
-            disabled={!formik.isValid || !formik.dirty}
+            disabled={!isChanged() || !formik.isValid}
             width="202px"
           >
             {t('edit-campaign.save')}

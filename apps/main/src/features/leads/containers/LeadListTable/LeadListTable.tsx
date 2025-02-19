@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import React, { memo, useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { deepEqual } from '@peiko/utils/deep-equal'
 import { Table } from '@peiko/components/Table'
@@ -23,16 +23,21 @@ import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { handleRestError } from '@/features/common/error'
 import { apiLeadList } from '@/api-rest/lead-list'
 import { StatusChip } from '@/features/campaigns/components/StatusChip'
+import { LeadListStatusChip } from '@/features/leads/components/StatusChip'
+import { Text } from '@peiko/components/Text/Text'
+
 import {
   TLeadCallStatusStatisticRawData,
   TLeadListData,
 } from '@/api-rest/lead-list/types'
 import { leadsApi } from '@/api-rest/leads'
+import { CAMPAIGN_STATUSES } from '@/features/campaigns/constants'
 import { InfoColumn } from '../../components/InfoColumn'
 
 type TLeadListRowKeys =
   | 'id'
   | 'name'
+  | 'active'
   | 'leadCount'
   | 'campaignName'
   | 'campaignStatus'
@@ -154,6 +159,15 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
       ),
       value: 'name',
     },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('headers.list.active')}
+          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.ACTIVE))}
+        />
+      ),
+      value: 'active',
+    },
     { label: t('headers.list.leadCount'), value: 'leadCount' },
     { label: t('headers.list.campaignName'), value: 'campaignName' },
     { label: t('headers.list.campaignStatus'), value: 'campaignStatus' },
@@ -167,6 +181,7 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
     row: {
       id: leadList.id,
       name: <InfoColumn title={leadList.name} />,
+      active: <LeadListStatusChip status={leadList.active ? 'active' : 'inactive'} />,
       leadCount: <InfoColumn title={leadList.leadCount} />,
       campaignName: <InfoColumn title={leadList.campaignName} />,
       campaignStatus: leadList?.campaignStatus && (
@@ -183,12 +198,24 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
         </IconButton>
       ),
       edit: (
-        <IconButton onClick={() => handleEdit(leadList.id)} iconColor="transparent">
+        <IconButton
+          onClick={() => handleEdit(leadList.id)}
+          iconColor="transparent"
+          disabled={
+            leadList.campaignStatus && leadList.campaignStatus !== CAMPAIGN_STATUSES.PAUSE
+          }
+        >
           <EditIcon width="24px" height="24px" />
         </IconButton>
       ),
       delete: (
-        <IconButton onClick={() => handleDelete(leadList.id)} iconColor="main13">
+        <IconButton
+          onClick={() => handleDelete(leadList.id)}
+          iconColor="main13"
+          disabled={
+            leadList.campaignStatus && leadList.campaignStatus !== CAMPAIGN_STATUSES.PAUSE
+          }
+        >
           <TrashIcon width="24px" height="24px" />
         </IconButton>
       ),
@@ -204,6 +231,20 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
         rowsData={rows}
         bodyCell={(props) => <BodyCell {...props} whiteSpace="nowrap" />}
         headerCell={(props) => <HeaderCell {...props} whiteSpace="nowrap" />}
+        emptyComponent={
+          <div
+            style={{
+              justifyItems: 'center',
+              alignItems: 'center',
+              flex: 4,
+              marginTop: '4px',
+            }}
+          >
+            <Text variant="f5" color="main4">
+              {t('view-lead-list.emptyData')}
+            </Text>
+          </div>
+        }
       />
       {isViewModalOpen && leadList && (
         <LeadListModal

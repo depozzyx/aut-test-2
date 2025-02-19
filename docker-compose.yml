@@ -1,14 +1,14 @@
 services:
-  nuxt-app:
+  autodialer-frontend:
     build:
       context: .
-      dockerfile: Dockerfile.main
+      dockerfile: Dockerfile
     ports:
-      - '3000:3000'
+      - '3001:3001'
     volumes:
       - .:/app
       - /app/node_modules
-    environment:
-      - NUXT_PORT=3000
-      - CHOKIDAR_USEPOLLING=true
+      - /app/apps/main/.next
+    env_file:
+      - ./apps/main/.env
     command: 'yarn start-main'

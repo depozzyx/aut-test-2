@@ -72,19 +72,19 @@ export const AgentStatus: FC = () => {
       )
       return
     }
-    if (pbxStatus.status === 'pause' && pbxStatus.reason === 'manual') {
+    if (pbxStatus.status === 'pause' && pbxStatus.reason === 'hold') {
+      setOptions(
+        INIT_OPTIONS(t).filter(({ value }) => value === 'pause' || value === 'finish'),
+      )
+      return
+    }
+    if (pbxStatus.status === 'pause') {
       setOptions(
         INIT_OPTIONS(t).filter(
           ({ value }) =>
             (router.pathname === ROUTES.AGENT_CALLS && value === 'unpause') ||
             value === 'finish',
         ),
-      )
-      return
-    }
-    if (pbxStatus.status === 'pause' && pbxStatus.reason === 'hold') {
-      setOptions(
-        INIT_OPTIONS(t).filter(({ value }) => value === 'pause' || value === 'finish'),
       )
       return
     }

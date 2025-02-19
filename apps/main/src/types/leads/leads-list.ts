@@ -1,6 +1,6 @@
 import { TLeadList } from '@/features/campaigns/hooks/use-getCampaignById'
 
-export type TLeadListStatus = 'active' | 'inactive' | 'successful' | 'unsuccessful'
+export type TLeadListStatus = 'active' | 'inactive'
 
 export type TLeadsList = {
   id: number

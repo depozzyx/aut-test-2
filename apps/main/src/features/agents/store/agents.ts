@@ -4,12 +4,13 @@ import { TPagination } from '@/types/entities/pagination'
 import { apiAgents } from '@/api-rest/agents'
 import { handleRestError } from '@/features/common/error'
 import {
+  TActiveAgent,
   TAgent,
   TAgentsReq,
   TAssignedCampaign,
   TDeletedAgentData,
 } from '@/api-rest/agents/types'
-import { TAgentSortBy, TAgentWorkStatus } from '@/features/agents/types'
+import { TAgentActiveWorkStatus, TAgentSortBy } from '@/features/agents/types'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { notificationActions } from '@/features/common/notifications/store'
 import { modalsActions } from '@/features/common/modals/store'
@@ -20,10 +21,10 @@ export type TInit = {
   selectedId: null | number | string
   isLoading: boolean
   agentsList: TAgent[]
-  activeAgents: TAgent[]
+  activeAgents: TActiveAgent[]
   pagination: TPagination
   sort: { sortBy?: TAgentSortBy; orderBy: TOrderBy }
-  statusFilter?: TAgentWorkStatus
+  statusFilter?: TAgentActiveWorkStatus
   deletedAgentData: null | TDeletedAgentData
   searchTerm: string
   selectedAssignedCampaign: null | TAssignedCampaign
@@ -40,7 +41,7 @@ const init: TInit = {
     limit: 8,
     total: 1,
   },
-  sort: { sortBy: AGENT_SORT_BY.CREATED_AT, orderBy: ORDER_BY.DESC },
+  sort: { sortBy: AGENT_SORT_BY.USERNAME, orderBy: ORDER_BY.DESC },
   statusFilter: undefined,
   deletedAgentData: null,
   searchTerm: '',

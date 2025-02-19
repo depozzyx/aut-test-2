@@ -7,7 +7,8 @@ COPY . .
 # COPY yarn.lock tsconfig* /app/
 
 RUN yarn install --network-timeout 240000
-RUN yarn tsc && yarn lint-deploy
+RUN yarn tsc
+RUN yarn lint-deploy
 RUN yarn build-main
 
-EXPOSE 3000
+EXPOSE 3001

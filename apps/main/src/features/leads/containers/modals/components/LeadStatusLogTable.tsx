@@ -87,7 +87,7 @@ export const LeadStatusLogTable = ({
           </div>
         ))}
       </div>
-      <div style={{ maxHeight: '150px', overflowY: 'scroll' }}>
+      <div style={{ maxHeight: '150px', overflowY: 'auto' }}>
         {data.length === 0 && renderEmptyTable()}
         {data.map((item) => (
           <div

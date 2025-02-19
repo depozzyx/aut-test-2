@@ -4,7 +4,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
-import { TLeadListData } from '@/api-rest/lead-list/types'
+import { TLeadListData, TUpdateLeadListReq } from '@/api-rest/lead-list/types'
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text/Text'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
@@ -19,6 +19,7 @@ import { handleRestError } from '@/features/common/error'
 import { useRedux } from '@/hooks/use-redux'
 import { leadsApi } from '@/api-rest/leads'
 import { hasArrayChanged } from '@/utils/array'
+import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect/FormikSelect'
 
 export const EditLeadListModal = ({
   leadListData,
@@ -48,6 +49,7 @@ export const EditLeadListModal = ({
 
   const rows = [
     { name: t('view-lead-list.name'), value: leadListData.name },
+    { name: 'active', value: '' },
     { name: t('view-lead-list.leadCount'), value: leadListData.leadCount },
     { name: 'leads', value: '' },
     { name: t('view-lead-list.campaignName'), value: leadListData.campaignName },
@@ -70,25 +72,36 @@ export const EditLeadListModal = ({
     page: 1,
   })
 
-  const handleSave = async (values: number[]) => {
-    try {
-      await apiLeadList.updateLeadList(leadListData.id, values)
-      onClose()
-      resetModals()
-    } catch (e) {
-      handleRestError({ e, dispatch })
-    }
-  }
-
   type TFormValues = {
     assignedLeadIds: number[]
+    active: boolean
   }
 
   const formik = useFormik<TFormValues>({
     initialValues: {
       assignedLeadIds: [],
+      active: leadListData.active,
     },
-    onSubmit: (values) => handleSave(values.assignedLeadIds),
+    onSubmit: async (values) => {
+      const payload: TUpdateLeadListReq = {}
+      if (values.active !== leadListData.active) {
+        payload.active = values.active
+      }
+      const isChangedLeadIds = hasArrayChanged<number>(
+        assignedLeads.map((l) => l.value),
+        values.assignedLeadIds,
+      )
+      if (isChangedLeadIds) {
+        payload.ids = values.assignedLeadIds
+      }
+      try {
+        await apiLeadList.updateLeadList(leadListData.id, payload)
+        onClose()
+        resetModals()
+      } catch (e) {
+        handleRestError({ e, dispatch })
+      }
+    },
   })
 
   const getLeadsOptions = async (append?: boolean) => {
@@ -112,9 +125,10 @@ export const EditLeadListModal = ({
   useEffect(() => {
     if (assignedLeads) {
       // console.warn({ assignedLeads })
-      formik.setValues({
-        assignedLeadIds: assignedLeads.map((option) => option.value),
-      })
+      formik.setFieldValue(
+        'assignedLeadIds',
+        assignedLeads.map((option) => option.value),
+      )
     }
   }, [assignedLeads])
 
@@ -137,9 +151,13 @@ export const EditLeadListModal = ({
   const [canSave, setCanSave] = useState(false)
 
   useEffect(() => {
-    const currentAssignedLeadIds = formik.getFieldProps('assignedLeadIds').value
-    const assignedLeadIds = assignedLeads.map((l) => l.value)
-    setCanSave(hasArrayChanged<number>(assignedLeadIds, currentAssignedLeadIds))
+    setCanSave(
+      leadListData.active !== formik.values.active ||
+        hasArrayChanged<number>(
+          assignedLeads.map((l) => l.value),
+          formik.getFieldProps('assignedLeadIds').value,
+        ),
+    )
   }, [formik])
 
   return (
@@ -169,10 +187,11 @@ export const EditLeadListModal = ({
               <Flex
                 key={row.name}
                 justify="start"
+                align="center"
                 styles={{
                   display: 'flex',
                   width: '100%',
-                  padding: '8px 0',
+                  padding: row.name === 'active' ? '3px 0' : '8px 0',
                   borderBottom: `1px solid ${theme.palette.main22}`,
                 }}
               >
@@ -182,7 +201,13 @@ export const EditLeadListModal = ({
                     textAlign: 'start',
                   }}
                 >
-                  {row.name === 'leads' ? <></> : <Text variant="f8">{row.name}</Text>}
+                  {row.name === 'leads' ? (
+                    <></>
+                  ) : (
+                    <Text variant="f8">
+                      {row.name === 'active' ? t('view-lead-list.status') : row.name}
+                    </Text>
+                  )}
                 </Flex>
                 <Flex
                   styles={{
@@ -190,7 +215,19 @@ export const EditLeadListModal = ({
                     textAlign: 'start',
                   }}
                 >
-                  {row.name === 'leads' ? (
+                  {row.name === 'active' && (
+                    <FormikSelect
+                      styles={{ padding: 0, margin: 0 }}
+                      size="s"
+                      formik={formik}
+                      name="active"
+                      options={[
+                        { label: t('statuses.lead-list.active'), value: true },
+                        { label: t('statuses.lead-list.inactive'), value: false },
+                      ]}
+                    />
+                  )}
+                  {row.name === 'leads' && (
                     <FormikMultiSelect
                       formik={formik}
                       name="assignedLeadIds"
@@ -202,7 +239,8 @@ export const EditLeadListModal = ({
                       isSearchable
                       maxMenuHeight={200}
                     />
-                  ) : (
+                  )}
+                  {!['leads', 'active'].includes(row.name) && (
                     <Text variant="f8">{row.value}</Text>
                   )}
                 </Flex>
