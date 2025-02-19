@@ -59,7 +59,10 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
         count: formDataForReview.filterLeadStatuses.length,
       })
     }
-    return t('review-campaign.lead-status')
+    if (formDataForReview.filterLeadStatuses.length === 1) {
+      return t('review-campaign.lead-status')
+    }
+    return 0
   }, [formDataForReview?.filterLeadStatuses])
 
   if (!formDataForReview) {
