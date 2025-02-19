@@ -21,7 +21,6 @@ export const UserData: FC = () => {
 
   const formik = useFormik({
     initialValues: {
-      id: user?.id,
       username: user?.username,
     },
     validationSchema: yup.object().shape({
@@ -64,15 +63,6 @@ export const UserData: FC = () => {
           <FormikInput
             size="s"
             formik={formik}
-            name="id"
-            label={{ label: t('changeName.userId') }}
-            placeholder={t('changeName.id')}
-            readOnly
-            inputProps={{ style: { color: palette.main22 } }}
-          />
-          <FormikInput
-            size="s"
-            formik={formik}
             name="username"
             label={{ label: t('changeName.username') }}
             placeholder={t('changeName.username')}
@@ -83,6 +73,11 @@ export const UserData: FC = () => {
             styles={{ marginLeft: '24px', marginTop: '22px' }}
             width="134px"
             type="submit"
+            disabled={
+              !formik.dirty ||
+              formik.values.username === user?.username ||
+              !formik.isValid
+            }
             isLoading={formik.isSubmitting}
           >
             {t('changeName.save')}

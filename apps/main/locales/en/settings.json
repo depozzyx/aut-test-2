@@ -28,7 +28,9 @@
       "title": "Change Lead Statuses",
       "addNew": "Add new",
       "valuePlaceholder": "status code",
-      "namePlaceholder": "status name"
+      "namePlaceholder": "status name",
+      "valueLabel": "Status Code",
+      "nameLabel": "Status Name"
     }
   }
 }

@@ -14,6 +14,7 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { Box } from '@peiko/components/Box'
 import { useRedux } from '@/hooks/use-redux'
 import { TFormik } from '@peiko/types/formik'
+import { Checkbox } from '@peiko/components/inputs/checkboxes/Checkbox/Checkbox'
 import { createLeadsGroups } from '../../store/leads'
 
 export const CreateLeadsGroup: FC = () => {
@@ -31,6 +32,7 @@ export const CreateLeadsGroup: FC = () => {
   const formik = useFormik({
     initialValues: {
       name: '',
+      active: false,
     },
     validationSchema: yup.object().shape({
       name: validation.required,
@@ -57,13 +59,26 @@ export const CreateLeadsGroup: FC = () => {
       <Box styles={{ marginTop: '40px' }}>
         <form onSubmit={formik.handleSubmit}>
           <Flex justify="center">
-            <FormikInput
-              label={{ label: t('createLeadsGroup.label') }}
-              placeholder={t('createLeadsGroup.placeholder')}
-              formik={formik}
-              name="name"
-              width="326px"
-            />
+            <Flex direction="column" gap={20}>
+              <FormikInput
+                label={{ label: t('createLeadsGroup.label') }}
+                placeholder={t('createLeadsGroup.placeholder')}
+                formik={formik}
+                name="name"
+                width="326px"
+              />
+              <Checkbox
+                size="s"
+                label={`${
+                  formik.values.active
+                    ? t('statuses.lead-list.active')
+                    : t('statuses.lead-list.inactive')
+                }`}
+                value={formik.values.active}
+                onChange={(e) => formik.setFieldValue('active', e.value)}
+                name="numbers"
+              />
+            </Flex>
           </Flex>
           <Flex justify="space-between" gap="24px" margin="51px 0 0">
             <OutlinedButton onClick={() => reset(formik)} width="100%" type="button">
@@ -71,7 +86,7 @@ export const CreateLeadsGroup: FC = () => {
             </OutlinedButton>
             <FilledButton
               isLoading={formik.isSubmitting}
-              disabled={!formik.dirty}
+              disabled={!formik.dirty || !formik.isValid}
               width="100%"
               type="submit"
             >

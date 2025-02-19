@@ -33,6 +33,7 @@ export type TLeadListCatalogRes = {
 export type TLeadListData = {
   id: number
   name: string
+  active: boolean
   campaignName: string
   campaignStatus: TCampaignStatus
   lastCallDate: string
@@ -70,4 +71,9 @@ export type TLeadCallStatusStatisticRes = {
 
 export type TDeleteLeadListRes = {
   statusCode: TGeneratedSuccessStatuses
+}
+
+export type TUpdateLeadListReq = {
+  active?: boolean
+  ids?: number[]
 }

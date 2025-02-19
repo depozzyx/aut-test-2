@@ -10,22 +10,21 @@ import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import { AgentStatusChip } from '@/features/agents/components/AgentStatusChip'
-import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { HeaderWithSort } from '@/components/HeaderWithSort'
 import { AGENT_SORT_BY } from '@/features/agents/constants'
 import { useAgentSort } from '@/features/agents/hooks/use-agentSort'
+import { TActiveAgent } from '@/api-rest/agents/types'
+import { isString } from 'formik'
+import { formatDuration } from '@/utils/date-to-string'
 import { selectActiveAgents, selectIsLoadingAgents } from '../../../store/agents'
 import { InfoColumn } from '../../../components/InfoColumn'
 
 type TActiveAgentsRowKeys =
   | 'name'
-  | 'status'
-  | 'date'
+  | 'workStatus'
   | 'callsHandled'
-  | 'callDuration'
-  | 'rating'
   | 'timeOnline'
-  | 'sumCallDuration'
+  | 'currentCampaign'
 
 export const ActiveAgentsTable = memo((): JSX.Element => {
   const { t } = useTranslation('agents')
@@ -40,12 +39,23 @@ export const ActiveAgentsTable = memo((): JSX.Element => {
   )
   const { handleSort } = useAgentSort()
 
+  const getTimeOnline = (agent: TActiveAgent) => {
+    const loggedTime = isString(agent.timeOnline)
+      ? parseFloat(agent.timeOnline)
+      : agent.timeOnline
+    const ongoingTime = isString(agent.ongoingTime)
+      ? parseFloat(agent.ongoingTime)
+      : agent.ongoingTime
+    const seconds = Math.ceil(loggedTime + ongoingTime)
+    return seconds > 0 ? formatDuration(seconds) : ''
+  }
+
   const headers: THeader<TActiveAgentsRowKeys>[] = [
     {
       label: (
         <HeaderWithSort
           title={t('active-agents-headers.agent-name')}
-          onClick={() => handleSort(AGENT_SORT_BY.CREATED_AT)}
+          onClick={() => handleSort(AGENT_SORT_BY.USERNAME)}
         />
       ),
       value: 'name',
@@ -53,39 +63,25 @@ export const ActiveAgentsTable = memo((): JSX.Element => {
     {
       label: (
         <HeaderWithSort
-          title={t('active-agents-headers.agent-status')}
-          onClick={() => handleSort(AGENT_SORT_BY.CREATED_AT)}
+          title={t('active-agents-headers.work-status')}
+          onClick={() => handleSort(AGENT_SORT_BY.WORK_STATUS)}
         />
       ),
-      value: 'status',
+      value: 'workStatus',
     },
-    {
-      label: (
-        <HeaderWithSort
-          title={t('headers.creation-date')}
-          onClick={() => handleSort(AGENT_SORT_BY.CREATED_AT)}
-        />
-      ),
-      value: 'date',
-    },
-    { label: t('active-agents-headers.calls-duration'), value: 'callDuration' },
-    { label: t('active-agents-headers.rating'), value: 'rating' },
     { label: t('active-agents-headers.time-online'), value: 'timeOnline' },
-    { label: t('active-agents-headers.sum-call-duration'), value: 'sumCallDuration' },
     { label: t('active-agents-headers.calls-handled'), value: 'callsHandled' },
+    { label: t('active-agents-headers.current-campaign'), value: 'currentCampaign' },
   ]
 
   const rows = activeAgents.map((agent) => ({
     row: {
       id: agent.id,
-      name: <InfoColumn title={agent.username} />,
-      status: <AgentStatusChip status={agent.workStatus} />,
-      date: <InfoColumn title={formatCreatedAt(agent.createdAt)} />,
-      callDuration: <InfoColumn title={agent.averageCallDuration} />,
-      rating: <InfoColumn title={agent.conversionRate} />,
-      timeOnline: <InfoColumn title={agent.availability} />,
-      sumCallDuration: <InfoColumn title={agent.callMinutes} />,
+      name: <InfoColumn title={agent.name} />,
+      workStatus: <AgentStatusChip status={agent.workStatus} />,
+      timeOnline: <InfoColumn title={getTimeOnline(agent)} />,
       callsHandled: <InfoColumn title={agent.callsHandled} />,
+      currentCampaign: <InfoColumn title={agent.currentCampaign || ''} />,
     },
   }))
 

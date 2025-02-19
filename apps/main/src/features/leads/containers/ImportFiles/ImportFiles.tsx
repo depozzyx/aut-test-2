@@ -208,7 +208,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
                   gap="12px"
                   styles={{
                     maxHeight: '300px',
-                    overflowY: 'scroll',
+                    overflowY: 'auto',
                     padding: '0 24px',
                     marginBottom: '2px',
                   }}

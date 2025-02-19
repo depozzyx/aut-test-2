@@ -15,6 +15,7 @@
     "list": {
       "id": "ID",
       "name": "Name",
+      "active": "Status",
       "leadCount": "Leads",
       "campaignName": "Campaign Name",
       "campaignStatus": "Campaign Status",
@@ -33,6 +34,8 @@
     "leadCount": "Leads count",
     "leads": "Leads",
     "lastCallDate": "Last call",
+    "emptyData": "No data",
+    "status": "Status",
     "statistic": {
       "statusCode": "Status",
       "status": "Status Name",
@@ -71,11 +74,11 @@
     "delete": "Delete lead"
   },
   "statuses": {
-    "active": "ACTIVE",
-    "inactive": "INACTIVE",
+    "lead-list": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
     "new": "NEW",
-    "successful": "SUCCESSFUL",
-    "unsuccessful": "UNSUCCESSFUL",
     "A": "Answering Machine",
     "DEAD": "Dead",
     "CALLBK": "Call Back",

@@ -1,5 +1,9 @@
 import { TGeneratedSuccessStatuses } from '@/constants/success-status'
-import { TAgentSortBy, TAgentWorkStatus } from '@/features/agents/types'
+import {
+  TAgentActiveWorkStatus,
+  TAgentSortBy,
+  TAgentWorkStatus,
+} from '@/features/agents/types'
 import { TPagination } from '@/types/entities/pagination'
 import { TOrderBy } from '@/types/entities/orderBy'
 
@@ -33,6 +37,16 @@ export type TAgent = {
   createdAt: string
 }
 
+export type TActiveAgent = {
+  id: number
+  name: string
+  workStatus: TAgentActiveWorkStatus
+  currentCampaign?: null
+  callsHandled: string
+  timeOnline: number
+  ongoingTime: string
+}
+
 export type TCreateAgentRes = {
   statusCode: TGeneratedSuccessStatuses
   meta: unknown
@@ -41,7 +55,7 @@ export type TCreateAgentRes = {
 
 export type TAgentsReq = {
   orderBy: TOrderBy
-  workStatus?: TAgentWorkStatus
+  workStatus?: TAgentActiveWorkStatus
   search?: string
   sortBy?: TAgentSortBy
 } & Pick<TPagination, 'page' | 'limit'>
@@ -57,7 +71,12 @@ export type TAgentsListRes = {
   data: TAgent[]
 }
 
-export type TActiveAgentsRes = TAgentsListRes
+export type TActiveAgentsRes = {
+  statusCode: TGeneratedSuccessStatuses
+  meta: unknown
+  pagination: TPagination
+  data: TActiveAgent[]
+}
 
 export type TPbxAuthRes = {
   statusCode: TGeneratedSuccessStatuses

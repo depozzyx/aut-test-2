@@ -39,7 +39,7 @@ export const CampaignsTooltip = ({ campaigns }: ICampaignTooltipProps): JSX.Elem
       renderMenu={() => (
         <div
           style={{
-            overflowY: 'scroll',
+            overflowY: 'auto',
             maxHeight: '150px',
             padding: '0 8px',
           }}

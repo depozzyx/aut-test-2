@@ -6,7 +6,7 @@ import { DropdownMenu } from '@/components/DropdownMenu'
 import { useRedux } from '@/hooks/use-redux'
 import { useStatusFilter } from '@/features/agents/hooks/use-statusFilter'
 import { FiltersIcon } from '@/components/icons/FiltersIcon'
-import { TAgentWorkStatus } from '@/features/agents/types'
+import { TAgentActiveWorkStatus } from '@/features/agents/types'
 import { selectStatusFilter } from '@/features/agents/store/agents'
 import { StyledButton } from './StatusFilter.styled'
 
@@ -44,7 +44,9 @@ export const StatusFilter = (): JSX.Element => {
       selectedOptions={statusOptions.filter((item) => statusFilter === item.value)}
       minWidth="210px"
       options={statusOptions}
-      onChange={(selectedEl) => handleOnChange(selectedEl[0].value as TAgentWorkStatus)}
+      onChange={(selectedEl) =>
+        handleOnChange(selectedEl[0].value as TAgentActiveWorkStatus)
+      }
     />
   )
 }

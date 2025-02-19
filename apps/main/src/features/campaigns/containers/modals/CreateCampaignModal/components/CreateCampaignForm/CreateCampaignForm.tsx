@@ -45,6 +45,7 @@ import { TAgent } from '@/api-rest/agents/types'
 import { TPagination } from '@/types/entities/pagination'
 import { handleRestError } from '@/features/common/error'
 import { TCampaign } from '@/features/campaigns/types'
+import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
 import {
   INITIAL_REQUEST_PARAMS_CREATE,
@@ -125,12 +126,19 @@ export const CreateCampaignForm: FC<Props> = ({
 
   const { getSettingsAsync } = useSettings()
 
+  const leadStatuses = select(selectLeadStatuses)
+
+  useEffect(() => {
+    dispatch(getLeadStatuses())
+  }, [dispatch])
+
   const formik = useFormik({
     initialValues: {
       name: '',
       holdTime: 0,
       mode: '',
       coefficient: '',
+      filterLeadStatuses: [],
     },
     validationSchema: createCampaignValidationSchema,
     onSubmit: (formData) => {
@@ -170,7 +178,8 @@ export const CreateCampaignForm: FC<Props> = ({
       modalState?.isOpen &&
       modalState?.modalName === MODAL_NAMES.CREATE_CAMPAIGN
     ) {
-      const { name, mode, coefficient, holdTime, leadListIds } = formDataForReview
+      const { name, mode, coefficient, holdTime, leadListIds, filterLeadStatuses } =
+        formDataForReview
       formik.setFieldValue('name', name)
       formik.setFieldValue('mode', mode)
       formik.setFieldValue('coefficient', coefficient)
@@ -180,6 +189,7 @@ export const CreateCampaignForm: FC<Props> = ({
         formik.setFieldValue('assignedAgentIds', assignedAgentIds)
       }
       formik.setFieldValue('leadListIds', leadListIds)
+      formik.setFieldValue('filterLeadStatuses', filterLeadStatuses)
     } else {
       dispatch(reset())
     }
@@ -219,6 +229,7 @@ export const CreateCampaignForm: FC<Props> = ({
             dispatch(setAgentsList({ data: newOptions, append: true }))
           }
           await formik.setFieldValue('assignedAgentIds', newAssignedAgentIds)
+          await formik.setFieldValue('filterLeadStatuses', campaign.filterLeadStatuses)
         }
       }
     } else if (option?.label === '-') {
@@ -347,6 +358,15 @@ export const CreateCampaignForm: FC<Props> = ({
             width={424}
             name="coefficient"
             label={{ label: t('create-campaign.coefficient-label') }}
+          />
+          <FormikMultiSelect
+            formik={formik}
+            name="filterLeadStatuses"
+            label={{ label: t('create-campaign.lead-statuses') }}
+            size="s"
+            width={424}
+            options={leadStatuses.map(({ name: label, value }) => ({ label, value }))}
+            isSearchable
           />
         </Flex>
         <Flex align="center" justify="center" gap={24}>

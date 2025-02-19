@@ -12,9 +12,13 @@ import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import { HeaderWithSort } from '@/components/HeaderWithSort'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
+import {
+  // selectSort,
+  selectManagersList,
+  setSelectedId,
+} from '@/features/managers/store/managers'
 import { useManagerList } from '../../hooks/use-managersList'
 import { InfoCell } from '../../components/InfoCell'
-import { selectManagersList, setSelectedId } from '../../store/managers'
 import { useManagersSort } from '../../hooks/use-managers-sort'
 import { SORT_BY } from '../../constants'
 
@@ -23,9 +27,8 @@ type TManagerRowKeys =
   | 'username'
   | 'date'
   | 'email'
-  | 'pbxName'
+  // | 'pbxName'
   | 'edit'
-  | 'managerId'
 
 export const ManagerListTable = (): JSX.Element => {
   const { t } = useTranslation('managers')
@@ -33,6 +36,8 @@ export const ManagerListTable = (): JSX.Element => {
   const { setModal } = useModals()
 
   const handleSort = useManagersSort()
+  // const sort = select(selectSort)
+
   const { isLoading } = useManagerList()
   const managersList = select(selectManagersList, shallowEqual)
 
@@ -42,30 +47,29 @@ export const ManagerListTable = (): JSX.Element => {
   }, [])
 
   const headers: THeader<TManagerRowKeys>[] = [
-    { label: t('list-headers.id'), value: 'managerId' },
     { label: t('list-headers.username'), value: 'username' },
     {
       label: (
         <HeaderWithSort
           title={t('list-headers.creation-date')}
           onClick={() => handleSort(SORT_BY.CREATED_AT)}
+          // order={sort.orderBy}
         />
       ),
       value: 'date',
     },
     { label: t('list-headers.email'), value: 'email' },
-    { label: t('list-headers.pbxName'), value: 'pbxName' },
+    // { label: t('list-headers.pbxName'), value: 'pbxName' },
     { label: t('list-headers.edit'), value: 'edit' },
   ]
 
   const rows = managersList.map((manager) => ({
     row: {
       id: manager.id,
-      managerId: <InfoCell title={manager.id} />,
       username: <InfoCell title={manager.username || '-'} />,
       date: <InfoCell title={formatCreatedAt(manager.createdAt)} />,
       email: <InfoCell title={manager.email} />,
-      pbxName: <InfoCell title={manager.pbxName || '-'} />,
+      // pbxName: <InfoCell title={manager.pbxName || '-'} />,
 
       edit: (
         <IconButton
