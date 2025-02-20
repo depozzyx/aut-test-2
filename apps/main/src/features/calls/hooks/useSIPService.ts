@@ -54,7 +54,8 @@ export const useSIPService = (): {
     },
   }
 
-  const jsSIPSocket = new JsSIP.WebSocketInterface('wss://dev.voipenv.uk:7777/ws')
+  const jsSIPSocket = new JsSIP.WebSocketInterface(`wss://pbx-core.voipenv.uk:7777/ws`)
+  console.warn(`wss://${pbxAuth?.domain}:7777/ws`)
   const [ua, setUA] = useState<UA | null>(null)
 
   const hangupAsync = async () => {

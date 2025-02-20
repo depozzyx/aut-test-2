@@ -5,10 +5,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - '3001:3001'
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/apps/main/.next
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules
+    #   - /app/apps/main/.next
+    #   - /app/apps/main/dist
     env_file:
       - ./apps/main/.env
     command: 'yarn start-main'
