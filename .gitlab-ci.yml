@@ -25,7 +25,7 @@ deploy-dev-job:
     - if: $CI_COMMIT_BRANCH == "develop"
   tags:
     - docker
-    - autodialer-prod
+    - autodialer-dev
     - shell
     - deploy
 #  when: manual
