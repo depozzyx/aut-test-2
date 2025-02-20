@@ -59,7 +59,8 @@
     "on-call": "On Call",
     "on-hold": "On Hold",
     "feedback": "Feedback",
-    "manual pause": "Manual Pause"
+    "manual pause": "Manual Pause",
+    "ringing": "Ringing"
   },
   "campaign-info": {
     "title": "Campaign Info",
