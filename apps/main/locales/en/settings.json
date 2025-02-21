@@ -21,6 +21,7 @@
     "title": "Change Campaigns Settings",
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
+    "workHours-label": "Work Hours",
     "save": "Save changes"
   },
   "change-lead-settings": {
