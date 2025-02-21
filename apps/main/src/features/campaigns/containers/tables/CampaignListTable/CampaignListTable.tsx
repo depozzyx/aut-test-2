@@ -147,7 +147,7 @@ export const CampaignListTable = (): JSX.Element => {
       ),
       debug: (
         <IconButton
-          disabled={disabled(campaign)}
+          disabled
           onClick={() => handleStartOrStop(campaign.id, campaign.status)}
         >
           <span>{tmpIcons(campaign.status, disabled(campaign))}</span>
