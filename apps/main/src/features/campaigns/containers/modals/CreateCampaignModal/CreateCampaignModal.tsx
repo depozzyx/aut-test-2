@@ -1,9 +1,10 @@
+import { FC } from 'react'
 import useTranslation from 'next-translate/useTranslation'
+
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
 import { reset } from '@/features/campaigns/store/create-campaign'
 import { useRedux } from '@/hooks/use-redux'
-import { FC } from 'react'
 import { CreateCampaignForm } from './components/CreateCampaignForm'
 
 type Props = {
@@ -31,7 +32,7 @@ export const CreateCampaignModal: FC<Props> = ({
       open
       title={title}
       onClose={handleClose}
-      maxWidth="612px"
+      maxWidth="1000px"
       containerWidth="100%"
     >
       <CreateCampaignForm

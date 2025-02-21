@@ -1,6 +1,6 @@
-LeadName,LeadPhone,LeadTimezone,LeadStatus,Source
-John Doe,+1234567890,UTC-05:00,NEW,Website
-Jane Smith,+0987654321,UTC+01:00,NEW,Referral
-Alex Johnson,+1230984567,UTC-08:00,NEW,Social Media
-Maria Garcia,+9876543210,UTC+03:00,NEW,Email Campaign
-James Wilson,+1029384756,UTC+00:00,NEW,Direct Call
+LeadName,LeadPhone,LeadStatus,Source
+John Doe,+1234567890,NEW,Website
+Jane Smith,+0987654321,NEW,Referral
+Alex Johnson,+1230984567,NEW,Social Media
+Maria Garcia,+9876543210,NEW,Email Campaign
+James Wilson,+1029384756,NEW,Direct Call

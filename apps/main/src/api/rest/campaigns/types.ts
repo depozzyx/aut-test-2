@@ -21,6 +21,12 @@ export type TCampaignListReq = TActiveCampaignsReq
 
 export type TActiveCampaignsRes = any
 
+export type TRecycleRule = {
+  status: string
+  delay: string
+  attempts: number
+}
+
 export type TCreateCampaignReq = {
   name: string
   assignedAgentIds?: number[] | []
@@ -30,6 +36,8 @@ export type TCreateCampaignReq = {
   mode: string
   coefficient: string
   filterLeadStatuses: string[]
+  recycleRules: TRecycleRule[]
+  workHours?: string
 }
 
 export type TEditCampaignReq = TCreateCampaignReq & { id: number }

@@ -355,3 +355,52 @@ export const asyncUpdateCampaignStatus =
       dispatch(setIsLoading(false))
     }
   }
+
+export const asyncStartOrStopCampaign =
+  (campaignId: number, currentStatus: TCampaignStatus): TAsyncAction =>
+  async (dispatch, getState) => {
+    try {
+      dispatch(setIsLoading(true))
+      const { campaignList, pagination } = getState().campaigns
+      const { name } = campaignList.find(({ id }) => id === campaignId) as TCampaign
+
+      if (currentStatus === CAMPAIGN_STATUSES.ACTIVE) {
+        await apiCampaigns.stop(campaignId)
+        dispatch(
+          notificationActions.setNotification({
+            key: 'notifications:campaign.paused',
+            status: 'success',
+            values: { campaignName: name },
+          }),
+        )
+      } else {
+        await apiCampaigns.startCampaign({
+          id: campaignId.toString(),
+        })
+        dispatch(
+          notificationActions.setNotification({
+            key: 'notifications:campaign.active',
+            status: 'success',
+            values: { campaignName: name },
+          }),
+        )
+      }
+
+      const params = {
+        page: pagination.page,
+        limit: pagination.limit,
+        sortBy: SORT_BY.CREATED_AT,
+        orderBy: ORDER_BY.DESC,
+      }
+
+      getCurrentCampaigns({
+        type: CAMPAIGN_TABLE_TYPES.LIST,
+        dispatch,
+        params: params as TActiveCampaignsReq,
+      })
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    } finally {
+      dispatch(setIsLoading(false))
+    }
+  }

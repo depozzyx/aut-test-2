@@ -65,6 +65,19 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
     return 0
   }, [formDataForReview?.filterLeadStatuses])
 
+  const recycleRules = useMemo(() => {
+    if (!formDataForReview) return
+    if (formDataForReview.recycleRules.length > 1) {
+      return t('review-campaign.recycle-rules', {
+        count: formDataForReview.recycleRules.length,
+      })
+    }
+    if (formDataForReview.recycleRules.length === 1) {
+      return t('review-campaign.recycle-rule')
+    }
+    return 0
+  }, [formDataForReview?.recycleRules])
+
   if (!formDataForReview) {
     return null
   }
@@ -88,6 +101,11 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
           value={formDataForReview.coefficient}
         />
         <Field label={t('create-campaign.lead-statuses-review')} value={leadStatuses} />
+        <Field label={t('create-campaign.recycle-rules')} value={recycleRules} />
+        <Field
+          label={t('create-campaign.workHours-label')}
+          value={formDataForReview.workHours}
+        />
       </Flex>
       <Flex align="center" justify="center" gap={24}>
         <OutlinedButton onClick={handleBack} width="236px">

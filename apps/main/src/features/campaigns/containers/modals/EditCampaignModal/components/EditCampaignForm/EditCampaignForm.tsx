@@ -24,9 +24,11 @@ import {
 import { ORDER_BY } from '@/constants/orderBy'
 import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
-import { coefficients, modes } from '@/constants/settings'
+import { coefficients, modes, workHours } from '@/constants/settings'
 import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
 import { hasArrayChanged } from '@/utils/array'
+import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
+import { TRecycleRule } from '@/api-rest/campaigns/types'
 import { asyncEditCampaign } from '../../../../../store/edit-campaign'
 import { TCampaignTableType } from '../../../../../types'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
@@ -45,6 +47,8 @@ type TFormValues = {
   mode: string
   coefficient: string
   filterLeadStatuses: string[]
+  recycleRules: TRecycleRule[]
+  workHours?: string
 }
 
 export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
@@ -98,6 +102,8 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
       mode: '',
       coefficient: '',
       filterLeadStatuses: [],
+      recycleRules: [],
+      workHours: workHours[0],
     },
     validationSchema: createCampaignValidationSchema,
     onSubmit: (formData) => {
@@ -115,6 +121,8 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
         mode: data?.mode,
         coefficient: data?.coefficient,
         filterLeadStatuses: data?.filterLeadStatuses,
+        recycleRules: data?.recycleRules,
+        workHours: data?.workHours || workHours[0],
       })
     }
   }, [data])
@@ -157,90 +165,107 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
   const isChanged = () =>
     data &&
     (data.name !== formik.values.name ||
+      data.workHours !== formik.values.workHours ||
       hasArrayChanged(data.assignedAgents, formik.values.assignedAgentIds) ||
       hasArrayChanged(data.leadLists, formik.values.leadListIds) ||
       data.holdTime !== formik.values.holdTime ||
       data.mode !== formik.values.mode ||
       data.coefficient !== formik.values.coefficient ||
+      JSON.stringify(data.recycleRules) !== JSON.stringify(formik.values.recycleRules) ||
       hasArrayChanged(data.filterLeadStatuses, formik.values.filterLeadStatuses))
+
+  const isRecycleRulesInvalid = () =>
+    formik.values.recycleRules.length && !formik.values.recycleRules[0].status
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
       <Flex direction="column" align="center" gap={48} margin="40px 0 0 0">
-        <Flex direction="column" gap={16} maxWidth="424px" width="100%">
-          <FormikInput
-            size="s"
-            name="name"
-            label={{ label: t('edit-campaign.campaign-name') }}
-            id="name"
-            formik={formik}
-            width={424}
-            styles={{ padding: '0 14px' }}
-          />
-          <FormikMultiSelect
-            formik={formik}
-            name="assignedAgentIds"
-            label={{ label: t('edit-campaign.agent-assignment') }}
-            width={424}
-            size="s"
-            options={agentsOptions}
-            onMenuScrollToBottom={onAgentsScrollToBottom}
-            isSearchable
-          />
-          <FormikMultiSelect
-            formik={formik}
-            name="leadListIds"
-            label={{ label: t('edit-campaign.lead-selection') }}
-            size="s"
-            width={424}
-            options={leadListOptions}
-            onMenuScrollToBottom={onLeadsScrollToBottom}
-            isSearchable
-          />
-          <FormikInput
-            size="s"
-            name="holdTime"
-            placeholder={t('edit-campaign.hold-time-placeholder')}
-            label={{ label: t('edit-campaign.hold-time') }}
-            formik={formik}
-            maxWidth="424px"
-            width="100%"
-            styles={{ padding: '0 14px' }}
-          />
-          <FormikSelect
-            formik={formik}
-            options={modes.map((mode) => ({
-              label: String(mode),
-              value: String(mode),
-            }))}
-            width={424}
-            name="mode"
-            label={{ label: t('create-campaign.mode-label') }}
-          />
-          <FormikSelect
-            formik={formik}
-            options={coefficients.map((number) => ({
-              label: String(number),
-              value: String(number),
-            }))}
-            width={424}
-            name="coefficient"
-            label={{ label: t('create-campaign.coefficient-label') }}
-          />
-          <FormikMultiSelect
-            formik={formik}
-            name="filterLeadStatuses"
-            label={{ label: t('edit-campaign.lead-statuses') }}
-            size="s"
-            width={424}
-            options={leadStatuses.map(({ name: label, value }) => ({ label, value }))}
-            isSearchable
-          />
+        <Flex direction="row" gap={48}>
+          <Flex direction="column" gap={16} maxWidth="424px" width="100%">
+            <FormikInput
+              size="s"
+              name="name"
+              label={{ label: t('edit-campaign.campaign-name') }}
+              id="name"
+              formik={formik}
+              width={424}
+              styles={{ padding: '0 14px' }}
+            />
+            <FormikMultiSelect
+              formik={formik}
+              name="assignedAgentIds"
+              label={{ label: t('edit-campaign.agent-assignment') }}
+              width={424}
+              size="s"
+              options={agentsOptions}
+              onMenuScrollToBottom={onAgentsScrollToBottom}
+              isSearchable
+            />
+            <FormikMultiSelect
+              formik={formik}
+              name="leadListIds"
+              label={{ label: t('edit-campaign.lead-selection') }}
+              size="s"
+              width={424}
+              options={leadListOptions}
+              onMenuScrollToBottom={onLeadsScrollToBottom}
+              isSearchable
+            />
+            <FormikInput
+              size="s"
+              name="holdTime"
+              placeholder={t('edit-campaign.hold-time-placeholder')}
+              label={{ label: t('edit-campaign.hold-time') }}
+              formik={formik}
+              maxWidth="424px"
+              width="100%"
+              styles={{ padding: '0 14px' }}
+            />
+            <FormikSelect
+              formik={formik}
+              options={modes.map((mode) => ({
+                label: String(mode),
+                value: String(mode),
+              }))}
+              width={424}
+              name="mode"
+              label={{ label: t('create-campaign.mode-label') }}
+            />
+            <FormikSelect
+              formik={formik}
+              options={coefficients.map((number) => ({
+                label: String(number),
+                value: String(number),
+              }))}
+              width={424}
+              name="coefficient"
+              label={{ label: t('create-campaign.coefficient-label') }}
+            />
+            <FormikSelect
+              formik={formik}
+              options={workHours.map((wh) => ({ label: wh, value: wh }))}
+              width={424}
+              name="workHours"
+              label={{ label: t('create-campaign.workHours-label') }}
+            />
+          </Flex>
+          <Flex direction="column" gap={48} maxWidth="424px" width="100%">
+            <FormikMultiSelect
+              formik={formik}
+              name="filterLeadStatuses"
+              label={{ label: t('edit-campaign.lead-statuses') }}
+              size="s"
+              width={424}
+              options={leadStatuses.map(({ name: label, value }) => ({ label, value }))}
+              isSearchable
+            />
+            <RecycleRules formik={formik} leadStatuses={leadStatuses} />
+          </Flex>
         </Flex>
         <Flex align="center" justify="center" gap={24}>
           <FilledButton
             type="submit"
-            disabled={!isChanged() || !formik.isValid}
+            disabled={!isChanged() || isRecycleRulesInvalid() || !formik.isValid}
             width="202px"
           >
             {t('edit-campaign.save')}

@@ -10,7 +10,13 @@ import { Box } from '@peiko/components/Box'
 import { validation } from '@/utils/validation'
 import { useSettings } from '@/features/settings/hooks/useSettings'
 import { TFormik } from '@peiko/types/formik'
-import { modes, coefficients, campaignSettingKeys } from '@/constants/settings'
+import {
+  modes,
+  coefficients,
+  campaignSettingKeys,
+  emptyWorkHourOption,
+  workHours,
+} from '@/constants/settings'
 import { CardTile } from './components/CardTile'
 
 export const Campaigns: FC = () => {
@@ -23,9 +29,11 @@ export const Campaigns: FC = () => {
     const { data } = await getSettingsAsync([
       campaignSettingKeys.mode,
       campaignSettingKeys.coefficient,
+      campaignSettingKeys.workHours,
     ])
     await form.setFieldValue(campaignSettingKeys.mode, data.campaignMode)
     await form.setFieldValue(campaignSettingKeys.coefficient, data.campaignCoefficient)
+    await form.setFieldValue(campaignSettingKeys.workHours, data.campaignWorkHours)
     setIsLoaded(true)
   }
 
@@ -33,17 +41,19 @@ export const Campaigns: FC = () => {
     initialValues: {
       campaignMode: '',
       campaignCoefficient: '',
+      campaignWorkHours: '',
     },
     validationSchema: yup.object().shape({
       campaignMode: validation.required,
       campaignCoefficient: validation.required,
     }),
-    onSubmit: async ({ campaignMode, campaignCoefficient }) => {
+    onSubmit: async ({ campaignMode, campaignCoefficient, campaignWorkHours }) => {
       await changeSettingsAsync({
         formData: {
           data: {
             campaignMode,
             campaignCoefficient,
+            campaignWorkHours,
           },
         },
         formik,
@@ -62,9 +72,9 @@ export const Campaigns: FC = () => {
       <form onSubmit={formik.handleSubmit}>
         <Box
           styles={{
-            display: 'grid',
-            gap: '24px',
-            gridTemplateColumns: 'repeat(2, 1fr) 158px',
+            display: 'flex',
+            gap: '16px',
+            alignItems: 'end',
           }}
         >
           <FormikSelect
@@ -87,9 +97,19 @@ export const Campaigns: FC = () => {
             name="campaignCoefficient"
             label={{ label: t('change-campaign-settings.coefficient-label') }}
           />
+          <FormikSelect
+            formik={formik}
+            options={[
+              emptyWorkHourOption,
+              ...workHours.map((wh) => ({ label: wh, value: wh })),
+            ]}
+            width="9rem"
+            name="campaignWorkHours"
+            label={{ label: t('change-campaign-settings.workHours-label') }}
+          />
           <FilledButton
             size="s"
-            styles={{ marginLeft: '24px', marginTop: '22px' }}
+            styles={{ marginLeft: '24px' }}
             width="134px"
             type="submit"
             isLoading={formik.isSubmitting}

@@ -27,6 +27,7 @@ import {
   selectCampaignsListForView,
   setSelectedId,
   asyncUpdateCampaignStatus,
+  asyncStartOrStopCampaign,
 } from '../../../store/campaigns'
 import { formatCreatedAt } from '../../../utils/formatCreateAt'
 
@@ -34,6 +35,7 @@ type TCampaignRowKeys =
   | 'view'
   | 'name'
   | 'action'
+  | 'debug'
   | 'date'
   | 'status'
   | 'leads'
@@ -65,6 +67,9 @@ export const CampaignListTable = (): JSX.Element => {
   const handleAction = useCallback((id: number, currentStatus: TCampaignStatus) => {
     dispatch(asyncUpdateCampaignStatus(id, currentStatus))
   }, [])
+
+  const handleStartOrStop = async (id: number, currentStatus: TCampaignStatus) =>
+    dispatch(asyncStartOrStopCampaign(id, currentStatus))
 
   const handleEditCampaign = useCallback((id: number) => {
     dispatch(setSelectedId(id))
@@ -107,10 +112,23 @@ export const CampaignListTable = (): JSX.Element => {
     { label: t('campaign-list-headers.leads'), value: 'leads' },
     { label: t('campaign-list-headers.agents'), value: 'agents' },
     { label: t('campaign-list-headers.action'), value: 'action' },
+    { label: t('campaign-list-headers.debug'), value: 'debug' },
     { label: t('campaign-list-headers.view'), value: 'view' },
     { label: t('campaign-list-headers.edit'), value: 'edit' },
     { label: t('campaign-list-headers.delete'), value: 'delete' },
   ]
+
+  const tmpIcons = (status: string, disabled: boolean) => {
+    if (status === 'pause') {
+      return disabled ? '🔘' : '☢️'
+    }
+    if (status === 'active') {
+      return '🧨'
+    }
+    if (status === 'complete') {
+      return '💀'
+    }
+  }
 
   const rows = data.map((campaign) => ({
     row: {
@@ -126,6 +144,19 @@ export const CampaignListTable = (): JSX.Element => {
           status={campaign.status}
           onClick={() => handleAction(campaign.id, campaign.status)}
         />
+      ),
+      debug: (
+        <IconButton
+          disabled={disabled(campaign)}
+          onClick={() => handleStartOrStop(campaign.id, campaign.status)}
+        >
+          <span>{tmpIcons(campaign.status, disabled(campaign))}</span>
+        </IconButton>
+        // <ActionBtn
+        //   disabled={disabled(campaign)}
+        //   status={campaign.status}
+        //   onClick={() => handleStartOrStop(campaign.id, campaign.status)}
+        // />
       ),
       view: (
         <IconButton
