@@ -374,9 +374,7 @@ export const asyncStartOrStopCampaign =
           }),
         )
       } else {
-        await apiCampaigns.startCampaign({
-          id: campaignId.toString(),
-        })
+        await apiCampaigns.start(campaignId)
         dispatch(
           notificationActions.setNotification({
             key: 'notifications:campaign.active',
