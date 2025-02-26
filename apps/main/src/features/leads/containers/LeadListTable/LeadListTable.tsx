@@ -60,6 +60,16 @@ const EditLeadListModal = dynamic(
   },
 )
 
+const ConfirmDeleteModal = dynamic(
+  () =>
+    import('@/components/modals/ConfirmDeleteModal').then(
+      (mod) => mod.ConfirmDeleteModal,
+    ),
+  {
+    ssr: false,
+  },
+)
+
 export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Element => {
   const { t } = useTranslation('leads-list')
   const { select, dispatch } = useRedux()
@@ -125,13 +135,21 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
     reFetch()
   }
 
-  const handleDelete = async (id: number) => {
+  const [leadListId, setLeadListId] = useState(0)
+
+  const handleDelete = async () => {
     try {
-      await apiLeadList.deleteLeadList(id)
+      await apiLeadList.deleteLeadList(leadListId)
       reFetch()
+      setLeadListId(0)
     } catch (e) {
       handleRestError({ e, dispatch })
     }
+  }
+
+  const confirmDelete = (id: number) => {
+    setLeadListId(id)
+    setModal({ modalName: MODAL_NAMES.DELETE_CONFIRMATION, isOpen: true })
   }
 
   const isViewModalOpen =
@@ -210,7 +228,7 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
       ),
       delete: (
         <IconButton
-          onClick={() => handleDelete(leadList.id)}
+          onClick={() => confirmDelete(leadList.id)}
           iconColor="main13"
           disabled={
             leadList.campaignStatus && leadList.campaignStatus !== CAMPAIGN_STATUSES.PAUSE
@@ -260,6 +278,10 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
           onClose={onCloseEditLeadListModal}
         />
       )}
+      <ConfirmDeleteModal
+        title="Are you sure you want to delete it?"
+        confirmAction={handleDelete}
+      />
     </>
   )
 }, deepEqual)

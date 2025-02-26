@@ -19,12 +19,14 @@ interface LeadStatusRowProps {
   originalItem: { id?: number; name: string; value: string; isSystem?: boolean }
   item: { id?: number; name: string; value: string; isSystem?: boolean }
   onReset: (id?: number) => void
+  onDelete: (id: number) => void
 }
 
 export const LeadStatusRow: FC<LeadStatusRowProps> = ({
   originalItem,
   item,
   onReset,
+  onDelete,
 }) => {
   const { t } = useTranslation('settings')
   const { dispatch } = useRedux()
@@ -48,15 +50,6 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
         await leadsApi.createCustomStatus({ name, value })
       }
       setIsEditing(false)
-      dispatch(getLeadStatuses())
-    } catch (e) {
-      handleRestError({ e, dispatch })
-    }
-  }
-
-  const handleDelete = async (id: number) => {
-    try {
-      await leadsApi.deleteCustomStatus(id)
       dispatch(getLeadStatuses())
     } catch (e) {
       handleRestError({ e, dispatch })
@@ -135,7 +128,7 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
               <EditIcon width="24px" height="24px" />
             </IconButton>
             <IconButton
-              onClick={() => editableItem.id && handleDelete(editableItem.id)}
+              onClick={() => editableItem.id && onDelete(editableItem.id)}
               iconColor="main13"
             >
               <TrashIcon width="24px" height="24px" />
