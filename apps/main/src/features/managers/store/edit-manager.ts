@@ -54,11 +54,12 @@ export const selectInitFormData = createSelector(
     if (!selectedId || !managersList) return null
 
     const currentManager = managersList.find((manager) => manager.id === selectedId)
-
-    return {
-      email: currentManager?.email || '',
-      username: currentManager?.username || '',
-      managerId: currentManager?.id || selectedId,
+    if (currentManager) {
+      return {
+        email: currentManager.email,
+        username: currentManager?.username || '',
+        managerId: currentManager?.id || selectedId,
+      }
     }
   },
 )
