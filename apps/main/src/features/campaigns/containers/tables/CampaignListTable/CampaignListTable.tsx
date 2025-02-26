@@ -118,17 +118,17 @@ export const CampaignListTable = (): JSX.Element => {
     { label: t('campaign-list-headers.delete'), value: 'delete' },
   ]
 
-  const tmpIcons = (status: string, disabled: boolean) => {
-    if (status === 'pause') {
-      return disabled ? '🔘' : '☢️'
-    }
-    if (status === 'active') {
-      return '🧨'
-    }
-    if (status === 'complete') {
-      return '💀'
-    }
-  }
+  // const tmpIcons = (status: string, disabled: boolean) => {
+  //   if (status === 'pause') {
+  //     return disabled ? '🔘' : '☢️'
+  //   }
+  //   if (status === 'active') {
+  //     return '🧨'
+  //   }
+  //   if (status === 'complete') {
+  //     return '💀'
+  //   }
+  // }
 
   const rows = data.map((campaign) => ({
     row: {
@@ -146,17 +146,17 @@ export const CampaignListTable = (): JSX.Element => {
         />
       ),
       debug: (
-        <IconButton
-          disabled
-          onClick={() => handleStartOrStop(campaign.id, campaign.status)}
-        >
-          <span>{tmpIcons(campaign.status, disabled(campaign))}</span>
-        </IconButton>
-        // <ActionBtn
-        //   disabled={disabled(campaign)}
-        //   status={campaign.status}
+        // <IconButton
+        //   disabled
         //   onClick={() => handleStartOrStop(campaign.id, campaign.status)}
-        // />
+        // >
+        //   <span>{tmpIcons(campaign.status, disabled(campaign))}</span>
+        // </IconButton>
+        <ActionBtn
+          disabled
+          status={campaign.status}
+          onClick={() => handleStartOrStop(campaign.id, campaign.status)}
+        />
       ),
       view: (
         <IconButton

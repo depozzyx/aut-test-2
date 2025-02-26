@@ -11,16 +11,27 @@ import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInpu
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 
 import { validation } from '@/utils/validation'
+import React, { useEffect } from 'react'
+
+import { useAuth } from '@/features/common/user'
+import { ERoles } from '@/constants/profile'
 import {
   asyncEditManager,
   selectInitFormData,
   selectEditManagerIsLoading,
 } from '../../store/edit-manager'
 
+type TFormValues = {
+  email?: string
+  username: string
+  password?: string
+}
+
 export const EditManagerForm = (): JSX.Element => {
   const { t } = useTranslation('managers')
   const { resetModals } = useModals()
   const { select, dispatch } = useRedux()
+  const { user } = useAuth()
 
   const { isLoading, initFormData } = select(
     createStructuredSelector({
@@ -30,34 +41,64 @@ export const EditManagerForm = (): JSX.Element => {
     shallowEqual,
   )
 
-  const formik = useFormik({
+  const formik = useFormik<TFormValues>({
     initialValues: {
-      // email: initFormData?.email || '',
-      username: initFormData?.username || '',
+      email: '',
+      username: '',
+      password: undefined,
     },
     validationSchema: yup.object().shape({
-      // email: validation.email,
+      email: validation.email,
       username: validation.required,
+      password: yup
+        .string()
+        .nullable()
+        .test(
+          'password-strength',
+          'Password must be at least 8 characters long, include numbers, uppercase and lowercase letters, and have no spaces',
+          (value) =>
+            !value || /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,32}$/.test(value),
+        ),
     }),
     onSubmit: (formData) => {
-      dispatch(asyncEditManager({ formData, formik }))
+      const payload = { ...formData }
+      if (!formData.password) {
+        payload.password = undefined
+      }
+      dispatch(asyncEditManager({ formData: payload, formik }))
     },
   })
+
+  useEffect(() => {
+    if (initFormData) {
+      formik.setValues({
+        username: initFormData.username,
+        email: initFormData.email,
+      })
+    }
+  }, [initFormData])
+
+  const isChanged = () =>
+    formik.values.email !== initFormData?.email ||
+    formik.values.username !== initFormData?.username ||
+    formik.values.password
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
       <Flex direction="column" align="center" gap={48} margin="40px 0 0 0">
         <Flex gap={24}>
           <Flex direction="column" gap={16} maxWidth="326px" width="100%">
-            {/* <FormikInput
-              size="s"
-              name="email"
-              label={{ label: t('edit-manager.email') }}
-              id="email"
-              formik={formik}
-              width={326}
-              styles={{ padding: '0 14px' }}
-            /> */}
+            {user?.role === ERoles.ADMIN && (
+              <FormikInput
+                size="s"
+                name="email"
+                label={{ label: t('edit-manager.email') }}
+                id="email"
+                formik={formik}
+                width={326}
+                styles={{ padding: '0 14px' }}
+              />
+            )}
             <FormikInput
               size="s"
               name="username"
@@ -67,12 +108,25 @@ export const EditManagerForm = (): JSX.Element => {
               width={326}
               styles={{ padding: '0 14px' }}
             />
+            {user?.role === ERoles.ADMIN && (
+              <FormikInput
+                size="s"
+                name="password"
+                type="password"
+                label={{ label: t('edit-manager.password') }}
+                id="password"
+                placeholder="********"
+                formik={formik}
+                width={326}
+                styles={{ padding: '0 14px' }}
+              />
+            )}
           </Flex>
         </Flex>
         <Flex align="center" justify="center" gap={24}>
           <FilledButton
             type="submit"
-            disabled={!formik.dirty || !formik.isValid || isLoading}
+            disabled={!formik.dirty || !isChanged() || !formik.isValid || isLoading}
             width="236px"
             isLoading={isLoading}
           >

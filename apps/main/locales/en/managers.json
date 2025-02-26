@@ -19,9 +19,10 @@
     "action": "Create Manager"
   },
   "edit-manager": {
-    "title": "Edit manager info",
+    "title": "Edit manager",
     "email": "Email",
     "username": "User Name",
+    "password": "Password",
     "cancel": "Cancel",
     "save": "Save"
   }
