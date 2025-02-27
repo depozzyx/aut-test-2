@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import * as S from './Tolltip.styles'
+import * as S from './Tooltip.styles'
 import { TTooltipProps } from './types'
 
 /**

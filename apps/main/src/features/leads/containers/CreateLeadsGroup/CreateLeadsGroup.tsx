@@ -14,7 +14,7 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { Box } from '@peiko/components/Box'
 import { useRedux } from '@/hooks/use-redux'
 import { TFormik } from '@peiko/types/formik'
-import { Checkbox } from '@peiko/components/inputs/checkboxes/Checkbox/Checkbox'
+import { RadioButton } from '@peiko/components/inputs/RadioButton/RadioButton'
 import { createLeadsGroups } from '../../store/leads'
 
 export const CreateLeadsGroup: FC = () => {
@@ -32,7 +32,7 @@ export const CreateLeadsGroup: FC = () => {
   const formik = useFormik({
     initialValues: {
       name: '',
-      active: false,
+      active: 'true',
     },
     validationSchema: yup.object().shape({
       name: validation.required,
@@ -67,17 +67,38 @@ export const CreateLeadsGroup: FC = () => {
                 name="name"
                 width="326px"
               />
-              <Checkbox
-                size="s"
-                label={`${
-                  formik.values.active
-                    ? t('statuses.lead-list.active')
-                    : t('statuses.lead-list.inactive')
-                }`}
-                value={formik.values.active}
-                onChange={(e) => formik.setFieldValue('active', e.value)}
-                name="numbers"
-              />
+              <Flex gap="22px" justify="start" styles={{ marginBottom: '14px' }}>
+                <Flex
+                  gap="4px"
+                  styles={{ cursor: 'pointer' }}
+                  onClick={() => formik.setFieldValue('active', 'true')}
+                >
+                  <RadioButton
+                    name="true"
+                    onChange={() => formik.setFieldValue('active', 'true')}
+                    inputProps={{
+                      value: 'true',
+                      checked: formik.values.active === 'true',
+                    }}
+                  />
+                  <Text>{t('statuses.lead-list.active')}</Text>
+                </Flex>
+                <Flex
+                  gap="4px"
+                  styles={{ cursor: 'pointer' }}
+                  onClick={() => formik.setFieldValue('active', 'false')}
+                >
+                  <RadioButton
+                    name="false"
+                    onChange={() => formik.setFieldValue('active', 'false')}
+                    inputProps={{
+                      value: 'false',
+                      checked: formik.values.active === 'false',
+                    }}
+                  />
+                  <Text>{t('statuses.lead-list.inactive')}</Text>
+                </Flex>
+              </Flex>
             </Flex>
           </Flex>
           <Flex justify="space-between" gap="24px" margin="51px 0 0">

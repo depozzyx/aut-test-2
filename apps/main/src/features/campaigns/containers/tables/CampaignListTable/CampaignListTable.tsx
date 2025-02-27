@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
@@ -9,8 +9,6 @@ import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { TCampaign, TCampaignStatus } from '@/features/campaigns/types'
 import { IconButton } from '@peiko/components/buttons/IconButton'
-import { EditIcon } from '@peiko/components/icons/EditIcon'
-import { TrashIcon } from '@peiko/components/icons/TrashIcon'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
@@ -19,6 +17,7 @@ import { CAMPAIGN_STATUSES, SORT_BY } from '@/features/campaigns/constants'
 import { useCampaignSort } from '@/features/campaigns/hooks/use-campaignSort'
 import { EyeIcon } from '@peiko/components/icons/EyeIcon/EyeIcon'
 import { ROUTES } from '@/routes'
+import { ButtonWithTooltip } from '@peiko/components/Tooltip'
 import { InfoCell } from '../../../components/InfoCell'
 import { StatusChip } from '../../../components/StatusChip'
 import { ActionBtn } from '../../../components/ActionBtn'
@@ -118,18 +117,6 @@ export const CampaignListTable = (): JSX.Element => {
     { label: t('campaign-list-headers.delete'), value: 'delete' },
   ]
 
-  // const tmpIcons = (status: string, disabled: boolean) => {
-  //   if (status === 'pause') {
-  //     return disabled ? '🔘' : '☢️'
-  //   }
-  //   if (status === 'active') {
-  //     return '🧨'
-  //   }
-  //   if (status === 'complete') {
-  //     return '💀'
-  //   }
-  // }
-
   const rows = data.map((campaign) => ({
     row: {
       id: campaign.id,
@@ -146,12 +133,6 @@ export const CampaignListTable = (): JSX.Element => {
         />
       ),
       debug: (
-        // <IconButton
-        //   disabled
-        //   onClick={() => handleStartOrStop(campaign.id, campaign.status)}
-        // >
-        //   <span>{tmpIcons(campaign.status, disabled(campaign))}</span>
-        // </IconButton>
         <ActionBtn
           disabled
           status={campaign.status}
@@ -167,22 +148,24 @@ export const CampaignListTable = (): JSX.Element => {
         </IconButton>
       ),
       edit: (
-        <IconButton
+        <ButtonWithTooltip
+          showTooltip={campaign.status === CAMPAIGN_STATUSES.ACTIVE}
+          buttonDisabled={campaign.status === CAMPAIGN_STATUSES.ACTIVE}
           onClick={() => handleEditCampaign(campaign.id)}
-          iconColor="transparent"
-          disabled={campaign.status !== CAMPAIGN_STATUSES.PAUSE}
-        >
-          <EditIcon width="24px" height="24px" />
-        </IconButton>
+          tooltipText={t(`tooltip.cannot-edit-active-campaign`)}
+          iconType="info"
+          buttonType="edit"
+        />
       ),
       delete: (
-        <IconButton
+        <ButtonWithTooltip
+          showTooltip={campaign.status === CAMPAIGN_STATUSES.ACTIVE}
+          buttonDisabled={campaign.status === CAMPAIGN_STATUSES.ACTIVE}
           onClick={() => handleDelete(campaign.id)}
-          iconColor="main13"
-          disabled={campaign.status !== CAMPAIGN_STATUSES.PAUSE}
-        >
-          <TrashIcon width="24px" height="24px" />
-        </IconButton>
+          tooltipText={t(`tooltip.cannot-delete-active-campaign`)}
+          iconType="info"
+          buttonType="delete"
+        />
       ),
     },
   }))
