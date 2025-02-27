@@ -17,14 +17,13 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import dynamic from 'next/dynamic'
 import { selectLeadLists, selectIsLoading } from '@/features/leads/store/lead-list'
 import { setLeadsSortBy } from '@/features/leads/store/leads'
-import { TrashIcon } from '@peiko/components/icons/TrashIcon/TrashIcon'
-import { EditIcon } from '@peiko/components/icons/EditIcon'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { handleRestError } from '@/features/common/error'
 import { apiLeadList } from '@/api-rest/lead-list'
 import { StatusChip } from '@/features/campaigns/components/StatusChip'
 import { LeadListStatusChip } from '@/features/leads/components/StatusChip'
 import { Text } from '@peiko/components/Text/Text'
+import { ButtonWithTooltip } from '@peiko/components/Tooltip'
 
 import {
   TLeadCallStatusStatisticRawData,
@@ -216,26 +215,24 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
         </IconButton>
       ),
       edit: (
-        <IconButton
+        <ButtonWithTooltip
+          showTooltip={leadList.campaignStatus === CAMPAIGN_STATUSES.ACTIVE}
+          buttonDisabled={leadList.campaignStatus === CAMPAIGN_STATUSES.ACTIVE}
           onClick={() => handleEdit(leadList.id)}
-          iconColor="transparent"
-          disabled={
-            leadList.campaignStatus && leadList.campaignStatus !== CAMPAIGN_STATUSES.PAUSE
-          }
-        >
-          <EditIcon width="24px" height="24px" />
-        </IconButton>
+          tooltipText={t(`tooltip.cannot-edit-active-campaign`)}
+          iconType="info"
+          buttonType="edit"
+        />
       ),
       delete: (
-        <IconButton
+        <ButtonWithTooltip
+          showTooltip={leadList.campaignStatus === CAMPAIGN_STATUSES.ACTIVE}
+          buttonDisabled={leadList.campaignStatus === CAMPAIGN_STATUSES.ACTIVE}
           onClick={() => confirmDelete(leadList.id)}
-          iconColor="main13"
-          disabled={
-            leadList.campaignStatus && leadList.campaignStatus !== CAMPAIGN_STATUSES.PAUSE
-          }
-        >
-          <TrashIcon width="24px" height="24px" />
-        </IconButton>
+          tooltipText={t(`tooltip.cannot-delete-active-campaign`)}
+          iconType="info"
+          buttonType="delete"
+        />
       ),
     },
   }))

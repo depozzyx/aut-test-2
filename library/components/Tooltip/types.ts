@@ -19,13 +19,13 @@ export type TTooltipProps = {
    */
   maxWidth?: CSSProperties['maxWidth']
   /**
-   * Define the background color of the tooltip content.
-   * @default base3
+   * Define the padding of the tooltip content.
+   * @default '16px 24px'
    */
   padding?: CSSProperties['padding']
   /**
-   * Define the padding of the tooltip content.
-   * @default '16px 24px'
+   * Define the background color of the tooltip content.
+   * @default base3
    */
   contentBackgroundColor?: keyof DefaultTheme['palette']
   /**
@@ -33,6 +33,11 @@ export type TTooltipProps = {
    * @default base3
    */
   arrowColor?: keyof DefaultTheme['palette']
+  /**
+   * Define the border color of the tooltip arrow.
+   * @default base3
+   */
+  arrowBorderColor?: keyof DefaultTheme['palette']
   /**
    * Define the border color of the tooltip content.
    * @default main8

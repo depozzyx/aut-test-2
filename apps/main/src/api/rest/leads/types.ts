@@ -49,8 +49,14 @@ export type TLeadsGroupReq = {
   orderBy: TOrderBy
 } & Pick<TPagination, 'page' | 'limit'>
 
+export type TCreateLeadGroupPayload = {
+  name: string
+  active: string
+}
+
 export type TCreateLeadGroupReq = {
   name: string
+  active: boolean
 }
 
 export type TCreateLeadGroupRes = {

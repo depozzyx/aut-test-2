@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { shallowEqual } from 'react-redux'
 import { useFormik } from 'formik'
 import { createStructuredSelector } from 'reselect'
@@ -33,7 +33,7 @@ import { asyncEditCampaign } from '../../../../../store/edit-campaign'
 import { TCampaignTableType } from '../../../../../types'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
 import { useGetCampaignById } from '../../../../../hooks/use-getCampaignById'
-import { INITIAL_REQUEST_PARAMS_EDIT } from '../../../../../constants'
+import { CAMPAIGN_STATUSES, INITIAL_REQUEST_PARAMS_EDIT } from '../../../../../constants'
 
 type TProps = {
   type: TCampaignTableType
@@ -111,6 +111,8 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     },
   })
 
+  const [initialLeadListIds, setInitialLeadListIds] = useState<number[]>([])
+
   useEffect(() => {
     if (data) {
       formik.setValues({
@@ -124,8 +126,27 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
         recycleRules: data?.recycleRules,
         workHours: data?.workHours || workHours[0],
       })
+      if (data.status === CAMPAIGN_STATUSES.COMPLETE) {
+        setInitialLeadListIds(data?.leadLists)
+      }
     }
   }, [data])
+
+  /** prevent to delete initial leads lists for completed campaign */
+  useEffect(() => {
+    if (data?.status === CAMPAIGN_STATUSES.COMPLETE && initialLeadListIds.length) {
+      const missingInitialItems = initialLeadListIds.filter(
+        (id) => !formik.values.leadListIds.includes(id),
+      )
+
+      if (missingInitialItems.length) {
+        formik.setFieldValue(
+          'leadListIds',
+          Array.from(new Set([...formik.values.leadListIds, ...missingInitialItems])),
+        )
+      }
+    }
+  }, [formik.values.leadListIds, data, initialLeadListIds])
 
   const onLeadsScrollToBottom = useCallback(() => {
     const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 10))
@@ -183,16 +204,18 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
         <Flex direction="row" gap={48}>
           <Flex direction="column" gap={16} maxWidth="424px" width="100%">
             <FormikInput
+              formik={formik}
+              disabled={data?.status === CAMPAIGN_STATUSES.COMPLETE}
               size="s"
               name="name"
               label={{ label: t('edit-campaign.campaign-name') }}
               id="name"
-              formik={formik}
               width={424}
               styles={{ padding: '0 14px' }}
             />
             <FormikMultiSelect
               formik={formik}
+              disabled={data?.status === CAMPAIGN_STATUSES.COMPLETE}
               name="assignedAgentIds"
               label={{ label: t('edit-campaign.agent-assignment') }}
               width={424}
@@ -212,17 +235,19 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
               isSearchable
             />
             <FormikInput
+              formik={formik}
+              disabled={data?.status === CAMPAIGN_STATUSES.COMPLETE}
               size="s"
               name="holdTime"
               placeholder={t('edit-campaign.hold-time-placeholder')}
               label={{ label: t('edit-campaign.hold-time') }}
-              formik={formik}
               maxWidth="424px"
               width="100%"
               styles={{ padding: '0 14px' }}
             />
             <FormikSelect
               formik={formik}
+              disabled={data?.status === CAMPAIGN_STATUSES.COMPLETE}
               options={modes.map((mode) => ({
                 label: String(mode),
                 value: String(mode),
@@ -233,6 +258,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
             />
             <FormikSelect
               formik={formik}
+              disabled={data?.status === CAMPAIGN_STATUSES.COMPLETE}
               options={coefficients.map((number) => ({
                 label: String(number),
                 value: String(number),
@@ -243,6 +269,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
             />
             <FormikSelect
               formik={formik}
+              disabled={data?.status === CAMPAIGN_STATUSES.COMPLETE}
               options={workHours.map((wh) => ({ label: wh, value: wh }))}
               width={424}
               name="workHours"

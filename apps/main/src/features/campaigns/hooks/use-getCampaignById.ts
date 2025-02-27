@@ -5,7 +5,7 @@ import { useRedux } from '@/hooks/use-redux'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { handleRestError } from '@/features/common/error'
-import { TCampaign } from '@/features/campaigns/types'
+import { TCampaign, TCampaignStatus } from '@/features/campaigns/types'
 import { TRecycleRule } from '@/api-rest/campaigns/types'
 
 export type TAgent = {
@@ -26,6 +26,7 @@ type TReturn = {
   data?: {
     id: number | string | null
     name: string
+    status: TCampaignStatus
     assignedAgents: number[]
     leadLists: number[]
     holdTime: number
@@ -60,6 +61,7 @@ export const useGetCampaignById = (): TReturn => {
 
     const {
       name,
+      status,
       assignedAgents,
       leadLists,
       holdTime,
@@ -73,6 +75,7 @@ export const useGetCampaignById = (): TReturn => {
     return {
       id,
       name,
+      status,
       assignedAgents: assignedAgents.map((agent: TAgent) => agent?.id),
       leadLists: leadLists.map((list: TLeadList) => list?.id),
       holdTime,

@@ -5,6 +5,10 @@
     "pause": "Paused",
     "complete": "Completed"
   },
+  "tooltip": {
+    "cannot-edit-active-campaign": "You can not edit \"Active\" campaign, wait for complete or pause it",
+    "cannot-delete-active-campaign": "You can not delete \"Active\" campaign, wait for complete or pause it"
+  },
   "campaign-list-headers": {
     "campaign-name": "Campaign Name",
     "creation-date": "Creation Date",
@@ -13,7 +17,7 @@
     "agents": "Agents",
     "view": "View",
     "action": "Action",
-    "debug": "Action (updated)",
+    "debug": "Debug",
     "edit": "Edit",
     "delete": "Delete"
   },
