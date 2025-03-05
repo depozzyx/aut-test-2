@@ -1,0 +1,1 @@
+export { authSocket } from './auth'
