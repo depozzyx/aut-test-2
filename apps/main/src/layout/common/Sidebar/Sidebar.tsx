@@ -17,6 +17,7 @@ import { SidebarItem } from './components/SidebarItem'
 import { Accordion, Container, MenuItem } from './styles/Sidebar.styled'
 import { agentSocket } from '../../../api/socket/agent'
 import { socket } from '../../../api/socket/Socket'
+import { authSocket } from '../../../api/socket/auth'
 
 export const Sidebar = (): JSX.Element => {
   const { t } = useTranslation('auth')
@@ -48,15 +49,33 @@ export const Sidebar = (): JSX.Element => {
     socket.unsubscribe('Subscribe agent status')
   }
 
+  const onSubscribeManagerAuth = () =>
+    authSocket.authUpdate({
+      id: 'Subscribe manager auth',
+      callback: (e) => {
+        if (!e.logged) logoutAsync()
+      },
+    })
+
+  const onUnsubscribeManagerAuth = () => {
+    socket.unsubscribe('Subscribe manager auth')
+  }
+
   useEffect(() => {
     if (user?.role === ERoles.AGENT) {
       setTimeout(() => onSubscribeAgentStatus(), 500)
+    }
+    if (user?.role === ERoles.MANAGER) {
+      setTimeout(() => onSubscribeManagerAuth(), 500)
     }
   }, [])
 
   useUnmount(() => {
     if (user?.role === ERoles.AGENT) {
       onUnsubscribeAgentStatus()
+    }
+    if (user?.role === ERoles.MANAGER) {
+      onUnsubscribeManagerAuth()
     }
   })
 
