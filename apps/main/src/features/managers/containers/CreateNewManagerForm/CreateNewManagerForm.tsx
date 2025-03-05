@@ -1,7 +1,11 @@
 import useTranslation from 'next-translate/useTranslation'
-import { Flex } from '@/components/Flex'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+import React from 'react'
+
+import { Flex } from '@/components/Flex'
+import { Text } from '@peiko/components/Text'
+import { RadioButton } from '@peiko/components/inputs/RadioButton/RadioButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { validation } from '@/utils/validation'
@@ -22,11 +26,13 @@ export const CreateNewManagerForm = (): JSX.Element => {
       email: '',
       username: '',
       password: '',
+      hideLeadPhones: 'false',
     },
     validationSchema: yup.object().shape({
       email: validation.email.required(),
       username: validation.required,
       password: validation.password,
+      hideLeadPhones: validation.required,
     }),
     onSubmit: (formData) => {
       dispatch(
@@ -77,6 +83,38 @@ export const CreateNewManagerForm = (): JSX.Element => {
                 width={326}
                 styles={{ padding: '0 14px' }}
               />
+              <Flex gap="22px" justify="start" width={326}>
+                <Flex
+                  gap="4px"
+                  styles={{ cursor: 'pointer' }}
+                  onClick={() => formik.setFieldValue('hideLeadPhones', 'false')}
+                >
+                  <RadioButton
+                    name="true"
+                    onChange={() => formik.setFieldValue('hideLeadPhones', 'false')}
+                    inputProps={{
+                      value: 'false',
+                      checked: formik.values.hideLeadPhones === 'false',
+                    }}
+                  />
+                  <Text>{t('create-manager.showLeadPhones')}</Text>
+                </Flex>
+                <Flex
+                  gap="4px"
+                  styles={{ cursor: 'pointer' }}
+                  onClick={() => formik.setFieldValue('hideLeadPhones', 'true')}
+                >
+                  <RadioButton
+                    name="true"
+                    onChange={() => formik.setFieldValue('hideLeadPhones', 'true')}
+                    inputProps={{
+                      value: 'true',
+                      checked: formik.values.hideLeadPhones === 'true',
+                    }}
+                  />
+                  <Text>{t('create-manager.hideLeadPhones')}</Text>
+                </Flex>
+              </Flex>
             </Flex>
           </Flex>
           <Flex align="center" justify="center" gap={24}>

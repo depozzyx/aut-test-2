@@ -1,7 +1,9 @@
 import { useFormik } from 'formik'
+import React, { useEffect } from 'react'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import * as yup from 'yup'
+
 import useTranslation from 'next-translate/useTranslation'
 import { useRedux } from '@/hooks/use-redux'
 import { Flex } from '@/components/Flex'
@@ -9,10 +11,9 @@ import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
-
+import { Text } from '@peiko/components/Text'
+import { RadioButton } from '@peiko/components/inputs/RadioButton/RadioButton'
 import { validation } from '@/utils/validation'
-import React, { useEffect } from 'react'
-
 import { useAuth } from '@/features/common/user'
 import { ERoles } from '@/constants/profile'
 import {
@@ -25,6 +26,7 @@ type TFormValues = {
   email?: string
   username: string
   password?: string
+  hideLeadPhones?: string
 }
 
 export const EditManagerForm = (): JSX.Element => {
@@ -46,6 +48,7 @@ export const EditManagerForm = (): JSX.Element => {
       email: '',
       username: '',
       password: undefined,
+      hideLeadPhones: 'false',
     },
     validationSchema: yup.object().shape({
       email: validation.email,
@@ -74,6 +77,7 @@ export const EditManagerForm = (): JSX.Element => {
       formik.setValues({
         username: initFormData.username,
         email: initFormData.email,
+        hideLeadPhones: String(initFormData.hideLeadPhones),
       })
     }
   }, [initFormData])
@@ -81,7 +85,8 @@ export const EditManagerForm = (): JSX.Element => {
   const isChanged = () =>
     formik.values.email !== initFormData?.email ||
     formik.values.username !== initFormData?.username ||
-    formik.values.password
+    formik.values.password ||
+    String(formik.values.hideLeadPhones) !== String(initFormData?.hideLeadPhones)
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
@@ -120,6 +125,40 @@ export const EditManagerForm = (): JSX.Element => {
                 width={326}
                 styles={{ padding: '0 14px' }}
               />
+            )}
+            {user?.role === ERoles.ADMIN && (
+              <Flex gap="22px" justify="start" width={326}>
+                <Flex
+                  gap="4px"
+                  styles={{ cursor: 'pointer' }}
+                  onClick={() => formik.setFieldValue('hideLeadPhones', 'false')}
+                >
+                  <RadioButton
+                    name="true"
+                    onChange={() => formik.setFieldValue('hideLeadPhones', 'false')}
+                    inputProps={{
+                      value: 'false',
+                      checked: formik.values.hideLeadPhones === 'false',
+                    }}
+                  />
+                  <Text>{t('create-manager.showLeadPhones')}</Text>
+                </Flex>
+                <Flex
+                  gap="4px"
+                  styles={{ cursor: 'pointer' }}
+                  onClick={() => formik.setFieldValue('hideLeadPhones', 'true')}
+                >
+                  <RadioButton
+                    name="true"
+                    onChange={() => formik.setFieldValue('hideLeadPhones', 'true')}
+                    inputProps={{
+                      value: 'true',
+                      checked: formik.values.hideLeadPhones === 'true',
+                    }}
+                  />
+                  <Text>{t('create-manager.hideLeadPhones')}</Text>
+                </Flex>
+              </Flex>
             )}
           </Flex>
         </Flex>

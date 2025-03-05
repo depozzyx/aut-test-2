@@ -8,8 +8,9 @@ export const workHours = [
   '11:00 - 19:00',
   '12:00 - 20:00',
 ]
+export const hideLeadPhoneOptions = ['hideFirst', 'hideLast', 'hideWhole']
 
-export const emptyWorkHourOption = {
+export const emptyOption = {
   label: '-',
   value: '',
 }
@@ -18,4 +19,6 @@ export const campaignSettingKeys = {
   mode: 'campaignMode',
   coefficient: 'campaignCoefficient',
   workHours: 'campaignWorkHours',
+  hidePhoneManager: 'campaignHidePhoneManager',
+  hidePhoneAgent: 'campaignHidePhoneAgent',
 }

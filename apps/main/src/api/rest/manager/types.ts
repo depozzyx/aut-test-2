@@ -14,6 +14,7 @@ export type TManager = {
   email: string
   username: string
   pbxName: string
+  hideLeadPhones: boolean
   createdAt: string
   campaigns: string[]
 }
@@ -24,10 +25,18 @@ export type TManagersRes = {
   pagination: TPagination
 }
 
+export type TCreateManagerReq = {
+  email: string
+  username: string
+  password: string
+  hideLeadPhones: string
+}
+
 export type TPostManagerReq = {
   email: string
   username: string
   password: string
+  hideLeadPhones: boolean
 }
 
 export type TPostManagerRes = {
@@ -35,11 +44,20 @@ export type TPostManagerRes = {
   data: TManager
 }
 
+export type TUpdateManager = {
+  email?: string
+  username: string
+  password?: string | undefined
+  managerId?: number
+  hideLeadPhones?: string
+}
+
 export type TUpdateManagerReq = {
   email?: string
   username: string
   password?: string | undefined
   managerId?: number
+  hideLeadPhones?: boolean
 }
 
 export type TUpdateManagerRes = {

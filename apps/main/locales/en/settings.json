@@ -22,6 +22,17 @@
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
     "workHours-label": "Work Hours",
+    "hidePhone": {
+      "manager": {
+        "label": "Hide Phone (Managers)"
+      },
+      "agent": {
+        "label": "Hide Phone (Agents)"
+      },
+      "hideFirst": "hide first numbers",
+      "hideLast": "hide last numbers",
+      "hideWhole": "hide whole numbers"
+    },
     "save": "Save changes"
   },
   "change-lead-settings": {
