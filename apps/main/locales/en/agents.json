@@ -3,6 +3,7 @@
   "headers": {
     "agent-name": "Agent Name",
     "email": "Email",
+    "pbxName": "PBX Name",
     "creation-date": "Creation Date",
     "campaigns": "Campaigns",
     "edit": "Edit",

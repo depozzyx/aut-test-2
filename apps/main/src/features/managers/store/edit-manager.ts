@@ -74,6 +74,7 @@ export const asyncEditManager =
     formik?: FormikHelpers<TUpdateManagerReq>
   }): TAsyncAction =>
   async (dispatch, getState) => {
+    let error
     try {
       dispatch(setIsLoading(true))
       const managerId = getState().managers.selectedId
@@ -91,10 +92,13 @@ export const asyncEditManager =
       )
       await mutate((key) => Array.isArray(key) && key[0] === '/manager/list')
     } catch (e) {
+      error = e
       handleRestError({ e, dispatch, formik })
     } finally {
-      formik?.resetForm()
-      dispatch(modalsActions.resetModalsState())
+      if (!error) {
+        formik?.resetForm()
+        dispatch(modalsActions.resetModalsState())
+      }
       dispatch(setIsLoading(false))
     }
   }
