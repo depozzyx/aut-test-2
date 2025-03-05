@@ -1,7 +1,7 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { FormikHelpers } from 'formik'
 import { TSelector, TAsyncAction } from '@/store'
-import { TManager, TPostManagerReq } from '@/api-rest/manager/types'
+import { TCreateManagerReq, TManager } from '@/api-rest/manager/types'
 import { managerApi } from '@/api-rest/manager'
 import { handleRestError } from '@/features/common/error'
 import { notificationActions } from '@/features/common/notifications/store'
@@ -53,15 +53,16 @@ export const asyncCreateManager =
     {
       formData,
       formik,
-    }: TFormPropsAsync<TPostManagerReq> & {
-      formik?: FormikHelpers<TPostManagerReq>
+    }: TFormPropsAsync<TCreateManagerReq> & {
+      formik?: FormikHelpers<TCreateManagerReq>
     },
     onsuccess?: () => void,
   ): TAsyncAction =>
   async (dispatch) => {
     try {
       dispatch(setIsLoading(true))
-      const { data } = await managerApi.postManager(formData)
+      const payload = { ...formData, hideLeadPhones: formData.hideLeadPhones === 'true' }
+      const { data } = await managerApi.postManager(payload)
       dispatch(setCreatedManager(data.data))
       const managerName = data.data.username
       dispatch(

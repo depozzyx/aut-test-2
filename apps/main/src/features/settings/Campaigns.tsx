@@ -14,8 +14,9 @@ import {
   modes,
   coefficients,
   campaignSettingKeys,
-  emptyWorkHourOption,
+  emptyOption,
   workHours,
+  hideLeadPhoneOptions,
 } from '@/constants/settings'
 import { CardTile } from './components/CardTile'
 
@@ -30,10 +31,20 @@ export const Campaigns: FC = () => {
       campaignSettingKeys.mode,
       campaignSettingKeys.coefficient,
       campaignSettingKeys.workHours,
+      campaignSettingKeys.hidePhoneAgent,
+      campaignSettingKeys.hidePhoneManager,
     ])
     await form.setFieldValue(campaignSettingKeys.mode, data.campaignMode)
     await form.setFieldValue(campaignSettingKeys.coefficient, data.campaignCoefficient)
     await form.setFieldValue(campaignSettingKeys.workHours, data.campaignWorkHours)
+    await form.setFieldValue(
+      campaignSettingKeys.hidePhoneManager,
+      data.campaignHidePhoneManager,
+    )
+    await form.setFieldValue(
+      campaignSettingKeys.hidePhoneAgent,
+      data.campaignHidePhoneAgent,
+    )
     setIsLoaded(true)
   }
 
@@ -42,18 +53,28 @@ export const Campaigns: FC = () => {
       campaignMode: '',
       campaignCoefficient: '',
       campaignWorkHours: '',
+      campaignHidePhoneManager: '',
+      campaignHidePhoneAgent: '',
     },
     validationSchema: yup.object().shape({
       campaignMode: validation.required,
       campaignCoefficient: validation.required,
     }),
-    onSubmit: async ({ campaignMode, campaignCoefficient, campaignWorkHours }) => {
+    onSubmit: async ({
+      campaignMode,
+      campaignCoefficient,
+      campaignWorkHours,
+      campaignHidePhoneManager,
+      campaignHidePhoneAgent,
+    }) => {
       await changeSettingsAsync({
         formData: {
           data: {
             campaignMode,
             campaignCoefficient,
             campaignWorkHours,
+            campaignHidePhoneManager,
+            campaignHidePhoneAgent,
           },
         },
         formik,
@@ -99,13 +120,36 @@ export const Campaigns: FC = () => {
           />
           <FormikSelect
             formik={formik}
-            options={[
-              emptyWorkHourOption,
-              ...workHours.map((wh) => ({ label: wh, value: wh })),
-            ]}
+            options={[emptyOption, ...workHours.map((wh) => ({ label: wh, value: wh }))]}
             width="9rem"
             name="campaignWorkHours"
             label={{ label: t('change-campaign-settings.workHours-label') }}
+          />
+          <FormikSelect
+            formik={formik}
+            options={[
+              emptyOption,
+              ...hideLeadPhoneOptions.map((option) => ({
+                label: t(`change-campaign-settings.hidePhone.${option}`),
+                value: option,
+              })),
+            ]}
+            width="12rem"
+            name="campaignHidePhoneManager"
+            label={{ label: t('change-campaign-settings.hidePhone.manager.label') }}
+          />
+          <FormikSelect
+            formik={formik}
+            options={[
+              emptyOption,
+              ...hideLeadPhoneOptions.map((option) => ({
+                label: t(`change-campaign-settings.hidePhone.${option}`),
+                value: option,
+              })),
+            ]}
+            width="12rem"
+            name="campaignHidePhoneAgent"
+            label={{ label: t('change-campaign-settings.hidePhone.agent.label') }}
           />
           <FilledButton
             size="s"

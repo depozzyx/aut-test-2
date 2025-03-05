@@ -16,6 +16,8 @@
     "email": "Email",
     "username": "User Name",
     "password": "Password",
+    "hideLeadPhones": "Hide Phones",
+    "showLeadPhones": "Show Phones",
     "action": "Create Manager"
   },
   "edit-manager": {
