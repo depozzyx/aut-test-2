@@ -29,8 +29,8 @@
       "agent": {
         "label": "Hide Phone (Agents)"
       },
-      "hideFirst": "hide first numbers",
-      "hideLast": "hide last numbers",
+      "hideFirst": "hide first 3 numbers",
+      "hideLast": "hide last 3 numbers",
       "hideWhole": "hide whole numbers"
     },
     "save": "Save changes"
