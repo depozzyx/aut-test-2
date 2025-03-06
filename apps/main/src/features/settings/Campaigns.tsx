@@ -1,12 +1,12 @@
-import { Card } from '@peiko/components/Card'
 import { useFormik } from 'formik'
 import useTranslation from 'next-translate/useTranslation'
 import React, { FC, useEffect, useState } from 'react'
-
 import * as yup from 'yup'
+
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { Box } from '@peiko/components/Box'
+import { Card } from '@peiko/components/Card'
 import { validation } from '@/utils/validation'
 import { useSettings } from '@/features/settings/hooks/useSettings'
 import { TFormik } from '@peiko/types/formik'
@@ -18,13 +18,26 @@ import {
   workHours,
   hideLeadPhoneOptions,
 } from '@/constants/settings'
+import { USER_ROLES } from '@/types/roles'
+import { useAuth } from '@/features/common/user'
 import { CardTile } from './components/CardTile'
 
 export const Campaigns: FC = () => {
   const { t } = useTranslation('settings')
   const { getSettingsAsync, changeSettingsAsync } = useSettings()
+  const { user } = useAuth()
 
   const [isLoaded, setIsLoaded] = useState(false)
+
+  const initialValues = {
+    [campaignSettingKeys.mode]: '',
+    [campaignSettingKeys.coefficient]: '',
+    [campaignSettingKeys.workHours]: '',
+    [campaignSettingKeys.hidePhoneManager]: '',
+    [campaignSettingKeys.hidePhoneAgent]: '',
+  }
+
+  const [originalSettings, setOriginalSettings] = useState(initialValues)
 
   const getSettings = async (form: TFormik) => {
     const { data } = await getSettingsAsync([
@@ -45,17 +58,12 @@ export const Campaigns: FC = () => {
       campaignSettingKeys.hidePhoneAgent,
       data.campaignHidePhoneAgent,
     )
+    setOriginalSettings(data)
     setIsLoaded(true)
   }
 
   const formik = useFormik({
-    initialValues: {
-      campaignMode: '',
-      campaignCoefficient: '',
-      campaignWorkHours: '',
-      campaignHidePhoneManager: '',
-      campaignHidePhoneAgent: '',
-    },
+    initialValues,
     validationSchema: yup.object().shape({
       campaignMode: validation.required,
       campaignCoefficient: validation.required,
@@ -86,6 +94,14 @@ export const Campaigns: FC = () => {
   useEffect(() => {
     getSettings(formik)
   }, [])
+
+  const isChanged = () => {
+    let changed = false
+    Object.keys(originalSettings).forEach((key) => {
+      if (originalSettings[key] !== formik.values[key]) changed = true
+    })
+    return changed
+  }
 
   return isLoaded ? (
     <Card margin="32px 0 40px" padding="24px 61px" fullWidth maxWidth="fit-content">
@@ -125,19 +141,21 @@ export const Campaigns: FC = () => {
             name="campaignWorkHours"
             label={{ label: t('change-campaign-settings.workHours-label') }}
           />
-          <FormikSelect
-            formik={formik}
-            options={[
-              emptyOption,
-              ...hideLeadPhoneOptions.map((option) => ({
-                label: t(`change-campaign-settings.hidePhone.${option}`),
-                value: option,
-              })),
-            ]}
-            width="12rem"
-            name="campaignHidePhoneManager"
-            label={{ label: t('change-campaign-settings.hidePhone.manager.label') }}
-          />
+          {user?.role !== USER_ROLES.MANAGER && (
+            <FormikSelect
+              formik={formik}
+              options={[
+                emptyOption,
+                ...hideLeadPhoneOptions.map((option) => ({
+                  label: t(`change-campaign-settings.hidePhone.${option}`),
+                  value: option,
+                })),
+              ]}
+              width="12rem"
+              name="campaignHidePhoneManager"
+              label={{ label: t('change-campaign-settings.hidePhone.manager.label') }}
+            />
+          )}
           <FormikSelect
             formik={formik}
             options={[
@@ -157,7 +175,7 @@ export const Campaigns: FC = () => {
             width="134px"
             type="submit"
             isLoading={formik.isSubmitting}
-            disabled={!formik.isValid || !formik.dirty}
+            disabled={!formik.isValid || !formik.dirty || !isChanged()}
           >
             {t('change-campaign-settings.save')}
           </FilledButton>

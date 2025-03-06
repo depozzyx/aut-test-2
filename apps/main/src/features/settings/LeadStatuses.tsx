@@ -104,7 +104,7 @@ export const LeadStatuses: FC = () => {
         {copy.map((item) => (
           <LeadStatusRow
             key={item.id || item.value}
-            originalItem={leadStatuses.find((status) => status.id === item.id) || item}
+            originalItem={item}
             item={item}
             onReset={handleReset}
             onDelete={confirmDelete}
