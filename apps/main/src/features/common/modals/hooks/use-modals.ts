@@ -9,6 +9,10 @@ type TModalsReturn = {
   resetModals: () => void
 }
 
+export interface IModal {
+  <T extends object>(props: T): JSX.Element
+}
+
 export const useModals = (): TModalsReturn => {
   const { select, dispatch } = useRedux()
   const { modalState } = select(selectModal)

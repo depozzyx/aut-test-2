@@ -12,7 +12,7 @@ export type TActiveCampaignsReq = {
   status?: TCampaignStatus
   search?: string
   sortBy?: TSortBy
-  name?: string
+  ids?: number[]
   fromDate?: string
   toDate?: string
 } & Pick<TPagination, 'page' | 'limit'>

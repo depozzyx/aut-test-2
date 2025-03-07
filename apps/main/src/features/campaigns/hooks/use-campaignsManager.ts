@@ -6,17 +6,17 @@ import { endOfDay, startOfDay } from 'date-fns'
 import { useRedux } from '@/hooks/use-redux'
 import {
   selectCampaignsPagination,
-  selectFilterCampaignName,
   selectFilterDate,
   selectSearchTerm,
   reset,
   resetFilters,
   setFilterDate,
-  setFilterCampaignName,
   setSearchTerm,
   setFilterStatus,
   selectFilterStatus,
   selectSort,
+  setFilterCampaignIds,
+  selectFilterCampaignIds,
 } from '@/features/campaigns/store/campaigns'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
@@ -34,7 +34,7 @@ type TReturn = {
   pagination: { total: number; page: number; limit?: number }
   filters: {
     searchTerm?: string
-    filterCampaignName?: string | number
+    filterCampaignIds?: number[]
     filterStatus?: TCampaignStatus
     filterDate?: { from?: string | Date; to?: string | Date }
   }
@@ -55,7 +55,7 @@ export const useCampaignsManager = (
   const {
     pagination: { total, page, limit },
     searchTerm,
-    filterCampaignName,
+    filterCampaignIds,
     filterDate,
     filterStatus,
     sort: { sortBy, orderBy },
@@ -63,7 +63,7 @@ export const useCampaignsManager = (
     createStructuredSelector({
       pagination: selectCampaignsPagination,
       searchTerm: selectSearchTerm,
-      filterCampaignName: selectFilterCampaignName,
+      filterCampaignIds: selectFilterCampaignIds,
       filterDate: selectFilterDate,
       filterStatus: selectFilterStatus,
       sort: selectSort,
@@ -77,7 +77,7 @@ export const useCampaignsManager = (
       limit,
       orderBy,
       ...(searchTerm && { search: searchTerm }),
-      ...(filterCampaignName && { name: filterCampaignName as string }),
+      ...(filterCampaignIds.length > 0 && { ids: filterCampaignIds }),
       ...(filterStatus && { status: filterStatus }),
       ...(filterDate?.from && { fromDate: filterDate?.from }),
       ...(filterDate?.to && { toDate: filterDate?.to }),
@@ -102,7 +102,7 @@ export const useCampaignsManager = (
     limit,
     orderBy,
     searchTerm,
-    filterCampaignName,
+    filterCampaignIds,
     filterStatus,
     filterDate,
     sortBy,
@@ -116,7 +116,7 @@ export const useCampaignsManager = (
     limit,
     orderBy,
     searchTerm,
-    filterCampaignName,
+    filterCampaignIds,
     filterStatus,
     filterDate,
     sortBy,
@@ -138,7 +138,7 @@ export const useCampaignsManager = (
           limit,
           orderBy,
           ...(searchTerm && { search: searchTerm }),
-          ...(filterCampaignName && { name: filterCampaignName as string }),
+          ...(filterCampaignIds.length > 0 && { ids: filterCampaignIds }),
           ...(filterStatus && { status: filterStatus }),
           ...(filterDate?.from && { fromDate: filterDate?.from }),
           ...(filterDate?.to && { toDate: filterDate?.to }),
@@ -150,7 +150,7 @@ export const useCampaignsManager = (
       dispatch,
       limit,
       searchTerm,
-      filterCampaignName,
+      filterCampaignIds,
       filterStatus,
       filterDate,
       sortBy,
@@ -168,14 +168,14 @@ export const useCampaignsManager = (
 
   const filters = {
     ...(searchTerm && { searchTerm }),
-    ...(filterCampaignName && { filterCampaignName }),
+    ...(filterCampaignIds.length > 0 && { filterCampaignIds }),
     ...(filterStatus && { filterStatus }),
     ...(filterDate?.from && filterDate?.to && { filterDate }),
   }
 
   const handlerResetFilters = useCallback((filterType: TFilterType) => {
     if (filterType === FILTER_TYPE.CAMPAIGN_NAME) {
-      dispatch(setFilterCampaignName(''))
+      dispatch(setFilterCampaignIds([]))
     } else if (filterType === FILTER_TYPE.DATE) {
       dispatch(
         setFilterDate({
