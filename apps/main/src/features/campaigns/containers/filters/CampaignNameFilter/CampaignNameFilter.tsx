@@ -62,7 +62,11 @@ export const CampaignNameFilter = ({
         filterCampaignIds.includes(option.value as number),
       )}
       minWidth="210px"
-      options={campaignOptions}
+      options={
+        filterCampaignIds.length
+          ? campaignOptions
+          : campaignOptions.filter((el) => el.label !== '-')
+      }
       onChange={handleOnChange}
       onMenuScrollToBottom={loadMoreCampaigns}
     />
