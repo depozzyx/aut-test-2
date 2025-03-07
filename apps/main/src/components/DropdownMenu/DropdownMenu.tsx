@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState, memo, useCallback, useRef, FC, useEffect } from 'react'
+import React, { useState, memo, useRef, FC, useEffect } from 'react'
 import { ContextMenu } from '@peiko/components/ContextMenu'
 import { deepEqual } from '@peiko/utils/deep-equal'
 import { MenuContainer, MenuItem } from './DropdownMenu.styled'
@@ -32,7 +32,6 @@ const Menu: FC<
   maxHeight,
   minWidth,
   onMenuScrollToBottom,
-  multiple,
 }) => {
   const menuRef = useRef<HTMLDivElement>(null)
 
