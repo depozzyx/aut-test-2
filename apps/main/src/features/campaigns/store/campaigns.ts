@@ -24,7 +24,7 @@ export type TInit = {
   campaignList: TCampaign[] | []
   pagination: TPagination
   searchTerm?: string
-  filterCampaignName?: string | number
+  filterCampaignIds: number[]
   filterDate: {
     from?: string
     to?: string
@@ -44,7 +44,7 @@ const init: TInit = {
     total: 1,
   },
   searchTerm: '',
-  filterCampaignName: '',
+  filterCampaignIds: [],
   filterDate: {
     from: undefined,
     to: undefined,
@@ -75,8 +75,8 @@ const campaigns = createSlice({
     setSearchTerm(state, action: PayloadAction<TInit['searchTerm']>) {
       state.searchTerm = action.payload
     },
-    setFilterCampaignName(state, action: PayloadAction<TInit['filterCampaignName']>) {
-      state.filterCampaignName = action.payload
+    setFilterCampaignIds(state, action: PayloadAction<TInit['filterCampaignIds']>) {
+      state.filterCampaignIds = action.payload
     },
     setFilterDate(state, action: PayloadAction<TInit['filterDate']>) {
       state.filterDate = action.payload
@@ -89,7 +89,7 @@ const campaigns = createSlice({
     },
     resetFilters(state) {
       state.searchTerm = ''
-      state.filterCampaignName = ''
+      state.filterCampaignIds = []
       state.filterStatus = undefined
       state.filterDate = {
         from: undefined,
@@ -107,7 +107,7 @@ export const {
   setActiveCampaigns,
   setCampaignList,
   setSearchTerm,
-  setFilterCampaignName,
+  setFilterCampaignIds,
   setFilterDate,
   setFilterStatus,
   setSort,
@@ -174,9 +174,9 @@ export const selectSearchTerm = createSelector(
   ({ searchTerm }) => searchTerm,
 )
 
-export const selectFilterCampaignName = createSelector(
+export const selectFilterCampaignIds = createSelector(
   selectCampaigns,
-  ({ filterCampaignName }) => filterCampaignName,
+  ({ filterCampaignIds }) => filterCampaignIds,
 )
 
 export const selectFilterStatus = createSelector(
@@ -202,11 +202,13 @@ export default campaigns.reducer
 
 export const asyncGetActiveCampaigns =
   (params: TActiveCampaignsReq): TAsyncAction =>
-  async (dispatch) => {
+  async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
+      const { filterCampaignIds } = getState().campaigns
       const { data } = await apiCampaigns.getActiveCampaigns({
         status: CAMPAIGN_STATUSES.ACTIVE,
+        ids: filterCampaignIds,
         ...params,
       })
 
@@ -224,11 +226,14 @@ export const asyncGetActiveCampaigns =
 
 export const asyncGetCampaignsList =
   (params: TActiveCampaignsReq): TAsyncAction =>
-  async (dispatch) => {
+  async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
-      const { data } = await apiCampaigns.getCampaignList(params)
-
+      const { filterCampaignIds } = getState().campaigns
+      const { data } = await apiCampaigns.getCampaignList({
+        ids: filterCampaignIds,
+        ...params,
+      })
       dispatch(setCampaignList(data.data))
       dispatch(setPagination(data.pagination))
     } catch (e) {
@@ -260,14 +265,8 @@ export const asyncRemoveCampaign =
   async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
-      const {
-        selectedId,
-        campaignList,
-        activeCampaigns,
-        pagination,
-        searchTerm,
-        filterCampaignName,
-      } = getState().campaigns
+      const { selectedId, campaignList, activeCampaigns, pagination, searchTerm } =
+        getState().campaigns
 
       let campaignName = ''
 
@@ -296,7 +295,6 @@ export const asyncRemoveCampaign =
         limit: pagination.limit,
         orderBy: ORDER_BY.DESC,
         search: searchTerm,
-        name: filterCampaignName,
       }
       getCurrentCampaigns({ type, dispatch, params: params as TActiveCampaignsReq })
     } catch (e) {

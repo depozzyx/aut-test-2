@@ -23,6 +23,7 @@ const Menu: FC<
   Omit<TDropdownMenuProps, 'triggerElement' | 'onChange' | 'multiple'> & {
     handleSelect: (item: TValue) => void
     selectedItems: TValue[]
+    multiple: boolean
   }
 > = ({
   handleSelect,
@@ -31,6 +32,7 @@ const Menu: FC<
   maxHeight,
   minWidth,
   onMenuScrollToBottom,
+  multiple,
 }) => {
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -89,19 +91,24 @@ export const DropdownMenu = memo(
     const [selectedItems, setSelectedItems] = useState<TValue[]>([])
 
     const handleSelect = (item: TValue) => {
-      const currentIndex = selectedItems.findIndex(
-        (selected) => selected.value === item.value,
-      )
-      let newSelectedItems = [...selectedItems]
+      let newSelectedItems: TValue[] = []
 
-      if (currentIndex === -1) {
-        newSelectedItems.push(item)
+      if (multiple) {
+        const currentIndex = selectedItems.findIndex(
+          (selected) => selected.value === item.value,
+        )
+        newSelectedItems = [...selectedItems]
+        if (currentIndex === -1) {
+          newSelectedItems.push(item)
+        } else {
+          newSelectedItems.splice(currentIndex, 1)
+        }
       } else {
-        newSelectedItems.splice(currentIndex, 1)
+        newSelectedItems = [item]
       }
 
-      setSelectedItems(multiple ? newSelectedItems : [item])
-      onChange(multiple ? newSelectedItems : [item])
+      setSelectedItems(newSelectedItems)
+      onChange(newSelectedItems)
     }
 
     useEffect(() => {
@@ -119,6 +126,7 @@ export const DropdownMenu = memo(
             options={options}
             selectedItems={selectedItems}
             onMenuScrollToBottom={onMenuScrollToBottom}
+            multiple={multiple || false}
           />
         )}
         position="bottom left"

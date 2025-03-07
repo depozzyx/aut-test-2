@@ -11,14 +11,14 @@ import {
   setIsLoading,
   setAnalyticsData,
 } from '@/features/campaigns/store/campaign-analytics'
-import { selectFilterCampaignName } from '@/features/campaigns/store/campaigns'
+import { selectFilterCampaignIds } from '@/features/campaigns/store/campaigns'
 
 export const useCampaignAnalytics = (): undefined => {
   const { select, dispatch } = useRedux()
 
-  const { campaignNameFilter: id, dateFilter } = select(
+  const { filterCampaignIds: ids, dateFilter } = select(
     createStructuredSelector({
-      campaignNameFilter: selectFilterCampaignName,
+      filterCampaignIds: selectFilterCampaignIds,
       dateFilter: selectDateFilter,
     }),
     shallowEqual,
@@ -29,12 +29,11 @@ export const useCampaignAnalytics = (): undefined => {
     return apiCampaignAnalytics.getCampaignAnalytics(id, params).then((res) => res.data)
   }, [])
 
-  const key = useMemo(() => `/analytics/campaign/${id}`, [id])
+  const key = useMemo(() => `/analytics/campaign/${ids[0]}`, [ids[0]])
 
   const { isLoading } = useSWR(
-    [key, id, dateFilter.fromDate, dateFilter.toDate],
-    () =>
-      fetcher(id as number, { fromDate: dateFilter.fromDate, toDate: dateFilter.toDate }),
+    [key, ids, dateFilter.fromDate, dateFilter.toDate],
+    () => fetcher(ids[0], { fromDate: dateFilter.fromDate, toDate: dateFilter.toDate }),
     {
       revalidateOnFocus: false,
       onSuccess: (data) => {
