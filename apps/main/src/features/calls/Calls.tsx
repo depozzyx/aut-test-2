@@ -114,7 +114,7 @@ export const Calls: FC = () => {
 
   useMount(() => {
     const checkStatus = async () => {
-      const { data } = await apiAgents.getAgentStatus({})
+      const { data } = await apiAgents.getAgentStatus()
       dispatch(agentActions.setPBXStatus(data.data))
       if (data.data.status === 'online') {
         dispatch(agentActions.setStatusAsync('finish'))

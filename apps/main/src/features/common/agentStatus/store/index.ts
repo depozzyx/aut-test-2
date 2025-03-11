@@ -3,7 +3,7 @@ import { TSelector, TAsyncAction } from '@/store'
 import { handleRestError } from '@/features/common/error'
 import { apiAgents } from '@/api-rest/agents'
 import { TAgentWorkStatus } from '@/features/agents/types'
-import { TAgentStatus, TChangeWorkStatusReq } from '@/api-rest/agents/types'
+import { AgentStatus, TAgentStatus } from '@/api-rest/agents/types'
 
 export type TInit = {
   status: TAgentWorkStatus | null
@@ -47,15 +47,44 @@ const agentStatus = createSlice({
 const { setStatus, setLoading, setPBXStatus, setCheckCampaignId, reset } =
   agentStatus.actions
 
+const checkStoredAndPbxAgentStatus = async (
+  agentStatus: AgentStatus,
+  changeStoreAgentStatus: (payload: TInit['pbxStatus']) => void,
+): Promise<boolean> => {
+  const { data: response } = await apiAgents.getAgentStatus()
+  const pbxAgentStatus = response?.data?.status
+  const isDifferent = agentStatus !== pbxAgentStatus
+  if (isDifferent) {
+    console.warn(
+      `Agent status in PBX is ${pbxAgentStatus} but in Redux is '${agentStatus}'`,
+    )
+    changeStoreAgentStatus(response.data)
+  }
+  return isDifferent
+}
+
 const setStatusAsync =
   (workStatus: TAgentWorkStatus, reason?: string, onSuccess?: () => void): TAsyncAction =>
   async (dispatch, getState) => {
     try {
       dispatch(setLoading(true))
-      const campaignId = getState().agents.selectedCampaignId
-      const payload: TChangeWorkStatusReq = { workStatus, reason }
-      payload.campaignId = campaignId || '-1'
-      const { data } = await apiAgents.changeWorkStatus(payload)
+
+      const agentStatus = getState().agentStatus.pbxStatus.status
+      const campaignId = getState().agents.selectedCampaignId || '-1'
+
+      const isDifferent = await checkStoredAndPbxAgentStatus(
+        agentStatus,
+        (payload: TInit['pbxStatus']) => dispatch(setPBXStatus(payload)),
+      )
+      if (isDifferent) {
+        return
+      }
+
+      const { data } = await apiAgents.changeWorkStatus({
+        workStatus,
+        reason,
+        campaignId,
+      })
       dispatch(setStatus(data.data.workStatus))
       onSuccess?.()
     } catch (e) {
