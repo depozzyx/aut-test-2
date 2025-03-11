@@ -1,6 +1,8 @@
 import { shallowEqual } from 'react-redux'
 import useTranslation from 'next-translate/useTranslation'
 import { useRedux } from '@/hooks/use-redux'
+import { useEffect } from 'react'
+
 import {
   selectFilterCampaignIds,
   setFilterCampaignIds,
@@ -11,7 +13,6 @@ import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { useCampaignNameFilter } from '@/features/campaigns/hooks/use-campaignNameFilter'
 
 import { TValue } from '@/components/DropdownMenu/DropdownMenu'
-import { useEffect } from 'react'
 import { StyledTrigger } from './CampaignNameFilter.styled'
 
 type TProps = {

@@ -60,10 +60,6 @@ export type TAgentsReq = {
   sortBy?: TAgentSortBy
 } & Pick<TPagination, 'page' | 'limit'>
 
-export type TAgentCampaignStatus = {
-  campaignId?: string | null
-}
-
 export type TAgentsListRes = {
   statusCode: TGeneratedSuccessStatuses
   meta: unknown
@@ -116,9 +112,11 @@ export type TDeletedAgentData = {
   workStatus: string
 }
 
+export type AgentStatus = 'offline' | 'online' | 'oncall' | 'pause' | 'ringing'
+
 export type TAgentStatus = {
   data: {
-    status: 'offline' | 'online' | 'oncall' | 'pause' | 'ringing'
+    status: AgentStatus
     exten: string
     reason?: string
   }
