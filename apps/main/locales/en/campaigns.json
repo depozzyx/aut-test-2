@@ -55,7 +55,7 @@
     "hold-time-placeholder": "from 5 to 60 seconds",
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
-    "workHours-label": "Work Hours",
+    "workHours-label": "Work Hours (UTC-0)",
     "lead-statuses": "Select lead statuses for calls",
     "lead-statuses-review": "Lead statuses filter for calls",
     "recycle-rules": "Recycle Rules",
@@ -77,7 +77,7 @@
     "hold-time-placeholder": "from 5 to 60 seconds",
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
-    "workHours-label": "Work Hours",
+    "workHours-label": "Work Hours (UTC-0)",
     "lead-statuses": "Select lead statuses for calls",
     "lead-statuses-review": "Filtered lead statuses for calls"
   },
