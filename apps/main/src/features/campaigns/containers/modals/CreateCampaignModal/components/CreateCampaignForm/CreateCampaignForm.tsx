@@ -177,7 +177,7 @@ export const CreateCampaignForm: FC<Props> = ({
   }
 
   useEffect(() => {
-    if (!formDataForReview) {
+    if (!formDataForReview && modalState?.isOpen) {
       getSettings(formik)
       dispatch(resetLeadsList())
       dispatch(resetAgentsList())

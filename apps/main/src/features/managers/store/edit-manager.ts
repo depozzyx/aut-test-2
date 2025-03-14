@@ -94,6 +94,7 @@ export const asyncEditManager =
           values: {},
         }),
       )
+      dispatch(reset())
       await mutate((key) => Array.isArray(key) && key[0] === '/manager/list')
     } catch (e) {
       error = e

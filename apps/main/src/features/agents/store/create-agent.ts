@@ -76,6 +76,7 @@ export const asyncCreateAgent =
         }),
       )
       formik?.resetForm()
+      dispatch(reset())
       dispatch(modalsActions.resetModalsState())
       onsuccess?.()
     } catch (e) {

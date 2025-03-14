@@ -1,9 +1,6 @@
 import useTranslation from 'next-translate/useTranslation'
-import dynamic from 'next/dynamic'
 import { useState } from 'react'
 
-import { IModal, useModals } from '@/features/common/modals/hooks/use-modals'
-import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { Flex } from '@/components/Flex'
 import { DashboardTabs } from '@/components/DashboardTabs'
 import { Pagination } from '@peiko/components/Pagination'
@@ -19,28 +16,8 @@ import { useCampaignsManager } from './hooks/use-campaignsManager'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import { asyncGetActiveCampaigns, setFilterCampaignIds } from './store/campaigns'
 
-const {
-  DeleteCampaignModal,
-  EditCampaignModal,
-  NewCampaignReviewModal,
-}: Record<string, IModal> = [
-  'DeleteCampaignModal',
-  'EditCampaignModal',
-  'NewCampaignReviewModal',
-].reduce(
-  (acc, modalName) => ({
-    ...acc,
-    [modalName]: dynamic(
-      () => import(`./containers/modals/${modalName}`).then((mod) => mod[modalName]),
-      { ssr: false },
-    ),
-  }),
-  {},
-)
-
 export const ActiveCampaigns = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
-  const { modalState } = useModals()
   const { dispatch } = useRedux()
 
   useCampaignUpdates()
@@ -52,9 +29,6 @@ export const ActiveCampaigns = (): JSX.Element => {
     filters,
     handlerResetFilters,
   } = useCampaignsManager(asyncGetActiveCampaigns, 5000)
-
-  const reviewModalIsOpen =
-    modalState?.modalName === MODAL_NAMES.REVIEW_CAMPAIGN && modalState.isOpen
 
   const [campaignOptions, setCampaignOptions] = useState<TValue[]>([])
 
@@ -110,9 +84,6 @@ export const ActiveCampaigns = (): JSX.Element => {
           />
         </Flex>
       </Flex>
-      <EditCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
-      <DeleteCampaignModal type={CAMPAIGN_TABLE_TYPES.ACTIVE} />
-      {reviewModalIsOpen && <NewCampaignReviewModal type={CAMPAIGN_TABLE_TYPES.ACTIVE} />}
     </>
   )
 }

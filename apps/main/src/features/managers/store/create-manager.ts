@@ -73,6 +73,7 @@ export const asyncCreateManager =
         }),
       )
       formik?.resetForm()
+      dispatch(reset())
       dispatch(modalsActions.resetModalsState())
       onsuccess?.()
     } catch (e) {

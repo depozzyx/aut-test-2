@@ -128,6 +128,7 @@ export const asyncCreateCampaign =
           values: { campaignName: formData?.name },
         }),
       )
+      dispatch(reset())
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
