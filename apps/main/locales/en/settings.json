@@ -21,7 +21,7 @@
     "title": "Change Campaigns Settings",
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
-    "workHours-label": "Work Hours",
+    "workHours-label": "Work Hours (UTC-0)",
     "hidePhone": {
       "manager": {
         "label": "Hide Phone (Managers)",
