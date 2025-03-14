@@ -11,12 +11,16 @@ import { validation } from '@/utils/validation'
 import { useSettings } from '@/features/settings/hooks/useSettings'
 import { TFormik } from '@peiko/types/formik'
 import {
-  modes,
-  coefficients,
   campaignSettingKeys,
+  coefficients,
   emptyOption,
-  workHours,
+  hideFirstPhoneOption,
+  hideLastPhoneOption,
   hideLeadPhoneOptions,
+  hidePhoneAmountOptions,
+  hideWholePhoneOption,
+  modes,
+  workHours,
 } from '@/constants/settings'
 import { USER_ROLES } from '@/types/roles'
 import { useAuth } from '@/features/common/user'
@@ -34,7 +38,9 @@ export const Campaigns: FC = () => {
     [campaignSettingKeys.coefficient]: '',
     [campaignSettingKeys.workHours]: '',
     [campaignSettingKeys.hidePhoneManager]: '',
+    [campaignSettingKeys.hidePhoneAmountManager]: '',
     [campaignSettingKeys.hidePhoneAgent]: '',
+    [campaignSettingKeys.hidePhoneAmountAgent]: '',
   }
 
   const [originalSettings, setOriginalSettings] = useState(initialValues)
@@ -45,7 +51,9 @@ export const Campaigns: FC = () => {
       campaignSettingKeys.coefficient,
       campaignSettingKeys.workHours,
       campaignSettingKeys.hidePhoneAgent,
+      campaignSettingKeys.hidePhoneAmountManager,
       campaignSettingKeys.hidePhoneManager,
+      campaignSettingKeys.hidePhoneAmountAgent,
     ])
     await form.setFieldValue(campaignSettingKeys.mode, data.campaignMode)
     await form.setFieldValue(campaignSettingKeys.coefficient, data.campaignCoefficient)
@@ -55,8 +63,16 @@ export const Campaigns: FC = () => {
       data.campaignHidePhoneManager,
     )
     await form.setFieldValue(
+      campaignSettingKeys.hidePhoneAmountManager,
+      data.campaignHidePhoneAmountManager,
+    )
+    await form.setFieldValue(
       campaignSettingKeys.hidePhoneAgent,
       data.campaignHidePhoneAgent,
+    )
+    await form.setFieldValue(
+      campaignSettingKeys.hidePhoneAmountAgent,
+      data.campaignHidePhoneAmountAgent,
     )
     setOriginalSettings(data)
     setIsLoaded(true)
@@ -67,24 +83,11 @@ export const Campaigns: FC = () => {
     validationSchema: yup.object().shape({
       campaignMode: validation.required,
       campaignCoefficient: validation.required,
+      campaignHidePhoneAmountManager: yup.string(),
     }),
-    onSubmit: async ({
-      campaignMode,
-      campaignCoefficient,
-      campaignWorkHours,
-      campaignHidePhoneManager,
-      campaignHidePhoneAgent,
-    }) => {
+    onSubmit: async (values) => {
       await changeSettingsAsync({
-        formData: {
-          data: {
-            campaignMode,
-            campaignCoefficient,
-            campaignWorkHours,
-            campaignHidePhoneManager,
-            campaignHidePhoneAgent,
-          },
-        },
+        formData: { data: values },
         formik,
       })
       await getSettings(formik)
@@ -103,6 +106,23 @@ export const Campaigns: FC = () => {
     return changed
   }
 
+  const isManagerAmountInValid = () =>
+    [hideFirstPhoneOption, hideLastPhoneOption].includes(
+      formik.values.campaignHidePhoneManager,
+    ) && !formik.values.campaignHidePhoneAmountManager
+
+  const isAgentAmountInValid = () =>
+    [hideFirstPhoneOption, hideLastPhoneOption].includes(
+      formik.values.campaignHidePhoneAgent,
+    ) && !formik.values.campaignHidePhoneAmountAgent
+
+  useEffect(() => {
+    if (isAgentAmountInValid() || isManagerAmountInValid()) {
+      console.warn('setFieldError')
+      formik.setFieldError('campaignHidePhoneAmountManager', 'required')
+    }
+  }, [isAgentAmountInValid(), isAgentAmountInValid()])
+
   return isLoaded ? (
     <Card margin="32px 0 40px" padding="24px 61px" fullWidth maxWidth="fit-content">
       <CardTile>{t('change-campaign-settings.title')}</CardTile>
@@ -110,38 +130,111 @@ export const Campaigns: FC = () => {
         <Box
           styles={{
             display: 'flex',
-            gap: '16px',
-            alignItems: 'end',
+            gap: '36px',
+            alignItems: 'start',
+            flexDirection: 'column',
           }}
         >
-          <FormikSelect
-            formik={formik}
-            options={modes.map((mode) => ({
-              label: String(mode),
-              value: String(mode),
-            }))}
-            width="7rem"
-            name="campaignMode"
-            label={{ label: t('change-campaign-settings.mode-label') }}
-          />
-          <FormikSelect
-            formik={formik}
-            options={coefficients.map((number) => ({
-              label: String(number),
-              value: String(number),
-            }))}
-            width="7rem"
-            name="campaignCoefficient"
-            label={{ label: t('change-campaign-settings.coefficient-label') }}
-          />
-          <FormikSelect
-            formik={formik}
-            options={[emptyOption, ...workHours.map((wh) => ({ label: wh, value: wh }))]}
-            width="9rem"
-            name="campaignWorkHours"
-            label={{ label: t('change-campaign-settings.workHours-label') }}
-          />
-          {user?.role !== USER_ROLES.MANAGER && (
+          <Box
+            styles={{
+              display: 'flex',
+              gap: '16px',
+            }}
+          >
+            <FormikSelect
+              formik={formik}
+              options={modes.map((mode) => ({
+                label: String(mode),
+                value: String(mode),
+              }))}
+              width="7rem"
+              name="campaignMode"
+              label={{ label: t('change-campaign-settings.mode-label') }}
+            />
+            <FormikSelect
+              formik={formik}
+              options={coefficients.map((number) => ({
+                label: String(number),
+                value: String(number),
+              }))}
+              width="7rem"
+              name="campaignCoefficient"
+              label={{ label: t('change-campaign-settings.coefficient-label') }}
+            />
+            <FormikSelect
+              formik={formik}
+              options={[
+                emptyOption,
+                ...workHours.map((wh) => ({ label: wh, value: wh })),
+              ]}
+              width="9rem"
+              name="campaignWorkHours"
+              label={{ label: t('change-campaign-settings.workHours-label') }}
+            />
+          </Box>
+          <Box
+            styles={{
+              gap: '32px 24px',
+              display: 'flex',
+              alignItems: 'start',
+            }}
+          >
+            {user?.role !== USER_ROLES.MANAGER && (
+              <Box
+                styles={{
+                  display: 'flex',
+                  gap: '16px',
+                  alignItems: 'start',
+                  marginRight: '24px',
+                }}
+              >
+                <FormikSelect
+                  formik={formik}
+                  options={[
+                    emptyOption,
+                    ...hideLeadPhoneOptions.map((option) => ({
+                      label: t(`change-campaign-settings.hidePhone.${option}`),
+                      value: option,
+                    })),
+                  ]}
+                  onChange={(e) => {
+                    if (
+                      [hideWholePhoneOption, emptyOption.value].includes(
+                        e?.value as string,
+                      )
+                    ) {
+                      formik.setFieldValue(
+                        'campaignHidePhoneAmountManager',
+                        emptyOption.value,
+                      )
+                    }
+                  }}
+                  width="12rem"
+                  size="s"
+                  name="campaignHidePhoneManager"
+                  label={{ label: t('change-campaign-settings.hidePhone.manager.label') }}
+                />
+                <FormikSelect
+                  disabled={[hideWholePhoneOption, emptyOption.value].includes(
+                    formik.values.campaignHidePhoneManager,
+                  )}
+                  formik={formik}
+                  options={hidePhoneAmountOptions.concat(
+                    [hideWholePhoneOption, emptyOption.value].includes(
+                      formik.values.campaignHidePhoneManager,
+                    )
+                      ? [emptyOption]
+                      : [],
+                  )}
+                  size="s"
+                  width="7rem"
+                  name="campaignHidePhoneAmountManager"
+                  label={{
+                    label: t('change-campaign-settings.hidePhone.manager.amount-label'),
+                  }}
+                />
+              </Box>
+            )}
             <FormikSelect
               formik={formik}
               options={[
@@ -151,34 +244,53 @@ export const Campaigns: FC = () => {
                   value: option,
                 })),
               ]}
+              onChange={(e) => {
+                if (
+                  [hideWholePhoneOption, emptyOption.value].includes(e?.value as string)
+                ) {
+                  formik.setFieldValue('campaignHidePhoneAmountAgent', emptyOption.value)
+                }
+              }}
               width="12rem"
-              name="campaignHidePhoneManager"
-              label={{ label: t('change-campaign-settings.hidePhone.manager.label') }}
+              size="s"
+              name="campaignHidePhoneAgent"
+              label={{ label: t('change-campaign-settings.hidePhone.agent.label') }}
             />
-          )}
-          <FormikSelect
-            formik={formik}
-            options={[
-              emptyOption,
-              ...hideLeadPhoneOptions.map((option) => ({
-                label: t(`change-campaign-settings.hidePhone.${option}`),
-                value: option,
-              })),
-            ]}
-            width="12rem"
-            name="campaignHidePhoneAgent"
-            label={{ label: t('change-campaign-settings.hidePhone.agent.label') }}
-          />
-          <FilledButton
-            size="s"
-            styles={{ marginLeft: '24px' }}
-            width="134px"
-            type="submit"
-            isLoading={formik.isSubmitting}
-            disabled={!formik.isValid || !formik.dirty || !isChanged()}
-          >
-            {t('change-campaign-settings.save')}
-          </FilledButton>
+            <FormikSelect
+              disabled={[hideWholePhoneOption, emptyOption.value].includes(
+                formik.values.campaignHidePhoneAgent,
+              )}
+              formik={formik}
+              options={hidePhoneAmountOptions.concat(
+                [hideWholePhoneOption, emptyOption.value].includes(
+                  formik.values.campaignHidePhoneAgent,
+                )
+                  ? [emptyOption]
+                  : [],
+              )}
+              width="7rem"
+              size="s"
+              name="campaignHidePhoneAmountAgent"
+              label={{
+                label: t('change-campaign-settings.hidePhone.agent.amount-label'),
+              }}
+            />
+            <FilledButton
+              styles={{ marginLeft: '24px', marginTop: '20px' }}
+              width="134px"
+              type="submit"
+              isLoading={formik.isSubmitting}
+              disabled={
+                !formik.isValid ||
+                !formik.dirty ||
+                !isChanged() ||
+                isManagerAmountInValid() ||
+                isAgentAmountInValid()
+              }
+            >
+              {t('change-campaign-settings.save')}
+            </FilledButton>
+          </Box>
         </Box>
       </form>
     </Card>

@@ -24,14 +24,16 @@
     "workHours-label": "Work Hours",
     "hidePhone": {
       "manager": {
-        "label": "Hide Phone (Managers)"
+        "label": "Hide Phone (Managers)",
+        "amount-label": "Amount"
       },
       "agent": {
-        "label": "Hide Phone (Agents)"
+        "label": "Hide Phone (Agents)",
+        "amount-label": "Amount"
       },
-      "hideFirst": "hide first numbers",
-      "hideLast": "hide last numbers",
-      "hideWhole": "hide whole numbers"
+      "hideFirst": "hide first",
+      "hideLast": "hide last",
+      "hideWhole": "hide whole"
     },
     "save": "Save changes"
   },

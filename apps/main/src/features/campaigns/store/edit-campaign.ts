@@ -87,6 +87,7 @@ export const asyncEditCampaign =
           values: { campaignName: formData?.name },
         }),
       )
+      dispatch(reset())
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
