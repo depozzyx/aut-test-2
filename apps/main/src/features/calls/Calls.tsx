@@ -195,10 +195,13 @@ export const Calls: FC = () => {
       if (holdTimeSec) {
         dispatch(agentActions.setStatusAsync('pause', 'hold'))
         setTimeout(() => {
-          dispatch(agentActions.setStatusAsync('unpause'))
+          const { status } = store.getState().agentStatus.pbxStatus
           if (completed) {
             onCompleteCampaign()
             setCompleted(false)
+          } else {
+            console.warn(`campaign is not completed yet ${status} => unpause`)
+            dispatch(agentActions.setStatusAsync('unpause'))
           }
         }, holdTimeSec * 1000)
       }
