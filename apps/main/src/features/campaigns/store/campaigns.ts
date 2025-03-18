@@ -15,7 +15,7 @@ import { modalsActions } from '@/features/common/modals/store'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { ORDER_BY } from '@/constants/orderBy'
 import { TActiveCampaign, TCampaign, TCampaignStatus, TCampaignTableType } from '../types'
-import { CAMPAIGN_STATUSES, CAMPAIGN_TABLE_TYPES, SORT_BY } from '../constants'
+import { CAMPAIGN_STATUSES, CAMPAIGN_TABLE_TYPES } from '../constants'
 
 export type TInit = {
   isLoading: boolean
@@ -50,7 +50,7 @@ const init: TInit = {
     to: undefined,
   },
   filterStatus: undefined,
-  sort: { sortBy: SORT_BY.CREATED_AT, orderBy: ORDER_BY.DESC },
+  sort: { orderBy: ORDER_BY.DESC },
 }
 
 const campaigns = createSlice({
@@ -305,54 +305,54 @@ export const asyncRemoveCampaign =
     }
   }
 
-export const asyncUpdateCampaignStatus =
-  (campaignId: number, currentStatus: TCampaignStatus): TAsyncAction =>
-  async (dispatch, getState) => {
-    try {
-      dispatch(setIsLoading(true))
-      const { campaignList, pagination } = getState().campaigns
-      const { name } = campaignList.find(({ id }) => id === campaignId) as TCampaign
-
-      if (currentStatus === CAMPAIGN_STATUSES.ACTIVE) {
-        await apiCampaigns.stopCampaign({ id: campaignId.toString() })
-        dispatch(
-          notificationActions.setNotification({
-            key: 'notifications:campaign.paused',
-            status: 'success',
-            values: { campaignName: name },
-          }),
-        )
-      } else {
-        await apiCampaigns.startCampaign({
-          id: campaignId.toString(),
-        })
-        dispatch(
-          notificationActions.setNotification({
-            key: 'notifications:campaign.active',
-            status: 'success',
-            values: { campaignName: name },
-          }),
-        )
-      }
-
-      const params = {
-        page: pagination.page,
-        limit: pagination.limit,
-        sortBy: SORT_BY.CREATED_AT,
-        orderBy: ORDER_BY.DESC,
-      }
-
-      getCurrentCampaigns({
-        type: CAMPAIGN_TABLE_TYPES.LIST,
-        dispatch,
-        params: params as TActiveCampaignsReq,
-      })
-    } catch (e) {
-      handleRestError({ e, dispatch })
-    } finally {
-      dispatch(setIsLoading(false))
-    }
-  }
+// export const asyncUpdateCampaignStatus =
+//   (campaignId: number, currentStatus: TCampaignStatus): TAsyncAction =>
+//   async (dispatch, getState) => {
+//     try {
+//       dispatch(setIsLoading(true))
+//       const { campaignList, pagination } = getState().campaigns
+//       const { name } = campaignList.find(({ id }) => id === campaignId) as TCampaign
+//
+//       if (currentStatus === CAMPAIGN_STATUSES.ACTIVE) {
+//         await apiCampaigns.stopCampaign({ id: campaignId.toString() })
+//         dispatch(
+//           notificationActions.setNotification({
+//             key: 'notifications:campaign.paused',
+//             status: 'success',
+//             values: { campaignName: name },
+//           }),
+//         )
+//       } else {
+//         await apiCampaigns.startCampaign({
+//           id: campaignId.toString(),
+//         })
+//         dispatch(
+//           notificationActions.setNotification({
+//             key: 'notifications:campaign.active',
+//             status: 'success',
+//             values: { campaignName: name },
+//           }),
+//         )
+//       }
+//
+//       const params = {
+//         page: pagination.page,
+//         limit: pagination.limit,
+//         sortBy: SORT_BY.CREATED_AT,
+//         orderBy: ORDER_BY.DESC,
+//       }
+//
+//       getCurrentCampaigns({
+//         type: CAMPAIGN_TABLE_TYPES.LIST,
+//         dispatch,
+//         params: params as TActiveCampaignsReq,
+//       })
+//     } catch (e) {
+//       handleRestError({ e, dispatch })
+//     } finally {
+//       dispatch(setIsLoading(false))
+//     }
+//   }
 
 export const asyncStartOrStopCampaign =
   (campaignId: number, currentStatus: TCampaignStatus): TAsyncAction =>
@@ -385,7 +385,6 @@ export const asyncStartOrStopCampaign =
       const params = {
         page: pagination.page,
         limit: pagination.limit,
-        sortBy: SORT_BY.CREATED_AT,
         orderBy: ORDER_BY.DESC,
       }
 
