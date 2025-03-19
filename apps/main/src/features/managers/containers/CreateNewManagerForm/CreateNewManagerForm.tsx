@@ -58,18 +58,18 @@ export const CreateNewManagerForm = (): JSX.Element => {
             <Flex direction="column" gap={16} maxWidth="326px" width="100%">
               <FormikInput
                 size="s"
-                name="email"
-                label={{ label: t('create-manager.email') }}
-                id="name"
+                name="username"
+                label={{ label: t('create-manager.username') }}
+                id="username"
                 formik={formik}
                 width={326}
                 styles={{ padding: '0 14px' }}
               />
               <FormikInput
                 size="s"
-                name="username"
-                label={{ label: t('create-manager.username') }}
-                id="username"
+                name="email"
+                label={{ label: t('create-manager.email') }}
+                id="name"
                 formik={formik}
                 width={326}
                 styles={{ padding: '0 14px' }}

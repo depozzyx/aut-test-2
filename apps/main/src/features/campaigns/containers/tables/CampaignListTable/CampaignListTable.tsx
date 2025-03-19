@@ -27,8 +27,11 @@ import {
   setSelectedId,
   // asyncUpdateCampaignStatus,
   asyncStartOrStopCampaign,
+  // setCampaignList,
 } from '../../../store/campaigns'
 import { formatCreatedAt } from '../../../utils/formatCreateAt'
+// import { campaignSocket } from '../../../../../api/socket/campaign'
+// import { socket } from '../../../../../api/socket/Socket'
 
 type TCampaignRowKeys =
   | 'view'
@@ -66,8 +69,39 @@ export const CampaignListTable = (): JSX.Element => {
   //   dispatch(asyncUpdateCampaignStatus(id, currentStatus))
   // }, [])
 
-  const handleStartOrStop = async (id: number, currentStatus: TCampaignStatus) =>
+  // const SUBSCRIBE_CAMPAIGN_STATUS = 'Subscribe campaign status'
+  // const onSubscribeCampaignStatus = (campaignId: string) => {
+  //   campaignSocket.campaignStatusUpdate(
+  //     {
+  //       id: SUBSCRIBE_CAMPAIGN_STATUS,
+  //       callback: (e) => {
+  //         if (e.status === 'complete') {
+  //           dispatch(
+  //             setCampaignList(
+  //               data.map((campaign) => ({
+  //                 ...campaign,
+  //                 status: campaign.id === +campaignId ? 'complete' : campaign.status,
+  //               })),
+  //             ),
+  //           )
+  //         }
+  //       },
+  //     },
+  //     campaignId,
+  //   )
+  // }
+  // const onUnsubscribeCampaignStatus = () => {
+  //   socket.unsubscribe(SUBSCRIBE_CAMPAIGN_STATUS)
+  // }
+
+  const handleStartOrStop = async (id: number, currentStatus: TCampaignStatus) => {
     dispatch(asyncStartOrStopCampaign(id, currentStatus))
+    // if (currentStatus === 'pause') {
+    //   onSubscribeCampaignStatus(id.toString())
+    // } else {
+    //   onUnsubscribeCampaignStatus()
+    // }
+  }
 
   const handleEditCampaign = useCallback((id: number) => {
     dispatch(setSelectedId(id))
