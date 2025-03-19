@@ -76,7 +76,7 @@ export const Calls: FC = () => {
   }
 
   const onCompleteCampaign = () => {
-    console.warn('run oncomplete callback')
+    console.warn('run oncomplete callback => set agent status [finish]')
     dispatch(agentActions.setStatusAsync('finish'))
     checkIfAllCampaignsCompleted()
     dispatch(setSelectedCampaignId(null))
@@ -91,9 +91,9 @@ export const Calls: FC = () => {
         callback: (e) => {
           if (e.status === 'complete') {
             const { status } = store.getState().agentStatus.pbxStatus
-            console.warn({ status })
+            console.warn(`Received completed event, current Agent Status ${status}`)
             if (status === 'pause') {
-              console.warn('set completed callback')
+              console.warn('set oncomplete callback')
               setCompleted(true)
             } else if (status !== 'offline') {
               onCompleteCampaign()
@@ -194,6 +194,7 @@ export const Calls: FC = () => {
       await resetAllData()
       if (holdTimeSec) {
         dispatch(agentActions.setStatusAsync('pause', 'hold'))
+        // un hold after timeout
         setTimeout(() => {
           const { status } = store.getState().agentStatus.pbxStatus
           if (completed) {

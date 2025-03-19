@@ -27,8 +27,8 @@ import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSel
 import { coefficients, modes, workHours } from '@/constants/settings'
 import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
 import { hasArrayChanged } from '@/utils/array'
-import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
-import { TRecycleRule } from '@/api-rest/campaigns/types'
+// import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
+// import { TRecycleRule } from '@/api-rest/campaigns/types'
 import { asyncEditCampaign } from '../../../../../store/edit-campaign'
 import { TCampaignTableType } from '../../../../../types'
 import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
@@ -47,7 +47,7 @@ type TFormValues = {
   mode: string
   coefficient: string
   filterLeadStatuses: string[]
-  recycleRules: TRecycleRule[]
+  // recycleRules: TRecycleRule[]
   workHours?: string
 }
 
@@ -102,7 +102,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
       mode: '',
       coefficient: '',
       filterLeadStatuses: [],
-      recycleRules: [],
+      // recycleRules: [],
       workHours: workHours[0],
     },
     validationSchema: createCampaignValidationSchema,
@@ -123,7 +123,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
         mode: data?.mode,
         coefficient: data?.coefficient,
         filterLeadStatuses: data?.filterLeadStatuses,
-        recycleRules: data?.recycleRules,
+        // recycleRules: data?.recycleRules,
         workHours: data?.workHours || workHours[0],
       })
       if (data.status === CAMPAIGN_STATUSES.COMPLETE) {
@@ -192,11 +192,11 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
       data.holdTime !== formik.values.holdTime ||
       data.mode !== formik.values.mode ||
       data.coefficient !== formik.values.coefficient ||
-      JSON.stringify(data.recycleRules) !== JSON.stringify(formik.values.recycleRules) ||
+      // JSON.stringify(data.recycleRules) !== JSON.stringify(formik.values.recycleRules) ||
       hasArrayChanged(data.filterLeadStatuses, formik.values.filterLeadStatuses))
 
-  const isRecycleRulesInvalid = () =>
-    formik.values.recycleRules.length && !formik.values.recycleRules[0].status
+  // const isRecycleRulesInvalid = () =>
+  //   formik.values.recycleRules.length && !formik.values.recycleRules[0].status
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
@@ -286,13 +286,17 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
               options={leadStatuses.map(({ name: label, value }) => ({ label, value }))}
               isSearchable
             />
-            <RecycleRules formik={formik} leadStatuses={leadStatuses} />
+            {/* <RecycleRules formik={formik} leadStatuses={leadStatuses} /> */}
           </Flex>
         </Flex>
         <Flex align="center" justify="center" gap={24}>
           <FilledButton
             type="submit"
-            disabled={!isChanged() || isRecycleRulesInvalid() || !formik.isValid}
+            disabled={
+              !isChanged() ||
+              // || isRecycleRulesInvalid()
+              !formik.isValid
+            }
             width="202px"
           >
             {t('edit-campaign.save')}

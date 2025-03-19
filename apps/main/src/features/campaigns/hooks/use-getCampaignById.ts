@@ -6,7 +6,7 @@ import { apiCampaigns } from '@/api-rest/campaigns'
 import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { handleRestError } from '@/features/common/error'
 import { TCampaign, TCampaignStatus } from '@/features/campaigns/types'
-import { TRecycleRule } from '@/api-rest/campaigns/types'
+// import { TRecycleRule } from '@/api-rest/campaigns/types'
 
 export type TAgent = {
   id: number
@@ -33,7 +33,7 @@ type TReturn = {
     mode: string
     coefficient: string
     filterLeadStatuses: string[]
-    recycleRules: TRecycleRule[]
+    // recycleRules: TRecycleRule[]
     workHours: string
   }
   isLoading: boolean
@@ -68,7 +68,7 @@ export const useGetCampaignById = (): TReturn => {
       mode,
       coefficient,
       filterLeadStatuses,
-      recycleRules,
+      // recycleRules,
       workHours,
     } = data.data
 
@@ -82,7 +82,7 @@ export const useGetCampaignById = (): TReturn => {
       mode,
       coefficient,
       filterLeadStatuses,
-      recycleRules,
+      // recycleRules,
       workHours,
     }
   }, [data?.data, id])

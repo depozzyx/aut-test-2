@@ -17,7 +17,7 @@ export const recycleRuleSchema = yup.object().shape({
   attempts: yup.number().min(1, 'Minimum 1').max(10, 'Maximum 10').required('At least 1'),
 })
 
-export const recycleRulesSchema = yup.array().of(recycleRuleSchema).default([])
+// export const recycleRulesSchema = yup.array().of(recycleRuleSchema).default([])
 
 export const createCampaignValidationSchema = yup.object().shape({
   name: validation.required,
@@ -33,5 +33,5 @@ export const createCampaignValidationSchema = yup.object().shape({
   coefficient: yup.string().required('This field is required'),
   workHours: yup.string().required('This field is required'),
   filterLeadStatuses: yup.array().of(yup.string()).default([]),
-  recycleRules: recycleRulesSchema,
+  // recycleRules: recycleRulesSchema,
 })

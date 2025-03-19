@@ -36,7 +36,7 @@ export type TCreateCampaignReq = {
   mode: string
   coefficient: string
   filterLeadStatuses: string[]
-  recycleRules: TRecycleRule[]
+  // recycleRules: TRecycleRule[]
   workHours?: string
 }
 

@@ -51,8 +51,8 @@ import {
   INITIAL_REQUEST_PARAMS_CREATE,
   PAGINATION_REQUEST_TIME,
 } from '@/features/campaigns/constants'
-import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
-import { TRecycleRule } from '@/api-rest/campaigns/types'
+// import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
+// import { TRecycleRule } from '@/api-rest/campaigns/types'
 
 type Props = {
   selectedCampaignId: string
@@ -67,7 +67,7 @@ type TFormValues = {
   mode: string
   coefficient: string
   filterLeadStatuses: string[]
-  recycleRules: TRecycleRule[]
+  // recycleRules: TRecycleRule[]
   workHours?: string
 }
 
@@ -155,7 +155,7 @@ export const CreateCampaignForm: FC<Props> = ({
       mode: '',
       coefficient: '',
       filterLeadStatuses: [],
-      recycleRules: [],
+      // recycleRules: [],
       workHours: workHours[0],
     },
     validationSchema: createCampaignValidationSchema,
@@ -206,7 +206,7 @@ export const CreateCampaignForm: FC<Props> = ({
         holdTime,
         leadListIds,
         filterLeadStatuses,
-        recycleRules,
+        // recycleRules,
         workHours,
       } = formDataForReview
       formik.setFieldValue('name', name)
@@ -220,7 +220,7 @@ export const CreateCampaignForm: FC<Props> = ({
       }
       formik.setFieldValue('leadListIds', leadListIds)
       formik.setFieldValue('filterLeadStatuses', filterLeadStatuses)
-      formik.setFieldValue('recycleRules', recycleRules)
+      // formik.setFieldValue('recycleRules', recycleRules)
     } else {
       dispatch(reset())
     }
@@ -261,7 +261,7 @@ export const CreateCampaignForm: FC<Props> = ({
           }
           await formik.setFieldValue('assignedAgentIds', newAssignedAgentIds)
           await formik.setFieldValue('filterLeadStatuses', campaign.filterLeadStatuses)
-          await formik.setFieldValue('recycleRules', campaign.recycleRules)
+          // await formik.setFieldValue('recycleRules', campaign.recycleRules)
         }
       }
     } else if (option?.label === '-') {
@@ -312,8 +312,8 @@ export const CreateCampaignForm: FC<Props> = ({
     [agentsPage, agentsLimit, agentsTotal],
   )
 
-  const isRecycleRulesInvalid = () =>
-    formik.values.recycleRules.length && !formik.values.recycleRules[0].status
+  // const isRecycleRulesInvalid = () =>
+  //   formik.values.recycleRules.length && !formik.values.recycleRules[0].status
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off" style={{ width: '100%' }}>
@@ -414,7 +414,7 @@ export const CreateCampaignForm: FC<Props> = ({
               options={leadStatuses.map(({ name: label, value }) => ({ label, value }))}
               isSearchable
             />
-            <RecycleRules formik={formik} leadStatuses={leadStatuses} />
+            {/*  <RecycleRules formik={formik} leadStatuses={leadStatuses} /> */}
           </Flex>
         </Flex>
         <Flex align="center" justify="center" gap={24}>
@@ -423,7 +423,11 @@ export const CreateCampaignForm: FC<Props> = ({
           </OutlinedButton>
           <FilledButton
             type="submit"
-            disabled={!formik.isValid || isRecycleRulesInvalid() || !formik.dirty}
+            disabled={
+              !formik.isValid ||
+              // || isRecycleRulesInvalid()
+              !formik.dirty
+            }
             width="202px"
           >
             {t('create-campaign.review')}

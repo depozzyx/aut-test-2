@@ -108,7 +108,7 @@ export const asyncCreateCampaign =
           assignedAgentIds: formData.assignedAgentIds || [],
           reserveAgentIds: formData.assignedAgentIds || [],
           filterLeadStatuses: formData.filterLeadStatuses || [],
-          recycleRules: formData.recycleRules || [],
+          // recycleRules: formData.recycleRules || [],
         }
 
         await apiCampaigns.createCampaign(dataForRequest)
