@@ -22,13 +22,7 @@ import { InfoCell } from '../../components/InfoCell'
 import { useManagersSort } from '../../hooks/use-managers-sort'
 import { SORT_BY } from '../../constants'
 
-type TManagerRowKeys =
-  | 'id'
-  | 'username'
-  | 'date'
-  | 'email'
-  // | 'pbxName'
-  | 'edit'
+type TManagerRowKeys = 'id' | 'username' | 'date' | 'email' | 'pbxName' | 'edit'
 
 export const ManagerListTable = (): JSX.Element => {
   const { t } = useTranslation('managers')
@@ -59,7 +53,7 @@ export const ManagerListTable = (): JSX.Element => {
       value: 'date',
     },
     { label: t('list-headers.email'), value: 'email' },
-    // { label: t('list-headers.pbxName'), value: 'pbxName' },
+    { label: t('list-headers.pbxName'), value: 'pbxName' },
     { label: t('list-headers.edit'), value: 'edit' },
   ]
 
@@ -69,7 +63,7 @@ export const ManagerListTable = (): JSX.Element => {
       username: <InfoCell title={manager.username || '-'} />,
       date: <InfoCell title={formatCreatedAt(manager.createdAt)} />,
       email: <InfoCell title={manager.email} />,
-      // pbxName: <InfoCell title={manager.pbxName || '-'} />,
+      pbxName: <InfoCell title={manager.pbxName} />,
 
       edit: (
         <IconButton

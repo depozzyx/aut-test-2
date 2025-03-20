@@ -1,8 +1,9 @@
 import useTranslation from 'next-translate/useTranslation'
 import dynamic from 'next/dynamic'
+import { useState } from 'react'
 
 import { Flex } from '@/components/Flex'
-import { useModals } from '@/features/common/modals/hooks/use-modals'
+import { IModal, useModals } from '@/features/common/modals/hooks/use-modals'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
@@ -17,7 +18,8 @@ import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { StatusFilter } from '@/features/campaigns/containers/filters/StatusFilter'
 import { FeaturePermission } from '@/features/common/permissions/FeaturePermissions'
 import { EManagerPermissions } from '@/constants/profile'
-import { useState } from 'react'
+import { TValue } from '@/components/DropdownMenu/DropdownMenu'
+import { useRedux } from '@/hooks/use-redux'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import {
   Container,
@@ -25,49 +27,34 @@ import {
   TableContainer,
   PaginationContainer,
 } from './styles/CampaignsList.styled'
-import { asyncGetCampaignsList } from './store/campaigns'
+import { asyncGetCampaignsList, setFilterCampaignIds } from './store/campaigns'
 
-const CreateCampaignModal = dynamic(
-  () =>
-    import('./containers/modals/CreateCampaignModal').then(
-      (mod) => mod.CreateCampaignModal,
+const {
+  CreateCampaignModal,
+  DeleteCampaignModal,
+  EditCampaignModal,
+  NewCampaignReviewModal,
+}: Record<string, IModal> = [
+  'CreateCampaignModal',
+  'DeleteCampaignModal',
+  'EditCampaignModal',
+  'NewCampaignReviewModal',
+].reduce(
+  (acc, modalName) => ({
+    ...acc,
+    [modalName]: dynamic(
+      () => import(`./containers/modals/${modalName}`).then((mod) => mod[modalName]),
+      { ssr: false },
     ),
-  {
-    ssr: false,
-  },
-)
-
-const DeleteCampaignModal = dynamic(
-  () =>
-    import('./containers/modals/DeleteCampaignModal').then(
-      (mod) => mod.DeleteCampaignModal,
-    ),
-  {
-    ssr: false,
-  },
-)
-
-const EditCampaignModal = dynamic(
-  () =>
-    import('./containers/modals/EditCampaignModal').then((mod) => mod.EditCampaignModal),
-  {
-    ssr: false,
-  },
-)
-
-const NewCampaignReviewModal = dynamic(
-  () =>
-    import('./containers/modals/NewCampaignReviewModal').then(
-      (mod) => mod.NewCampaignReviewModal,
-    ),
-  {
-    ssr: false,
-  },
+  }),
+  {},
 )
 
 export const CampaignsList = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
   const { modalState } = useModals()
+  const { dispatch } = useRedux()
+
   const {
     handleCreateCampaign,
     handleChangePage,
@@ -84,13 +71,24 @@ export const CampaignsList = (): JSX.Element => {
     handleCreateCampaign()
   }
 
+  const [campaignOptions, setCampaignOptions] = useState<TValue[]>([])
+
+  const handleResetFilter = (id: number) =>
+    filters?.filterCampaignIds &&
+    dispatch(
+      setFilterCampaignIds(filters.filterCampaignIds.filter((item) => item !== id)),
+    )
+
   return (
     <>
       <Container>
         <Panel>
           <Flex gap={16} align="center" width="100%">
             <CampaignSearchField placeholder={t('inputs:placeholder.search-campaign')} />
-            <CampaignNameFilter type={CAMPAIGN_TABLE_TYPES.LIST} />
+            <CampaignNameFilter
+              type={CAMPAIGN_TABLE_TYPES.LIST}
+              setCampaignOptions={setCampaignOptions}
+            />
             <StatusFilter />
             <RangeDayPicker onChange={handleChangeDate} />
           </Flex>
@@ -114,17 +112,16 @@ export const CampaignsList = (): JSX.Element => {
             marginTop: '12px',
           }}
         >
-          {(filters.filterCampaignName ||
+          {(filters.filterCampaignIds ||
             filters.filterStatus ||
             (filters.filterDate?.from && filters.filterDate?.to)) && (
             <Flex gap="16px" align="center">
-              {filters.filterCampaignName && (
-                <PikedFilter
-                  onClose={() => handlerResetFilters(FILTER_TYPE.CAMPAIGN_NAME)}
-                >
-                  {filters.filterCampaignName}
-                </PikedFilter>
-              )}
+              {filters.filterCampaignIds &&
+                filters.filterCampaignIds.map((id) => (
+                  <PikedFilter key={id} onClose={() => handleResetFilter(id)}>
+                    {campaignOptions.find((option) => option.value === id)?.label}
+                  </PikedFilter>
+                ))}
               {filters.filterStatus && (
                 <PikedFilter onClose={() => handlerResetFilters(FILTER_TYPE.STATUS)}>
                   {t(`statuses.${filters.filterStatus}`)}

@@ -12,12 +12,11 @@ import { ResizeIcon } from '@/icons/ResizeIcon'
 import { DataIcon } from '@/icons/DataIcon'
 import { InfoColumn } from './components/InfoColumn'
 
-type TDataKeys = 'name' | 'phone' | 'timezone' | 'status' | 'source' | 'id'
+type TDataKeys = 'name' | 'phone' | 'status' | 'source' | 'id'
 
 const DATA_TITLES: { label: string; value: TDataKeys }[] = [
   { label: 'Lead Name', value: 'name' },
   { label: 'Lead Phone', value: 'phone' },
-  { label: 'Lead Timezone', value: 'timezone' },
   { label: 'Lead Status', value: 'status' },
   { label: 'Source', value: 'source' },
 ]
@@ -29,7 +28,6 @@ const DATA_EXAMPLE: {
     id: '1',
     name: 'John Doe',
     phone: '+1234567890',
-    timezone: 'UTC-05:00',
     status: 'NEW',
     source: 'Website',
   },
@@ -37,7 +35,6 @@ const DATA_EXAMPLE: {
     id: '2',
     name: 'Jane Smith',
     phone: '+1234567987',
-    timezone: 'UTC+05:00',
     status: 'NEW',
     source: 'Email Campaign',
   },
@@ -45,7 +42,6 @@ const DATA_EXAMPLE: {
     id: '3',
     name: 'Alex Johnson',
     phone: '+1234590987',
-    timezone: 'UTC+01:00',
     status: 'NA',
     source: 'Direct Call',
   },
@@ -86,7 +82,6 @@ export const ImportLeadsInstruction: FC = () => {
         id: item.id,
         name: <InfoColumn title={item.name} />,
         phone: <InfoColumn title={item.phone} />,
-        timezone: <InfoColumn title={item.timezone} />,
         status: <InfoColumn title={item.status} />,
         source: <InfoColumn title={item.source} />,
       },

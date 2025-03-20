@@ -10,11 +10,27 @@ import { LeadStatusRow } from '@/features/settings/components/LeadStatusRow/Lead
 import { Flex } from '@/components/Flex'
 import { PlusIcon } from '@peiko/components/icons/PlusIcon/PlusIcon'
 import { Text } from '@peiko/components/Text'
+import dynamic from 'next/dynamic'
+import { leadsApi } from '@/api-rest/leads'
+import { handleRestError } from '@/features/common/error'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
+import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { CardTile } from './components/CardTile'
+
+const ConfirmDeleteModal = dynamic(
+  () =>
+    import('@/components/modals/ConfirmDeleteModal').then(
+      (mod) => mod.ConfirmDeleteModal,
+    ),
+  {
+    ssr: false,
+  },
+)
 
 export const LeadStatuses: FC = () => {
   const { t } = useTranslation('settings')
   const { dispatch, select } = useRedux()
+  const { setModal } = useModals()
   const leadStatuses = select(selectLeadStatuses)
 
   useEffect(() => {
@@ -47,6 +63,23 @@ export const LeadStatuses: FC = () => {
     }
   }
 
+  const [statusId, setStatusId] = useState(0)
+
+  const handleDelete = async () => {
+    try {
+      await leadsApi.deleteCustomStatus(statusId)
+      dispatch(getLeadStatuses())
+      setStatusId(0)
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    }
+  }
+
+  const confirmDelete = (id: number) => {
+    setStatusId(id)
+    setModal({ modalName: MODAL_NAMES.DELETE_CONFIRMATION, isOpen: true })
+  }
+
   return (
     <Card margin="32px 0 40px" padding="24px 41px" fullWidth maxWidth="fit-content">
       <Flex justify="space-between">
@@ -71,12 +104,17 @@ export const LeadStatuses: FC = () => {
         {copy.map((item) => (
           <LeadStatusRow
             key={item.id || item.value}
-            originalItem={leadStatuses.find((status) => status.id === item.id) || item}
+            originalItem={item}
             item={item}
             onReset={handleReset}
+            onDelete={confirmDelete}
           />
         ))}
       </div>
+      <ConfirmDeleteModal
+        title="Are you sure you want to delete it?"
+        confirmAction={handleDelete}
+      />
     </Card>
   )
 }

@@ -17,14 +17,13 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import dynamic from 'next/dynamic'
 import { selectLeadLists, selectIsLoading } from '@/features/leads/store/lead-list'
 import { setLeadsSortBy } from '@/features/leads/store/leads'
-import { TrashIcon } from '@peiko/components/icons/TrashIcon/TrashIcon'
-import { EditIcon } from '@peiko/components/icons/EditIcon'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { handleRestError } from '@/features/common/error'
 import { apiLeadList } from '@/api-rest/lead-list'
 import { StatusChip } from '@/features/campaigns/components/StatusChip'
 import { LeadListStatusChip } from '@/features/leads/components/StatusChip'
 import { Text } from '@peiko/components/Text/Text'
+import { ButtonWithTooltip } from '@peiko/components/Tooltip'
 
 import {
   TLeadCallStatusStatisticRawData,
@@ -55,6 +54,16 @@ const LeadListModal = dynamic(
 
 const EditLeadListModal = dynamic(
   () => import('../modals').then((mod) => mod.EditLeadListModal),
+  {
+    ssr: false,
+  },
+)
+
+const ConfirmDeleteModal = dynamic(
+  () =>
+    import('@/components/modals/ConfirmDeleteModal').then(
+      (mod) => mod.ConfirmDeleteModal,
+    ),
   {
     ssr: false,
   },
@@ -125,13 +134,21 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
     reFetch()
   }
 
-  const handleDelete = async (id: number) => {
+  const [leadListId, setLeadListId] = useState(0)
+
+  const handleDelete = async () => {
     try {
-      await apiLeadList.deleteLeadList(id)
+      await apiLeadList.deleteLeadList(leadListId)
       reFetch()
+      setLeadListId(0)
     } catch (e) {
       handleRestError({ e, dispatch })
     }
+  }
+
+  const confirmDelete = (id: number) => {
+    setLeadListId(id)
+    setModal({ modalName: MODAL_NAMES.DELETE_CONFIRMATION, isOpen: true })
   }
 
   const isViewModalOpen =
@@ -198,26 +215,24 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
         </IconButton>
       ),
       edit: (
-        <IconButton
+        <ButtonWithTooltip
+          showTooltip={leadList.campaignStatus === CAMPAIGN_STATUSES.ACTIVE}
+          buttonDisabled={leadList.campaignStatus === CAMPAIGN_STATUSES.ACTIVE}
           onClick={() => handleEdit(leadList.id)}
-          iconColor="transparent"
-          disabled={
-            leadList.campaignStatus && leadList.campaignStatus !== CAMPAIGN_STATUSES.PAUSE
-          }
-        >
-          <EditIcon width="24px" height="24px" />
-        </IconButton>
+          tooltipText={t(`tooltip.cannot-edit-active-campaign`)}
+          iconType="info"
+          buttonType="edit"
+        />
       ),
       delete: (
-        <IconButton
-          onClick={() => handleDelete(leadList.id)}
-          iconColor="main13"
-          disabled={
-            leadList.campaignStatus && leadList.campaignStatus !== CAMPAIGN_STATUSES.PAUSE
-          }
-        >
-          <TrashIcon width="24px" height="24px" />
-        </IconButton>
+        <ButtonWithTooltip
+          showTooltip={leadList.campaignStatus === CAMPAIGN_STATUSES.ACTIVE}
+          buttonDisabled={leadList.campaignStatus === CAMPAIGN_STATUSES.ACTIVE}
+          onClick={() => confirmDelete(leadList.id)}
+          tooltipText={t(`tooltip.cannot-delete-active-campaign`)}
+          iconType="info"
+          buttonType="delete"
+        />
       ),
     },
   }))
@@ -260,6 +275,10 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
           onClose={onCloseEditLeadListModal}
         />
       )}
+      <ConfirmDeleteModal
+        title="Are you sure you want to delete it?"
+        confirmAction={handleDelete}
+      />
     </>
   )
 }, deepEqual)

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { TAsyncAction, TSelector } from '@/store'
 import { TCampaignTableType } from '@/features/campaigns/types'
 import { apiCampaigns } from '@/api-rest/campaigns'
-import { CAMPAIGN_TABLE_TYPES, SORT_BY } from '@/features/campaigns/constants'
+import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 import {
   asyncGetActiveCampaigns,
   asyncGetCampaignsList,
@@ -66,7 +66,6 @@ export const asyncEditCampaign =
             page,
             limit,
             orderBy: ORDER_BY.DESC,
-            sortBy: SORT_BY.CREATED_AT,
           }),
         )
       } else {
@@ -75,7 +74,6 @@ export const asyncEditCampaign =
             page,
             limit,
             orderBy: ORDER_BY.DESC,
-            sortBy: SORT_BY.CREATED_AT,
           }),
         )
       }
@@ -87,6 +85,7 @@ export const asyncEditCampaign =
           values: { campaignName: formData?.name },
         }),
       )
+      dispatch(reset())
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {

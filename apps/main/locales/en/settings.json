@@ -21,6 +21,20 @@
     "title": "Change Campaigns Settings",
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
+    "workHours-label": "Work Hours (UTC-0)",
+    "hidePhone": {
+      "manager": {
+        "label": "Hide Phone (Managers)",
+        "amount-label": "Amount"
+      },
+      "agent": {
+        "label": "Hide Phone (Agents)",
+        "amount-label": "Amount"
+      },
+      "hideFirst": "hide first",
+      "hideLast": "hide last",
+      "hideWhole": "hide whole"
+    },
     "save": "Save changes"
   },
   "change-lead-settings": {

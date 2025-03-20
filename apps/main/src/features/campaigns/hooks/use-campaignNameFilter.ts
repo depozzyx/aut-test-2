@@ -11,7 +11,7 @@ import {
 import { CAMPAIGN_TABLE_TYPES } from '@/features/campaigns/constants'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { TCampaignListReq } from '@/api-rest/campaigns/types'
-import { setFilterCampaignName } from '@/features/campaigns/store/campaigns'
+import { setFilterCampaignIds } from '@/features/campaigns/store/campaigns'
 
 type TUniversalCampaign = TActiveCampaign | TCampaign
 
@@ -71,7 +71,11 @@ export const useCampaignNameFilter = (
           value: useIdForValue ? campaign.id : campaign.name,
         }))
         if (formattedData.length > 0 && !campaignOptions.length && useIdForValue) {
-          dispatch(setFilterCampaignName(formattedData[0].value))
+          dispatch(
+            setFilterCampaignIds(
+              formattedData.map((option: TCampaignOption) => +option.value),
+            ),
+          )
         }
         setCampaignOptions((prev) => [...prev, ...formattedData])
         setPagination(data.pagination)

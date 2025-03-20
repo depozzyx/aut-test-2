@@ -86,6 +86,7 @@ export const asyncUpdateAgent =
           values: {},
         }),
       )
+      dispatch(reset())
 
       dispatch(
         asyncGetAgentsList({

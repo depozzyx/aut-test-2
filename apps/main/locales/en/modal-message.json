@@ -1,5 +1,7 @@
 {
   "error": "Error",
+  "delete": "Delete",
+  "cancel": "Cancel",
   "statuses": {
     "success": "Success!",
     "error": "Error!"

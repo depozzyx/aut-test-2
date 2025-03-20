@@ -1,8 +1,9 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { FormikHelpers } from 'formik'
 import { mutate } from 'swr'
+
 import { TSelector, TAsyncAction } from '@/store'
-import { TManager, TUpdateManagerReq } from '@/api-rest/manager/types'
+import { TManager, TUpdateManager } from '@/api-rest/manager/types'
 import { managerApi } from '@/api-rest/manager'
 import { handleRestError } from '@/features/common/error'
 import { notificationActions } from '@/features/common/notifications/store'
@@ -54,11 +55,13 @@ export const selectInitFormData = createSelector(
     if (!selectedId || !managersList) return null
 
     const currentManager = managersList.find((manager) => manager.id === selectedId)
-
-    return {
-      email: currentManager?.email || '',
-      username: currentManager?.username || '',
-      managerId: currentManager?.id || selectedId,
+    if (currentManager) {
+      return {
+        email: currentManager.email,
+        username: currentManager?.username || '',
+        managerId: currentManager?.id || selectedId,
+        hideLeadPhones: currentManager?.hideLeadPhones,
+      }
     }
   },
 )
@@ -69,17 +72,20 @@ export const asyncEditManager =
   ({
     formData,
     formik,
-  }: TFormPropsAsync<TUpdateManagerReq> & {
-    formik?: FormikHelpers<TUpdateManagerReq>
+  }: TFormPropsAsync<TUpdateManager> & {
+    formik?: FormikHelpers<TUpdateManager>
   }): TAsyncAction =>
   async (dispatch, getState) => {
+    let error
     try {
       dispatch(setIsLoading(true))
       const managerId = getState().managers.selectedId
-      const { data } = await managerApi.updateManager({
+      const payload = {
         ...formData,
         ...(managerId && { managerId }),
-      })
+        hideLeadPhones: formData.hideLeadPhones === 'true',
+      }
+      const { data } = await managerApi.updateManager(payload)
       dispatch(setEditedManager(data.data))
       dispatch(
         notificationActions.setNotification({
@@ -88,12 +94,16 @@ export const asyncEditManager =
           values: {},
         }),
       )
+      dispatch(reset())
       await mutate((key) => Array.isArray(key) && key[0] === '/manager/list')
     } catch (e) {
+      error = e
       handleRestError({ e, dispatch, formik })
     } finally {
-      formik?.resetForm()
-      dispatch(modalsActions.resetModalsState())
+      if (!error) {
+        formik?.resetForm()
+        dispatch(modalsActions.resetModalsState())
+      }
       dispatch(setIsLoading(false))
     }
   }

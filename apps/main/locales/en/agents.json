@@ -3,6 +3,7 @@
   "headers": {
     "agent-name": "Agent Name",
     "email": "Email",
+    "pbxName": "PBX Name",
     "creation-date": "Creation Date",
     "campaigns": "Campaigns",
     "edit": "Edit",
@@ -59,7 +60,8 @@
     "on-call": "On Call",
     "on-hold": "On Hold",
     "feedback": "Feedback",
-    "manual pause": "Manual Pause"
+    "manual pause": "Manual Pause",
+    "ringing": "Ringing"
   },
   "campaign-info": {
     "title": "Campaign Info",

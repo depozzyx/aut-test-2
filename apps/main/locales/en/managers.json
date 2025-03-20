@@ -16,12 +16,15 @@
     "email": "Email",
     "username": "User Name",
     "password": "Password",
+    "hideLeadPhones": "Hide Phones",
+    "showLeadPhones": "Show Phones",
     "action": "Create Manager"
   },
   "edit-manager": {
-    "title": "Edit manager info",
+    "title": "Edit manager",
     "email": "Email",
     "username": "User Name",
+    "password": "Password",
     "cancel": "Cancel",
     "save": "Save"
   }

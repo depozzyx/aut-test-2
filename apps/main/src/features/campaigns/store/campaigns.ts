@@ -15,7 +15,7 @@ import { modalsActions } from '@/features/common/modals/store'
 import { TOrderBy } from '@/types/entities/orderBy'
 import { ORDER_BY } from '@/constants/orderBy'
 import { TActiveCampaign, TCampaign, TCampaignStatus, TCampaignTableType } from '../types'
-import { CAMPAIGN_STATUSES, CAMPAIGN_TABLE_TYPES, SORT_BY } from '../constants'
+import { CAMPAIGN_STATUSES, CAMPAIGN_TABLE_TYPES } from '../constants'
 
 export type TInit = {
   isLoading: boolean
@@ -24,7 +24,7 @@ export type TInit = {
   campaignList: TCampaign[] | []
   pagination: TPagination
   searchTerm?: string
-  filterCampaignName?: string | number
+  filterCampaignIds: number[]
   filterDate: {
     from?: string
     to?: string
@@ -44,13 +44,13 @@ const init: TInit = {
     total: 1,
   },
   searchTerm: '',
-  filterCampaignName: '',
+  filterCampaignIds: [],
   filterDate: {
     from: undefined,
     to: undefined,
   },
   filterStatus: undefined,
-  sort: { sortBy: SORT_BY.CREATED_AT, orderBy: ORDER_BY.DESC },
+  sort: { orderBy: ORDER_BY.DESC },
 }
 
 const campaigns = createSlice({
@@ -75,8 +75,8 @@ const campaigns = createSlice({
     setSearchTerm(state, action: PayloadAction<TInit['searchTerm']>) {
       state.searchTerm = action.payload
     },
-    setFilterCampaignName(state, action: PayloadAction<TInit['filterCampaignName']>) {
-      state.filterCampaignName = action.payload
+    setFilterCampaignIds(state, action: PayloadAction<TInit['filterCampaignIds']>) {
+      state.filterCampaignIds = action.payload
     },
     setFilterDate(state, action: PayloadAction<TInit['filterDate']>) {
       state.filterDate = action.payload
@@ -89,7 +89,7 @@ const campaigns = createSlice({
     },
     resetFilters(state) {
       state.searchTerm = ''
-      state.filterCampaignName = ''
+      state.filterCampaignIds = []
       state.filterStatus = undefined
       state.filterDate = {
         from: undefined,
@@ -107,7 +107,7 @@ export const {
   setActiveCampaigns,
   setCampaignList,
   setSearchTerm,
-  setFilterCampaignName,
+  setFilterCampaignIds,
   setFilterDate,
   setFilterStatus,
   setSort,
@@ -174,9 +174,9 @@ export const selectSearchTerm = createSelector(
   ({ searchTerm }) => searchTerm,
 )
 
-export const selectFilterCampaignName = createSelector(
+export const selectFilterCampaignIds = createSelector(
   selectCampaigns,
-  ({ filterCampaignName }) => filterCampaignName,
+  ({ filterCampaignIds }) => filterCampaignIds,
 )
 
 export const selectFilterStatus = createSelector(
@@ -202,11 +202,13 @@ export default campaigns.reducer
 
 export const asyncGetActiveCampaigns =
   (params: TActiveCampaignsReq): TAsyncAction =>
-  async (dispatch) => {
+  async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
+      const { filterCampaignIds } = getState().campaigns
       const { data } = await apiCampaigns.getActiveCampaigns({
         status: CAMPAIGN_STATUSES.ACTIVE,
+        ids: filterCampaignIds,
         ...params,
       })
 
@@ -224,11 +226,14 @@ export const asyncGetActiveCampaigns =
 
 export const asyncGetCampaignsList =
   (params: TActiveCampaignsReq): TAsyncAction =>
-  async (dispatch) => {
+  async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
-      const { data } = await apiCampaigns.getCampaignList(params)
-
+      const { filterCampaignIds } = getState().campaigns
+      const { data } = await apiCampaigns.getCampaignList({
+        ids: filterCampaignIds,
+        ...params,
+      })
       dispatch(setCampaignList(data.data))
       dispatch(setPagination(data.pagination))
     } catch (e) {
@@ -260,14 +265,8 @@ export const asyncRemoveCampaign =
   async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
-      const {
-        selectedId,
-        campaignList,
-        activeCampaigns,
-        pagination,
-        searchTerm,
-        filterCampaignName,
-      } = getState().campaigns
+      const { selectedId, campaignList, activeCampaigns, pagination, searchTerm } =
+        getState().campaigns
 
       let campaignName = ''
 
@@ -296,7 +295,6 @@ export const asyncRemoveCampaign =
         limit: pagination.limit,
         orderBy: ORDER_BY.DESC,
         search: searchTerm,
-        name: filterCampaignName,
       }
       getCurrentCampaigns({ type, dispatch, params: params as TActiveCampaignsReq })
     } catch (e) {
@@ -307,7 +305,56 @@ export const asyncRemoveCampaign =
     }
   }
 
-export const asyncUpdateCampaignStatus =
+// export const asyncUpdateCampaignStatus =
+//   (campaignId: number, currentStatus: TCampaignStatus): TAsyncAction =>
+//   async (dispatch, getState) => {
+//     try {
+//       dispatch(setIsLoading(true))
+//       const { campaignList, pagination } = getState().campaigns
+//       const { name } = campaignList.find(({ id }) => id === campaignId) as TCampaign
+//
+//       if (currentStatus === CAMPAIGN_STATUSES.ACTIVE) {
+//         await apiCampaigns.stopCampaign({ id: campaignId.toString() })
+//         dispatch(
+//           notificationActions.setNotification({
+//             key: 'notifications:campaign.paused',
+//             status: 'success',
+//             values: { campaignName: name },
+//           }),
+//         )
+//       } else {
+//         await apiCampaigns.startCampaign({
+//           id: campaignId.toString(),
+//         })
+//         dispatch(
+//           notificationActions.setNotification({
+//             key: 'notifications:campaign.active',
+//             status: 'success',
+//             values: { campaignName: name },
+//           }),
+//         )
+//       }
+//
+//       const params = {
+//         page: pagination.page,
+//         limit: pagination.limit,
+//         sortBy: SORT_BY.CREATED_AT,
+//         orderBy: ORDER_BY.DESC,
+//       }
+//
+//       getCurrentCampaigns({
+//         type: CAMPAIGN_TABLE_TYPES.LIST,
+//         dispatch,
+//         params: params as TActiveCampaignsReq,
+//       })
+//     } catch (e) {
+//       handleRestError({ e, dispatch })
+//     } finally {
+//       dispatch(setIsLoading(false))
+//     }
+//   }
+
+export const asyncStartOrStopCampaign =
   (campaignId: number, currentStatus: TCampaignStatus): TAsyncAction =>
   async (dispatch, getState) => {
     try {
@@ -316,7 +363,7 @@ export const asyncUpdateCampaignStatus =
       const { name } = campaignList.find(({ id }) => id === campaignId) as TCampaign
 
       if (currentStatus === CAMPAIGN_STATUSES.ACTIVE) {
-        await apiCampaigns.stopCampaign({ id: campaignId.toString() })
+        await apiCampaigns.stop(campaignId)
         dispatch(
           notificationActions.setNotification({
             key: 'notifications:campaign.paused',
@@ -325,9 +372,7 @@ export const asyncUpdateCampaignStatus =
           }),
         )
       } else {
-        await apiCampaigns.startCampaign({
-          id: campaignId.toString(),
-        })
+        await apiCampaigns.start(campaignId)
         dispatch(
           notificationActions.setNotification({
             key: 'notifications:campaign.active',
@@ -340,7 +385,6 @@ export const asyncUpdateCampaignStatus =
       const params = {
         page: pagination.page,
         limit: pagination.limit,
-        sortBy: SORT_BY.CREATED_AT,
         orderBy: ORDER_BY.DESC,
       }
 

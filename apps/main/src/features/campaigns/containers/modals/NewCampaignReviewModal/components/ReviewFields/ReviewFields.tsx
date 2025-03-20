@@ -65,29 +65,47 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
     return 0
   }, [formDataForReview?.filterLeadStatuses])
 
-  if (!formDataForReview) {
-    return null
-  }
+  // const recycleRules = useMemo(() => {
+  //   if (!formDataForReview) return
+  //   if (formDataForReview.recycleRules.length > 1) {
+  //     return t('review-campaign.recycle-rules', {
+  //       count: formDataForReview.recycleRules.length,
+  //     })
+  //   }
+  //   if (formDataForReview.recycleRules.length === 1) {
+  //     return t('review-campaign.recycle-rule')
+  //   }
+  //   return 0
+  // }, [formDataForReview?.recycleRules])
+  //
+  // if (!formDataForReview) {
+  //   return null
+  // }
 
   return (
     <Flex direction="column" align="center" gap={48} margin="40px 0 0 0">
       <Flex gap={24} direction="column" width="326px">
         <Field
           label={t('create-campaign.campaign-name')}
-          value={formDataForReview.name}
+          value={formDataForReview?.name}
         />
         <Field label={t('create-campaign.agent-assignment')} value={agents} />
         <Field label={t('create-campaign.lead-selection')} value={leads} />
         <Field
           label={t('create-campaign.hold-time')}
-          value={formDataForReview.holdTime}
+          value={formDataForReview?.holdTime}
         />
-        <Field label={t('create-campaign.mode-label')} value={formDataForReview.mode} />
+        <Field label={t('create-campaign.mode-label')} value={formDataForReview?.mode} />
         <Field
           label={t('create-campaign.coefficient-label')}
-          value={formDataForReview.coefficient}
+          value={formDataForReview?.coefficient}
         />
         <Field label={t('create-campaign.lead-statuses-review')} value={leadStatuses} />
+        {/* <Field label={t('create-campaign.recycle-rules')} value={recycleRules} /> */}
+        <Field
+          label={t('create-campaign.workHours-label')}
+          value={formDataForReview?.workHours}
+        />
       </Flex>
       <Flex align="center" justify="center" gap={24}>
         <OutlinedButton onClick={handleBack} width="236px">

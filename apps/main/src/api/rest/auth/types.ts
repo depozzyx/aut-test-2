@@ -57,3 +57,9 @@ export type TCheckResetPasswordTimerRes = {
   statusCode: number
   data: number
 }
+
+export type TAuthUpdateWS = {
+  data: {
+    logged: boolean
+  }
+}

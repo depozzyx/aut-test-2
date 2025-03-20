@@ -5,6 +5,10 @@
     "pause": "Paused",
     "complete": "Completed"
   },
+  "tooltip": {
+    "cannot-edit-active-campaign": "You can not edit \"Active\" campaign, wait for complete or pause it",
+    "cannot-delete-active-campaign": "You can not delete \"Active\" campaign, wait for complete or pause it"
+  },
   "campaign-list-headers": {
     "campaign-name": "Campaign Name",
     "creation-date": "Creation Date",
@@ -13,6 +17,7 @@
     "agents": "Agents",
     "view": "View",
     "action": "Action",
+    "debug": "Debug",
     "edit": "Edit",
     "delete": "Delete"
   },
@@ -50,8 +55,14 @@
     "hold-time-placeholder": "from 5 to 60 seconds",
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
+    "workHours-label": "Work Hours (UTC-0)",
     "lead-statuses": "Select lead statuses for calls",
-    "lead-statuses-review": "Lead statuses filter for calls"
+    "lead-statuses-review": "Lead statuses filter for calls",
+    "recycle-rules": "Recycle Rules",
+    "add-recycle-rule": "Add Rule",
+    "recycle-rule-status": "Lead Status",
+    "recycle-rule-delay": "Delay",
+    "recycle-rule-attempts": "Max Attempts"
   },
   "edit-campaign": {
     "title": "Edit Campaign",
@@ -66,6 +77,7 @@
     "hold-time-placeholder": "from 5 to 60 seconds",
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
+    "workHours-label": "Work Hours (UTC-0)",
     "lead-statuses": "Select lead statuses for calls",
     "lead-statuses-review": "Filtered lead statuses for calls"
   },
@@ -76,7 +88,9 @@
     "leads": "{{ count }} leads",
     "agents": "{{ count }} agents",
     "lead-status": "1 lead status",
-    "lead-statuses": "{{ count }} lead statuses"
+    "lead-statuses": "{{ count }} lead statuses",
+    "recycle-rule": "1 recycle rule",
+    "recycle-rules": "{{ count }} recycle rules"
   },
   "active-campaigns": "Active Campaigns",
   "campaign-effectiveness": "Campaign Effectiveness",

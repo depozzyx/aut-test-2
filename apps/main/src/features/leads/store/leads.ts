@@ -6,7 +6,7 @@ import { handleRestError } from '@/features/common/error'
 import { leadsApi } from '@/api-rest/leads'
 import {
   ELeadsSortBy,
-  TCreateLeadGroupReq,
+  TCreateLeadGroupPayload,
   TLeadsGroupReq,
   TLeadsListReq,
   TLeadStatusData,
@@ -230,7 +230,7 @@ export const createLeadsGroups =
     formData,
     onSuccess,
   }: {
-    formData: TCreateLeadGroupReq
+    formData: TCreateLeadGroupPayload
     formik: TFormik
     onSuccess: () => void
   }): TAsyncAction =>
@@ -242,7 +242,8 @@ export const createLeadsGroups =
         },
       } = _store()
 
-      const { data } = await leadsApi.createLeadGroup(formData)
+      const payload = { ...formData, active: formData.active === 'true' }
+      const { data } = await leadsApi.createLeadGroup(payload)
 
       dispatch(resetLeadGroups())
 

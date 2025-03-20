@@ -71,12 +71,12 @@ export const useMenuLinks = (): TMenuItem[] => {
           disabled: false,
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
         },
-        {
-          title: t('campaigns_analytics'),
-          link: ROUTES.CAMPAIGNS_ANALYTICS,
-          disabled: false,
-          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
-        },
+        // {
+        //   title: t('campaigns_analytics'),
+        //   link: ROUTES.CAMPAIGNS_ANALYTICS,
+        //   disabled: false,
+        //   availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+        // },
       ],
     },
     {
@@ -121,12 +121,12 @@ export const useMenuLinks = (): TMenuItem[] => {
           disabled: false,
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
         },
-        {
-          title: t('agents_analytics'),
-          link: ROUTES.AGENTS_ANALYTICS,
-          disabled: false,
-          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
-        },
+        // {
+        //   title: t('agents_analytics'),
+        //   link: ROUTES.AGENTS_ANALYTICS,
+        //   disabled: false,
+        //   availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+        // },
         {
           title: t('agents_calls'),
           link: ROUTES.AGENT_CALLS,
@@ -172,12 +172,12 @@ export const useMenuLinks = (): TMenuItem[] => {
           disabled: false,
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
         },
-        {
-          title: t('settings_api_key_management'),
-          link: ROUTES.SETTINGS_API_KEY_MANAGEMENT,
-          disabled: false,
-          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
-        },
+        // {
+        //   title: t('settings_api_key_management'),
+        //   link: ROUTES.SETTINGS_API_KEY_MANAGEMENT,
+        //   disabled: false,
+        //   availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+        // },
         {
           title: t('settings_activity_log'),
           link: ROUTES.SETTINGS_ACTIVITY_LOG_GENERAL,

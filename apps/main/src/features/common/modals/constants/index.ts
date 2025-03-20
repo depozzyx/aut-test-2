@@ -23,6 +23,7 @@ export const MODAL_NAMES = {
   VIEW_LEAD: 'VIEW_LEAD',
   VIEW_LEAD_LIST: 'VIEW_LEAD_LIST',
   EDIT_LEAD_LIST: 'EDIT_LEAD_LIST',
+  DELETE_CONFIRMATION: 'DELETE_CONFIRMATION',
 } as const
 
 export type TModalNames = typeof MODAL_NAMES[keyof typeof MODAL_NAMES]

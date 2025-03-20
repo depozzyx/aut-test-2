@@ -108,6 +108,7 @@ export const asyncCreateCampaign =
           assignedAgentIds: formData.assignedAgentIds || [],
           reserveAgentIds: formData.assignedAgentIds || [],
           filterLeadStatuses: formData.filterLeadStatuses || [],
+          // recycleRules: formData.recycleRules || [],
         }
 
         await apiCampaigns.createCampaign(dataForRequest)
@@ -127,6 +128,7 @@ export const asyncCreateCampaign =
           values: { campaignName: formData?.name },
         }),
       )
+      dispatch(reset())
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {

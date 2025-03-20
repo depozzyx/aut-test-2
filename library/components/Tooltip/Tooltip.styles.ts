@@ -7,13 +7,14 @@ type TTooltip = {
   padding?: CSSProperties['padding']
   contentBackgroundColor?: keyof DefaultTheme['palette']
   arrowColor?: keyof DefaultTheme['palette']
+  arrowBorderColor?: keyof DefaultTheme['palette']
   contentBorderColor?: keyof DefaultTheme['palette']
 }
 
 export const Tooltip = styled(Popup)<TTooltip>`
   &-arrow {
-    stroke-width: 2px;
-    stroke: ${(props) => props.theme.palette[props.arrowColor || 'main8']};
+    stroke-width: 1px;
+    stroke: ${(props) => props.theme.palette[props.arrowBorderColor || 'main8']};
     stroke-dasharray: 30px;
     stroke-dashoffset: -54px;
     color: ${(props) => props.theme.palette[props.arrowColor || 'base3']};

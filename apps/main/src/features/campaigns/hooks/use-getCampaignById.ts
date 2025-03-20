@@ -5,7 +5,8 @@ import { useRedux } from '@/hooks/use-redux'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { handleRestError } from '@/features/common/error'
-import { TCampaign } from '@/features/campaigns/types'
+import { TCampaign, TCampaignStatus } from '@/features/campaigns/types'
+// import { TRecycleRule } from '@/api-rest/campaigns/types'
 
 export type TAgent = {
   id: number
@@ -25,12 +26,15 @@ type TReturn = {
   data?: {
     id: number | string | null
     name: string
+    status: TCampaignStatus
     assignedAgents: number[]
     leadLists: number[]
     holdTime: number
     mode: string
     coefficient: string
     filterLeadStatuses: string[]
+    // recycleRules: TRecycleRule[]
+    workHours: string
   }
   isLoading: boolean
 }
@@ -57,23 +61,29 @@ export const useGetCampaignById = (): TReturn => {
 
     const {
       name,
+      status,
       assignedAgents,
       leadLists,
       holdTime,
       mode,
       coefficient,
       filterLeadStatuses,
+      // recycleRules,
+      workHours,
     } = data.data
 
     return {
       id,
       name,
+      status,
       assignedAgents: assignedAgents.map((agent: TAgent) => agent?.id),
       leadLists: leadLists.map((list: TLeadList) => list?.id),
       holdTime,
       mode,
       coefficient,
       filterLeadStatuses,
+      // recycleRules,
+      workHours,
     }
   }, [data?.data, id])
 

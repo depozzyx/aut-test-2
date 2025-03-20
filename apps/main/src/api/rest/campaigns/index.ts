@@ -42,6 +42,10 @@ const stopCampaign = (data: { id: string }): TAxiosResponse<any> =>
 const startCampaign = (data: { id: string }): TAxiosResponse<any> =>
   api.post('/campaign/start', data)
 
+const start = (id: number): TAxiosResponse<any> => api.post(`/campaign/${id}/start`)
+
+const stop = (id: number): TAxiosResponse<any> => api.post(`/campaign/${id}/stop`)
+
 export const apiCampaigns = {
   getActiveCampaigns,
   getCampaignList,
@@ -54,4 +58,6 @@ export const apiCampaigns = {
   startCampaign,
   createCampaign,
   editCampaign,
+  start,
+  stop,
 }

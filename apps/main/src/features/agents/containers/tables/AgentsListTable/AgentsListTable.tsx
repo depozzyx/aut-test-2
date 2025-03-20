@@ -24,7 +24,14 @@ import { CampaignsTooltip } from '../../../components/CampaignsTooltip'
 import { useAgentSort } from '../../../hooks/use-agentSort'
 import { AGENT_SORT_BY } from '../../../constants'
 
-type TAgentRowKeys = 'username' | 'email' | 'date' | 'edit' | 'delete' | 'campaigns'
+type TAgentRowKeys =
+  | 'username'
+  | 'email'
+  | 'pbxName'
+  | 'date'
+  | 'edit'
+  | 'delete'
+  | 'campaigns'
 
 export const AgentsListTable = (): JSX.Element => {
   const { t } = useTranslation('agents')
@@ -61,6 +68,7 @@ export const AgentsListTable = (): JSX.Element => {
       value: 'username',
     },
     { label: t('headers.email'), value: 'email' },
+    { label: t('headers.pbxName'), value: 'pbxName' },
     {
       label: (
         <HeaderWithSort
@@ -83,6 +91,7 @@ export const AgentsListTable = (): JSX.Element => {
         id: agent.id,
         username: <InfoColumn title={agent.username} />,
         email: <InfoColumn title={agent.email} />,
+        pbxName: <InfoColumn title={agent.pbxName} />,
         date: <InfoColumn title={formatCreatedAt(agent.createdAt)} />,
         campaigns: <CampaignsTooltip campaigns={assignedCampaigns} />,
         edit: (
