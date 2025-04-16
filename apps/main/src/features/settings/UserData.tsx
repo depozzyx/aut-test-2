@@ -2,13 +2,12 @@ import { Card } from '@peiko/components/Card'
 import { useFormik } from 'formik'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
-import * as yup from 'yup'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { Box } from '@peiko/components/Box'
-import { validation } from '@/utils/validation'
 import { useTheme } from 'styled-components'
 import { USER_ROLES } from '@/types/roles'
+import { accountManagementValidationSchema } from '@/utils/validation'
 import { useAuth } from '../common/user'
 import { CardTile } from './components/CardTile'
 import { useUpdateProfile } from './hooks/useUpdateProfile'
@@ -23,9 +22,7 @@ export const UserData: FC = () => {
     initialValues: {
       username: user?.username,
     },
-    validationSchema: yup.object().shape({
-      username: validation.required,
-    }),
+    validationSchema: accountManagementValidationSchema,
     onSubmit: ({ username }) => {
       if (username) updateProfileAsync({ formData: { username }, formik })
     },

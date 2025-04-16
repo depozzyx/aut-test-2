@@ -3,13 +3,18 @@ import React, { FC, useEffect } from 'react'
 import { Box } from '@peiko/components/Box'
 import { LeadListTable } from '@/features/leads/containers/LeadListTable'
 import { useRedux } from '@/hooks/use-redux'
-import { asyncGetLeadLists } from '@/features/leads/store/lead-list'
-import { createStructuredSelector } from 'reselect'
 import {
-  selectLeadsOrderBy,
-  selectLeadsPagination,
-  selectLeadsSortBy,
-} from '@/features/leads/store/leads'
+  asyncGetLeadLists,
+  selectLeadListPagination,
+  selectLeadListsOrderBy,
+  selectLeadListsOrder,
+} from '@/features/leads/store/lead-list'
+import { createStructuredSelector } from 'reselect'
+// import {
+//   selectLeadsPagination,
+//   selectLeadsOrderBy,
+//   selectLeadsOrder,
+// } from '@/features/leads/store/leads'
 import { shallowEqual } from 'react-redux'
 import { Pagination } from '@peiko/components/Pagination/Pagination'
 import { useFormik } from 'formik'
@@ -23,19 +28,19 @@ export const LeadList: FC = () => {
   const {
     pagination: { total, page, limit },
     orderBy,
-    sortBy,
+    order,
   } = select(
     createStructuredSelector({
-      pagination: selectLeadsPagination,
-      sortBy: selectLeadsSortBy,
-      orderBy: selectLeadsOrderBy,
+      pagination: selectLeadListPagination,
+      orderBy: selectLeadListsOrderBy,
+      order: selectLeadListsOrder,
     }),
     shallowEqual,
   )
 
   useEffect(() => {
-    dispatch(asyncGetLeadLists({ page, limit, orderBy, sortBy }))
-  }, [orderBy, sortBy])
+    dispatch(asyncGetLeadLists({ page, limit, orderBy, order }))
+  }, [orderBy, order])
 
   const filters: TFormik = useFormik({
     initialValues: {
@@ -49,7 +54,7 @@ export const LeadList: FC = () => {
   })
 
   const onChangePage = (page: number) =>
-    dispatch(asyncGetLeadLists({ page, orderBy, sortBy, ...cleanObject(filters.values) }))
+    dispatch(asyncGetLeadLists({ page, orderBy, order, ...cleanObject(filters.values) }))
 
   const onChangeFilters = () => onChangePage(1)
 

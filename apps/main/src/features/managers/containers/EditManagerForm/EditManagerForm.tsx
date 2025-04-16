@@ -2,7 +2,6 @@ import { useFormik } from 'formik'
 import React, { useEffect } from 'react'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
-import * as yup from 'yup'
 
 import useTranslation from 'next-translate/useTranslation'
 import { useRedux } from '@/hooks/use-redux'
@@ -13,9 +12,9 @@ import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInpu
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { Text } from '@peiko/components/Text'
 import { RadioButton } from '@peiko/components/inputs/RadioButton/RadioButton'
-import { validation } from '@/utils/validation'
 import { useAuth } from '@/features/common/user'
 import { ERoles } from '@/constants/profile'
+import { createManagerValidationSchema } from '@/utils/validation'
 import {
   asyncEditManager,
   selectInitFormData,
@@ -50,19 +49,9 @@ export const EditManagerForm = (): JSX.Element => {
       password: undefined,
       hideLeadPhones: 'false',
     },
-    validationSchema: yup.object().shape({
-      email: validation.email,
-      username: validation.required,
-      password: yup
-        .string()
-        .nullable()
-        .test(
-          'password-strength',
-          'Password must be at least 8 characters long, include numbers, uppercase and lowercase letters, and have no spaces',
-          (value) =>
-            !value || /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,32}$/.test(value),
-        ),
-    }),
+    validationSchema: createManagerValidationSchema.omit(
+      user?.role === ERoles.ADMIN ? ['email', 'password'] : [],
+    ),
     onSubmit: (formData) => {
       const payload = { ...formData }
       if (!formData.password) {

@@ -9,13 +9,18 @@ import {
   TLeadListCatalog,
   TLeadListsReq,
   TLeadListData,
+  ELeadListOrderBy,
 } from '@/api-rest/lead-list/types'
+import { TOrder } from '@/types/entities/order'
+import { ORDER } from '@/constants/order'
 
 export type TInit = {
   leadListCatalog: TLeadListCatalog[]
   leadLists: TLeadListData[]
   pagination: TPagination
   isLoading: boolean
+  orderBy?: ELeadListOrderBy
+  order?: TOrder
 }
 
 const init: TInit = {
@@ -27,6 +32,8 @@ const init: TInit = {
     total: 1,
   },
   isLoading: true,
+  // orderBy: undefined,
+  // order: undefined,
 }
 
 const leadList = createSlice({
@@ -52,12 +59,36 @@ const leadList = createSlice({
     setIsLoading(state, action: PayloadAction<TInit['isLoading']>) {
       state.isLoading = action.payload
     },
+    setLeadListOrderBy(state, action: PayloadAction<TInit['orderBy']>) {
+      // ASC => DESC => clear
+      if (action.payload === state.orderBy) {
+        if (state.order === ORDER.ASC) {
+          state.order = ORDER.DESC
+        } else if (state.order === ORDER.DESC) {
+          state.orderBy = undefined
+          state.order = undefined
+        }
+      } else {
+        state.orderBy = action.payload
+        state.order = ORDER.ASC
+      }
+    },
+    setLeadListOrder(state, action: PayloadAction<TInit['order']>) {
+      state.order = action.payload
+    },
     reset: () => init,
   },
 })
 
-export const { setPagination, setLeadListCatalog, setLeadLists, setIsLoading, reset } =
-  leadList.actions
+export const {
+  setPagination,
+  setLeadListCatalog,
+  setLeadLists,
+  setIsLoading,
+  setLeadListOrderBy,
+  setLeadListOrder,
+  reset,
+} = leadList.actions
 
 export const selectLeadList: TSelector<TInit> = (state) => state.leadList
 
@@ -65,6 +96,13 @@ export const selectIsLoading = createSelector(
   selectLeadList,
   ({ isLoading }) => isLoading,
 )
+
+export const selectLeadListsOrderBy = createSelector(
+  selectLeadList,
+  ({ orderBy }) => orderBy,
+)
+
+export const selectLeadListsOrder = createSelector(selectLeadList, ({ order }) => order)
 
 export const selectLeadListPagination = createSelector(
   selectLeadList,

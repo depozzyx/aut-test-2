@@ -1,6 +1,5 @@
 import useTranslation from 'next-translate/useTranslation'
 import React, { FC } from 'react'
-import * as yup from 'yup'
 import { useFormik } from 'formik'
 
 import { useModals } from '@/features/common/modals/hooks/use-modals'
@@ -8,7 +7,7 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
 import { Text } from '@peiko/components/Text'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
-import { validation } from '@/utils/validation'
+import { createLeadListValidationSchema } from '@/utils/validation'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { Flex } from '@/components/Flex'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
@@ -35,9 +34,7 @@ export const CreateLeadsGroup: FC = () => {
       name: '',
       active: 'true',
     },
-    validationSchema: yup.object().shape({
-      name: validation.required,
-    }),
+    validationSchema: createLeadListValidationSchema,
     onSubmit: (formData) => {
       dispatch(
         createLeadsGroups({

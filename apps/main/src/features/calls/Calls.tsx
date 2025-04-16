@@ -17,17 +17,28 @@ import {
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { apiCampaigns } from '@/api-rest/campaigns'
-import { TCampaign } from '@/features/campaigns/types'
 import { apiAgents } from '@/api-rest/agents'
 import { palette } from '@peiko/styles/palette'
 import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
 import { getCountryName } from '@/features/campaigns/utils/getCountryByCode'
 import { useStore } from 'react-redux'
+import { TDispatch } from 'store'
+import {
+  asyncGetAgentAssignedCampaigns,
+  selectAgentAssignedCampaigns,
+  setAgentAssignedCampaigns,
+} from '@/features/campaigns/store/campaigns'
+import { formatDuration } from '@/utils/date-to-string'
+import { CardTile } from '@/features/settings/components/CardTile'
+import { TAgentDashboard } from '@/api-rest/agents/types'
+import { isString } from 'formik'
+// import { FilledButton } from '@peiko/components/buttons/FilledButton'
+import { ButtonWithTooltip } from '@peiko/components/Tooltip'
 import { CallButton } from './components/CallButton/CallButton'
 import { CallWindow } from './components/CallWindow'
 import { useSIPService } from './hooks/useSIPService'
 import { agentActions, agentStatusSelector } from '../common/agentStatus/store'
-import { handleRestError } from '../common/error'
+import { errorActions, handleRestError } from '../common/error'
 import { socket } from '../../api/socket/Socket'
 import { campaignSocket } from '../../api/socket/campaign'
 
@@ -41,27 +52,62 @@ const SelectAgentCampaignModal = dynamic(
   },
 )
 
+const gridRepeatCount = (length: number) => {
+  if (length <= 9) return 3
+  if (length > 9) return 4
+  if (length > 12) return 5
+}
+
+const SUBSCRIBE_CAMPAIGN_STATUS = 'Subscribe campaign status'
+
+const getActiveCampaigns = async (dispatch: TDispatch) => {
+  const response = await apiCampaigns.getAgentAssignedActiveCampaigns()
+  const campaigns = response?.data?.data || []
+  dispatch(setAgentAssignedCampaigns(campaigns))
+  return campaigns
+}
+
+const checkStatus = async (dispatch: TDispatch) => {
+  const { data } = await apiAgents.getAgentStatus()
+  dispatch(agentActions.setPBXStatus(data.data))
+  if (data.data.status === 'online') {
+    dispatch(agentActions.setStatusAsync('finish'))
+    dispatch(setSelectedCampaignId(null))
+  }
+}
+
 export const Calls: FC = () => {
   const { t } = useTranslation('calls')
 
   const { dispatch, select } = useRedux()
   const store = useStore()
-  const { pbxStatus, checkCampaignId } = select(agentStatusSelector)
+  const { pbxStatus, checkCampaignId, sipCanConnect, hasCurrentRTCSession } =
+    select(agentStatusSelector)
   const [callDuration, setCallDuration] = useState(0)
-  const { connect, disconnect, ua, endCall, lead, endedCall, setEndedCall, setLead } =
-    useSIPService()
+
+  const {
+    connect,
+    keepAlive,
+    disconnect,
+    endCall,
+    ua,
+    lead,
+    endedCall,
+    setEndedCall,
+    setLead,
+  } = useSIPService()
+
   const { user } = useAuth()
   const { modalState, setModal } = useModals()
   const [campaignCompleted, setCampaignCompleted] = useState(false)
 
   const selectedCampaignId = select(selectSelectedCampaignId)
   const leadStatuses = select(selectLeadStatuses)
+  const agentAssignedCampaigns = select(selectAgentAssignedCampaigns)
 
-  const SUBSCRIBE_CAMPAIGN_STATUS = 'Subscribe campaign status'
-
-  const getActiveCampaigns = async () => {
-    const response = await apiCampaigns.getAgentAssignedActiveCampaigns()
-    return response?.data?.data
+  const openModal = async () => {
+    dispatch(asyncGetAgentAssignedCampaigns())
+    setModal({ modalName: MODAL_NAMES.SELECT_AGENT_CAMPAIGN, isOpen: true })
   }
 
   const onUnsubscribeCampaignStatus = () => {
@@ -69,7 +115,7 @@ export const Calls: FC = () => {
   }
 
   const checkIfAllCampaignsCompleted = async () => {
-    const campaignsData = await getActiveCampaigns()
+    const campaignsData = await getActiveCampaigns(dispatch)
     if (!campaignsData.length) {
       setCampaignCompleted(true)
     }
@@ -78,6 +124,8 @@ export const Calls: FC = () => {
   const onCompleteCampaign = () => {
     console.warn('run oncomplete callback => set agent status [finish]')
     dispatch(agentActions.setStatusAsync('finish'))
+    dispatch(agentActions.setSipCanConnect(false))
+    disconnect()
     checkIfAllCampaignsCompleted()
     dispatch(setSelectedCampaignId(null))
   }
@@ -106,47 +154,49 @@ export const Calls: FC = () => {
     )
   }
 
+  // // connect to sip
   useEffect(() => {
-    if (ua && !ua?.isConnected()) {
+    if (sipCanConnect && !hasCurrentRTCSession && !ua?.isConnected()) {
+      // eslint-disable-next-line no-console
+      console.info(`CONNECTING ... [${pbxStatus.status}]`)
       connect()
+      keepAlive()
+      // setTimeout(() => {
+      //   // eslint-disable-next-line no-console
+      //   console.info('TIMER')
+      //   dispatch(agentActions.setStatusAsync('start'))
+      // }, 500)
     }
-  }, [ua])
+  }, [ua, hasCurrentRTCSession, sipCanConnect])
 
   useMount(() => {
-    const checkStatus = async () => {
-      const { data } = await apiAgents.getAgentStatus()
-      dispatch(agentActions.setPBXStatus(data.data))
-      if (data.data.status === 'online') {
-        dispatch(agentActions.setStatusAsync('finish'))
-      }
-    }
+    // eslint-disable-next-line no-console
+    console.debug('on mount isConnected: ', ua?.isConnected())
     dispatch(getLeadStatuses())
-    checkStatus()
+    checkStatus(dispatch)
   })
-
   useUnmount(() => {
-    if (['offline', 'finish', 'pause'].includes(pbxStatus.status)) {
-      disconnect()
-    }
+    // eslint-disable-next-line no-console
+    console.debug('disconnect on unmount')
+    // if (['offline', 'finish', 'pause'].includes(pbxStatus.status)) {
+    //   disconnect()
+    // }
     onUnsubscribeCampaignStatus()
+    disconnect()
+    dispatch(agentActions.setSipCanConnect(false))
   })
 
-  const [campaigns, setCampaigns] = useState<Partial<TCampaign>[]>([])
   const [onSelectedCampaign, setOnSelectedCampaign] = useState(true)
 
-  const openModal = () => {
-    setModal({ modalName: MODAL_NAMES.SELECT_AGENT_CAMPAIGN, isOpen: true })
-  }
-
+  // set agent working campaign
   const setCampaignId = async (createCallback?: boolean): Promise<number | null> => {
     if (user?.role === 'agent' && !selectedCampaignId) {
       if (createCallback) {
         setOnSelectedCampaign(true)
       }
-      const campaignsData = await getActiveCampaigns()
-      setCampaigns([])
+      const campaignsData = await getActiveCampaigns(dispatch)
+      // setCampaigns([])
       if (campaignsData.length) {
-        setCampaigns(campaignsData)
         if (campaignsData.length === 1) {
           const campaignId = campaignsData[0].id
           if (campaignId) {
@@ -158,7 +208,6 @@ export const Calls: FC = () => {
           openModal()
         }
       } else {
-        setCampaigns([])
         openModal()
       }
     }
@@ -170,7 +219,12 @@ export const Calls: FC = () => {
       dispatch(agentActions.setCheckCampaignId(false))
       setCampaignId(true).then((id) => {
         if (id) {
-          dispatch(agentActions.setStatusAsync('start'))
+          // eslint-disable-next-line no-console
+          // console.info('checkCampaignId -> start')
+          if (pbxStatus.status !== 'online') {
+            dispatch(agentActions.setSipCanConnect(true))
+            dispatch(agentActions.setStatusAsync('start'))
+          }
           onSubscribeCampaignStatus(String(id))
         }
       })
@@ -192,7 +246,7 @@ export const Calls: FC = () => {
         requestId: lead.requestId,
       })
       await resetAllData()
-      if (holdTimeSec) {
+      if (holdTimeSec || holdTimeSec === 0) {
         dispatch(agentActions.setStatusAsync('pause', 'hold'))
         // un hold after timeout
         setTimeout(() => {
@@ -201,7 +255,8 @@ export const Calls: FC = () => {
             onCompleteCampaign()
             setCompleted(false)
           } else {
-            console.warn(`campaign is not completed yet ${status} => unpause`)
+            // eslint-disable-next-line no-console
+            console.debug(`campaign is not completed yet ${status} => unpause`)
             dispatch(agentActions.setStatusAsync('unpause'))
           }
         }, holdTimeSec * 1000)
@@ -211,12 +266,24 @@ export const Calls: FC = () => {
     }
   }
 
+  // reset all on call ends
   useEffect(() => {
     if (['online'].includes(pbxStatus.status) && endedCall) {
       resetAllData()
     }
   }, [pbxStatus.status])
 
+  const [agentDashboard, setAgentDashboard] = useState<TAgentDashboard>()
+  const getCurrentAgentDashboard = async () => {
+    try {
+      const response = await apiAgents.getAgentDashboard()
+      setAgentDashboard(response?.data?.data)
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    }
+  }
+
+  // set campaign id on selected
   useEffect(() => {
     setCampaignId()
   }, [selectedCampaignId])
@@ -226,14 +293,102 @@ export const Calls: FC = () => {
     modalState.isOpen &&
     !['oncall', 'ringing', 'pause'].includes(pbxStatus.status)
 
-  const gridRepeatCount = (length: number) => {
-    if (length <= 9) return 3
-    if (length > 9) return 4
-    if (length > 12) return 5
+  const handleChangeCampaign = async () => {
+    if (pbxStatus.status !== 'offline') {
+      dispatch(
+        errorActions.showGlobalError(
+          "You can't change the campaign right now. Please switch it to offline mode first.",
+        ),
+      )
+    } else {
+      await openModal()
+    }
   }
+
+  useEffect(() => {
+    getCurrentAgentDashboard()
+  }, [selectedCampaignId])
+
+  const getTimeOnline = (agent: TAgentDashboard) => {
+    const loggedTime = isString(agent.timeOnline)
+      ? parseFloat(agent.timeOnline)
+      : agent.timeOnline
+    const ongoingTime = isString(agent.ongoingTime)
+      ? parseFloat(agent.ongoingTime)
+      : agent.ongoingTime
+    const seconds = Math.ceil(loggedTime + ongoingTime)
+    return seconds > 0 ? formatDuration(seconds) : ''
+  }
+
+  const reFetchTimeout = 5000
+  useEffect(() => {
+    if (reFetchTimeout) {
+      const interval = setInterval(() => {
+        getCurrentAgentDashboard()
+      }, reFetchTimeout)
+
+      return () => clearInterval(interval)
+    }
+  }, [reFetchTimeout, dispatch])
 
   return (
     <>
+      <Card fullWidth styles={{ marginTop: '40px', padding: '24px' }}>
+        <CardTile>{t('agents.dashboard.title')}</CardTile>
+        <Flex
+          justify="space-between"
+          align="center"
+          styles={{ marginTop: '24px', flexWrap: 'wrap', gap: '24px' }}
+        >
+          <div
+            style={{
+              minWidth: '150px',
+              cursor: 'pointer',
+            }}
+          >
+            <div style={{ fontSize: '14px', color: '#888', marginBottom: '4px' }}>
+              {t('agents.dashboard.current-campaign')}
+            </div>
+            <Flex align="center" gap="8px">
+              <div style={{ fontSize: '18px', fontWeight: '600' }}>
+                {(selectedCampaignId && agentDashboard?.currentCampaignName) || '-'}
+              </div>
+              <ButtonWithTooltip
+                showTooltip={!agentDashboard?.currentCampaignName}
+                // buttonDisabled={campaign.status === CAMPAIGN_STATUSES.ACTIVE}
+                onClick={handleChangeCampaign}
+                tooltipText="Go online to join the selected campaign."
+                iconType="info"
+                buttonType="edit"
+              />
+            </Flex>
+            {/* <FilledButton onClick={handleChangeCampaign}> */}
+            {/*  <div style={{ fontSize: '18px', fontWeight: '600' }}> */}
+            {/*    {(selectedCampaignId && agentDashboard?.currentCampaignName) || */}
+            {/*      'click to select campaign'} */}
+            {/*  </div> */}
+            {/* </FilledButton> */}
+          </div>
+          <div style={{ minWidth: '150px' }}>
+            <div style={{ fontSize: '14px', color: '#888', marginBottom: '4px' }}>
+              {t('agents.dashboard.time-online')}
+            </div>
+            <div style={{ fontSize: '18px', fontWeight: '600' }}>
+              {agentDashboard?.timeOnline ? getTimeOnline(agentDashboard) : '0s'}
+            </div>
+          </div>
+
+          <div style={{ minWidth: '150px' }}>
+            <div style={{ fontSize: '14px', color: '#888', marginBottom: '4px' }}>
+              {t('agents.dashboard.calls-handled')}
+            </div>
+            <div style={{ fontSize: '18px', fontWeight: '600' }}>
+              {agentDashboard?.callsHandled ?? 0}
+            </div>
+          </div>
+        </Flex>
+      </Card>
+
       <Flex justify="center" align="center" styles={{ flex: 1 }}>
         {lead?.requestId &&
           endedCall &&
@@ -327,21 +482,23 @@ export const Calls: FC = () => {
           </Card>
         )}
       </Flex>
-      {showModal && (campaigns.length > 1 || campaigns.length === 0) && (
-        <SelectAgentCampaignModal
-          campaigns={campaigns}
-          onSelectedCampaign={onSelectedCampaign}
-          callback={(id: string | undefined) => {
-            if (id) {
-              dispatch(agentActions.setStatusAsync('start'))
-              setOnSelectedCampaign(false)
-              onSubscribeCampaignStatus(id)
-            }
-          }}
-          campaignCompleted={campaignCompleted}
-          onClose={() => campaignCompleted && setCampaignCompleted(false)}
-        />
-      )}
+      {showModal &&
+        (agentAssignedCampaigns.length > 1 || agentAssignedCampaigns.length === 0) && (
+          <SelectAgentCampaignModal
+            // campaigns={campaigns}
+            onSelectedCampaign={onSelectedCampaign}
+            callback={(id: string | undefined) => {
+              if (id) {
+                // dispatch(agentActions.setSipCanConnect(true))
+                // dispatch(agentActions.setStatusAsync('start'))
+                setOnSelectedCampaign(false)
+                onSubscribeCampaignStatus(id)
+              }
+            }}
+            // campaignCompleted={campaignCompleted}
+            onClose={() => campaignCompleted && setCampaignCompleted(false)}
+          />
+        )}
     </>
   )
 }

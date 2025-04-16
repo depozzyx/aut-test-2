@@ -10,7 +10,7 @@ import { useCampaignFilters } from '../../../../hooks/campaign/use-campaign-filt
 
 export const SelectedParams = (): JSX.Element => {
   const { t } = useTranslation('activity-log')
-  const { actionTypes, orderBy, sortBy } = useCampaignFilters()
+  const { actionTypes, orderBy, orders } = useCampaignFilters()
   const { select, dispatch } = useRedux()
 
   const filters = select(selectParams, shallowEqual)
@@ -32,7 +32,10 @@ export const SelectedParams = (): JSX.Element => {
         marginTop: '24px',
       }}
     >
-      {(filters.entityAction || filters.entityType || filters.sortBy) && (
+      {(filters.entityAction ||
+        filters.entityType ||
+        filters.orderBy ||
+        filters.order) && (
         <Flex gap="16px" align="center">
           {filters.entityAction && (
             <PikedFilter onClose={() => deleteSelectedFilter('entityAction')}>
@@ -44,9 +47,9 @@ export const SelectedParams = (): JSX.Element => {
               {orderBy.find(({ value }) => filters.orderBy === value)?.label}
             </PikedFilter>
           )}
-          {filters.sortBy && (
-            <PikedFilter onClose={() => deleteSelectedFilter('sortBy')}>
-              {sortBy.find(({ value }) => filters.sortBy === value)?.label}
+          {filters.order && (
+            <PikedFilter onClose={() => deleteSelectedFilter('order')}>
+              {orders.find(({ value }) => filters.order === value)?.label}
             </PikedFilter>
           )}
         </Flex>

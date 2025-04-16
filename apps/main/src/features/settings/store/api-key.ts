@@ -3,7 +3,7 @@ import { mutate } from 'swr'
 import { TSelector, TAsyncAction } from '@/store'
 import { notificationActions } from '@/features/common/notifications/store'
 import { TPagination } from '@/types/entities/pagination'
-import { TOrderBy } from '@/types/entities/orderBy'
+import { TOrder } from '@/types/entities/order'
 import { handleRestError } from '@/features/common/error'
 import { modalsActions } from '@/features/common/modals/store'
 import { managerApi } from '@/api-rest/manager'
@@ -15,7 +15,7 @@ export type TInit = {
   pagination: TPagination
   apiKeysList: TApiKey[]
   selectedId: number | null
-  sortFilter: TOrderBy
+  order?: TOrder
   createdApiKey: TApiKey | null
 }
 
@@ -23,12 +23,12 @@ const init: TInit = {
   isLoading: false,
   pagination: {
     page: 1,
-    limit: 8,
+    limit: 10,
     total: 1,
   },
   apiKeysList: [],
   selectedId: null,
-  sortFilter: 'ASC',
+  order: undefined,
   createdApiKey: null,
 }
 
@@ -48,8 +48,8 @@ const apiKey = createSlice({
     setSelectedId(state, action: PayloadAction<TInit['selectedId']>) {
       state.selectedId = action.payload
     },
-    setSortFilter(state, action: PayloadAction<TInit['sortFilter']>) {
-      state.sortFilter = action.payload
+    setOrder(state, action: PayloadAction<TInit['order']>) {
+      state.order = action.payload
     },
     setCreatedApiKey(state, action: PayloadAction<TInit['createdApiKey']>) {
       state.createdApiKey = action.payload
@@ -63,7 +63,7 @@ export const {
   setApiKeysList,
   setPagination,
   setSelectedId,
-  setSortFilter,
+  setOrder,
   setCreatedApiKey,
   reset,
 } = apiKey.actions
@@ -90,10 +90,7 @@ export const selectSelectedId = createSelector(
   (state) => state.selectedId,
 )
 
-export const selectSortFilter = createSelector(
-  selectApiKeyState,
-  (state) => state.sortFilter,
-)
+export const selectOrder = createSelector(selectApiKeyState, (state) => state.order)
 
 export const selectCreatedApiKey = createSelector(
   selectApiKeyState,
@@ -113,7 +110,7 @@ export const generateApiKey = (): TAsyncAction => async (dispatch) => {
         isOpen: true,
       }),
     )
-    mutate(['/manager/api-key', 1, 8, 'ASC'])
+    await mutate(['/manager/api-key', 1, 8])
   } catch (e) {
     handleRestError({ e, dispatch })
   } finally {
@@ -139,7 +136,7 @@ export const revokeApiKey = (): TAsyncAction => async (dispatch, getState) => {
         values: {},
       }),
     )
-    mutate(['/manager/api-key', 1, 8, 'ASC'])
+    await mutate(['/manager/api-key', 1, 8])
   } catch (e) {
     handleRestError({ e, dispatch })
     dispatch(

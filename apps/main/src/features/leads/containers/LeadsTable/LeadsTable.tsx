@@ -1,14 +1,14 @@
-import { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { deepEqual } from '@peiko/utils/deep-equal'
-import { Table } from '@peiko/components/Table'
+import { EmptyComponent, Table } from '@peiko/components/Table'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import { useRedux } from '@/hooks/use-redux'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
-import { ELeadsSortBy, TLeadData } from '@/api-rest/leads/types'
+import { ELeadsOrderBy, TLeadData } from '@/api-rest/leads/types'
 import { HeaderWithSort } from '@/components/HeaderWithSort'
 import { IconButton } from '@peiko/components/buttons/IconButton/IconButton'
 import { EyeIcon } from '@peiko/components/icons/EyeIcon'
@@ -24,7 +24,7 @@ import {
   selectIsLoading,
   selectLeadsList,
   selectLeadStatuses,
-  setLeadsSortBy,
+  setLeadsOrderBy,
 } from '../../store/leads'
 
 type TLeadsRowKeys =
@@ -89,12 +89,16 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
   const isLeadModalOpen =
     modalState?.modalName === MODAL_NAMES.VIEW_LEAD && modalState.isOpen
 
+  const orderBy = select((state) => state.leads.orderBy)
+  const order = select((state) => state.leads.order)
+
   const headers: THeader<TLeadsRowKeys>[] = [
     {
       label: (
         <HeaderWithSort
           title={t('headers.lead-id')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.ID))}
+          onClick={() => dispatch(setLeadsOrderBy(ELeadsOrderBy.ID))}
+          order={orderBy === ELeadsOrderBy.ID ? order : undefined}
         />
       ),
       value: 'leadId',
@@ -103,7 +107,8 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
       label: (
         <HeaderWithSort
           title={t('headers.lead-name')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.NAME))}
+          onClick={() => dispatch(setLeadsOrderBy(ELeadsOrderBy.NAME))}
+          order={orderBy === ELeadsOrderBy.NAME ? order : undefined}
         />
       ),
       value: 'name',
@@ -112,7 +117,8 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
       label: (
         <HeaderWithSort
           title={t('headers.lead-phone')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.PHONE))}
+          onClick={() => dispatch(setLeadsOrderBy(ELeadsOrderBy.PHONE))}
+          order={orderBy === ELeadsOrderBy.PHONE ? order : undefined}
         />
       ),
       value: 'phone',
@@ -121,7 +127,8 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
       label: (
         <HeaderWithSort
           title={t('headers.lead-timezone')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.TIMEZONE))}
+          onClick={() => dispatch(setLeadsOrderBy(ELeadsOrderBy.TIMEZONE))}
+          order={orderBy === ELeadsOrderBy.TIMEZONE ? order : undefined}
         />
       ),
       value: 'timezone',
@@ -130,7 +137,8 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
       label: (
         <HeaderWithSort
           title={t('headers.lead-status')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.STATUS))}
+          onClick={() => dispatch(setLeadsOrderBy(ELeadsOrderBy.STATUS))}
+          order={orderBy === ELeadsOrderBy.STATUS ? order : undefined}
         />
       ),
       value: 'status',
@@ -139,7 +147,8 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
       label: (
         <HeaderWithSort
           title={t('headers.lead-source')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.SOURCE))}
+          onClick={() => dispatch(setLeadsOrderBy(ELeadsOrderBy.SOURCE))}
+          order={orderBy === ELeadsOrderBy.SOURCE ? order : undefined}
         />
       ),
       value: 'source',
@@ -148,7 +157,8 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
       label: (
         <HeaderWithSort
           title={t('headers.campaign')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.CAMPAIGN))}
+          onClick={() => dispatch(setLeadsOrderBy(ELeadsOrderBy.CAMPAIGN))}
+          order={orderBy === ELeadsOrderBy.CAMPAIGN ? order : undefined}
         />
       ),
       value: 'campaign',
@@ -157,7 +167,8 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
       label: (
         <HeaderWithSort
           title={t('headers.lead-list')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.LEAD_LIST))}
+          onClick={() => dispatch(setLeadsOrderBy(ELeadsOrderBy.LEAD_LIST))}
+          order={orderBy === ELeadsOrderBy.LEAD_LIST ? order : undefined}
         />
       ),
       value: 'leadList',
@@ -193,6 +204,7 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
         rowsData={rows}
         bodyCell={(props) => <BodyCell {...props} whiteSpace="nowrap" />}
         headerCell={(props) => <HeaderCell {...props} whiteSpace="nowrap" />}
+        emptyComponent={<EmptyComponent text={t('empty-data')} isLoading={isLoading} />}
       />
       {isLeadModalOpen && leadData && (
         <LeadModal onSave={getLeadData} leadData={leadData} onClose={reFetch} />

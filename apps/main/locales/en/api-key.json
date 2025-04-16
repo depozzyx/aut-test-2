@@ -1,5 +1,6 @@
 {
   "title": "API Key Management",
+  "empty-data": "No data",
   "generate": "Generate API key",
   "table-headers": {
     "action": "Action",

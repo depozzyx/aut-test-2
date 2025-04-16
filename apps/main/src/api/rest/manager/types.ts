@@ -1,12 +1,18 @@
 import { TGeneratedSuccessStatuses } from '@/constants/success-status'
-import { TOrderBy } from '@/types/entities/orderBy'
+import { TOrder } from '@/types/entities/order'
 import { TPagination } from '@/types/entities/pagination'
 
-export type TManagerSortBy = 'createdAt' | 'workStatus' | 'username' | 'id'
+export type TManagerOrderBy =
+  | 'createdAt'
+  | 'workStatus'
+  | 'username'
+  | 'id'
+  | 'pbxName'
+  | 'email'
 
 export type TManagersReq = {
-  orderBy: TOrderBy
-  sortBy?: TManagerSortBy
+  orderBy?: TManagerOrderBy
+  order?: TOrder
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TManager = {

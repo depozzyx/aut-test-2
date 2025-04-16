@@ -12,7 +12,6 @@ import { modalsActions } from '@/features/common/modals/store'
 import { setIsLoading } from '@/features/campaigns/store/create-campaign'
 import { TEditCampaignReq } from '@/api-rest/campaigns/types'
 import { notificationActions } from '@/features/common/notifications/store/'
-import { ORDER_BY } from '@/constants/orderBy'
 
 export type TInit = {
   formData: Record<string, unknown>
@@ -65,7 +64,6 @@ export const asyncEditCampaign =
           asyncGetActiveCampaigns({
             page,
             limit,
-            orderBy: ORDER_BY.DESC,
           }),
         )
       } else {
@@ -73,7 +71,6 @@ export const asyncEditCampaign =
           asyncGetCampaignsList({
             page,
             limit,
-            orderBy: ORDER_BY.DESC,
           }),
         )
       }

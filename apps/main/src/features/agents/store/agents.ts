@@ -10,12 +10,11 @@ import {
   TAssignedCampaign,
   TDeletedAgentData,
 } from '@/api-rest/agents/types'
-import { TAgentActiveWorkStatus, TAgentSortBy } from '@/features/agents/types'
-import { TOrderBy } from '@/types/entities/orderBy'
+import { TAgentActiveWorkStatus, TAgentOrderBy } from '@/features/agents/types'
+import { TOrder } from '@/types/entities/order'
 import { notificationActions } from '@/features/common/notifications/store'
 import { modalsActions } from '@/features/common/modals/store'
-import { ORDER_BY } from '@/constants/orderBy'
-import { AGENT_SORT_BY } from '../constants'
+import { ORDER } from '@/constants/order'
 
 export type TInit = {
   selectedId: null | number | string
@@ -23,12 +22,14 @@ export type TInit = {
   agentsList: TAgent[]
   activeAgents: TActiveAgent[]
   pagination: TPagination
-  sort: { sortBy?: TAgentSortBy; orderBy: TOrderBy }
+  orderBy?: TAgentOrderBy
+  order?: TOrder
   statusFilter?: TAgentActiveWorkStatus
   deletedAgentData: null | TDeletedAgentData
   searchTerm: string
   selectedAssignedCampaign: null | TAssignedCampaign
   selectedCampaignId: null | string
+  isAgentOnline: boolean // New state for agent online status
 }
 
 const init: TInit = {
@@ -38,15 +39,15 @@ const init: TInit = {
   activeAgents: [],
   pagination: {
     page: 1,
-    limit: 8,
+    limit: 10,
     total: 1,
   },
-  sort: { sortBy: AGENT_SORT_BY.USERNAME, orderBy: ORDER_BY.DESC },
   statusFilter: undefined,
   deletedAgentData: null,
   searchTerm: '',
   selectedAssignedCampaign: null,
-  selectedCampaignId: '',
+  selectedCampaignId: null,
+  isAgentOnline: false,
 }
 
 const agents = createSlice({
@@ -75,8 +76,22 @@ const agents = createSlice({
     setActiveAgents(state, action: PayloadAction<TInit['activeAgents']>) {
       state.activeAgents = action.payload
     },
-    setSort(state, action: PayloadAction<TInit['sort']>) {
-      state.sort = action.payload
+    setOrderBy(state, action: PayloadAction<TInit['orderBy']>) {
+      // ASC => DESC => clear
+      if (action.payload === state.orderBy) {
+        if (state.order === ORDER.ASC) {
+          state.order = ORDER.DESC
+        } else if (state.order === ORDER.DESC) {
+          state.orderBy = undefined
+          state.order = undefined
+        }
+      } else {
+        state.orderBy = action.payload
+        state.order = ORDER.ASC
+      }
+    },
+    setOrder(state, action: PayloadAction<TInit['order']>) {
+      state.order = action.payload
     },
     setStatusFilter(state, action: PayloadAction<TInit['statusFilter']>) {
       state.statusFilter = action.payload
@@ -94,7 +109,12 @@ const agents = createSlice({
       state.selectedAssignedCampaign = action.payload
     },
     setSelectedCampaignId(state, action: PayloadAction<TInit['selectedCampaignId']>) {
+      // eslint-disable-next-line no-console
+      console.debug(`setSelectedCampaignId => ${action.payload}`) // todo debug
       state.selectedCampaignId = action.payload
+    },
+    setIsAgentOnline(state, action: PayloadAction<TInit['isAgentOnline']>) {
+      state.isAgentOnline = action.payload
     },
     reset: () => init,
   },
@@ -106,12 +126,13 @@ export const {
   setSelectedId,
   setAgentsList,
   setActiveAgents,
-  setSort,
+  setOrderBy,
   setStatusFilter,
   setDeletedAgentData,
   setSearchTerm,
   setSelectedAssignedCampaign,
   setSelectedCampaignId,
+  setIsAgentOnline, // New action
   reset,
 } = agents.actions
 
@@ -151,7 +172,8 @@ export const selectStatusFilter = createSelector(
   ({ statusFilter }) => statusFilter,
 )
 
-export const selectSort = createSelector(selectAgents, ({ sort }) => sort)
+export const selectOrderBy = createSelector(selectAgents, ({ orderBy }) => orderBy)
+export const selectOrder = createSelector(selectAgents, ({ order }) => order)
 
 export const selectSelectedId = createSelector(
   selectAgents,
@@ -233,8 +255,7 @@ export const asyncRemoveAgent =
       dispatch(
         asyncGetAgentsList({
           page: 1,
-          limit: 8,
-          orderBy: ORDER_BY.DESC,
+          limit: 10,
         }),
       )
     } catch (e) {

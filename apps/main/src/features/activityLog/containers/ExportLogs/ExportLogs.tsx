@@ -1,12 +1,13 @@
 import useTranslation from 'next-translate/useTranslation'
 import React, { FC, useCallback } from 'react'
+import { useFormik } from 'formik'
+import * as yup from 'yup'
+
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
 import { Text } from '@peiko/components/Text'
-import { useFormik } from 'formik'
-import * as yup from 'yup'
-import { validation } from '@/utils/validation'
+import { required } from '@/utils/validation'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { Flex } from '@/components/Flex'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
@@ -40,7 +41,7 @@ export const ExportLogs: FC<Pick<TFilters, 'managers'>> = ({ managers }) => {
   const exportLogsAsync = useExportLogs()
 
   const filters = select(selectFilters)
-  const { actionTypes, orderBy } = useFilters()
+  const { actionTypes, orders } = useFilters()
 
   const showModal =
     modalState?.modalName === MODAL_NAMES.EXPORT_ACTIVITY_LOGS && modalState.isOpen
@@ -59,10 +60,10 @@ export const ExportLogs: FC<Pick<TFilters, 'managers'>> = ({ managers }) => {
       },
     },
     validationSchema: yup.object().shape({
-      fileFormat: validation.required,
+      fileFormat: required,
       dates: yup.object().shape({
-        from: validation.required,
-        to: validation.required,
+        from: required,
+        to: required,
       }),
     }),
     onSubmit: (formData) => {
@@ -84,7 +85,7 @@ export const ExportLogs: FC<Pick<TFilters, 'managers'>> = ({ managers }) => {
   })
 
   const getFilters = useCallback(() => {
-    const order = orderBy.find((item) => item.value === filters.orderBy)?.label
+    const order = orders.find((item) => item.value === filters.order)?.label
     const action = actionTypes.find((item) => item.value === filters.entityAction)?.label
     const user = managers.find((item) => item.value === filters.userId)?.label
     const data: string[] = []
@@ -96,7 +97,7 @@ export const ExportLogs: FC<Pick<TFilters, 'managers'>> = ({ managers }) => {
 
       return `${acc}, ${item}`
     }, '')
-  }, [orderBy, actionTypes, managers, filters])
+  }, [orders, actionTypes, managers, filters])
 
   return (
     <ModalMessage

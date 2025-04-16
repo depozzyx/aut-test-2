@@ -28,5 +28,13 @@
     "BA": "Busy Auto",
     "NA": "No Answer",
     "NNA": "Number Not Available"
+  },
+  "agents": {
+    "dashboard": {
+      "title": "Dashboard",
+      "current-campaign": "Campaign: ",
+      "calls-handled": "Calls Handled: ",
+      "time-online": "Time Online: "
+    }
   }
 }

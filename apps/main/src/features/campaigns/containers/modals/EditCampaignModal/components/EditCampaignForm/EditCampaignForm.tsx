@@ -21,7 +21,6 @@ import {
   selectAgentsOptions,
   selectAgentsPagination,
 } from '@/features/agents/store/agents'
-import { ORDER_BY } from '@/constants/orderBy'
 import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 import { coefficients, modes, workHours } from '@/constants/settings'
@@ -29,9 +28,9 @@ import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/lead
 import { hasArrayChanged } from '@/utils/array'
 // import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
 // import { TRecycleRule } from '@/api-rest/campaigns/types'
+import { createCampaignValidationSchema } from '@/utils/validation'
 import { asyncEditCampaign } from '../../../../../store/edit-campaign'
 import { TCampaignTableType } from '../../../../../types'
-import { createCampaignValidationSchema } from '../../../../../utils/validationSchema'
 import { useGetCampaignById } from '../../../../../hooks/use-getCampaignById'
 import { CAMPAIGN_STATUSES, INITIAL_REQUEST_PARAMS_EDIT } from '../../../../../constants'
 
@@ -140,6 +139,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
       )
 
       if (missingInitialItems.length) {
+        // console.debug(`missing ${missingInitialItems}`) //todo
         formik.setFieldValue(
           'leadListIds',
           Array.from(new Set([...formik.values.leadListIds, ...missingInitialItems])),
@@ -156,7 +156,6 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
           {
             page: leadsPage + 1,
             limit: leadsLimit,
-            orderBy: ORDER_BY.DESC,
             withoutCampaigns: true,
             campaignId: campaignId && +campaignId,
           },
@@ -174,7 +173,6 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
           {
             page: agentsPage + 1,
             limit: agentsLimit,
-            orderBy: ORDER_BY.DESC,
           },
           true,
           true,
@@ -231,11 +229,16 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
               size="s"
               width={424}
               options={leadListOptions}
+              // isOptionDisabled={(option) =>
+              //   data?.status === CAMPAIGN_STATUSES.COMPLETE &&
+              //   initialLeadListIds.includes(+option.value)
+              // }
               onMenuScrollToBottom={onLeadsScrollToBottom}
               isSearchable
             />
             <FormikInput
               formik={formik}
+              type="number"
               disabled={data?.status === CAMPAIGN_STATUSES.COMPLETE}
               size="s"
               name="holdTime"

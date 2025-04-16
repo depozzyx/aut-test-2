@@ -53,7 +53,7 @@ const INIT_OPTIONS = (
 export const AgentStatus: FC = () => {
   const { t } = useTranslation('user')
   const { dispatch, select } = useRedux()
-  const { pbxStatus } = select(agentStatusSelector)
+  const { pbxStatus, hasCurrentRTCSession } = select(agentStatusSelector)
   const [options, setOptions] = useState(INIT_OPTIONS(t))
   const { user } = useAuth()
   const selectedCampaignId = select(selectSelectedCampaignId)
@@ -109,11 +109,25 @@ export const AgentStatus: FC = () => {
           if (data?.data === CAMPAIGN_STATUSES.COMPLETE) {
             dispatch(setSelectedCampaignId(null))
           } else {
-            dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
+            // eslint-disable-next-line no-console
+            console.debug('agent status change command: ', e?.value)
+            dispatch(agentActions.setSipCanConnect(true))
+            setTimeout(() => {
+              // eslint-disable-next-line no-console
+              console.info('TIMEOUT for connect to SIP before change work status')
+              dispatch(agentActions.setStatusAsync('start'))
+            }, 500)
+            // dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
           }
         }
       } else {
         dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
+        if (e?.value === 'finish') {
+          // eslint-disable-next-line no-console
+          console.debug('else agent status change command: ', e?.value)
+          dispatch(agentActions.setSipCanConnect(false))
+          dispatch(setSelectedCampaignId(null))
+        }
       }
     }
   }
@@ -126,7 +140,11 @@ export const AgentStatus: FC = () => {
         name="workStatus"
         options={options}
         readOnlySelection
-        disabled={pbxStatus.status === 'oncall' || pbxStatus.status === 'ringing'}
+        disabled={
+          pbxStatus.status === 'oncall' ||
+          pbxStatus.status === 'ringing' ||
+          hasCurrentRTCSession
+        }
         onChange={checkAndSetCampaign}
       />
     </Box>

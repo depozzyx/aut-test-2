@@ -10,11 +10,18 @@ import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { useCampaignUpdates } from '@/features/campaigns/hooks/use-active-campaigns-update'
 import { TValue } from '@/components/DropdownMenu/DropdownMenu'
 import { useRedux } from '@/hooks/use-redux'
+import { LimitSelect } from '@/components/limit-select'
+import { SingleValue } from 'react-select'
+import { TSelectOption } from '@/components/MutliSelect/types'
 import { ActiveCampaignsTable } from './containers/tables/ActiveCampaignsTable'
 import { CampaignNameFilter } from './containers/filters/CampaignNameFilter'
 import { useCampaignsManager } from './hooks/use-campaignsManager'
 import { CampaignSearchField } from './components/CampaignSearchField'
-import { asyncGetActiveCampaigns, setFilterCampaignIds } from './store/campaigns'
+import {
+  asyncGetActiveCampaigns,
+  setFilterCampaignIds,
+  setPagination,
+} from './store/campaigns'
 
 export const ActiveCampaigns = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
@@ -37,6 +44,16 @@ export const ActiveCampaigns = (): JSX.Element => {
     dispatch(
       setFilterCampaignIds(filters.filterCampaignIds.filter((item) => item !== id)),
     )
+
+  const changeLimit = (option: SingleValue<TSelectOption>) =>
+    option &&
+    dispatch(
+      setPagination({
+        page,
+        limit: +option.value,
+        total,
+      }),
+    )
   return (
     <>
       <Flex direction="column" padding="12px 0 0 0">
@@ -49,6 +66,7 @@ export const ActiveCampaigns = (): JSX.Element => {
               setCampaignOptions={setCampaignOptions}
             />
             {/* <RangeDayPicker onChange={handleChangeDate} /> */}
+            <LimitSelect limit={limit} onChange={changeLimit} />
           </Flex>
         </Flex>
         <Flex

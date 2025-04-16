@@ -39,8 +39,7 @@ export const LeadListSelect: FC<LeadListSelectProps> = ({ withoutEmpty, ...props
 
   const onMenuScrollToBottom = () => {
     const lastPage = total === 0 ? 1 : Math.ceil(total / (limit ?? 15))
-    if (page < lastPage)
-      dispatch(getLeadsGroups({ page: page + 1, limit, orderBy: 'DESC' }))
+    if (page < lastPage) dispatch(getLeadsGroups({ page: page + 1, limit }))
   }
 
   return (

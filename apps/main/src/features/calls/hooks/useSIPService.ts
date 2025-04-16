@@ -5,7 +5,7 @@ import {
   IncomingRTCSessionEvent,
   OutgoingRTCSessionEvent,
 } from 'jssip/lib/UA'
-import { AnswerOptions } from 'jssip/lib/RTCSession'
+import { AnswerOptions, RTCSession } from 'jssip/lib/RTCSession'
 import { useAuth } from '@/features/common/user'
 import { useRedux } from '@/hooks/use-redux'
 import { errorActions, handleRestError } from '@/features/common/error'
@@ -15,35 +15,53 @@ import { TCallsInit } from 'api/socket/call/types'
 import { apiAgents } from '@/api-rest/agents'
 import { API_SECRET_KEY } from '@/constants/config'
 import { decrypt } from '@peiko/utils/crypto-js'
+import { useStore } from 'react-redux'
+import { agentActions } from '@/features/common/agentStatus/store'
+import { apiCalls } from '@/api-rest/calls'
 
 const TEXTS = {
   SUBSCRIBE_CALLS: 'Subscribe calls',
   SUBSCRIBE_CALLS_END: 'Subscribe calls end',
 }
 
-export const useSIPService = (): {
+export const useSIPService = (
+  echoTestMode?: boolean,
+  currentSession?: RTCSession | null,
+  setCurrentSession?: (session: RTCSession | null) => void,
+): {
   connect: () => void
+  keepAlive: () => void
   disconnect: () => void
   ua: UA | null
-  endCall: (isClient?: boolean) => void
-  lead: TCallsInit | null
+  endCall: (isClient?: boolean, isEchoTest?: boolean) => void
+  hangupSip: (isEchoTest?: boolean) => void
+  makeEchoTest: () => void
   endedCall: boolean
   setEndedCall: (endedCall: boolean) => void
+  lead: TCallsInit | null
   setLead: (lead: TCallsInit | null) => void
 } => {
   const { pbxAuth } = useAuth()
   const { dispatch } = useRedux()
+  const store = useStore()
+
   const [endedCall, setEndedCall] = useState(false)
+
   const [lead, setLead] = useState<TCallsInit | null>(null)
+
+  let iceCandidateTimeout: NodeJS.Timeout | number | null = null
 
   const sipOptions: AnswerOptions = {
     pcConfig: {
       rtcpMuxPolicy: 'negotiate' as 'require',
       iceServers: [
-        { urls: ['stun:stun.l.google.com:19302'] },
-        { urls: ['stun:stun1.l.google.com:19302'] },
-        { urls: ['stun:stun2.l.google.com:19302'] },
+        {
+          urls: process.env.NEXT_PUBLIC_SIP_COTURN_URL as string,
+          username: process.env.NEXT_PUBLIC_SIP_COTURN_USER,
+          credential: process.env.NEXT_PUBLIC_SIP_COTURN_PASSWORD,
+        },
       ],
+      iceTransportPolicy: 'relay',
     },
     mediaConstraints: {
       audio: true,
@@ -65,6 +83,39 @@ export const useSIPService = (): {
     }
   }
 
+  const onUnsubscribeCalls = () => {
+    socket.unsubscribe(TEXTS.SUBSCRIBE_CALLS)
+    socket.unsubscribe(TEXTS.SUBSCRIBE_CALLS_END)
+  }
+
+  const disconnect = () => {
+    // eslint-disable-next-line no-console
+    console.log('disconnect => unregister and stop')
+    ua?.unregister()
+    ua?.stop()
+    if (!echoTestMode) onUnsubscribeCalls()
+  }
+
+  const makeEchoTest = () => {
+    if (pbxAuth?.username) return apiCalls.makeEchoTest({ exten: pbxAuth.username })
+  }
+
+  const hangupSip = (isEchoTest?: boolean) => {
+    console.warn('hangupSip', currentSession?.status)
+    if (currentSession && currentSession?.status !== 8) {
+      currentSession.terminate()
+      dispatch(agentActions.setHasCurrentRTCSession(false))
+    }
+    if (setCurrentSession) {
+      setCurrentSession(null)
+    }
+    if (isEchoTest) {
+      console.warn('hangup sip echo test and disconnect', currentSession?.status)
+      ua?.terminateSessions()
+      disconnect()
+    }
+  }
+
   const endCall = async (isClient?: boolean) => {
     setEndedCall(true)
     if (isClient) await hangupAsync()
@@ -83,26 +134,36 @@ export const useSIPService = (): {
     })
   }
 
-  const onUnsubscribeCalls = () => {
-    socket.unsubscribe(TEXTS.SUBSCRIBE_CALLS)
-    socket.unsubscribe(TEXTS.SUBSCRIBE_CALLS_END)
-  }
-
   const connect = () => {
     ua?.start()
-    onSubscribeCalls()
+    if (!echoTestMode) onSubscribeCalls()
   }
 
-  const disconnect = () => {
-    ua?.stop()
-    onUnsubscribeCalls()
+  const keepAlive = () => {
+    setInterval(() => {
+      const { sipCanConnect } = store.getState().agentStatus
+      // eslint-disable-next-line no-console
+      if (ua && ua?.isConnected() && pbxAuth?.username && sipCanConnect) {
+        // eslint-disable-next-line no-console
+        // console.info(`sipCanConnect ${sipCanConnect}`)
+        try {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          ua.sendOptions(`sip:${pbxAuth?.username}@${pbxAuth?.domain}`, null, {})
+        } catch (e) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Keep-alive ping error (safe to ignore):', e)
+          }
+        }
+      }
+    }, 10000)
   }
 
   useEffect(() => {
     if (pbxAuth)
       setUA(() => {
         const password = decrypt(pbxAuth?.password, API_SECRET_KEY)
-        // console.warn(password)
+        // console.warn(password) // debug
 
         const configuration: UAConfiguration = {
           uri: `sip:${pbxAuth?.username}@${pbxAuth?.domain}`,
@@ -115,22 +176,31 @@ export const useSIPService = (): {
         }
         const user = new JsSIP.UA(configuration)
 
-        user.on('connected', (e) => {
-          console.warn('Connected to SIP server', e)
+        user.on('registered', () => {
+          console.warn('SIP registered')
+        })
+
+        user.on('connected', () => {
+          console.warn('SIP connected')
         })
 
         user.on('disconnected', (e) => {
           console.warn('Disconnected from SIP server', e)
+          dispatch(agentActions.setSipConnected(false))
         })
 
         user.on(
           'newRTCSession',
-          ({ session }: IncomingRTCSessionEvent | OutgoingRTCSessionEvent) => {
-            console.warn('New session started', session)
+          ({ session }: IncomingRTCSessionEvent | OutgoingRTCSessionEvent): void => {
+            // console.warn('New session started', session?.direction)
 
             const answerCall = async () => {
               if (session) {
                 session.answer(sipOptions)
+                if (echoTestMode && setCurrentSession) {
+                  dispatch(agentActions.setHasCurrentRTCSession(true))
+                  setCurrentSession(session)
+                }
               } else {
                 console.warn('No call session')
               }
@@ -140,14 +210,33 @@ export const useSIPService = (): {
             }, 2000)
 
             session.on('peerconnection', ({ peerconnection }) => {
-              const pc = peerconnection
-              pc.ontrack = (event) => {
+              // eslint-disable-next-line no-param-reassign
+              peerconnection.ontrack = (event) => {
                 console.warn('New track added:', event.track)
                 const remoteStream = event.streams[0]
                 const audioElement = document.createElement('audio')
                 audioElement.srcObject = remoteStream
                 audioElement.autoplay = true
                 document.body.appendChild(audioElement)
+              }
+            })
+
+            session.on('icecandidate', (event) => {
+              const iceCandidate = event?.candidate
+              if (typeof iceCandidateTimeout === 'number')
+                clearTimeout(iceCandidateTimeout)
+
+              iceCandidateTimeout = setTimeout(() => event.ready(), 5000)
+
+              if (
+                iceCandidate &&
+                iceCandidate.type === 'srflx' &&
+                iceCandidate.relatedAddress &&
+                iceCandidate.relatedPort
+              ) {
+                if (iceCandidateTimeout != null) {
+                  event.ready()
+                }
               }
             })
 
@@ -164,6 +253,7 @@ export const useSIPService = (): {
 
         user.on('registrationFailed', (e) => {
           console.error('Registration failed', e)
+          // todo set new work status
           if (e.cause) dispatch(errorActions.showGlobalError(e.cause))
         })
 
@@ -171,5 +261,17 @@ export const useSIPService = (): {
       })
   }, [pbxAuth])
 
-  return { connect, disconnect, ua, endCall, lead, endedCall, setEndedCall, setLead }
+  return {
+    connect,
+    keepAlive,
+    disconnect,
+    ua,
+    makeEchoTest,
+    hangupSip,
+    endCall,
+    lead,
+    endedCall,
+    setEndedCall,
+    setLead,
+  }
 }

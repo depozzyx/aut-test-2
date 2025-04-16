@@ -20,8 +20,8 @@ import {
   selectLeadsGroup,
   selectLeadsGroupPagination,
   selectLeadsOrderBy,
+  selectLeadsOrder,
   selectLeadsPagination,
-  selectLeadsSortBy,
 } from './store/leads'
 
 const CreateLeadsGroup = dynamic(
@@ -39,27 +39,27 @@ export const Leads: FC = () => {
     pagination: { total, page, limit },
     leadsGroup,
     groupsPagination,
-    sortBy,
     orderBy,
+    order,
   } = select(
     createStructuredSelector({
       pagination: selectLeadsPagination,
       groupsPagination: selectLeadsGroupPagination,
       leadsGroup: selectLeadsGroup,
-      sortBy: selectLeadsSortBy,
       orderBy: selectLeadsOrderBy,
+      order: selectLeadsOrder,
     }),
     shallowEqual,
   )
 
   useEffect(() => {
-    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy }))
+    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit }))
   }, [])
 
   useEffect(() => {
     if (secondMount)
-      dispatch(getLeadList({ page: 1, limit, orderBy, leadListId: leadsGroup, sortBy }))
-  }, [leadsGroup, secondMount, sortBy, orderBy])
+      dispatch(getLeadList({ page: 1, limit, orderBy, order, leadListId: leadsGroup }))
+  }, [leadsGroup, secondMount, orderBy, order])
 
   useUnmount(() => {
     dispatch(reset())
@@ -87,6 +87,7 @@ export const Leads: FC = () => {
       getLeadList({
         page,
         orderBy,
+        order,
         leadListId: leadsGroup,
         ...cleanObject(filters.values),
       }),

@@ -6,7 +6,7 @@ export type TAgentActiveWorkStatus =
   | 'feedback'
   | 'on-hold'
   | 'on-call'
-export type TAgentSortBy = 'workStatus' | 'username' | 'createdAt'
+export type TAgentOrderBy = 'workStatus' | 'username' | 'createdAt' | 'email' | 'pbxName'
 
 export type TCreateAgentFormData = {
   username: string

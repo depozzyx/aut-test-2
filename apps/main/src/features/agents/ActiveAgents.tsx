@@ -7,9 +7,11 @@ import {
   asyncGetActiveAgents,
   selectAgentsPagination,
   selectStatusFilter,
-  selectSort,
   setStatusFilter,
   selectSearchTerm,
+  selectOrderBy,
+  selectOrder,
+  setPagination,
 } from '@/features/agents/store/agents'
 import { shallowEqual } from 'react-redux'
 import { useRedux } from '@/hooks/use-redux'
@@ -17,8 +19,11 @@ import { Pagination } from '@peiko/components/Pagination'
 import { StatusFilter } from '@/features/agents/containers/filters/StatusFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton/OutlinedButton'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
-import { ActiveAgentsTable } from './containers/tables/ActiveAgentsTable'
+import { SingleValue } from 'react-select'
+import { TSelectOption } from '@/components/MutliSelect/types'
+import { LimitSelect } from '@/components/limit-select'
 import { AgentSearchField } from './components/AgentSearchField'
+import { ActiveAgentsTable } from './containers/tables/ActiveAgentsTable'
 
 export const ActiveAgents = (): JSX.Element => {
   const { t } = useTranslation('agents')
@@ -26,13 +31,15 @@ export const ActiveAgents = (): JSX.Element => {
 
   const {
     pagination: { total, page, limit },
-    sort: { orderBy, sortBy },
+    orderBy,
+    order,
     statusFilter,
     searchTerm,
   } = select(
     createStructuredSelector({
       pagination: selectAgentsPagination,
-      sort: selectSort,
+      orderBy: selectOrderBy,
+      order: selectOrder,
       statusFilter: selectStatusFilter,
       searchTerm: selectSearchTerm,
     }),
@@ -45,12 +52,12 @@ export const ActiveAgents = (): JSX.Element => {
         page: 1,
         limit: limit ?? 7,
         orderBy,
-        ...(sortBy && { sortBy }),
+        order,
         ...(searchTerm && { search: searchTerm }),
         ...(statusFilter && { workStatus: statusFilter }),
       }),
     )
-  }, [limit, searchTerm, sortBy, orderBy, statusFilter])
+  }, [limit, searchTerm, orderBy, order, statusFilter])
 
   const fetchAgents = (newPage: number) =>
     dispatch(
@@ -58,14 +65,14 @@ export const ActiveAgents = (): JSX.Element => {
         page: newPage,
         limit: limit ?? 7,
         orderBy,
-        ...(sortBy && { sortBy }),
+        order,
         ...(searchTerm && { search: searchTerm }),
         ...(statusFilter && { workStatus: statusFilter }),
       }),
     )
   const handleChangePage = useCallback(
     (newPage) => fetchAgents(newPage),
-    [searchTerm, sortBy, orderBy, statusFilter],
+    [searchTerm, orderBy, order, statusFilter],
   )
 
   const handleResetStatusFilter = useCallback(() => {
@@ -78,7 +85,17 @@ export const ActiveAgents = (): JSX.Element => {
     }, 5000)
 
     return () => clearInterval(interval)
-  }, [page, limit, searchTerm, sortBy, orderBy, statusFilter])
+  }, [page, limit, searchTerm, orderBy, order, statusFilter])
+
+  const changeLimit = (option: SingleValue<TSelectOption>) =>
+    option &&
+    dispatch(
+      setPagination({
+        page,
+        limit: +option.value,
+        total,
+      }),
+    )
 
   return (
     <Flex direction="column" padding="12px 0 0 0">
@@ -87,6 +104,7 @@ export const ActiveAgents = (): JSX.Element => {
         <Flex gap={16} align="center" width="100%">
           <AgentSearchField />
           <StatusFilter />
+          <LimitSelect limit={limit} onChange={changeLimit} />
         </Flex>
       </Flex>
       <Flex

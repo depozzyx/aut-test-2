@@ -1,17 +1,22 @@
 import { FC } from 'react'
 import { TFormik } from '@peiko/types/formik'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect/FormikSelect'
+import { TSelectOption } from '@/components/MutliSelect/types'
+import { SingleValue } from 'react-select'
+import { Select } from '@peiko/components/inputs/Select/Select'
 
 type Props = {
-  formik: TFormik
+  formik?: TFormik
+  limit?: number
+  onChange?: (option: SingleValue<TSelectOption>) => void
 }
 
 const limits = [10, 15, 25, 50, 100]
+const options = limits.map((l) => ({ label: l.toString(), value: l }))
 
-export const LimitSelect: FC<Props> = ({ formik }: Props) => (
-  <FormikSelect
-    formik={formik}
-    name="limit"
-    options={limits.map((l) => ({ label: l.toString(), value: l }))}
-  />
-)
+export const LimitSelect: FC<Props> = ({ formik, limit, onChange }: Props) =>
+  formik ? (
+    <FormikSelect formik={formik} name="limit" options={options} />
+  ) : (
+    <Select name="limit" options={options} onChange={onChange} value={limit} />
+  )

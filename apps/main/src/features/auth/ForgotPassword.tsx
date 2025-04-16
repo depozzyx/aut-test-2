@@ -1,10 +1,9 @@
 import React, { FC, useEffect, useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { useFormik } from 'formik'
-import * as yup from 'yup'
 import { useUnmount } from 'react-use'
 import { Text } from '@peiko/components/Text'
-import { validation } from '@/utils/validation'
+import { forgotPasswordValidationSchema } from '@/utils/validation'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { EmailIcon } from '@peiko/components/icons/EmailIcon'
@@ -15,6 +14,8 @@ import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton/Outline
 import { ROUTES } from '@/routes'
 import { useRouter } from 'next/router'
 import { apiAuth } from '@/api-rest/auth'
+import { CLOUDFLARE_CAPTCHA_SITE_KEY } from '@/constants/config'
+import Turnstile, { useTurnstile } from 'react-turnstile'
 import {
   forgotPasswordAsync,
   reset,
@@ -26,6 +27,8 @@ import { AuthFormCard } from './components/AuthFormCard'
 export const ForgotPassword: FC = () => {
   const { t } = useTranslation('auth')
   const { select, dispatch } = useRedux()
+  const turnstile = useTurnstile()
+
   const router = useRouter()
 
   const { statusCode } = select(selectForgotPassword)
@@ -40,10 +43,9 @@ export const ForgotPassword: FC = () => {
   const formik = useFormik({
     initialValues: {
       email: '',
+      captchaToken: '',
     },
-    validationSchema: yup.object().shape({
-      email: validation.email.required(),
-    }),
+    validationSchema: forgotPasswordValidationSchema,
     onSubmit: async (formData) => {
       if (timer > 0) {
         dispatch(setStatusCode('error'))
@@ -70,6 +72,11 @@ export const ForgotPassword: FC = () => {
     setStartTimer(false)
     await formik.setFieldValue('email', email)
     await formik.setFieldTouched('email', true)
+  }
+
+  const resetCaptchaToken = () => {
+    turnstile.reset()
+    formik.setFieldValue('captchaToken', undefined)
   }
 
   const formatData = (value: number) => value.toString().padStart(2, '0')
@@ -119,10 +126,20 @@ export const ForgotPassword: FC = () => {
               id="email"
               formik={formik}
               onChange={handleInputChange}
-              maxWidth="248px"
+              maxWidth="300px"
               debounce={600}
               startAdornment={<EmailIcon width="24px" height="24px" />}
             />
+            {CLOUDFLARE_CAPTCHA_SITE_KEY && (
+              <Turnstile
+                sitekey={CLOUDFLARE_CAPTCHA_SITE_KEY}
+                onVerify={(token) => formik.setFieldValue('captchaToken', token)}
+                onExpire={resetCaptchaToken}
+                onError={resetCaptchaToken}
+                theme="light"
+                size="normal"
+              />
+            )}
             <Flex justify="space-between" align="center" gap={10}>
               <OutlinedButton
                 onClick={() => router.push(ROUTES.SIGN_IN)}

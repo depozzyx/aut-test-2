@@ -15,7 +15,7 @@ import {
   selectLeadsGroupPagination,
   selectLeadsOrderBy,
   selectLeadsPagination,
-  selectLeadsSortBy,
+  selectLeadsOrder,
 } from './store/leads'
 import { ImportFiles } from './containers/ImportFiles'
 import { CreateLeads } from './containers/CreateLeads'
@@ -35,37 +35,37 @@ export const ImportLeads: FC = () => {
     pagination: { total, page, limit },
     groupsPagination,
     leadsGroup,
-    sortBy,
     orderBy,
+    order,
   } = select(
     createStructuredSelector({
       pagination: selectLeadsPagination,
       groupsPagination: selectLeadsGroupPagination,
       leadsGroup: selectLeadsGroup,
-      sortBy: selectLeadsSortBy,
       orderBy: selectLeadsOrderBy,
+      order: selectLeadsOrder,
     }),
     shallowEqual,
   )
 
   useEffect(() => {
-    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit, orderBy }))
+    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit, order }))
   }, [])
 
   useUnmount(() => dispatch(reset()))
 
   const onImportSubmit = () => {
     setStep('list')
-    dispatch(getLeadList({ page, limit, orderBy, leadListId: leadsGroup }))
+    dispatch(getLeadList({ page, limit, orderBy, order, leadListId: leadsGroup }))
   }
 
   const onChangePage = (page: number) =>
-    dispatch(getLeadList({ page, limit, orderBy, leadListId: leadsGroup }))
+    dispatch(getLeadList({ page, limit, orderBy, order, leadListId: leadsGroup }))
 
   useEffect(() => {
     if (leadsGroup && step === 'list')
-      dispatch(getLeadList({ page, limit, orderBy, leadListId: leadsGroup, sortBy }))
-  }, [leadsGroup, sortBy])
+      dispatch(getLeadList({ page, limit, orderBy, leadListId: leadsGroup, order }))
+  }, [leadsGroup, orderBy])
 
   return (
     <>

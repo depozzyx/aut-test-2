@@ -36,7 +36,6 @@ export const useAgentNameFilter = (): TReturn => {
       fetcher({
         page: pagination.page,
         limit: pagination.limit,
-        orderBy: 'ASC',
       }),
     {
       revalidateOnFocus: false,

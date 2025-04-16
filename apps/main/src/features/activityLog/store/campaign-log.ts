@@ -35,6 +35,7 @@ const campaignLog = createSlice({
       state.params = copyParams
     },
     resetParams(state) {
+      state.pagination = init.pagination
       state.params = init.params
     },
     setLogsData: (state, action: PayloadAction<TInit['logsData']>) => {

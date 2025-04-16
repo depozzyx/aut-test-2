@@ -26,6 +26,7 @@ const importLeads = (
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+    timeout: 300_000,
   })
 
 const leadsList = (params: TLeadsListReq): TAxiosResponse<TPaginatedRes<TLeadsList>> =>

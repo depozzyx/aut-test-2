@@ -1,4 +1,5 @@
 {
+  "empty-data": "No data",
   "headers": {
     "lead-id": "ID",
     "lead-name": "Lead Name",
@@ -34,7 +35,6 @@
     "leadCount": "Leads count",
     "leads": "Leads",
     "lastCallDate": "Last call",
-    "emptyData": "No data",
     "status": "Status",
     "statistic": {
       "statusCode": "Status",
@@ -91,8 +91,8 @@
     "NNA": "Number Not Available"
   },
   "tooltip": {
-    "cannot-edit-active-campaign": "You can not edit lead list from \"Active\" campaign, wait for complete or pause it",
-    "cannot-delete-active-campaign": "You can not delete lead list from \"Active\" campaign, wait for complete or pause it"
+    "cannot-edit-active-campaign": "You can not edit lead list of \"Active\" campaign, wait for complete or pause it.",
+    "cannot-delete-active-campaign": "You can not delete lead list of \"Active\" campaign, wait for complete or pause it."
   },
   "createLeadsGroup": {
     "cancel": "Cancel",

@@ -61,7 +61,14 @@ export const Modal = memo(
     if (!isClient) return null
 
     return (
-      <S.Popup modal nested open={open} onClose={onClose} closeOnDocumentClick={false}>
+      <S.Popup
+        modal
+        nested
+        open={open}
+        onClose={onClose}
+        closeOnDocumentClick={false}
+        closeOnEscape={false}
+      >
         <S.Container
           ref={containerRef}
           tabIndex={0}

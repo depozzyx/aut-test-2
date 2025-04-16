@@ -1,5 +1,4 @@
 import { FC } from 'react'
-import * as yup from 'yup'
 import { useFormik } from 'formik'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -7,7 +6,7 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { LockIcon } from '@peiko/components/icons/LockIcon'
 import { Text } from '@peiko/components/Text'
-import { validation } from '@/utils/validation'
+import { resetPasswordValidationSchema } from '@/utils/validation'
 import { useRedux } from '@/hooks/use-redux'
 import { Flex } from '@/components/Flex'
 import { resetPasswordAsync } from '../../store/reset-password'
@@ -23,10 +22,7 @@ export const ResetPasswordForm: FC = () => {
       password: '',
       confirmPassword: '',
     },
-    validationSchema: yup.object().shape({
-      password: validation.password,
-      confirmPassword: validation.repeatPassword,
-    }),
+    validationSchema: resetPasswordValidationSchema,
     onSubmit: (formData) => {
       dispatch(
         resetPasswordAsync({

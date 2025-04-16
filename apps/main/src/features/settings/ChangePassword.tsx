@@ -2,12 +2,11 @@ import { Card } from '@peiko/components/Card'
 import { useFormik } from 'formik'
 import useTranslation from 'next-translate/useTranslation'
 import React, { FC } from 'react'
-import * as yup from 'yup'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { Box } from '@peiko/components/Box'
-import { validation } from '@/utils/validation'
 import { Text } from '@peiko/components/Text'
+import { changePasswordValidationSchema } from '@/utils/validation'
 import { CardTile } from './components/CardTile'
 import { useChangePassword } from './hooks/useChangePassword'
 
@@ -21,11 +20,7 @@ export const ChangePassword: FC = () => {
       password: '',
       confirmPassword: '',
     },
-    validationSchema: yup.object().shape({
-      currentPassword: validation.required,
-      password: validation.required,
-      confirmPassword: validation.repeatPassword,
-    }),
+    validationSchema: changePasswordValidationSchema,
     onSubmit: (formData) => {
       changePasswordAsync({ formData, formik })
     },

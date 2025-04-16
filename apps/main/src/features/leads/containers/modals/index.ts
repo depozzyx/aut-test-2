@@ -1,5 +1,5 @@
 export { LeadModal } from './LeadModal'
-export { LeadListModal } from './LeadListModal'
+export { ViewLeadListModal } from './ViewLeadListModal'
 export { EditLeadListModal } from './EditLeadListModal'
 
 export const timezones = [

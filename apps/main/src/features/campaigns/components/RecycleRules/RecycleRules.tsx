@@ -6,8 +6,8 @@ import { PlusIcon } from '@peiko/components/icons/PlusIcon/PlusIcon'
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
 import { TFormik } from '@peiko/types/formik'
-import { recycleRuleSchema } from '@/features/campaigns/utils/validationSchema'
 import { TLeadStatusData } from '@/api-rest/leads/types'
+import { recycleRulesSchema } from '@/utils/validation'
 import { RecycleRuleRow } from './RecycleRuleRow'
 
 interface RecycleRule {
@@ -46,7 +46,7 @@ export const RecycleRules: FC<Props> = ({ formik, leadStatuses }: Props) => {
     const firstRule = formik.values.recycleRules[0]
 
     const checkRuleValidation = async () => {
-      const res = await recycleRuleSchema.isValid(firstRule)
+      const res = await recycleRulesSchema.isValid(firstRule)
       setDisabled(!res)
     }
     if (!firstRule) {

@@ -1,6 +1,6 @@
 import useTranslation from 'next-translate/useTranslation'
 import dynamic from 'next/dynamic'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 import { Flex } from '@/components/Flex'
 import { IModal, useModals } from '@/features/common/modals/hooks/use-modals'
@@ -20,6 +20,9 @@ import { FeaturePermission } from '@/features/common/permissions/FeaturePermissi
 import { EManagerPermissions } from '@/constants/profile'
 import { TValue } from '@/components/DropdownMenu/DropdownMenu'
 import { useRedux } from '@/hooks/use-redux'
+import { LimitSelect } from '@/components/limit-select'
+import { SingleValue } from 'react-select'
+import { TSelectOption } from '@/components/MutliSelect/types'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import {
   Container,
@@ -27,7 +30,11 @@ import {
   TableContainer,
   PaginationContainer,
 } from './styles/CampaignsList.styled'
-import { asyncGetCampaignsList, setFilterCampaignIds } from './store/campaigns'
+import {
+  asyncGetCampaignsList,
+  setFilterCampaignIds,
+  setPagination,
+} from './store/campaigns'
 
 const {
   CreateCampaignModal,
@@ -79,6 +86,9 @@ export const CampaignsList = (): JSX.Element => {
       setFilterCampaignIds(filters.filterCampaignIds.filter((item) => item !== id)),
     )
 
+  const handleChangeLimit = (option: SingleValue<TSelectOption>) =>
+    option && dispatch(setPagination({ page, total, limit: +option.value }))
+
   return (
     <>
       <Container>
@@ -91,6 +101,7 @@ export const CampaignsList = (): JSX.Element => {
             />
             <StatusFilter />
             <RangeDayPicker onChange={handleChangeDate} />
+            <LimitSelect limit={limit} onChange={handleChangeLimit} />
           </Flex>
           <FeaturePermission permissions={[EManagerPermissions.CREATE_CAMPAIGN]}>
             <FilledButton

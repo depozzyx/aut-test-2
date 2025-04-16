@@ -14,7 +14,7 @@ import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { useTheme } from 'styled-components'
 import { LeadListCallStatisticTable } from './components/LeadListCallStatisticTable'
 
-export const LeadListModal = ({
+export const ViewLeadListModal = ({
   leadListData,
   stats,
   onClose,
@@ -56,7 +56,8 @@ export const LeadListModal = ({
     },
     {
       name: t('view-lead-list.lastCallDate'),
-      value: leadListData.lastCallDate && formatCreatedAt(leadListData.lastCallDate),
+      value:
+        leadListData.lastCallDate && formatCreatedAt(leadListData.lastCallDate, true),
     },
   ]
 

@@ -1,8 +1,7 @@
 import { FC } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { useFormik } from 'formik'
-import * as yup from 'yup'
-import { validation } from '@/utils/validation'
+import { loginValidationSchema } from '@/utils/validation'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { NextLink } from '@peiko/components/links/NextLink'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
@@ -12,6 +11,8 @@ import { Text } from '@peiko/components/Text'
 import { useRedux } from '@/hooks/use-redux'
 import { ROUTES } from '@/constants/routes'
 import { Flex } from '@/components/Flex'
+import Turnstile, { useTurnstile } from 'react-turnstile'
+import { CLOUDFLARE_CAPTCHA_SITE_KEY } from '@/constants/config'
 import { AuthFormCard } from './components/AuthFormCard'
 import { signInAsync } from './store/sign-in'
 
@@ -19,20 +20,24 @@ export const SignIn: FC = () => {
   const { t } = useTranslation('auth')
 
   const { dispatch } = useRedux()
+  const turnstile = useTurnstile()
 
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
+      captchaToken: '',
     },
-    validationSchema: yup.object().shape({
-      email: validation.required,
-      password: validation.password,
-    }),
+    validationSchema: loginValidationSchema,
     onSubmit: (formData) => {
       dispatch(signInAsync({ formData, formik }))
     },
   })
+
+  const resetCaptchaToken = () => {
+    turnstile.reset()
+    formik.setFieldValue('captchaToken', undefined)
+  }
 
   return (
     <AuthFormCard maxWidth={356} padding="32px 40px">
@@ -42,7 +47,7 @@ export const SignIn: FC = () => {
             {t('sign-in.title')}
           </Text>
           <Flex direction="column" align="center" justify="center" gap={16} fullWidth>
-            <Flex direction="column" gap={4} fullWidth>
+            <Flex direction="column" gap={4} fullWidth align="center">
               <FormikInput
                 size="s"
                 name="email"
@@ -50,7 +55,7 @@ export const SignIn: FC = () => {
                 placeholder={t('inputs:placeholder.email')}
                 id="email"
                 formik={formik}
-                width={256}
+                width={300}
                 startAdornment={<EmailIcon width="24px" height="24px" />}
               />
               {!formik.errors.email && (
@@ -59,30 +64,44 @@ export const SignIn: FC = () => {
                 </Text>
               )}
             </Flex>
-            <FormikInput
-              size="s"
-              name="password"
-              type="password"
-              label={{ label: t('inputs:password') }}
-              placeholder={t('inputs:placeholder.password')}
-              id="password"
-              formik={formik}
-              width={256}
-              startAdornment={<LockIcon width="24px" height="24px" />}
-            />
+            <Flex direction="column" fullWidth align="center">
+              <FormikInput
+                size="s"
+                name="password"
+                type="password"
+                label={{ label: t('inputs:password') }}
+                placeholder={t('inputs:placeholder.password')}
+                id="password"
+                formik={formik}
+                width={300}
+                startAdornment={<LockIcon width="24px" height="24px" />}
+              />
+            </Flex>
+            <NextLink href={ROUTES.FORGOT_PASSWORD}>
+              <Text
+                variant="f10"
+                styles={{
+                  alignSelf: 'flex-end',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                }}
+              >
+                {t('forgot-password-link')}
+              </Text>
+            </NextLink>
+            {CLOUDFLARE_CAPTCHA_SITE_KEY && (
+              <Flex align="center" width={300}>
+                <Turnstile
+                  sitekey={CLOUDFLARE_CAPTCHA_SITE_KEY}
+                  onVerify={(token) => formik.setFieldValue('captchaToken', token)}
+                  onExpire={resetCaptchaToken}
+                  onError={resetCaptchaToken}
+                  theme="light"
+                  size="normal"
+                />
+              </Flex>
+            )}
           </Flex>
-          <NextLink href={ROUTES.FORGOT_PASSWORD}>
-            <Text
-              variant="f10"
-              styles={{
-                alignSelf: 'flex-end',
-                textDecoration: 'underline',
-                cursor: 'pointer',
-              }}
-            >
-              {t('forgot-password-link')}
-            </Text>
-          </NextLink>
           <FilledButton
             type="submit"
             size="s"

@@ -13,6 +13,10 @@ import { FeaturePermission } from '@/features/common/permissions/FeaturePermissi
 import { EManagerPermissions } from '@/constants/profile'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { LimitSelect } from '@/components/limit-select'
+import { Flex } from '@/components/Flex'
+import { SingleValue } from 'react-select'
+import { TSelectOption } from '@/components/MutliSelect/types'
 import {
   Container,
   Panel,
@@ -22,9 +26,11 @@ import {
 import {
   selectAgentsPagination,
   asyncGetAgentsList,
-  selectSort,
   selectStatusFilter,
   reset,
+  selectOrderBy,
+  selectOrder,
+  setPagination,
 } from './store/agents'
 import { AgentsListTable } from './containers/tables/AgentsListTable'
 
@@ -68,12 +74,14 @@ export const AgentsList = (): JSX.Element => {
 
   const {
     pagination: { total, page, limit },
-    sort: { orderBy, sortBy },
+    orderBy,
+    order,
     statusFilter,
   } = select(
     createStructuredSelector({
       pagination: selectAgentsPagination,
-      sort: selectSort,
+      orderBy: selectOrderBy,
+      order: selectOrder,
       statusFilter: selectStatusFilter,
     }),
     shallowEqual,
@@ -87,29 +95,39 @@ export const AgentsList = (): JSX.Element => {
     dispatch(
       asyncGetAgentsList({
         page: 1,
-        limit: limit ?? 8,
+        limit: limit ?? 10,
         orderBy,
+        order,
         workStatus: statusFilter,
-        ...(sortBy && { sortBy }),
       }),
     )
-  }, [limit, sortBy, orderBy, statusFilter])
+  }, [limit, orderBy, order, statusFilter])
 
   const fetchAgentsList = (newPage?: number) =>
     dispatch(
       asyncGetAgentsList({
         page: newPage || 1,
-        limit: limit ?? 8,
+        limit: limit ?? 10,
         orderBy,
+        order,
         workStatus: statusFilter,
-        ...(sortBy && { sortBy }),
       }),
     )
 
   const handleChangePage = useCallback(
     (newPage) => fetchAgentsList(newPage),
-    [sortBy, orderBy, statusFilter],
+    [orderBy, order, statusFilter],
   )
+
+  const changeLimit = (option: SingleValue<TSelectOption>) =>
+    option &&
+    dispatch(
+      setPagination({
+        page,
+        limit: +option.value,
+        total,
+      }),
+    )
 
   useUnmount(() => {
     dispatch(reset())
@@ -119,17 +137,20 @@ export const AgentsList = (): JSX.Element => {
     <>
       <Container>
         <Panel>
-          <FeaturePermission permissions={[EManagerPermissions.CREATE_AGENT]}>
-            <FilledButton
-              size="m"
-              maxWidth="236px"
-              width="100%"
-              startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
-              onClick={openCreateNewAgentModal}
-            >
-              {t('add-agent')}
-            </FilledButton>
-          </FeaturePermission>
+          <Flex width="100%" justify="flex-end" align="center" gap="16px">
+            <LimitSelect limit={limit} onChange={changeLimit} />
+            <FeaturePermission permissions={[EManagerPermissions.CREATE_AGENT]}>
+              <FilledButton
+                size="m"
+                maxWidth="236px"
+                width="100%"
+                startIcon={<PlusIcon width="24px" height="24px" color="main22" />}
+                onClick={openCreateNewAgentModal}
+              >
+                {t('add-agent')}
+              </FilledButton>
+            </FeaturePermission>
+          </Flex>
         </Panel>
         <TableContainer>
           <AgentsListTable />

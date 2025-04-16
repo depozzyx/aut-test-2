@@ -11,6 +11,9 @@ import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { SingleValue } from 'react-select'
+import { TSelectOption } from '@/components/MutliSelect/types'
+import { LimitSelect } from '@/components/limit-select'
 import { ManagerListTable } from './containers/ManagerListTable'
 import { reset, selectPagination, setPagination } from './store/managers'
 
@@ -44,11 +47,21 @@ export const ManagersList = (): JSX.Element => {
     dispatch(
       setPagination({
         page: newPage,
-        limit: limit ?? 8,
+        limit: limit ?? 10,
         total,
       }),
     )
   }, [])
+
+  const changeLimit = (option: SingleValue<TSelectOption>) =>
+    option &&
+    dispatch(
+      setPagination({
+        page,
+        limit: +option.value,
+        total,
+      }),
+    )
 
   useUnmount(() => {
     dispatch(reset())
@@ -57,7 +70,8 @@ export const ManagersList = (): JSX.Element => {
   return (
     <>
       <Flex width="100%" height="100%" direction="column" padding="16px 0 0 0">
-        <Flex width="100%" justify="flex-end">
+        <Flex width="100%" justify="flex-end" align="center" gap="16px">
+          <LimitSelect limit={limit} onChange={changeLimit} />
           <FilledButton
             size="m"
             maxWidth="236px"

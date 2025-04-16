@@ -1,17 +1,17 @@
 import { TGeneratedSuccessStatuses } from '@/constants/success-status'
 import { TEntityActions, TEntityType, TSortBy } from '@/types/activity-logs'
-import { TOrderBy } from '@/types/entities/orderBy'
+import { TOrder } from '@/types/entities/order'
 import { TPagination } from '@/types/entities/pagination'
 
 type TActivityLogParams = {
-  orderBy?: TOrderBy
   userId?: string
   targetCampaignId?: number
   targetUserId?: number
   entityType?: TEntityType
   entityAction?: TEntityActions
   search?: string
-  sortBy?: TSortBy
+  orderBy?: TSortBy
+  order?: TOrder
   fromDate?: string
   toDate?: string
 }

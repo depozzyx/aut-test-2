@@ -6,7 +6,6 @@ import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text/Text'
 import { TLeadData, TUpdateLeadReq } from '@/api-rest/leads/types'
 import React, { useEffect, useState } from 'react'
-import { Input } from '@peiko/components/inputs/Input'
 import { IconButton } from '@peiko/components/buttons/IconButton/IconButton'
 import { CloseIcon } from '@peiko/components/icons/CloseIcon'
 import { EditIcon } from '@peiko/components/icons/EditIcon'
@@ -18,10 +17,14 @@ import { Select } from '@peiko/components/inputs/Select/Select'
 import { leadsApi } from '@/api-rest/leads'
 import { handleRestError } from '@/features/common/error'
 import { useRedux } from '@/hooks/use-redux'
-import { timezones } from '@/features/leads/containers/modals/index'
+// import { timezones } from '@/features/leads/containers/modals/index'
 import { selectLeadStatuses } from '@/features/leads/store/leads'
 import { useTheme } from 'styled-components'
 import { getLeadStatus } from '@/features/leads/containers/LeadsTable'
+import { useFormik } from 'formik'
+import { editLeadValidationSchema } from '@/utils/validation'
+import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
+import { CAMPAIGN_STATUSES } from '@/features/campaigns/constants'
 import { LeadStatusLogTable } from './components/LeadStatusLogTable'
 
 type Field = {
@@ -66,6 +69,14 @@ export const LeadModal = ({
 
   const showModal = modalState?.modalName === MODAL_NAMES.VIEW_LEAD && modalState.isOpen
 
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+    },
+    onSubmit: async () => null,
+    validationSchema: editLeadValidationSchema,
+  })
+
   const initFields = () => ({
     name: {
       isEditable: true,
@@ -78,7 +89,7 @@ export const LeadModal = ({
       value: leadData.status,
     },
     timezone: {
-      isEditable: true,
+      isEditable: false,
       isEditing: false,
       value: leadData.timezone,
     },
@@ -100,7 +111,7 @@ export const LeadModal = ({
     },
     lastCallAt: {
       isEditable: false,
-      value: leadData.lastCallAt && formatCreatedAt(leadData.lastCallAt),
+      value: leadData.lastCallAt && formatCreatedAt(leadData.lastCallAt, true),
     },
     country: {
       isEditable: false,
@@ -212,19 +223,19 @@ export const LeadModal = ({
                   borderBottom: `1px solid ${theme.palette.main22}`,
                 }}
               >
-                <Flex justify="start" align="center" width="35%" padding="8px">
+                <Flex justify="start" align="center" width="35%" padding="14px">
                   <Text variant="f8">{t(`view-lead.fields.${key}`)}</Text>
                 </Flex>
                 <Flex justify="start" align="center" width="45%">
-                  {fields[typedKey].isEditing && key === 'timezone' && (
-                    <Select
-                      name={key}
-                      options={timezones.map((t) => ({ label: t, value: t }))}
-                      value={fields[key].value}
-                      width="100%"
-                      onChange={(e) => handleInputChange(key, String(e?.value))}
-                    />
-                  )}
+                  {/* {fields[typedKey].isEditing && key === 'timezone' && ( */}
+                  {/*  <Select */}
+                  {/*    name={key} */}
+                  {/*    options={timezones.map((t) => ({ label: t, value: t }))} */}
+                  {/*    value={fields[key].value} */}
+                  {/*    width="100%" */}
+                  {/*    onChange={(e) => handleInputChange(key, String(e?.value))} */}
+                  {/*  /> */}
+                  {/* )} */}
                   {fields[typedKey].isEditing && key === 'status' && (
                     <Select
                       name={key}
@@ -238,8 +249,9 @@ export const LeadModal = ({
                     />
                   )}
                   {fields[typedKey].isEditing && key === 'name' && (
-                    <Input
+                    <FormikInput
                       name={key}
+                      formik={formik}
                       maxWidth="374px"
                       width="100%"
                       size="s"
@@ -296,7 +308,11 @@ export const LeadModal = ({
             marginBottom: '10px',
           }}
         >
-          <FilledButton disabled={!canSave} width="202px" onClick={handleSave}>
+          <FilledButton
+            disabled={!canSave || !formik.isValid}
+            width="202px"
+            onClick={handleSave}
+          >
             {t('view-lead.save')}
           </FilledButton>
           <OutlinedButton onClick={resetFields} width="202px">
@@ -309,6 +325,10 @@ export const LeadModal = ({
         <FilledButton
           styles={{ marginBottom: leadData.logs?.length ? '-24px' : '0' }}
           onClick={handleDelete}
+          disabled={
+            leadData?.leadList?.campaign?.status === CAMPAIGN_STATUSES.COMPLETE ||
+            leadData?.leadList?.campaign?.status === CAMPAIGN_STATUSES.ACTIVE
+          }
         >
           {t('view-lead.delete')}
         </FilledButton>

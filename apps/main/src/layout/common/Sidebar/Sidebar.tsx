@@ -13,6 +13,7 @@ import { useRedux } from '@/hooks/use-redux'
 import { useUnmount } from 'react-use'
 import { ERoles } from '@/constants/profile'
 import { useEffect } from 'react'
+import { setSelectedCampaignId } from '@/features/agents/store/agents'
 import { SidebarItem } from './components/SidebarItem'
 import { Accordion, Container, MenuItem } from './styles/Sidebar.styled'
 import { agentSocket } from '../../../api/socket/agent'
@@ -22,19 +23,21 @@ import { authSocket } from '../../../api/socket/auth'
 export const Sidebar = (): JSX.Element => {
   const { t } = useTranslation('auth')
   const { dispatch, select } = useRedux()
-  const { pbxStatus } = select(agentStatusSelector)
+  const { pbxStatus, hasCurrentRTCSession } = select(agentStatusSelector)
 
   const { logoutAsync, user } = useAuth()
   const links = useMenuLinks()
   const { pathname } = useRouter()
-  const { menuDisabled, showErrorMessage } = useDisableClickOnCall()
+  const { menuDisabled, sidebarDisabled, showErrorMessage } = useDisableClickOnCall()
 
   const handleLogout = () => {
     if (menuDisabled) {
       showErrorMessage()
-    } else if (pbxStatus.status !== 'offline')
+    } else if (pbxStatus.status !== 'offline') {
       dispatch(agentActions.setStatusAsync('finish', undefined, logoutAsync))
-    else logoutAsync()
+      dispatch(setSelectedCampaignId(null))
+      dispatch(agentActions.setSipCanConnect(false))
+    } else logoutAsync()
   }
 
   const onSubscribeAgentStatus = () =>
@@ -84,6 +87,7 @@ export const Sidebar = (): JSX.Element => {
       const handleBeforeUnload = (event: BeforeUnloadEvent) => {
         event.preventDefault()
         dispatch(agentActions.setStatusAsync('finish'))
+        dispatch(setSelectedCampaignId(null))
       }
 
       window.addEventListener('beforeunload', handleBeforeUnload)
@@ -121,7 +125,7 @@ export const Sidebar = (): JSX.Element => {
                 />
               </MenuItem>
             )}
-            disabled={menuDisabled}
+            disabled={menuDisabled || sidebarDisabled}
             handleDisabledToggle={showErrorMessage}
           >
             {item.links.map((item) => (
@@ -130,10 +134,16 @@ export const Sidebar = (): JSX.Element => {
           </Accordion>
         ))}
       </Flex>
-      <BaseButton width="fit-content" onClick={handleLogout}>
+      <BaseButton
+        width="fit-content"
+        disabled={hasCurrentRTCSession}
+        onClick={handleLogout}
+      >
         <MenuItem align="center" gap="8px" justify="space-between" padding="8px 16px">
-          <LogoutIcon color={menuDisabled ? 'overlay' : 'base'} />
-          <Text color={menuDisabled ? 'overlay' : 'base'}>{t('logout-btn')}</Text>
+          <LogoutIcon color={menuDisabled || hasCurrentRTCSession ? 'overlay' : 'base'} />
+          <Text color={menuDisabled || hasCurrentRTCSession ? 'overlay' : 'base'}>
+            {t('logout-btn')}
+          </Text>
         </MenuItem>
       </BaseButton>
     </Container>
