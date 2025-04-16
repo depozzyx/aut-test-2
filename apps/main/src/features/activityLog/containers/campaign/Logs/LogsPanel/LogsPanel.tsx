@@ -11,8 +11,17 @@ import { dateToString } from '@/utils/date-to-string'
 import { SearchFieldIcon } from '@/icons/SearchFieldIcon'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { TDateValue } from '@/inputs/RangeDayPicker/types'
-import { selectParams, updateParams } from '../../../../store/campaign-log'
+import { LimitSelect } from '@/components/limit-select'
+import { createStructuredSelector } from 'reselect'
+import { SingleValue } from 'react-select'
+import { TSelectOption } from '@/components/MutliSelect/types'
 import { useCampaignFilters } from '../../../../hooks/campaign/use-campaign-filters'
+import {
+  selectLogPagination,
+  setPagination,
+  selectParams,
+  updateParams,
+} from '../../../../store/campaign-log'
 
 export const LogsPanel = (): JSX.Element => {
   const { t } = useTranslation('activity-log')
@@ -20,10 +29,29 @@ export const LogsPanel = (): JSX.Element => {
 
   const params = select(selectParams, shallowEqual)
 
-  const { actionTypes, orderBy, sortBy } = useCampaignFilters()
+  const { actionTypes, orderBy, orders } = useCampaignFilters()
 
   const setSelectedFilter = (filterName: keyof typeof params, value?: string | number) =>
     dispatch(updateParams({ ...params, [filterName]: value }))
+
+  const {
+    pagination: { page, limit, total },
+  } = select(
+    createStructuredSelector({
+      pagination: selectLogPagination,
+    }),
+    shallowEqual,
+  )
+
+  const changeLimit = (option: SingleValue<TSelectOption>) =>
+    option &&
+    dispatch(
+      setPagination({
+        page,
+        limit: +option.value,
+        total,
+      }),
+    )
 
   const onDateChange = useCallback(
     (date: TDateValue) => {
@@ -86,10 +114,10 @@ export const LogsPanel = (): JSX.Element => {
               <ArrowIcon color="main5" size="s" direction={isOpen ? 'up' : 'down'} />
             </BaseTrigger>
           )}
-          selectedOptions={sortBy.filter((item) => params.sortBy === item.value)}
+          selectedOptions={orderBy.filter((item) => params.orderBy === item.value)}
           minWidth="210px"
-          options={sortBy}
-          onChange={(selectedEl) => setSelectedFilter('sortBy', selectedEl[0].value)}
+          options={orderBy}
+          onChange={(selectedEl) => setSelectedFilter('orderBy', selectedEl[0].value)}
         />
         <DropdownMenu
           maxHeight="350px"
@@ -99,11 +127,12 @@ export const LogsPanel = (): JSX.Element => {
               <ArrowIcon color="main5" size="s" direction={isOpen ? 'up' : 'down'} />
             </BaseTrigger>
           )}
-          selectedOptions={orderBy.filter((item) => params.orderBy === item.value)}
+          selectedOptions={orders.filter((item) => params.order === item.value)}
           minWidth="210px"
-          options={orderBy}
-          onChange={(selectedEl) => setSelectedFilter('orderBy', selectedEl[0].value)}
+          options={orders}
+          onChange={(selectedEl) => setSelectedFilter('order', selectedEl[0].value)}
         />
+        <LimitSelect limit={limit} onChange={changeLimit} />
         <Input
           name="search"
           maxWidth="180px"

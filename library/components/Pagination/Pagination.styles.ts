@@ -19,6 +19,8 @@ export const PaginationBtn = styled(FilledIconButton)((props) => {
   } = props
 
   return css`
+    min-width: 40px;
+    max-width: 100px;
     border-radius: 8px;
     background-color: ${palette.transparent};
     color: ${palette.main5};

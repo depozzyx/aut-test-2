@@ -7,7 +7,7 @@ import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSel
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { Box } from '@peiko/components/Box'
 import { Card } from '@peiko/components/Card'
-import { validation } from '@/utils/validation'
+import { required } from '@/utils/validation'
 import { useSettings } from '@/features/settings/hooks/useSettings'
 import { TFormik } from '@peiko/types/formik'
 import {
@@ -79,8 +79,8 @@ export const Campaigns: FC = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: yup.object().shape({
-      campaignMode: validation.required,
-      campaignCoefficient: validation.required,
+      campaignMode: required,
+      campaignCoefficient: required,
       campaignHidePhoneAmountManager: yup.string(),
     }),
     onSubmit: async (values) => {

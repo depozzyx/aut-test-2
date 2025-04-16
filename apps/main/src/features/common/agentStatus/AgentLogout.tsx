@@ -7,6 +7,7 @@ import { Box } from '@peiko/components/Box'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { useRedux } from '@/hooks/use-redux'
+import { setSelectedCampaignId } from '@/features/agents/store/agents'
 import { MODAL_NAMES } from '../modals/constants'
 import { useModals } from '../modals/hooks/use-modals'
 import { agentActions, agentStatusSelector } from './store'
@@ -24,12 +25,17 @@ export const AgentLogout: FC = () => {
 
   const logoutHandler = () => {
     const logout = () => {
+      // if (rtcSession) { // todo
+      //
+      // }
       logoutAsync()
       resetModals()
     }
-    if (pbxStatus.status !== 'offline')
+    if (pbxStatus.status !== 'offline') {
       dispatch(agentActions.setStatusAsync('finish', undefined, logout))
-    else logout()
+      dispatch(setSelectedCampaignId(null))
+      dispatch(agentActions.setSipCanConnect(false))
+    } else logout()
   }
 
   const handleBeforeUnload = useCallback(

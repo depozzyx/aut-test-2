@@ -1,12 +1,11 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useFormik } from 'formik'
 import useTranslation from 'next-translate/useTranslation'
-import * as yup from 'yup'
 
 import { Flex } from '@/components/Flex'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
-import { validation } from '@/utils/validation'
+import { createAgentValidationSchema } from '@/utils/validation'
 import { useRedux } from '@/hooks/use-redux'
 import { Snackbar } from '@/components/Snackbar'
 import {
@@ -41,17 +40,6 @@ export const CreateNewAgentForm = (): JSX.Element => {
   const { select, dispatch } = useRedux()
   const isLoading = select(selectCreateAgentsIsLoading)
 
-  const validationSchema = useMemo(
-    () =>
-      yup.object().shape({
-        username: validation.required,
-        email: validation.email.required(),
-        sendToEmail: validation.boolean,
-        password: yup.string(),
-      }),
-    [],
-  )
-
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -59,16 +47,14 @@ export const CreateNewAgentForm = (): JSX.Element => {
       sendToEmail: true,
       password: '',
     },
-    validationSchema,
+    validationSchema: createAgentValidationSchema,
     onSubmit: (formData) => {
       dispatch(
         asyncCreateAgent({ formData, formik }, () =>
           dispatch(
             asyncGetAgentsList({
               page: 1,
-              limit: 8,
-              orderBy: 'DESC',
-              sortBy: 'createdAt',
+              limit: 10,
             }),
           ),
         ),

@@ -1,7 +1,9 @@
-export const AGENT_SORT_BY = {
+export const AGENT_ORDER_BY = {
   CREATED_AT: 'createdAt',
   WORK_STATUS: 'workStatus',
   USERNAME: 'username',
+  EMAIL: 'email',
+  PBX_NAME: 'pbxName',
 } as const
 
 export const AGENT_WORK_STATUS = {

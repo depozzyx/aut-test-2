@@ -1,5 +1,6 @@
 {
   "add-agent": "Add new Agent",
+  "empty-data": "No data",
   "headers": {
     "agent-name": "Agent Name",
     "email": "Email",

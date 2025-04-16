@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
 import { UserRoleIcon } from '@/features/common/user/components/UserRoleIcon'
@@ -14,6 +14,11 @@ import { ERoles } from '@/constants/profile'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { EnvelopeIcon } from '@/icons/EnvelopeIcon'
+import { agentStatusSelector } from '@/features/common/agentStatus/store'
+import { useRedux } from '@/hooks/use-redux'
+import { CallIcon } from '@/icons/CallIcon'
+import { RTCSession } from 'jssip/lib/RTCSession'
+import { CallButton } from '@/features/calls/components/CallButton/CallButton'
 import { Divider, ItemWrapper } from './ProfilePopover.styled'
 
 export interface IProfilePopoverProps {
@@ -21,6 +26,9 @@ export interface IProfilePopoverProps {
   phone?: string
   email?: string
   userRole?: TUserRoles
+  rtcSession: RTCSession | null
+  onClickEchoTest: () => void
+  disconnectSip: () => void
 }
 
 interface IPopoverMenuItemProps {
@@ -45,6 +53,9 @@ export const ProfilePopover = ({
   name,
   email,
   userRole,
+  rtcSession,
+  onClickEchoTest,
+  disconnectSip,
 }: IProfilePopoverProps): JSX.Element => {
   const { t } = useTranslation('user')
   const { setModal } = useModals()
@@ -55,15 +66,19 @@ export const ProfilePopover = ({
 
   const handleLogout = () => {
     if (userRole === 'agent') {
+      disconnectSip()
       setModal({ modalName: MODAL_NAMES.AGENT_LOGOUT, isOpen: true })
     } else {
       logoutAsync()
     }
   }
 
-  const handleGoToSettings = () => {
-    router.push(ROUTES.SETTINGS_ACCOUNT_MANAGEMENT)
+  const handleGoToSettings = async () => {
+    await router.push(ROUTES.SETTINGS_ACCOUNT_MANAGEMENT)
   }
+
+  const { select } = useRedux()
+  const { pbxStatus } = select(agentStatusSelector)
 
   return (
     <Flex direction="column" align="center" gap={30}>
@@ -88,6 +103,24 @@ export const ProfilePopover = ({
             cursor="pointer"
           />
         )}
+        {userRole === ERoles.AGENT && pbxStatus.status === 'offline' && (
+          <PopoverMenuItem
+            icon={
+              rtcSession && rtcSession?.status !== 8 ? (
+                <CallButton size="s">
+                  <CallIcon />
+                </CallButton>
+              ) : (
+                <UserRoleIcon userRole={userRole} />
+              )
+            }
+            title={
+              rtcSession && rtcSession?.status !== 8 ? 'Finish echo test' : 'Echo Test'
+            }
+            onClick={onClickEchoTest}
+            cursor="pointer"
+          />
+        )}{' '}
         <Divider />
         <PopoverMenuItem
           icon={<LogoutIcon color="main5" />}

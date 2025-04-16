@@ -10,6 +10,9 @@ export type TInit = {
   loading: boolean
   pbxStatus: TAgentStatus['data']
   checkCampaignId: boolean
+  sipCanConnect: boolean
+  sipConnected: boolean
+  hasCurrentRTCSession: boolean
 }
 
 const init: TInit = {
@@ -21,6 +24,9 @@ const init: TInit = {
     reason: '',
   },
   checkCampaignId: false,
+  sipCanConnect: false,
+  sipConnected: false,
+  hasCurrentRTCSession: false,
 }
 
 const agentStatus = createSlice({
@@ -31,6 +37,7 @@ const agentStatus = createSlice({
       state.status = action.payload
     },
     setPBXStatus(state, action: PayloadAction<TInit['pbxStatus']>) {
+      // state.pbxStatus = { ...action.payload, status: 'oncall' } // debug
       state.pbxStatus = action.payload
     },
     setLoading(state, action: PayloadAction<TInit['loading']>) {
@@ -39,13 +46,30 @@ const agentStatus = createSlice({
     setCheckCampaignId(state, action: PayloadAction<TInit['checkCampaignId']>) {
       state.checkCampaignId = action.payload
     },
+    setSipCanConnect(state, action: PayloadAction<TInit['sipCanConnect']>) {
+      state.sipCanConnect = action.payload
+    },
+    setSipConnected(state, action: PayloadAction<TInit['sipConnected']>) {
+      state.sipConnected = action.payload
+    },
+    setHasCurrentRTCSession(state, action: PayloadAction<TInit['hasCurrentRTCSession']>) {
+      state.hasCurrentRTCSession = action.payload
+    },
     reset: () => init,
   },
 })
 
 // actions
-const { setStatus, setLoading, setPBXStatus, setCheckCampaignId, reset } =
-  agentStatus.actions
+const {
+  setStatus,
+  setLoading,
+  setPBXStatus,
+  setCheckCampaignId,
+  setSipCanConnect,
+  setSipConnected,
+  setHasCurrentRTCSession,
+  reset,
+} = agentStatus.actions
 
 const checkStoredAndPbxAgentStatus = async (
   agentStatus: AgentStatus,
@@ -97,9 +121,12 @@ const setStatusAsync =
 export const agentActions = {
   setStatus,
   setStatusAsync,
-  reset,
   setPBXStatus,
   setCheckCampaignId,
+  setSipCanConnect,
+  setSipConnected,
+  setHasCurrentRTCSession,
+  reset,
 }
 // selectors
 export const agentStatusSelector: TSelector<TInit> = (state) => state.agentStatus

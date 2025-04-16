@@ -20,14 +20,17 @@ import { useRedux } from '@/hooks/use-redux'
 import { leadsApi } from '@/api-rest/leads'
 import { hasArrayChanged } from '@/utils/array'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect/FormikSelect'
+import { CAMPAIGN_STATUSES } from '@/features/campaigns/constants'
 
 export const EditLeadListModal = ({
   leadListData,
   assignedLeads,
+  initialLeadIds,
   onClose,
 }: {
   leadListData: TLeadListData
   assignedLeads: TLeadOption[]
+  initialLeadIds: number[]
   onClose: () => void
 }): JSX.Element => {
   const { t } = useTranslation('leads-list')
@@ -61,7 +64,8 @@ export const EditLeadListModal = ({
     },
     {
       name: t('view-lead-list.lastCallDate'),
-      value: leadListData.lastCallDate && formatCreatedAt(leadListData.lastCallDate),
+      value:
+        leadListData.lastCallDate && formatCreatedAt(leadListData.lastCallDate, true),
     },
   ]
 
@@ -150,6 +154,26 @@ export const EditLeadListModal = ({
 
   const [canSave, setCanSave] = useState(false)
 
+  /** prevent to delete initial leads lists for completed campaign */
+  useEffect(() => {
+    if (
+      leadListData?.campaignStatus === CAMPAIGN_STATUSES.COMPLETE &&
+      initialLeadIds.length
+    ) {
+      const missingInitialItems = initialLeadIds.filter(
+        (id) => !formik.values.assignedLeadIds.includes(id),
+      )
+
+      if (missingInitialItems.length) {
+        // console.debug(`missing ${missingInitialItems}`) // todo
+        formik.setFieldValue(
+          'assignedLeadIds',
+          Array.from(new Set([...formik.values.assignedLeadIds, ...missingInitialItems])),
+        )
+      }
+    }
+  }, [formik.values.assignedLeadIds, leadListData, initialLeadIds])
+
   useEffect(() => {
     setCanSave(
       leadListData.active !== formik.values.active ||
@@ -235,6 +259,10 @@ export const EditLeadListModal = ({
                       size="s"
                       width="100%"
                       options={leadOptions}
+                      // isOptionDisabled={(option, selectValue) => // todo
+                      //   leadListData?.campaignStatus === CAMPAIGN_STATUSES.COMPLETE &&
+                      //   initialLeadIds.includes(+selectValue)
+                      // }
                       onMenuScrollToBottom={onLeadsScrollToBottom}
                       isSearchable
                       maxMenuHeight={200}

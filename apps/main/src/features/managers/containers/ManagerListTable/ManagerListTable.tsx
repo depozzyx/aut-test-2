@@ -1,7 +1,7 @@
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { shallowEqual } from 'react-redux'
-import { Table } from '@peiko/components/Table'
+import { EmptyComponent, Table } from '@peiko/components/Table'
 import { useRedux } from '@/hooks/use-redux'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
@@ -12,14 +12,14 @@ import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import { HeaderWithSort } from '@/components/HeaderWithSort'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
+
 import {
-  // selectSort,
   selectManagersList,
   setSelectedId,
+  setOrderBy,
 } from '@/features/managers/store/managers'
 import { useManagerList } from '../../hooks/use-managersList'
 import { InfoCell } from '../../components/InfoCell'
-import { useManagersSort } from '../../hooks/use-managers-sort'
 import { SORT_BY } from '../../constants'
 
 type TManagerRowKeys = 'id' | 'username' | 'date' | 'email' | 'pbxName' | 'edit'
@@ -29,8 +29,8 @@ export const ManagerListTable = (): JSX.Element => {
   const { select, dispatch } = useRedux()
   const { setModal } = useModals()
 
-  const handleSort = useManagersSort()
-  // const sort = select(selectSort)
+  const orderBy = select((state) => state.managers.orderBy)
+  const order = select((state) => state.managers.order)
 
   const { isLoading } = useManagerList()
   const managersList = select(selectManagersList, shallowEqual)
@@ -41,19 +41,47 @@ export const ManagerListTable = (): JSX.Element => {
   }, [])
 
   const headers: THeader<TManagerRowKeys>[] = [
-    { label: t('list-headers.username'), value: 'username' },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('list-headers.username')}
+          onClick={() => dispatch(setOrderBy(SORT_BY.NAME))}
+          order={orderBy === SORT_BY.NAME ? order : undefined}
+        />
+      ),
+
+      value: 'username',
+    },
     {
       label: (
         <HeaderWithSort
           title={t('list-headers.creation-date')}
-          onClick={() => handleSort(SORT_BY.CREATED_AT)}
-          // order={sort.orderBy}
+          onClick={() => dispatch(setOrderBy(SORT_BY.CREATED_AT))}
+          order={orderBy === SORT_BY.CREATED_AT ? order : undefined}
         />
       ),
       value: 'date',
     },
-    { label: t('list-headers.email'), value: 'email' },
-    { label: t('list-headers.pbxName'), value: 'pbxName' },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('list-headers.email')}
+          onClick={() => dispatch(setOrderBy(SORT_BY.EMAIL))}
+          order={orderBy === SORT_BY.EMAIL ? order : undefined}
+        />
+      ),
+      value: 'email',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('list-headers.pbxName')}
+          onClick={() => dispatch(setOrderBy(SORT_BY.PBX_NAME))}
+          order={orderBy === SORT_BY.PBX_NAME ? order : undefined}
+        />
+      ),
+      value: 'pbxName',
+    },
     { label: t('list-headers.edit'), value: 'edit' },
   ]
 
@@ -83,6 +111,7 @@ export const ManagerListTable = (): JSX.Element => {
       rowsData={rows}
       bodyCell={(props) => <BodyCell {...props} whiteSpace="nowrap" />}
       headerCell={(props) => <HeaderCell {...props} whiteSpace="nowrap" />}
+      emptyComponent={<EmptyComponent text={t('empty-data')} isLoading={isLoading} />}
     />
   )
 }

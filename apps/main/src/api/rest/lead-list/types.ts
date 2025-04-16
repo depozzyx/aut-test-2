@@ -1,19 +1,25 @@
 import { TGeneratedSuccessStatuses } from '@/constants/success-status'
-import { TOrderBy } from '@/types/entities/orderBy'
+import { TOrder } from '@/types/entities/order'
 import { TPagination } from '@/types/entities/pagination'
 import { TCampaignStatus } from '@/features/campaigns/types'
-import { ELeadsSortBy, TLeadListFilters } from '@/api-rest/leads/types'
+import { TLeadListFilters } from '@/api-rest/leads/types'
+
+export enum ELeadListOrderBy {
+  ID = 'id',
+  NAME = 'name',
+  ACTIVE = 'active',
+}
 
 export type TLeadListCatalogReq = {
-  orderBy: TOrderBy
+  order?: TOrder
 } & Pick<TPagination, 'page' | 'limit'> & {
     withoutCampaigns?: boolean
     campaignId?: number | string | null
   }
 
 export type TLeadListsReq = {
-  orderBy: TOrderBy
-  sortBy?: ELeadsSortBy
+  orderBy?: ELeadListOrderBy
+  order?: TOrder
 } & Pick<TPagination, 'page' | 'limit'> &
   TLeadListFilters
 

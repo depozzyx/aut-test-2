@@ -1,8 +1,8 @@
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import useTranslation from 'next-translate/useTranslation'
-import { Table } from '@peiko/components/Table'
+import { EmptyComponent, Table } from '@peiko/components/Table'
 import { IconButton } from '@peiko/components/buttons/IconButton'
 import { EditIcon } from '@peiko/components/icons/EditIcon'
 import { TrashIcon } from '@peiko/components/icons/TrashIcon'
@@ -15,14 +15,14 @@ import { useModals } from '@/features/common/modals/hooks/use-modals'
 import {
   selectAgentsList,
   selectIsLoadingAgents,
+  setOrderBy,
   setSelectedId,
 } from '@/features/agents/store/agents'
 import { HeaderWithSort } from '@/components/HeaderWithSort'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { InfoColumn } from '../../../components/InfoColumn'
 import { CampaignsTooltip } from '../../../components/CampaignsTooltip'
-import { useAgentSort } from '../../../hooks/use-agentSort'
-import { AGENT_SORT_BY } from '../../../constants'
+import { AGENT_ORDER_BY } from '../../../constants'
 
 type TAgentRowKeys =
   | 'username'
@@ -37,7 +37,9 @@ export const AgentsListTable = (): JSX.Element => {
   const { t } = useTranslation('agents')
   const { select, dispatch } = useRedux()
   const { setModal } = useModals()
-  const { handleSort } = useAgentSort()
+
+  const orderBy = select((state) => state.agents.orderBy)
+  const order = select((state) => state.agents.order)
 
   const { isLoading, data } = select(
     createStructuredSelector({
@@ -62,18 +64,38 @@ export const AgentsListTable = (): JSX.Element => {
       label: (
         <HeaderWithSort
           title={t('headers.agent-name')}
-          onClick={() => handleSort(AGENT_SORT_BY.USERNAME)}
+          onClick={() => dispatch(setOrderBy(AGENT_ORDER_BY.USERNAME))}
+          order={orderBy === AGENT_ORDER_BY.USERNAME ? order : undefined}
         />
       ),
       value: 'username',
     },
-    { label: t('headers.email'), value: 'email' },
-    { label: t('headers.pbxName'), value: 'pbxName' },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('headers.email')}
+          onClick={() => dispatch(setOrderBy(AGENT_ORDER_BY.EMAIL))}
+          order={orderBy === AGENT_ORDER_BY.EMAIL ? order : undefined}
+        />
+      ),
+      value: 'email',
+    },
+    {
+      label: (
+        <HeaderWithSort
+          title={t('headers.pbxName')}
+          onClick={() => dispatch(setOrderBy(AGENT_ORDER_BY.PBX_NAME))}
+          order={orderBy === AGENT_ORDER_BY.PBX_NAME ? order : undefined}
+        />
+      ),
+      value: 'pbxName',
+    },
     {
       label: (
         <HeaderWithSort
           title={t('headers.creation-date')}
-          onClick={() => handleSort(AGENT_SORT_BY.CREATED_AT)}
+          onClick={() => dispatch(setOrderBy(AGENT_ORDER_BY.CREATED_AT))}
+          order={orderBy === AGENT_ORDER_BY.CREATED_AT ? order : undefined}
         />
       ),
       value: 'date',
@@ -115,6 +137,7 @@ export const AgentsListTable = (): JSX.Element => {
       rowsData={rows}
       bodyCell={(props) => <BodyCell {...props} whiteSpace="nowrap" />}
       headerCell={(props) => <HeaderCell {...props} whiteSpace="nowrap" />}
+      emptyComponent={<EmptyComponent text={t('empty-data')} isLoading={isLoading} />}
     />
   )
 }

@@ -1,6 +1,7 @@
 import { parseISO, format } from 'date-fns'
 
-export const formatCreatedAt = (dateString: string): string => {
+export const formatCreatedAt = (dateString: string, withTime?: boolean): string => {
   const date = parseISO(dateString)
-  return format(date, 'dd/MM/yyyy')
+  const currentFormat = `${withTime ? 'dd/MM/yyyy HH:mm' : 'dd/MM/yyyy'}`
+  return format(date, currentFormat)
 }

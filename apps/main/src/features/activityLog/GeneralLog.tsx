@@ -76,7 +76,7 @@ export const GeneralLog: FC = () => {
 
   useEffect(() => {
     const { limit } = managerPagination
-    getManagers({ page: 1, limit, orderBy: 'DESC' })
+    getManagers({ page: 1, limit })
   }, [])
 
   useEffect(() => {

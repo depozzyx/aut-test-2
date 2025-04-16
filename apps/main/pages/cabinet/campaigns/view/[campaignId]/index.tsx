@@ -30,7 +30,7 @@ import { ArrowIcon } from '@peiko/components/icons/Arrow/ArrowIcon'
 import {
   selectLeadsOrderBy,
   selectLeadsPagination,
-  selectLeadsSortBy,
+  selectLeadsOrder,
 } from '@/features/leads/store/leads'
 import { ROUTES } from '@/routes'
 
@@ -50,23 +50,23 @@ const CampaignViewPage: NextPage = () => {
   const {
     pagination: { total, page, limit },
     orderBy,
-    sortBy,
+    order,
   } = select(
     createStructuredSelector({
       pagination: selectLeadsPagination,
-      sortBy: selectLeadsSortBy,
       orderBy: selectLeadsOrderBy,
+      order: selectLeadsOrder,
     }),
     shallowEqual,
   )
 
   const onChangePage = (page: number) =>
     campaignId &&
-    dispatch(asyncGetLeadLists({ page, limit, orderBy, sortBy, campaignId: +campaignId }))
+    dispatch(asyncGetLeadLists({ page, limit, order, campaignId: +campaignId }))
 
   useEffect(() => {
     onChangePage(page)
-  }, [orderBy, sortBy])
+  }, [orderBy, order])
 
   const [loading, setLoading] = useState(true)
   useEffect(() => {

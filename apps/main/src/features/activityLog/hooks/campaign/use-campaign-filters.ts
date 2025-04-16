@@ -1,6 +1,7 @@
 import useTranslation from 'next-translate/useTranslation'
-import { TOrderBy } from '@/types/entities/orderBy'
+import { TOrder } from '@/types/entities/order'
 import { TSortBy, TEntityAction } from '@/api-rest/campaign-log/types'
+import { ORDER } from '@/constants/order'
 
 type TValue<T = string> = {
   label: string
@@ -9,16 +10,16 @@ type TValue<T = string> = {
 
 export type TFilters = {
   actionTypes: TValue<TEntityAction>[]
-  orderBy: TValue<TOrderBy>[]
-  sortBy: TValue<TSortBy>[]
+  orderBy: TValue<TSortBy>[]
+  orders: TValue<TOrder>[]
 }
 
 export const useCampaignFilters = (): TFilters => {
   const { t } = useTranslation('activity-log')
 
-  const orderBy: TFilters['orderBy'] = [
-    { label: t('campaign.orderBy.DESC'), value: 'DESC' },
-    { label: t('campaign.orderBy.ASC'), value: 'ASC' },
+  const orders: TFilters['orders'] = [
+    { label: t('campaign.orderBy.DESC'), value: ORDER.DESC },
+    { label: t('campaign.orderBy.ASC'), value: ORDER.ASC },
   ]
 
   const actionTypes: TFilters['actionTypes'] = [
@@ -28,7 +29,7 @@ export const useCampaignFilters = (): TFilters => {
     { label: t('campaign.campaignFilters.call-requeue'), value: 'call_requeue' },
   ]
 
-  const sortBy: TFilters['sortBy'] = [
+  const orderBy: TFilters['orderBy'] = [
     {
       label: t('campaign.campaignSorts.id'),
       value: 'id',
@@ -51,5 +52,5 @@ export const useCampaignFilters = (): TFilters => {
     },
   ]
 
-  return { actionTypes, orderBy, sortBy }
+  return { actionTypes, orderBy, orders }
 }

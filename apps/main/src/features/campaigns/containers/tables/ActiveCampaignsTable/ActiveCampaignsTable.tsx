@@ -3,16 +3,21 @@ import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import { Flex } from '@/components/Flex'
 import { useRedux } from '@/hooks/use-redux'
-import { Table } from '@peiko/components/Table'
+import { EmptyComponent, Table } from '@peiko/components/Table'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
-import { useCampaignSort } from '@/features/campaigns/hooks/use-campaignSort'
 import { SORT_BY } from '@/features/campaigns/constants'
 import { HeaderWithSort } from 'components/HeaderWithSort'
 import { StatisticsTypeResponse } from '@/features/campaigns/types'
+import { TCampaignOrderBy } from '@/api-rest/campaigns/types'
+import React from 'react'
 import { InfoCell } from '../../../components/InfoCell'
-import { selectActiveCampaignsForView, selectIsLoading } from '../../../store/campaigns'
+import {
+  selectActiveCampaignsForView,
+  selectIsLoading,
+  setOrderBy,
+} from '../../../store/campaigns'
 import { formatCreatedAt } from '../../../utils/formatCreateAt'
 
 type TActiveCampaignsRowKeys =
@@ -26,7 +31,7 @@ type TActiveCampaignsRowKeys =
 
 export const ActiveCampaignsTable = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
-  const { select } = useRedux()
+  const { select, dispatch } = useRedux()
 
   const { isLoading, data } = select(
     createStructuredSelector({
@@ -36,7 +41,10 @@ export const ActiveCampaignsTable = (): JSX.Element => {
     shallowEqual,
   )
 
-  const { handleSort } = useCampaignSort()
+  const orderBy = select((state) => state.campaigns.orderBy)
+  const order = select((state) => state.campaigns.order)
+  const handleOrderBy = (orderBy: TCampaignOrderBy) => dispatch(setOrderBy(orderBy))
+
   const getTotalCalls = (statistic?: StatisticsTypeResponse): number => {
     if (statistic) {
       return (
@@ -53,7 +61,8 @@ export const ActiveCampaignsTable = (): JSX.Element => {
       label: (
         <HeaderWithSort
           title={t('active-campaigns-headers.campaign-name')}
-          onClick={() => handleSort(SORT_BY.NAME)}
+          onClick={() => handleOrderBy(SORT_BY.NAME)}
+          order={orderBy === SORT_BY.NAME ? order : undefined}
         />
       ),
       value: 'name',
@@ -62,7 +71,8 @@ export const ActiveCampaignsTable = (): JSX.Element => {
       label: (
         <HeaderWithSort
           title={t('active-campaigns-headers.creation-date')}
-          onClick={() => handleSort(SORT_BY.CREATED_AT)}
+          onClick={() => handleOrderBy(SORT_BY.CREATED_AT)}
+          order={orderBy === SORT_BY.CREATED_AT ? order : undefined}
         />
       ),
       value: 'date',
@@ -105,6 +115,7 @@ export const ActiveCampaignsTable = (): JSX.Element => {
         rowsData={rows}
         bodyCell={(props) => <BodyCell {...props} whiteSpace="nowrap" />}
         headerCell={(props) => <HeaderCell {...props} whiteSpace="nowrap" />}
+        emptyComponent={<EmptyComponent text={t('empty-data')} isLoading={isLoading} />}
       />
     </Flex>
   )

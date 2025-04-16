@@ -1,5 +1,6 @@
 import { ContextMenu } from '@peiko/components/ContextMenu'
 import { useAuth } from '@/features/common/user/hooks/use-auth'
+import { RTCSession } from 'jssip/lib/RTCSession'
 import useToggleStyle from '../../../hooks/use-toggle-style'
 import { Trigger } from './components/Trigger'
 import { ProfilePopover } from './components/ProfilePopover'
@@ -26,7 +27,17 @@ const containerStyles = `
   padding: 24px;
 `
 
-export const UserProfile = ({ disabled }: { disabled?: boolean }): JSX.Element => {
+export const UserProfile = ({
+  disabled,
+  onClickEchoTest,
+  disconnectSip,
+  rtcSession,
+}: {
+  disabled?: boolean
+  onClickEchoTest: () => void
+  disconnectSip: () => void
+  rtcSession: RTCSession | null
+}): JSX.Element => {
   const { user } = useAuth()
 
   const { applyStyle, resetStyle } = useToggleStyle({
@@ -47,6 +58,9 @@ export const UserProfile = ({ disabled }: { disabled?: boolean }): JSX.Element =
           userRole={user?.role}
           email={user?.email}
           name={user?.username ?? ''}
+          rtcSession={rtcSession}
+          onClickEchoTest={onClickEchoTest}
+          disconnectSip={disconnectSip}
         />
       )}
       trigger={<Trigger userRole={user?.role} name={shortName} />}

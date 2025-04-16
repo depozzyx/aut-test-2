@@ -1,10 +1,10 @@
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { shallowEqual } from 'react-redux'
 import { useTheme } from 'styled-components'
 import useTranslation from 'next-translate/useTranslation'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { useRedux } from '@/hooks/use-redux'
-import { Table } from '@peiko/components/Table'
+import { EmptyComponent, Table } from '@peiko/components/Table'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { setSelectedId, selectApiKeysList } from '@/features/settings/store/api-key'
 import { THeader } from '@peiko/components/Table/types'
@@ -88,6 +88,7 @@ export const ApiKeyList = (): JSX.Element | null => {
       rowsData={rows}
       bodyCell={(props) => <BodyCell {...props} whiteSpace="nowrap" />}
       headerCell={(props) => <HeaderCell {...props} whiteSpace="nowrap" />}
+      emptyComponent={<EmptyComponent text={t('empty-data')} isLoading={isLoading} />}
     />
   )
 }

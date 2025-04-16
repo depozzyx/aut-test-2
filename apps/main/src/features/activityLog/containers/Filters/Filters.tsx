@@ -10,8 +10,17 @@ import { dateToString } from '@/utils/date-to-string'
 import { SearchFieldIcon } from '@/icons/SearchFieldIcon'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { TDateValue } from '@/inputs/RangeDayPicker/types'
-import { selectFilters, setFilters } from '../../store/activity-log'
+import { LimitSelect } from '@/components/limit-select'
+import { SingleValue } from 'react-select'
+import { TSelectOption } from '@/components/MutliSelect/types'
 import { TFilters, useFilters } from '../../hooks/useFilters'
+import {
+  getActivityLogsAsync,
+  selectFilters,
+  selectPagination,
+  setFilters,
+  setPagination,
+} from '../../store/activity-log'
 
 export const Filters: FC<
   Pick<TFilters, 'getManagers' | 'managers' | 'managerPagination'>
@@ -21,7 +30,9 @@ export const Filters: FC<
 
   const filters = select(selectFilters)
 
-  const { actionTypes, orderBy } = useFilters()
+  const pagination = select(selectPagination)
+
+  const { actionTypes, orders } = useFilters()
 
   const setSelectedFilter = (filterName: keyof typeof filters, value?: string | number) =>
     dispatch(setFilters({ ...filters, [filterName]: value }))
@@ -54,7 +65,20 @@ export const Filters: FC<
 
   const onMenuScrollToBottom = () => {
     const lastPage = total === 0 ? 1 : Math.ceil(total / (limit ?? 15))
-    if (page < lastPage) getManagers({ page: page + 1, limit, orderBy: 'DESC' })
+    if (page < lastPage) getManagers({ page: page + 1, limit })
+  }
+
+  const changeLimit = async (option: SingleValue<TSelectOption>) => {
+    if (!option) return
+    const newLimit = +option.value
+    dispatch(setPagination({ ...pagination, limit: newLimit }))
+    dispatch(
+      getActivityLogsAsync({
+        page: pagination.page,
+        limit: newLimit,
+        ...filters,
+      }),
+    )
   }
 
   return (
@@ -96,10 +120,10 @@ export const Filters: FC<
               <ArrowIcon color="main5" size="s" direction={isOpen ? 'up' : 'down'} />
             </BaseTrigger>
           )}
-          selectedOptions={orderBy.filter((item) => filters.orderBy === item.value)}
+          selectedOptions={orders.filter((item) => filters.order === item.value)}
           minWidth="210px"
-          options={orderBy}
-          onChange={(selectedEl) => setSelectedFilter('orderBy', selectedEl[0].value)}
+          options={orders}
+          onChange={(selectedEl) => setSelectedFilter('order', selectedEl[0].value)}
         />
         <DropdownMenu
           maxHeight="350px"
@@ -122,6 +146,7 @@ export const Filters: FC<
           }}
           onChange={onDateChange}
         />
+        <LimitSelect limit={pagination.limit} onChange={changeLimit} />
       </Flex>
     </Flex>
   )

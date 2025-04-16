@@ -1,4 +1,4 @@
-export const ORDER_BY = {
+export const ORDER = {
   ASC: 'ASC',
   DESC: 'DESC',
 } as const

@@ -26,6 +26,13 @@ export type TActiveCampaign = {
   statistic?: StatisticsTypeResponse
 }
 
+export type TAgentAssignedCampaign = {
+  id: 1
+  name: string
+  createdAt: string
+  status: TCampaignStatus
+}
+
 export type TCampaign = {
   id: number
   name: string

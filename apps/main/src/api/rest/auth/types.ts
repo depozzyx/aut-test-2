@@ -5,6 +5,7 @@ import { TGeneratedSuccessStatuses } from '@/constants/success-status'
 export type TLoginReq = {
   email: string
   password: string
+  captchaToken: string
 }
 
 type TTokenInfo = {
@@ -33,6 +34,7 @@ export type TLoginWSRes = {
 
 export type TForgotPasswordReq = {
   email: string
+  captchaToken: string
 }
 
 export type TForgotPasswordRes = {

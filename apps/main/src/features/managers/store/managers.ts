@@ -1,32 +1,33 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { TAsyncAction, TSelector } from '@/store'
-import { ORDER_BY } from '@/constants/orderBy'
-import { TOrderBy } from '@/types/entities/orderBy'
+import { TOrder } from '@/types/entities/order'
 import { TPagination } from '@/types/entities/pagination'
-import { TManager, TManagerSortBy, TManagersReq } from '@/api-rest/manager/types'
+import { TManager, TManagerOrderBy, TManagersReq } from '@/api-rest/manager/types'
 import { managerApi } from '@/api-rest/manager'
 import { modalsActions } from '@/features/common/modals'
 import { handleRestError } from '@/features/common/error'
-import { SORT_BY } from '../constants'
+import { ORDER } from '@/constants/order'
 
 export type TInit = {
   isLoading: boolean
   pagination: TPagination
   managersList: TManager[] | []
   selectedId: number | null
-  sort: { sortBy?: TManagerSortBy; orderBy: TOrderBy }
+  orderBy?: TManagerOrderBy
+  order?: TOrder
 }
 
 const init: TInit = {
   isLoading: false,
   pagination: {
     page: 1,
-    limit: 8,
+    limit: 10,
     total: 1,
   },
   managersList: [],
   selectedId: null,
-  sort: { sortBy: SORT_BY.CREATED_AT, orderBy: ORDER_BY.DESC },
+  orderBy: undefined,
+  order: undefined,
 }
 
 const managers = createSlice({
@@ -36,8 +37,22 @@ const managers = createSlice({
     setIsLoading(state, action: PayloadAction<TInit['isLoading']>) {
       state.isLoading = action.payload
     },
-    setSort(state, action: PayloadAction<TInit['sort']>) {
-      state.sort = action.payload
+    setOrderBy(state, action: PayloadAction<TInit['orderBy']>) {
+      // ASC => DESC => clear
+      if (action.payload === state.orderBy) {
+        if (state.order === ORDER.ASC) {
+          state.order = ORDER.DESC
+        } else if (state.order === ORDER.DESC) {
+          state.orderBy = undefined
+          state.order = undefined
+        }
+      } else {
+        state.orderBy = action.payload
+        state.order = ORDER.ASC
+      }
+    },
+    setOrder(state, action: PayloadAction<TInit['order']>) {
+      state.order = action.payload
     },
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
       state.pagination = action.payload
@@ -56,14 +71,16 @@ export const {
   setIsLoading,
   setPagination,
   setManagersList,
-  setSort,
+  setOrderBy,
+  setOrder,
   setSelectedId,
   reset,
 } = managers.actions
 
 export const selectManagers: TSelector<TInit> = (state) => state.managers
 
-export const selectSort = createSelector(selectManagers, ({ sort }) => sort)
+export const selectOrderBy = createSelector(selectManagers, ({ orderBy }) => orderBy)
+export const selectOrder = createSelector(selectManagers, ({ order }) => order)
 
 export const selectPagination = createSelector(
   selectManagers,

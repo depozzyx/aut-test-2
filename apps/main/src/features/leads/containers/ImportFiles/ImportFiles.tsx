@@ -5,7 +5,7 @@ import { Text } from '@peiko/components/Text'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { CloudIcon } from '@/icons/CloudIcon'
 import { useRedux } from '@/hooks/use-redux'
 import { nanoid } from '@reduxjs/toolkit'
@@ -21,6 +21,7 @@ import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { Button } from '@/features/leads/containers/LeadListSelect/LeadListSelect.styled'
+import { palette } from '@peiko/styles/palette'
 import { BottomText } from './ImportFiles.styled'
 import {
   getLeadStatuses,
@@ -38,7 +39,14 @@ import { ImportFilesList } from '../ImportFilesList'
 
 const MAX_WIDTH = '616px'
 
-export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
+interface ImportFilesProps {
+  onSubmit: () => void
+}
+
+const MAX_FILE_SIZE_MB = 20
+const MAX_FILES = 20
+
+export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
   const { t } = useTranslation('import-leads')
   const { select, dispatch } = useRedux()
   const { setModal } = useModals()
@@ -56,7 +64,20 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     dispatch(getLeadStatuses())
   }, [dispatch])
 
+  const [error, setError] = useState<string | null>(null)
+
   const onDrop = async (files: File[]) => {
+    setError(null)
+    if (files.length > MAX_FILES) {
+      setError(t('validation.max-files', { count: MAX_FILES }))
+      return
+    }
+    const has = files.some((f) => f.size > MAX_FILE_SIZE_MB * 1024 * 1024)
+    if (has) {
+      setError(t('validation.max-file-size', { size: MAX_FILE_SIZE_MB }))
+      return
+    }
+
     const preparedFilesPromises: Promise<TPreparedFiles>[] = files.map(async (file) => {
       const { name, size, type } = file
       const reader = new FileReader()
@@ -74,6 +95,11 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     const preparedFiles = await Promise.all(preparedFilesPromises)
 
     dispatch(setImportFiles(preparedFiles))
+  }
+
+  const handleSubmit = async () => {
+    // todo: preview with edit before upload to BE
+    onSubmit()
   }
 
   const onButtonClick = () => {
@@ -246,8 +272,8 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             textAlign: 'center',
             marginBottom: '14px',
           }}
-          maxFiles={20}
-          maxSize={1024 * 1024 * 20}
+          // maxFiles={20}
+          // maxSize={1024 * 1024 * 20}
           disabled={!leadsGroup}
           onDropAccepted={onDrop}
         >
@@ -282,6 +308,11 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             </Text>
           </Flex>
         </UploadFiles>
+        {error && (
+          <Text styles={{ color: palette.main13, textAlign: 'center' }} variant="f8">
+            {t(error)}
+          </Text>
+        )}
         <ImportFilesList />
         <Flex justify="space-between" gap="24px" margin="48px 0 0">
           <OutlinedButton
@@ -294,7 +325,7 @@ export const ImportFiles: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
           <FilledButton
             disabled={filesForImport.length === 0 || !allFilesImported}
             width="100%"
-            onClick={() => onSubmit()}
+            onClick={handleSubmit}
           >
             {t('submit')}
           </FilledButton>

@@ -1,22 +1,26 @@
-import { memo } from 'react'
+import React, { memo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import { Flex } from '@/components/Flex'
 import { useRedux } from '@/hooks/use-redux'
 import { deepEqual } from '@peiko/utils/deep-equal'
-import { Table } from '@peiko/components/Table'
+import { EmptyComponent, Table } from '@peiko/components/Table'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import { AgentStatusChip } from '@/features/agents/components/AgentStatusChip'
 import { HeaderWithSort } from '@/components/HeaderWithSort'
-import { AGENT_SORT_BY } from '@/features/agents/constants'
-import { useAgentSort } from '@/features/agents/hooks/use-agentSort'
+import { AGENT_ORDER_BY } from '@/features/agents/constants'
 import { TActiveAgent } from '@/api-rest/agents/types'
 import { isString } from 'formik'
+
 import { formatDuration } from '@/utils/date-to-string'
-import { selectActiveAgents, selectIsLoadingAgents } from '../../../store/agents'
+import {
+  selectActiveAgents,
+  selectIsLoadingAgents,
+  setOrderBy,
+} from '../../../store/agents'
 import { InfoColumn } from '../../../components/InfoColumn'
 
 type TActiveAgentsRowKeys =
@@ -28,7 +32,7 @@ type TActiveAgentsRowKeys =
 
 export const ActiveAgentsTable = memo((): JSX.Element => {
   const { t } = useTranslation('agents')
-  const { select } = useRedux()
+  const { select, dispatch } = useRedux()
 
   const { activeAgents, isLoading } = select(
     createStructuredSelector({
@@ -37,7 +41,9 @@ export const ActiveAgentsTable = memo((): JSX.Element => {
     }),
     shallowEqual,
   )
-  const { handleSort } = useAgentSort()
+
+  const orderBy = select((state) => state.agents.orderBy)
+  const order = select((state) => state.agents.order)
 
   const getTimeOnline = (agent: TActiveAgent) => {
     const loggedTime = isString(agent.timeOnline)
@@ -55,7 +61,8 @@ export const ActiveAgentsTable = memo((): JSX.Element => {
       label: (
         <HeaderWithSort
           title={t('active-agents-headers.agent-name')}
-          onClick={() => handleSort(AGENT_SORT_BY.USERNAME)}
+          onClick={() => dispatch(setOrderBy(AGENT_ORDER_BY.USERNAME))}
+          order={orderBy === AGENT_ORDER_BY.USERNAME ? order : undefined}
         />
       ),
       value: 'name',
@@ -64,7 +71,8 @@ export const ActiveAgentsTable = memo((): JSX.Element => {
       label: (
         <HeaderWithSort
           title={t('active-agents-headers.work-status')}
-          onClick={() => handleSort(AGENT_SORT_BY.WORK_STATUS)}
+          onClick={() => dispatch(setOrderBy(AGENT_ORDER_BY.WORK_STATUS))}
+          order={orderBy === AGENT_ORDER_BY.WORK_STATUS ? order : undefined}
         />
       ),
       value: 'workStatus',
@@ -93,6 +101,7 @@ export const ActiveAgentsTable = memo((): JSX.Element => {
         rowsData={rows}
         bodyCell={(props) => <BodyCell {...props} whiteSpace="nowrap" />}
         headerCell={(props) => <HeaderCell {...props} whiteSpace="nowrap" />}
+        emptyComponent={<EmptyComponent text={t('empty-data')} isLoading={isLoading} />}
       />
     </Flex>
   )

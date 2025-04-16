@@ -1,6 +1,5 @@
 import useTranslation from 'next-translate/useTranslation'
 import { useFormik } from 'formik'
-import * as yup from 'yup'
 import React from 'react'
 
 import { Flex } from '@/components/Flex'
@@ -8,7 +7,7 @@ import { Text } from '@peiko/components/Text'
 import { RadioButton } from '@peiko/components/inputs/RadioButton/RadioButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
-import { validation } from '@/utils/validation'
+import { createManagerValidationSchema } from '@/utils/validation'
 import { useRedux } from '@/hooks/use-redux'
 import {
   asyncCreateManager,
@@ -28,21 +27,14 @@ export const CreateNewManagerForm = (): JSX.Element => {
       password: '',
       hideLeadPhones: 'false',
     },
-    validationSchema: yup.object().shape({
-      email: validation.email.required(),
-      username: validation.required,
-      password: validation.password,
-      hideLeadPhones: validation.required,
-    }),
+    validationSchema: createManagerValidationSchema,
     onSubmit: (formData) => {
       dispatch(
         asyncCreateManager({ formData, formik }, () =>
           dispatch(
             asyncGetManagerList({
               page: 1,
-              limit: 8,
-              orderBy: 'DESC',
-              sortBy: 'createdAt',
+              limit: 10,
             }),
           ),
         ),

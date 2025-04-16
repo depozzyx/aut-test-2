@@ -1,7 +1,6 @@
 import { useFormik } from 'formik'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
-import * as yup from 'yup'
 import useTranslation from 'next-translate/useTranslation'
 import { Flex } from '@/components/Flex'
 import { useRedux } from '@/hooks/use-redux'
@@ -14,7 +13,7 @@ import {
   selectInitFormData,
   selectUpdateAgentIsLoading,
 } from '@/features/agents/store/edit-agent'
-import { validation } from '@/utils/validation'
+import { editAgentValidationSchema } from '@/utils/validation'
 
 export const EditAgentForm = (): JSX.Element => {
   const { t } = useTranslation('agents')
@@ -34,10 +33,7 @@ export const EditAgentForm = (): JSX.Element => {
       username: initFormData?.username || '',
       email: initFormData?.email || '',
     },
-    validationSchema: yup.object().shape({
-      username: validation.required,
-      email: validation.email,
-    }),
+    validationSchema: editAgentValidationSchema,
     onSubmit: (formData) => {
       dispatch(asyncUpdateAgent({ formData, formik }))
     },

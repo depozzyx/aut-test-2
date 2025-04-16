@@ -9,7 +9,7 @@ import { deleteFilter, resetFilters, selectFilters } from '../../store/activity-
 
 export const SelectedFilters: FC<Pick<TFilters, 'managers'>> = ({ managers }) => {
   const { t } = useTranslation('activity-log')
-  const { actionTypes, orderBy } = useFilters()
+  const { actionTypes, orders } = useFilters()
   const { select, dispatch } = useRedux()
 
   const filters = select(selectFilters)
@@ -26,16 +26,19 @@ export const SelectedFilters: FC<Pick<TFilters, 'managers'>> = ({ managers }) =>
         marginTop: '24px',
       }}
     >
-      {(filters.entityAction || filters.entityType || filters.userId) && (
+      {(filters.entityAction ||
+        filters.order ||
+        filters.entityType ||
+        filters.userId) && (
         <Flex gap="16px" align="center">
           {filters.entityAction && (
             <PikedFilter onClose={() => deleteSelectedFilter('entityAction')}>
               {actionTypes.find(({ value }) => filters.entityAction === value)?.label}
             </PikedFilter>
           )}
-          {filters.orderBy && (
-            <PikedFilter onClose={() => deleteSelectedFilter('orderBy')}>
-              {orderBy.find(({ value }) => filters.orderBy === value)?.label}
+          {filters.order && (
+            <PikedFilter onClose={() => deleteSelectedFilter('order')}>
+              {orders.find(({ value }) => filters.order === value)?.label}
             </PikedFilter>
           )}
           {filters.userId && (

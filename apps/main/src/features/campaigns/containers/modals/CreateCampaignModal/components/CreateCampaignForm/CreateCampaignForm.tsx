@@ -24,7 +24,6 @@ import {
   reset as resetAgentsList,
   setAgentsList,
 } from '@/features/agents/store/agents'
-import { ORDER_BY } from '@/constants/orderBy'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 import { modes, coefficients, campaignSettingKeys, workHours } from '@/constants/settings'
@@ -46,13 +45,13 @@ import { TPagination } from '@/types/entities/pagination'
 import { handleRestError } from '@/features/common/error'
 import { TCampaign } from '@/features/campaigns/types'
 import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
-import { createCampaignValidationSchema } from '@/features/campaigns/utils/validationSchema'
 import {
   INITIAL_REQUEST_PARAMS_CREATE,
   PAGINATION_REQUEST_TIME,
 } from '@/features/campaigns/constants'
 // import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
 // import { TRecycleRule } from '@/api-rest/campaigns/types'
+import { createCampaignValidationSchema } from '@/utils/validation'
 
 type Props = {
   selectedCampaignId: string
@@ -95,7 +94,6 @@ export const CreateCampaignForm: FC<Props> = ({
       const { data } = await apiCampaigns.getCampaignList({
         page: campaignsPagination.page,
         limit: campaignsPagination.limit,
-        orderBy: 'DESC',
       })
       setCampaignOptions((prev) => [
         ...prev,
@@ -280,7 +278,6 @@ export const CreateCampaignForm: FC<Props> = ({
             {
               page: leadsPage + 1,
               limit: leadsLimit,
-              orderBy: ORDER_BY.DESC,
               withoutCampaigns: true,
             },
             true,
@@ -301,7 +298,6 @@ export const CreateCampaignForm: FC<Props> = ({
             {
               page: agentsPage + 1,
               limit: agentsLimit,
-              orderBy: ORDER_BY.DESC,
             },
             true,
             true,
@@ -368,6 +364,7 @@ export const CreateCampaignForm: FC<Props> = ({
             />
             <FormikInput
               size="s"
+              type="number"
               name="holdTime"
               placeholder={t('create-campaign.hold-time-placeholder')}
               label={{ label: t('create-campaign.hold-time') }}

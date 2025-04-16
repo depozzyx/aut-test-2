@@ -69,6 +69,7 @@
     "react-spinners": "^0.13.8",
     "react-syntax-highlighter": "^15.5.0",
     "react-timer-hook": "^3.0.7",
+    "react-turnstile": "^1.1.4",
     "react-use": "^17.4.0",
     "react-verification-code-input": "^1.2.9",
     "react-window": "^1.8.10",

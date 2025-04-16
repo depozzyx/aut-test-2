@@ -11,7 +11,6 @@ import {
   selectSelectedId,
 } from '@/features/agents/store/agents'
 import { modalsActions } from '@/features/common/modals/store'
-import { ORDER_BY } from '@/constants/orderBy'
 
 export type TInit = {
   isLoading: boolean
@@ -91,8 +90,7 @@ export const asyncUpdateAgent =
       dispatch(
         asyncGetAgentsList({
           page: 1,
-          limit: 8,
-          orderBy: ORDER_BY.DESC,
+          limit: 10,
         }),
       )
     } catch (e) {

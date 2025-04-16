@@ -5,7 +5,7 @@ import { TLeadsGroup, TLeadsList } from '@/types/leads/leads-list'
 import { handleRestError } from '@/features/common/error'
 import { leadsApi } from '@/api-rest/leads'
 import {
-  ELeadsSortBy,
+  ELeadsOrderBy,
   TCreateLeadGroupPayload,
   TLeadsGroupReq,
   TLeadsListReq,
@@ -13,7 +13,8 @@ import {
   TUpsertCustomStatusReq,
 } from '@/api-rest/leads/types'
 import { TFormik } from '@peiko/types/formik'
-import { TOrderBy } from '@/types/entities/orderBy'
+import { TOrder } from '@/types/entities/order'
+import { ORDER } from '@/constants/order'
 import { TImportError, TPreparedFiles } from '../types/files'
 import { dataURIToBlob } from '../utils/dataURIToBlob'
 
@@ -28,8 +29,8 @@ export type TInit = {
   useDefaultStatus: string
   selectError?: string
   filesForImport: TPreparedFiles[]
-  sortBy?: ELeadsSortBy
-  orderBy: TOrderBy
+  orderBy?: ELeadsOrderBy
+  order?: TOrder
   statuses: TLeadStatusData[]
 }
 
@@ -50,7 +51,8 @@ const init: TInit = {
   isLoading: true,
   leadsGroups: [{ name: '-', id: 0 }],
   filesForImport: [],
-  orderBy: 'DESC',
+  orderBy: undefined,
+  order: undefined,
   statuses: [],
 }
 
@@ -97,10 +99,19 @@ const leads = createSlice({
     setUseDefaultStatus(state, action: PayloadAction<string>) {
       state.useDefaultStatus = action.payload
     },
-    setLeadsSortBy(state, action: PayloadAction<TInit['sortBy']>) {
-      if (action.payload === state.sortBy)
-        state.orderBy = state.orderBy === 'DESC' ? 'ASC' : 'DESC'
-      state.sortBy = action.payload
+    setLeadsOrderBy(state, action: PayloadAction<TInit['orderBy']>) {
+      // ASC => DESC => clear
+      if (action.payload === state.orderBy) {
+        if (state.order === ORDER.ASC) {
+          state.order = ORDER.DESC
+        } else if (state.order === ORDER.DESC) {
+          state.orderBy = undefined
+          state.order = undefined
+        }
+      } else {
+        state.orderBy = action.payload
+        state.order = ORDER.ASC
+      }
     },
     setSelectError(state, action: PayloadAction<TInit['selectError']>) {
       state.selectError = action.payload
@@ -133,7 +144,7 @@ export const {
   deleteImportFile,
   setSelectError,
   setLeadsGroupPagination,
-  setLeadsSortBy,
+  setLeadsOrderBy,
   reset,
   resetLeadGroups,
   setCheckNumberUnique,
@@ -166,8 +177,8 @@ export const selectLeadsGroup = createSelector(
   ({ selectedLeadsGroup }) => selectedLeadsGroup,
 )
 
-export const selectLeadsSortBy = createSelector(selectLeads, ({ sortBy }) => sortBy)
 export const selectLeadsOrderBy = createSelector(selectLeads, ({ orderBy }) => orderBy)
+export const selectLeadsOrder = createSelector(selectLeads, ({ order }) => order)
 
 export const selectLeadsGroupError = createSelector(
   selectLeads,
@@ -248,9 +259,7 @@ export const createLeadsGroups =
       dispatch(resetLeadGroups())
 
       dispatch(
-        getLeadsGroups({ page: 1, limit, orderBy: 'DESC' }, () =>
-          dispatch(setLeadsGroup(data.data.id)),
-        ),
+        getLeadsGroups({ page: 1, limit }, () => dispatch(setLeadsGroup(data.data.id))),
       )
       onSuccess()
     } catch (e) {
@@ -315,7 +324,7 @@ export const importFilesAsync =
           }
           const typedData = data as unknown as TImportError
           const messages = Object.values(
-            typedData.errors.validationErrors[0]?.constraints,
+            typedData.errors?.validationErrors[0]?.constraints || {},
           )
 
           dispatch(

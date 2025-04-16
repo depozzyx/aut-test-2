@@ -1,20 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TPagination } from '@/types/entities/pagination'
 import { StatisticsTypeResponse, TCampaignStatus } from '@/features/campaigns/types'
-import { TOrderBy } from '@/types/entities/orderBy'
+import { TOrder } from '@/types/entities/order'
 import { TLeadCallStatusStatisticRawData } from '@/api-rest/lead-list/types'
 import { TGeneratedSuccessStatuses } from '@/constants/success-status'
 
-export type TSortBy = 'createdAt' | 'status' | 'name'
+export type TCampaignOrderBy = 'createdAt' | 'status' | 'name'
 
 export type TActiveCampaignsReq = {
-  orderBy: TOrderBy
+  orderBy?: TCampaignOrderBy
+  order?: TOrder
   status?: TCampaignStatus
   search?: string
-  sortBy?: TSortBy
   ids?: number[]
   fromDate?: string
   toDate?: string
+} & Pick<TPagination, 'page' | 'limit'>
+
+export type TAgentAssignedCampaignsReq = {
+  orderBy?: TCampaignOrderBy
+  order?: TOrder
+  status?: TCampaignStatus
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TCampaignListReq = TActiveCampaignsReq

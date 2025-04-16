@@ -61,7 +61,6 @@ export const useCampaignNameFilter = (
       fetcher({
         page: pagination.page,
         limit: pagination.limit,
-        orderBy: 'DESC',
       }),
     {
       revalidateOnFocus: false,

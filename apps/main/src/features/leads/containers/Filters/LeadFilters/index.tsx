@@ -52,7 +52,7 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
   const onMenuScrollToBottom = () => {
     const lastPage = total === 0 ? 1 : Math.ceil(total / (leadListLimit ?? 15))
     if (page < lastPage)
-      dispatch(getLeadsGroups({ page: page + 1, limit: leadListLimit, orderBy: 'DESC' }))
+      dispatch(getLeadsGroups({ page: page + 1, limit: leadListLimit }))
   }
 
   const { campaignOptions, loadMoreCampaigns } = useCampaignNameFilter('list', true)

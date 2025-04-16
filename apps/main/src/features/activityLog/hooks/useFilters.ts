@@ -3,10 +3,11 @@ import { TManagersReq } from '@/api-rest/manager/types'
 import { handleRestError } from '@/features/common/error'
 import { useRedux } from '@/hooks/use-redux'
 import { TEntityActions } from '@/types/activity-logs'
-import { TOrderBy } from '@/types/entities/orderBy'
+import { TOrder } from '@/types/entities/order'
 import { TPagination } from '@/types/entities/pagination'
 import useTranslation from 'next-translate/useTranslation'
 import { useState } from 'react'
+import { ORDER } from '@/constants/order'
 
 type TValue<T = string> = {
   label: string
@@ -15,7 +16,7 @@ type TValue<T = string> = {
 
 export type TFilters = {
   actionTypes: TValue<TEntityActions>[]
-  orderBy: TValue<TOrderBy>[]
+  orders: TValue<TOrder>[]
   getManagers: (params: TManagersReq) => void
   managers: TValue[]
   managerPagination: TPagination
@@ -51,9 +52,9 @@ export const useFilters = (): TFilters => {
     }
   }
 
-  const orderBy: TFilters['orderBy'] = [
-    { label: t('filterNames.DESC'), value: 'DESC' },
-    { label: t('filterNames.ASC'), value: 'ASC' },
+  const orders: TFilters['orders'] = [
+    { label: t('filterNames.DESC'), value: ORDER.DESC },
+    { label: t('filterNames.ASC'), value: ORDER.ASC },
   ]
 
   const actionTypes: TFilters['actionTypes'] = [
@@ -68,5 +69,5 @@ export const useFilters = (): TFilters => {
     { label: t('filterNames.import-lead'), value: 'import-lead' },
   ]
 
-  return { actionTypes, orderBy, getManagers, managers, managerPagination }
+  return { actionTypes, orders, getManagers, managers, managerPagination }
 }

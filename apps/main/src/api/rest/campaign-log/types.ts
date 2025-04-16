@@ -1,5 +1,5 @@
 import { TPagination } from '@/types/entities/pagination'
-import { TOrderBy } from '@/types/entities/orderBy'
+import { TOrder } from '@/types/entities/order'
 import { TCampaignStatus } from '@/features/campaigns/types'
 import { TUserRoles } from '@/types/roles'
 import { TLeadList } from '@/features/campaigns/hooks/use-getCampaignById'
@@ -11,14 +11,14 @@ export type TEntityAction = 'start' | 'stop' | 'call_initiated' | 'call_requeue'
 export type TSortBy = 'id' | 'createdAt' | 'username' | 'role' | 'actionType'
 
 export type TCampaignLogsReq = {
-  orderBy?: TOrderBy
   userId?: number
   leadId?: number
   campaignId?: number
   entityType?: TEntityType
   entityAction?: TEntityAction
   search?: string
-  sortBy?: TSortBy
+  orderBy?: TSortBy
+  order?: TOrder
   fromDate?: string
   toDate?: string
 } & Omit<TPagination, 'total'>

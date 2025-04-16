@@ -1,5 +1,10 @@
 {
   "uploadFiles": "Upload file",
+  "validation": {
+    "no-files": "No files selected",
+    "max-files": "Upload limit: 20 files",
+    "max-file-size": "Max file size: 20 Mb"
+  },
   "preselectText": "Before initiating file upload, please select a leads list.",
   "selectLabel": "Select lead list",
   "checkNumberUnique": "Check duplicate numbers",
@@ -15,7 +20,7 @@
   "browse": "browse",
   "maxSize": "Max file size: <0>{{value}}</0>",
   "supportedTypes": "Supported file types:<0>{{value}}</0>",
-  "limit": "Download limit: <0>{{value}} files</0>",
+  "limit": "Upload limit: <0>{{value}} files</0>",
   "cancel": "Cancel",
   "submit": "Submit",
   "downloadTemplateText": "For better data import please download our template",

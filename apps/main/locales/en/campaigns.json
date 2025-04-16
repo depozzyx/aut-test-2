@@ -1,5 +1,6 @@
 {
   "add-campaign": "Add new Campaign",
+  "empty-data": "No data",
   "statuses": {
     "active": "Active",
     "pause": "Paused",
@@ -52,11 +53,11 @@
     "review": "Review",
     "cancel": "Cancel",
     "hold-time": "Agent Hold Time (seconds)",
-    "hold-time-placeholder": "from 5 to 60 seconds",
+    "hold-time-placeholder": "max 60s",
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
     "workHours-label": "Work Hours (UTC-0)",
-    "lead-statuses": "Select lead statuses for calls",
+    "lead-statuses": "Select lead statuses to filter calls",
     "lead-statuses-review": "Lead statuses filter for calls",
     "recycle-rules": "Recycle Rules",
     "add-recycle-rule": "Add Rule",
@@ -74,11 +75,11 @@
     "save": "Save",
     "cancel": "Cancel",
     "hold-time": "Agent Hold Time (seconds)",
-    "hold-time-placeholder": "from 5 to 60 seconds",
+    "hold-time-placeholder": "max 60s",
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
     "workHours-label": "Work Hours (UTC-0)",
-    "lead-statuses": "Select lead statuses for calls",
+    "lead-statuses": "Select lead statuses to filter calls",
     "lead-statuses-review": "Filtered lead statuses for calls"
   },
   "review-campaign": {

@@ -1,7 +1,8 @@
 import { TGeneratedSuccessStatuses } from '@/constants/success-status'
-import { TOrderBy } from '@/types/entities/orderBy'
+import { TOrder } from '@/types/entities/order'
 import { TPagination } from '@/types/entities/pagination'
 import { TLeadsGroup } from '@/types/leads/leads-list'
+import { TCampaignStatus } from '@/features/campaigns/types'
 
 export type TImportReq = FormData
 
@@ -9,7 +10,7 @@ export type TImportLeadsRes = {
   statusCode: TGeneratedSuccessStatuses
 }
 
-export enum ELeadsSortBy {
+export enum ELeadsOrderBy {
   CREATED_AT = 'createdAt',
   ID = 'id',
   NAME = 'name',
@@ -39,14 +40,14 @@ export type TLeadListFilters = {
 }
 
 export type TLeadsListReq = {
-  orderBy: TOrderBy
+  orderBy?: ELeadsOrderBy
+  order?: TOrder
   leadListId?: number
-  sortBy?: ELeadsSortBy
 } & Pick<TPagination, 'page' | 'limit'> &
   TLeadFilters
 
 export type TLeadsGroupReq = {
-  orderBy: TOrderBy
+  order?: TOrder
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TCreateLeadGroupPayload = {
@@ -110,6 +111,7 @@ export type TLeadData = {
     campaign: {
       id: number
       name: string
+      status: TCampaignStatus
     }
   }
   countryCode: string

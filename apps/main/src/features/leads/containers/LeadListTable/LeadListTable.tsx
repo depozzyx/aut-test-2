@@ -1,31 +1,34 @@
 import React, { memo, useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { deepEqual } from '@peiko/utils/deep-equal'
-import { Table } from '@peiko/components/Table'
+import { EmptyComponent, Table } from '@peiko/components/Table'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 import { useRedux } from '@/hooks/use-redux'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
-import { ELeadsSortBy, TLeadOption } from '@/api-rest/leads/types'
+import { ELeadsOrderBy, TLeadOption } from '@/api-rest/leads/types'
 import { HeaderWithSort } from '@/components/HeaderWithSort'
 import { IconButton } from '@peiko/components/buttons/IconButton/IconButton'
 import { EyeIcon } from '@peiko/components/icons/EyeIcon'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import dynamic from 'next/dynamic'
-import { selectLeadLists, selectIsLoading } from '@/features/leads/store/lead-list'
-import { setLeadsSortBy } from '@/features/leads/store/leads'
+import {
+  selectLeadLists,
+  selectIsLoading,
+  setLeadListOrderBy,
+} from '@/features/leads/store/lead-list'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { handleRestError } from '@/features/common/error'
 import { apiLeadList } from '@/api-rest/lead-list'
 import { StatusChip } from '@/features/campaigns/components/StatusChip'
 import { LeadListStatusChip } from '@/features/leads/components/StatusChip'
-import { Text } from '@peiko/components/Text/Text'
 import { ButtonWithTooltip } from '@peiko/components/Tooltip'
 
 import {
+  ELeadListOrderBy,
   TLeadCallStatusStatisticRawData,
   TLeadListData,
 } from '@/api-rest/lead-list/types'
@@ -46,7 +49,7 @@ type TLeadListRowKeys =
   | 'delete'
 
 const LeadListModal = dynamic(
-  () => import('../modals').then((mod) => mod.LeadListModal),
+  () => import('../modals').then((mod) => mod.ViewLeadListModal),
   {
     ssr: false,
   },
@@ -157,33 +160,39 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
   const isEditModalOpen =
     modalState?.modalName === MODAL_NAMES.EDIT_LEAD_LIST && modalState.isOpen
 
+  const orderBy = select((state) => state.leadList.orderBy)
+  const order = select((state) => state.leadList.order)
+
   const headers: THeader<TLeadListRowKeys>[] = [
     {
       label: (
         <HeaderWithSort
           title={t('headers.list.id')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.ID))}
+          onClick={() => dispatch(setLeadListOrderBy(ELeadListOrderBy.ID))}
+          order={orderBy === ELeadListOrderBy.ID ? order : undefined}
         />
       ),
-      value: 'id',
+      value: ELeadsOrderBy.ID,
     },
     {
       label: (
         <HeaderWithSort
           title={t('headers.list.name')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.NAME))}
+          onClick={() => dispatch(setLeadListOrderBy(ELeadListOrderBy.NAME))}
+          order={orderBy === ELeadListOrderBy.NAME ? order : undefined}
         />
       ),
-      value: 'name',
+      value: ELeadsOrderBy.NAME,
     },
     {
       label: (
         <HeaderWithSort
           title={t('headers.list.active')}
-          onClick={() => dispatch(setLeadsSortBy(ELeadsSortBy.ACTIVE))}
+          onClick={() => dispatch(setLeadListOrderBy(ELeadListOrderBy.ACTIVE))}
+          order={orderBy === ELeadListOrderBy.ACTIVE ? order : undefined}
         />
       ),
-      value: 'active',
+      value: ELeadsOrderBy.ACTIVE,
     },
     { label: t('headers.list.leadCount'), value: 'leadCount' },
     { label: t('headers.list.campaignName'), value: 'campaignName' },
@@ -206,7 +215,9 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
       ),
       lastCallDate: (
         <InfoColumn
-          title={leadList?.lastCallDate ? formatCreatedAt(leadList.lastCallDate) : ''}
+          title={
+            leadList?.lastCallDate ? formatCreatedAt(leadList.lastCallDate, true) : ''
+          }
         />
       ),
       view: (
@@ -246,20 +257,7 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
         rowsData={rows}
         bodyCell={(props) => <BodyCell {...props} whiteSpace="nowrap" />}
         headerCell={(props) => <HeaderCell {...props} whiteSpace="nowrap" />}
-        emptyComponent={
-          <div
-            style={{
-              justifyItems: 'center',
-              alignItems: 'center',
-              flex: 4,
-              marginTop: '4px',
-            }}
-          >
-            <Text variant="f5" color="main4">
-              {t('view-lead-list.emptyData')}
-            </Text>
-          </div>
-        }
+        emptyComponent={<EmptyComponent text={t('empty-data')} isLoading={isLoading} />}
       />
       {isViewModalOpen && leadList && (
         <LeadListModal
@@ -272,6 +270,7 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
         <EditLeadListModal
           leadListData={leadList}
           assignedLeads={assignedLeads}
+          initialLeadIds={assignedLeads.map((l) => l.value)}
           onClose={onCloseEditLeadListModal}
         />
       )}

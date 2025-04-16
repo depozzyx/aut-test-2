@@ -111,7 +111,7 @@ export const Pagination: React.FC<TPagination> = ({
   if (lastPage === 1) return <></>
 
   return (
-    <Container>
+    <Container style={{ gap: 2 }}>
       {renderButton({
         page: paginationData.firstPage,
         arrowDirection: 'left',

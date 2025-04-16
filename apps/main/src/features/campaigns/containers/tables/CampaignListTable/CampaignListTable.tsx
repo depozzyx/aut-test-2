@@ -3,7 +3,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { shallowEqual } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import { useRouter } from 'next/router'
-import { Table } from '@peiko/components/Table'
+import { EmptyComponent, Table } from '@peiko/components/Table'
 import { useRedux } from '@/hooks/use-redux'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
@@ -12,12 +12,13 @@ import { IconButton } from '@peiko/components/buttons/IconButton'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
+
 import { HeaderWithSort } from 'components/HeaderWithSort'
 import { CAMPAIGN_STATUSES, SORT_BY } from '@/features/campaigns/constants'
-import { useCampaignSort } from '@/features/campaigns/hooks/use-campaignSort'
 import { EyeIcon } from '@peiko/components/icons/EyeIcon/EyeIcon'
 import { ROUTES } from '@/routes'
 import { ButtonWithTooltip } from '@peiko/components/Tooltip'
+import { TCampaignOrderBy } from '@/api-rest/campaigns/types'
 import { InfoCell } from '../../../components/InfoCell'
 import { StatusChip } from '../../../components/StatusChip'
 import { ActionBtn } from '../../../components/ActionBtn'
@@ -27,6 +28,7 @@ import {
   setSelectedId,
   // asyncUpdateCampaignStatus,
   asyncStartOrStopCampaign,
+  setOrderBy,
   // setCampaignList,
 } from '../../../store/campaigns'
 import { formatCreatedAt } from '../../../utils/formatCreateAt'
@@ -57,8 +59,6 @@ export const CampaignListTable = (): JSX.Element => {
     }),
     shallowEqual,
   )
-
-  const { handleSort } = useCampaignSort()
 
   const handleDelete = useCallback((id: number) => {
     dispatch(setSelectedId(id))
@@ -113,12 +113,18 @@ export const CampaignListTable = (): JSX.Element => {
     campaign.leadCount === 0 ||
     campaign.leadLists.filter((l) => l.active).length === 0
 
+  const orderBy = select((state) => state.campaigns.orderBy)
+  const order = select((state) => state.campaigns.order)
+
+  const handleOrderBy = (orderBy: TCampaignOrderBy) => dispatch(setOrderBy(orderBy))
+
   const headers: THeader<TCampaignRowKeys>[] = [
     {
       label: (
         <HeaderWithSort
           title={t('active-campaigns-headers.campaign-name')}
-          onClick={() => handleSort(SORT_BY.NAME)}
+          onClick={() => handleOrderBy(SORT_BY.NAME)}
+          order={orderBy === SORT_BY.NAME ? order : undefined}
         />
       ),
       value: 'name',
@@ -127,7 +133,8 @@ export const CampaignListTable = (): JSX.Element => {
       label: (
         <HeaderWithSort
           title={t('active-campaigns-headers.creation-date')}
-          onClick={() => handleSort(SORT_BY.CREATED_AT)}
+          onClick={() => handleOrderBy(SORT_BY.CREATED_AT)}
+          order={orderBy === SORT_BY.CREATED_AT ? order : undefined}
         />
       ),
       value: 'date',
@@ -136,7 +143,8 @@ export const CampaignListTable = (): JSX.Element => {
       label: (
         <HeaderWithSort
           title={t('campaign-list-headers.status')}
-          onClick={() => handleSort(SORT_BY.WORK_STATUS)}
+          onClick={() => handleOrderBy(SORT_BY.WORK_STATUS)}
+          order={orderBy === SORT_BY.WORK_STATUS ? order : undefined}
         />
       ),
       value: 'status',
@@ -202,6 +210,7 @@ export const CampaignListTable = (): JSX.Element => {
       rowsData={rows}
       bodyCell={(props) => <BodyCell {...props} whiteSpace="nowrap" />}
       headerCell={(props) => <HeaderCell {...props} whiteSpace="nowrap" />}
+      emptyComponent={<EmptyComponent text={t('empty-data')} isLoading={isLoading} />}
     />
   )
 }

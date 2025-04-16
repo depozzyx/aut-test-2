@@ -14,9 +14,10 @@ import {
   setSearchTerm,
   setFilterStatus,
   selectFilterStatus,
-  selectSort,
+  selectOrderBy,
   setFilterCampaignIds,
   selectFilterCampaignIds,
+  selectOrder,
 } from '@/features/campaigns/store/campaigns'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
@@ -58,7 +59,8 @@ export const useCampaignsManager = (
     filterCampaignIds,
     filterDate,
     filterStatus,
-    sort: { sortBy, orderBy },
+    orderBy,
+    order,
   } = select(
     createStructuredSelector({
       pagination: selectCampaignsPagination,
@@ -66,7 +68,8 @@ export const useCampaignsManager = (
       filterCampaignIds: selectFilterCampaignIds,
       filterDate: selectFilterDate,
       filterStatus: selectFilterStatus,
-      sort: selectSort,
+      orderBy: selectOrderBy,
+      order: selectOrder,
     }),
     shallowEqual,
   )
@@ -76,12 +79,12 @@ export const useCampaignsManager = (
       page: newPage || page,
       limit,
       orderBy,
+      order,
       ...(searchTerm && { search: searchTerm }),
       ...(filterCampaignIds.length > 0 && { ids: filterCampaignIds }),
       ...(filterStatus && { status: filterStatus }),
       ...(filterDate?.from && { fromDate: filterDate?.from }),
       ...(filterDate?.to && { toDate: filterDate?.to }),
-      ...(sortBy && { sortBy }),
     }
 
     dispatch(fetcher(currentParams))
@@ -100,12 +103,12 @@ export const useCampaignsManager = (
     dispatch,
     page,
     limit,
-    orderBy,
     searchTerm,
     filterCampaignIds,
     filterStatus,
     filterDate,
-    sortBy,
+    orderBy,
+    order,
     fetcher,
   ])
 
@@ -114,12 +117,12 @@ export const useCampaignsManager = (
   }, [
     dispatch,
     limit,
-    orderBy,
     searchTerm,
     filterCampaignIds,
     filterStatus,
     filterDate,
-    sortBy,
+    orderBy,
+    order,
   ])
 
   useUnmount(() => {
@@ -137,12 +140,12 @@ export const useCampaignsManager = (
           page: newPage,
           limit,
           orderBy,
+          order,
           ...(searchTerm && { search: searchTerm }),
           ...(filterCampaignIds.length > 0 && { ids: filterCampaignIds }),
           ...(filterStatus && { status: filterStatus }),
           ...(filterDate?.from && { fromDate: filterDate?.from }),
           ...(filterDate?.to && { toDate: filterDate?.to }),
-          ...(sortBy && { sortBy }),
         }),
       )
     },
@@ -153,8 +156,8 @@ export const useCampaignsManager = (
       filterCampaignIds,
       filterStatus,
       filterDate,
-      sortBy,
       orderBy,
+      order,
     ],
   )
 

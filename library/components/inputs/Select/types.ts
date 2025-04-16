@@ -118,4 +118,5 @@ export type TSelectProps = {
   zIndex?: CSSProperties['zIndex']
   onMenuScrollToBottom?: () => void
   readOnlySelection?: boolean
+  // isOptionDisabled?: (option: TSelectOption) => boolean
 } & TStylesProps
