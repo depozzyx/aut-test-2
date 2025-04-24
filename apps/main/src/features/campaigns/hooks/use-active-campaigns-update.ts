@@ -1,6 +1,6 @@
 import { useMount, useUnmount } from 'react-use'
 import { useRedux } from '@/hooks/use-redux'
-import { setActiveCampaigns } from '@/features/campaigns/store/campaigns'
+import { setActiveCampaigns, setCampaignList } from '@/features/campaigns/store/campaigns'
 import { StatisticsTypeResponse, TActiveCampaign } from '@/features/campaigns/types'
 import { useStore } from 'react-redux'
 import { campaignSocket } from '../../../api/socket/campaign'
@@ -12,14 +12,26 @@ export const useCampaignUpdates = (): void => {
 
   const findAndUpdateCampaign = (
     campaignId: number,
-    statistic: StatisticsTypeResponse,
+    data: StatisticsTypeResponse | string,
   ) => {
-    const { activeCampaigns } = store.getState().campaigns
-    if (activeCampaigns.length) {
-      const updatedData = activeCampaigns.map((campaign: TActiveCampaign) =>
-        campaign.id === campaignId ? { ...campaign, statistic } : campaign,
-      )
-      dispatch(setActiveCampaigns(updatedData))
+    const { activeCampaigns, campaignList } = store.getState().campaigns
+    const source = typeof data === 'string' ? campaignList : activeCampaigns
+
+    if (source.length) {
+      const field = typeof data === 'string' ? 'status' : 'statistic'
+      const method = typeof data === 'string' ? setCampaignList : setActiveCampaigns
+      const mapper = (campaign: TActiveCampaign) => {
+        if (campaign.id === campaignId) {
+          return {
+            ...campaign,
+            [field]: data,
+          }
+        }
+        return campaign
+      }
+
+      const updatedData = source.map(mapper)
+      dispatch(method(updatedData))
     }
   }
 
@@ -27,7 +39,7 @@ export const useCampaignUpdates = (): void => {
     campaignSocket.campaignStatisticUpdate({
       id: 'Subscribe campaign statistic',
       callback: (e) => {
-        findAndUpdateCampaign(e.campaignId, e.statistic)
+        findAndUpdateCampaign(e.campaignId, e.data)
       },
     })
 

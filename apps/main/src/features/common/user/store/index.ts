@@ -9,6 +9,7 @@ import { TProfile } from '@/types/entities/profile'
 import { apiAgents } from '@/api-rest/agents'
 import { TPbxAuthRes } from '@/api-rest/agents/types'
 import { setSelectedCampaignId } from '@/features/agents/store/agents'
+import { agentActions } from '@/features/common/agentStatus/store'
 // import { ROUTES } from '@/constants/routes'
 
 export type TInit = {
@@ -98,6 +99,7 @@ export const logoutAsync = (): TAsyncAction => async (dispatch) => {
     authorized.remove()
     dispatch(removeUser())
     dispatch(setSelectedCampaignId(null))
+    dispatch(agentActions.setSipCanConnect(false))
   } catch (e) {
     handleRestError({ e, dispatch })
   } finally {

@@ -25,7 +25,6 @@ import { handleRestError } from '@/features/common/error'
 import { apiLeadList } from '@/api-rest/lead-list'
 import { StatusChip } from '@/features/campaigns/components/StatusChip'
 import { LeadListStatusChip } from '@/features/leads/components/StatusChip'
-import { ButtonWithTooltip } from '@peiko/components/Tooltip'
 
 import {
   ELeadListOrderBy,
@@ -33,7 +32,12 @@ import {
   TLeadListData,
 } from '@/api-rest/lead-list/types'
 import { leadsApi } from '@/api-rest/leads'
-import { CAMPAIGN_STATUSES } from '@/features/campaigns/constants'
+import {
+  campaignDisabledActionStatusesMap,
+  isCampaignDisabledAction,
+} from '@/features/campaigns/constants'
+import { TCampaignActiveStatus } from '@/features/campaigns/types'
+import { ButtonWithTooltip } from '@/features/campaigns/containers/tables/CampaignListTable/ButtonWithTooltip'
 import { InfoColumn } from '../../components/InfoColumn'
 
 type TLeadListRowKeys =
@@ -227,20 +231,32 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
       ),
       edit: (
         <ButtonWithTooltip
-          showTooltip={leadList.campaignStatus === CAMPAIGN_STATUSES.ACTIVE}
-          buttonDisabled={leadList.campaignStatus === CAMPAIGN_STATUSES.ACTIVE}
+          showTooltip={isCampaignDisabledAction(
+            leadList.campaignStatus as TCampaignActiveStatus,
+          )}
+          buttonDisabled={isCampaignDisabledAction(
+            leadList.campaignStatus as TCampaignActiveStatus,
+          )}
           onClick={() => handleEdit(leadList.id)}
-          tooltipText={t(`tooltip.cannot-edit-active-campaign`)}
+          tooltipText={t(`tooltip.cannot-edit-active-campaign`, {
+            status: campaignDisabledActionStatusesMap[leadList.campaignStatus],
+          })}
           iconType="info"
           buttonType="edit"
         />
       ),
       delete: (
         <ButtonWithTooltip
-          showTooltip={leadList.campaignStatus === CAMPAIGN_STATUSES.ACTIVE}
-          buttonDisabled={leadList.campaignStatus === CAMPAIGN_STATUSES.ACTIVE}
+          showTooltip={isCampaignDisabledAction(
+            leadList.campaignStatus as TCampaignActiveStatus,
+          )}
+          buttonDisabled={isCampaignDisabledAction(
+            leadList.campaignStatus as TCampaignActiveStatus,
+          )}
           onClick={() => confirmDelete(leadList.id)}
-          tooltipText={t(`tooltip.cannot-delete-active-campaign`)}
+          tooltipText={t(`tooltip.cannot-delete-active-campaign`, {
+            status: campaignDisabledActionStatusesMap[leadList.campaignStatus],
+          })}
           iconType="info"
           buttonType="delete"
         />

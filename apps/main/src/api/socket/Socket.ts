@@ -191,7 +191,7 @@ class SocketClass {
   emit({ action, data }: TEmitProps): void {
     if (!this.isConnected()) {
       // need show in toastify
-      console.warn('Socket not connected')
+      console.error('Socket not connected')
       return
     }
 

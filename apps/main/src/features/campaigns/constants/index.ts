@@ -1,10 +1,24 @@
-// import { ORDER } from '@/constants/order'
+import { TCampaignActiveStatus } from '@/features/campaigns/types'
 
 export const CAMPAIGN_STATUSES = {
   ACTIVE: 'active',
   PAUSE: 'pause',
   COMPLETE: 'complete',
+  HOLD: 'hold',
 } as const
+
+export const campaignDisabledActionStatuses = [
+  CAMPAIGN_STATUSES.HOLD,
+  CAMPAIGN_STATUSES.ACTIVE,
+]
+
+export const isCampaignDisabledAction = (status: TCampaignActiveStatus): boolean =>
+  campaignDisabledActionStatuses.includes(status)
+
+export const campaignDisabledActionStatusesMap: Record<string, string> = {
+  [CAMPAIGN_STATUSES.HOLD]: '"On Hold"',
+  [CAMPAIGN_STATUSES.ACTIVE]: '"Active"',
+}
 
 export type TGeneratedCampaignStatuses =
   typeof CAMPAIGN_STATUSES[keyof typeof CAMPAIGN_STATUSES]
@@ -53,7 +67,7 @@ export const INITIAL_REQUEST_PARAMS_CREATE = {
 
 export const INITIAL_REQUEST_PARAMS_EDIT = {
   page: 1,
-  limit: 1000000,
+  limit: 100,
 }
 
 export const PAGINATION_REQUEST_TIME = 300

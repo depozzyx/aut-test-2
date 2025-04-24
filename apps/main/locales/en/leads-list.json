@@ -91,8 +91,8 @@
     "NNA": "Number Not Available"
   },
   "tooltip": {
-    "cannot-edit-active-campaign": "You can not edit lead list of \"Active\" campaign, wait for complete or pause it.",
-    "cannot-delete-active-campaign": "You can not delete lead list of \"Active\" campaign, wait for complete or pause it."
+    "cannot-edit-active-campaign": "You can't edit lead list of {{ status }} campaign, wait for complete or pause it",
+    "cannot-delete-active-campaign": "You can't delete lead list of {{ status }} campaign, wait for complete or pause it"
   },
   "createLeadsGroup": {
     "cancel": "Cancel",

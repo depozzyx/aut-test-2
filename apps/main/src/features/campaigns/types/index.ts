@@ -6,7 +6,9 @@ import { TLeadList } from '@/features/campaigns/hooks/use-getCampaignById'
 
 export type TCampaignTableType = 'active' | 'list'
 
-export type TCampaignStatus = 'active' | 'pause' | 'complete'
+export type TCampaignStatus = 'active' | 'pause' | 'complete' | 'hold'
+
+export type TCampaignActiveStatus = 'active' | 'hold'
 
 export type StatisticsTypeResponse = {
   oncall_agents: number

@@ -9,6 +9,14 @@ export type TPreparedFiles = {
   imported?: boolean
   error?: string[]
   canceled?: boolean
+
+  importProgress?: number
+  // uploadProgress?: number
+}
+
+export type TImportProgress = {
+  id: string
+  importProgress: number
 }
 
 export type TImportError = {

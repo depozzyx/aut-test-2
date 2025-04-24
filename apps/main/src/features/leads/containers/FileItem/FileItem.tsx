@@ -102,6 +102,8 @@ export const FileItem: FC<TPreparedFiles & { onDelete: (id: string) => void }> =
     controller?.abort()
   }
 
+  const importProgress = files.find((f) => f.id === id)?.importProgress
+
   return (
     <Flex gap="8px" align="center">
       <FileIcon width="40px" height="40px" />
@@ -116,28 +118,37 @@ export const FileItem: FC<TPreparedFiles & { onDelete: (id: string) => void }> =
             )}
             {!duplicate && (
               <>
-                {imported && <CheckIcon />}
                 <Text variant="f10" color="main22">
                   {error && t('error')}
                   {!error && (
-                    <span>
-                      {imported ? '100%' : `${count}%`}{' '}
+                    <>
+                      <span style={{ marginRight: '2px' }}>
+                        {t('uploaded')} <b>{imported ? '100' : count}%</b>
+                      </span>
                       {`(${prettyBytes(
                         imported ? size : (size / 100) * count,
                       )}/${prettyBytes(size)})`}
-                    </span>
+                      <span style={{ marginLeft: '8px' }}>
+                        {t('imported')} <b>{importProgress || '0'}%</b>
+                      </span>
+                    </>
                   )}
                 </Text>
-                {startImporting && (
+                {(startImporting || importProgress !== 100) && (
                   <Container>
                     <LoaderIcon />
                   </Container>
                 )}
+                {imported && importProgress === 100 && !error && <CheckIcon />}
               </>
             )}
           </Flex>
         </Flex>
-        <ProgressBar error={!!error} progress={imported ? 100 : count} />
+        <ProgressBar
+          error={!!error}
+          progress={imported ? 100 : count}
+          importProgress={importProgress ?? 0}
+        />
         {error && (
           <>
             {error.map((e) => (

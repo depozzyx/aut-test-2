@@ -4,11 +4,15 @@
   "statuses": {
     "active": "Active",
     "pause": "Paused",
-    "complete": "Completed"
+    "complete": "Completed",
+    "hold": "On Hold"
   },
   "tooltip": {
-    "cannot-edit-active-campaign": "You can not edit \"Active\" campaign, wait for complete or pause it",
-    "cannot-delete-active-campaign": "You can not delete \"Active\" campaign, wait for complete or pause it"
+    "cannot-edit-active-campaign": "You can not edit {{ status }} campaign, wait for complete or pause it",
+    "cannot-delete-active-campaign": "You can not delete {{ status }} campaign, wait for complete or pause it",
+    "cannot-action-complete-campaign": "You can't start a completed campaign",
+    "cannot-action-no-leads-campaign": "You can't start a campaign without leads for calling",
+    "cannot-action-inactive-lists-campaign": "You can't start a campaign without active lead lists"
   },
   "campaign-list-headers": {
     "campaign-name": "Campaign Name",

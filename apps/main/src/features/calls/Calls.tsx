@@ -33,7 +33,7 @@ import { CardTile } from '@/features/settings/components/CardTile'
 import { TAgentDashboard } from '@/api-rest/agents/types'
 import { isString } from 'formik'
 // import { FilledButton } from '@peiko/components/buttons/FilledButton'
-import { ButtonWithTooltip } from '@peiko/components/Tooltip'
+import { ButtonWithTooltip } from '@/features/campaigns/containers/tables/CampaignListTable/ButtonWithTooltip'
 import { CallButton } from './components/CallButton/CallButton'
 import { CallWindow } from './components/CallWindow'
 import { useSIPService } from './hooks/useSIPService'
@@ -65,6 +65,18 @@ const getActiveCampaigns = async (dispatch: TDispatch) => {
   const campaigns = response?.data?.data || []
   dispatch(setAgentAssignedCampaigns(campaigns))
   return campaigns
+}
+
+const getCurrentAgentDashboard = async (
+  dispatch: TDispatch,
+  setAgentDashboard: React.Dispatch<React.SetStateAction<TAgentDashboard | undefined>>,
+) => {
+  try {
+    const response = await apiAgents.getAgentDashboard()
+    setAgentDashboard(response?.data?.data)
+  } catch (e) {
+    handleRestError({ e, dispatch })
+  }
 }
 
 const checkStatus = async (dispatch: TDispatch) => {
@@ -122,7 +134,8 @@ export const Calls: FC = () => {
   }
 
   const onCompleteCampaign = () => {
-    console.warn('run oncomplete callback => set agent status [finish]')
+    // eslint-disable-next-line no-console
+    console.info('run oncomplete callback => set agent status [finish]')
     dispatch(agentActions.setStatusAsync('finish'))
     dispatch(agentActions.setSipCanConnect(false))
     disconnect()
@@ -139,9 +152,11 @@ export const Calls: FC = () => {
         callback: (e) => {
           if (e.status === 'complete') {
             const { status } = store.getState().agentStatus.pbxStatus
-            console.warn(`Received completed event, current Agent Status ${status}`)
+            // eslint-disable-next-line no-console
+            console.info(`Received completed event, current Agent Status ${status}`)
             if (status === 'pause') {
-              console.warn('set oncomplete callback')
+              // eslint-disable-next-line no-console
+              console.info('set oncomplete callback')
               setCompleted(true)
             } else if (status !== 'offline') {
               onCompleteCampaign()
@@ -220,9 +235,11 @@ export const Calls: FC = () => {
       setCampaignId(true).then((id) => {
         if (id) {
           // eslint-disable-next-line no-console
-          // console.info('checkCampaignId -> start')
+          console.info('checkCampaignId with callback to -> start')
           if (pbxStatus.status !== 'online') {
             dispatch(agentActions.setSipCanConnect(true))
+            // eslint-disable-next-line no-console
+            console.info('callback to -> start')
             dispatch(agentActions.setStatusAsync('start'))
           }
           onSubscribeCampaignStatus(String(id))
@@ -274,14 +291,6 @@ export const Calls: FC = () => {
   }, [pbxStatus.status])
 
   const [agentDashboard, setAgentDashboard] = useState<TAgentDashboard>()
-  const getCurrentAgentDashboard = async () => {
-    try {
-      const response = await apiAgents.getAgentDashboard()
-      setAgentDashboard(response?.data?.data)
-    } catch (e) {
-      handleRestError({ e, dispatch })
-    }
-  }
 
   // set campaign id on selected
   useEffect(() => {
@@ -305,10 +314,10 @@ export const Calls: FC = () => {
     }
   }
 
+  // get agent dashboard data
   useEffect(() => {
-    getCurrentAgentDashboard()
+    getCurrentAgentDashboard(dispatch, setAgentDashboard)
   }, [selectedCampaignId])
-
   const getTimeOnline = (agent: TAgentDashboard) => {
     const loggedTime = isString(agent.timeOnline)
       ? parseFloat(agent.timeOnline)
@@ -319,17 +328,29 @@ export const Calls: FC = () => {
     const seconds = Math.ceil(loggedTime + ongoingTime)
     return seconds > 0 ? formatDuration(seconds) : ''
   }
-
   const reFetchTimeout = 5000
   useEffect(() => {
     if (reFetchTimeout) {
       const interval = setInterval(() => {
-        getCurrentAgentDashboard()
+        getCurrentAgentDashboard(dispatch, setAgentDashboard)
       }, reFetchTimeout)
 
       return () => clearInterval(interval)
     }
   }, [reFetchTimeout, dispatch])
+
+  const showSelectedCampaignName = (): string => {
+    let result = '-'
+    if (selectedCampaignId && !agentDashboard?.currentCampaignName) {
+      const found = agentAssignedCampaigns.find((c) => c.id === +selectedCampaignId)
+      if (found) {
+        result = found.name
+      }
+    } else if (agentDashboard?.currentCampaignName) {
+      result = agentDashboard.currentCampaignName
+    }
+    return result
+  }
 
   return (
     <>
@@ -337,27 +358,41 @@ export const Calls: FC = () => {
         <CardTile>{t('agents.dashboard.title')}</CardTile>
         <Flex
           justify="space-between"
-          align="center"
+          align="start"
           styles={{ marginTop: '24px', flexWrap: 'wrap', gap: '24px' }}
         >
           <div
             style={{
               minWidth: '150px',
-              cursor: 'pointer',
+              // cursor: 'pointer',
             }}
           >
-            <div style={{ fontSize: '14px', color: '#888', marginBottom: '4px' }}>
-              {t('agents.dashboard.current-campaign')}
-            </div>
-            <Flex align="center" gap="8px">
-              <div style={{ fontSize: '18px', fontWeight: '600' }}>
-                {(selectedCampaignId && agentDashboard?.currentCampaignName) || '-'}
+            {/* <div style={{ fontSize: '14px', color: 'main22', marginBottom: '4px' }}> */}
+            {/*  {t('agents.dashboard.current-campaign')} */}
+            {/* </div> */}
+            <Text color="main22"> {t('agents.dashboard.current-campaign')}</Text>
+            <Flex align="start" justify="start" gap="8px">
+              <div
+                style={{
+                  // fontSize: '18px',
+                  // fontWeight: '600',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <Text variant="f4">{showSelectedCampaignName()}</Text>
+                {!agentDashboard?.currentCampaignName && selectedCampaignId && (
+                  <Text variant="f10" color="main22">
+                    {t('agents.dashboard.not-online')}
+                  </Text>
+                )}
               </div>
+              <div />
               <ButtonWithTooltip
                 showTooltip={!agentDashboard?.currentCampaignName}
                 // buttonDisabled={campaign.status === CAMPAIGN_STATUSES.ACTIVE}
                 onClick={handleChangeCampaign}
-                tooltipText="Go online to join the selected campaign."
+                tooltipText="Change selected campaign"
                 iconType="info"
                 buttonType="edit"
               />

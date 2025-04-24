@@ -43,8 +43,8 @@ interface ImportFilesProps {
   onSubmit: () => void
 }
 
-const MAX_FILE_SIZE_MB = 20
-const MAX_FILES = 20
+const MAX_FILE_SIZE_MB = 4
+const MAX_FILES = 10
 
 export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
   const { t } = useTranslation('import-leads')
@@ -68,11 +68,13 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
 
   const onDrop = async (files: File[]) => {
     setError(null)
-    if (files.length > MAX_FILES) {
+    if (files.length > MAX_FILES || filesForImport.length + files.length > MAX_FILES) {
       setError(t('validation.max-files', { count: MAX_FILES }))
       return
     }
-    const has = files.some((f) => f.size > MAX_FILE_SIZE_MB * 1024 * 1024)
+    const limitSize = MAX_FILE_SIZE_MB * 1000 * 1000
+    // console.debug({ limitSize, fileSize: files[0].size })
+    const has = files.some((f) => f.size > limitSize)
     if (has) {
       setError(t('validation.max-file-size', { size: MAX_FILE_SIZE_MB }))
       return
@@ -272,8 +274,8 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
             textAlign: 'center',
             marginBottom: '14px',
           }}
-          // maxFiles={20}
-          // maxSize={1024 * 1024 * 20}
+          // maxFiles={10}
+          // maxSize={1024 * 1024 * 4}
           disabled={!leadsGroup}
           onDropAccepted={onDrop}
         >
@@ -289,7 +291,7 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
               <Trans
                 i18nKey="import-leads:maxSize"
                 components={[<Text tag="span" styles={{ fontWeight: '600' }} key="0" />]}
-                values={{ value: '20 Mb' }}
+                values={{ value: '4 Mb' }}
               />
             </Text>
             <Text color="main23" variant="f10">
@@ -303,14 +305,14 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
               <Trans
                 i18nKey="import-leads:limit"
                 components={[<Text tag="span" styles={{ fontWeight: '600' }} key="0" />]}
-                values={{ value: '20' }}
+                values={{ value: '10' }}
               />
             </Text>
           </Flex>
         </UploadFiles>
         {error && (
           <Text styles={{ color: palette.main13, textAlign: 'center' }} variant="f8">
-            {t(error)}
+            {error}
           </Text>
         )}
         <ImportFilesList />
@@ -323,7 +325,11 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
             {t('cancel')}
           </OutlinedButton>
           <FilledButton
-            disabled={filesForImport.length === 0 || !allFilesImported}
+            disabled={
+              filesForImport.length === 0 ||
+              !allFilesImported ||
+              filesForImport.some((file) => file?.importProgress !== 100 || file.error)
+            }
             width="100%"
             onClick={handleSubmit}
           >

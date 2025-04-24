@@ -432,7 +432,10 @@ export const asyncStartOrStopCampaign =
       const { campaignList, pagination } = getState().campaigns
       const { name } = campaignList.find(({ id }) => id === campaignId) as TCampaign
 
-      if (currentStatus === CAMPAIGN_STATUSES.ACTIVE) {
+      if (
+        currentStatus === CAMPAIGN_STATUSES.ACTIVE ||
+        currentStatus === CAMPAIGN_STATUSES.HOLD
+      ) {
         await apiCampaigns.stop(campaignId)
         dispatch(
           notificationActions.setNotification({

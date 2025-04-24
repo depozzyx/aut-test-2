@@ -34,7 +34,8 @@
       "title": "Dashboard",
       "current-campaign": "Campaign: ",
       "calls-handled": "Calls Handled: ",
-      "time-online": "Time Online: "
+      "time-online": "Time Online: ",
+      "not-online": "(Go online to join the selected campaign.)"
     }
   }
 }
