@@ -63,6 +63,7 @@ export const AgentStatus: FC = () => {
     if (user?.workStatus) dispatch(agentActions.setStatus(user?.workStatus))
   }, [user])
 
+  // update available options
   useEffect(() => {
     if (pbxStatus.status === 'offline') {
       setOptions(

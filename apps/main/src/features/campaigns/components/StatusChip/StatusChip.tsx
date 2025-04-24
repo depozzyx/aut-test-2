@@ -12,6 +12,7 @@ export const statusColor: Record<TCampaignStatus, keyof DefaultTheme['palette']>
   active: 'main',
   pause: 'main10-100',
   complete: 'main7-100',
+  hold: 'main22',
 }
 
 export const StatusChip = ({ status }: IStatusChipProps): JSX.Element => {

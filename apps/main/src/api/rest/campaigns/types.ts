@@ -55,7 +55,7 @@ export type TCampaignWSStatus = {
 export type TCampaignWSStatistic = {
   data: {
     campaignId: number
-    statistic: StatisticsTypeResponse
+    data: StatisticsTypeResponse
   }
 }
 

@@ -21,6 +21,9 @@ export const ActionBtn = ({
     case 'active':
       icon = <StopIcon width="24px" height="24px" />
       break
+    case 'hold':
+      icon = <StopIcon width="24px" height="24px" />
+      break
     case 'pause':
       icon = <PlayIcon width="24px" height="24px" />
       break

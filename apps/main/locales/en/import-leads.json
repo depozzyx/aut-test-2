@@ -1,9 +1,11 @@
 {
   "uploadFiles": "Upload file",
+  "uploaded": "uploaded",
+  "imported": "imported",
   "validation": {
     "no-files": "No files selected",
-    "max-files": "Upload limit: 20 files",
-    "max-file-size": "Max file size: 20 Mb"
+    "max-files": "Upload limit: {{count}} files",
+    "max-file-size": "Max file size: {{size}} Mb"
   },
   "preselectText": "Before initiating file upload, please select a leads list.",
   "selectLabel": "Select lead list",

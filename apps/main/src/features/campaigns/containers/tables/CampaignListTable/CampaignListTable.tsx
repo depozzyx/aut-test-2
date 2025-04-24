@@ -7,33 +7,38 @@ import { EmptyComponent, Table } from '@peiko/components/Table'
 import { useRedux } from '@/hooks/use-redux'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { TCampaign, TCampaignStatus } from '@/features/campaigns/types'
+import {
+  TCampaign,
+  TCampaignActiveStatus,
+  TCampaignStatus,
+} from '@/features/campaigns/types'
 import { IconButton } from '@peiko/components/buttons/IconButton'
 import { BodyCell } from '@peiko/components/Table/components/BodyCell'
 import { HeaderCell } from '@peiko/components/Table/components/HeaderCell'
 import { THeader } from '@peiko/components/Table/types'
 
 import { HeaderWithSort } from 'components/HeaderWithSort'
-import { CAMPAIGN_STATUSES, SORT_BY } from '@/features/campaigns/constants'
+import {
+  CAMPAIGN_STATUSES,
+  campaignDisabledActionStatusesMap,
+  isCampaignDisabledAction,
+  SORT_BY,
+} from '@/features/campaigns/constants'
 import { EyeIcon } from '@peiko/components/icons/EyeIcon/EyeIcon'
 import { ROUTES } from '@/routes'
-import { ButtonWithTooltip } from '@peiko/components/Tooltip'
 import { TCampaignOrderBy } from '@/api-rest/campaigns/types'
+import { useCampaignUpdates } from '@/features/campaigns/hooks/use-active-campaigns-update'
+import { ButtonWithTooltip } from '@/features/campaigns/containers/tables/CampaignListTable/ButtonWithTooltip'
 import { InfoCell } from '../../../components/InfoCell'
 import { StatusChip } from '../../../components/StatusChip'
-import { ActionBtn } from '../../../components/ActionBtn'
 import {
   selectIsLoading,
   selectCampaignsListForView,
   setSelectedId,
-  // asyncUpdateCampaignStatus,
   asyncStartOrStopCampaign,
   setOrderBy,
-  // setCampaignList,
 } from '../../../store/campaigns'
 import { formatCreatedAt } from '../../../utils/formatCreateAt'
-// import { campaignSocket } from '../../../../../api/socket/campaign'
-// import { socket } from '../../../../../api/socket/Socket'
 
 type TCampaignRowKeys =
   | 'view'
@@ -65,42 +70,10 @@ export const CampaignListTable = (): JSX.Element => {
     setModal({ modalName: MODAL_NAMES.DELETE_CAMPAIGN, isOpen: true })
   }, [])
 
-  // const handleAction = useCallback((id: number, currentStatus: TCampaignStatus) => {
-  //   dispatch(asyncUpdateCampaignStatus(id, currentStatus))
-  // }, [])
-
-  // const SUBSCRIBE_CAMPAIGN_STATUS = 'Subscribe campaign status'
-  // const onSubscribeCampaignStatus = (campaignId: string) => {
-  //   campaignSocket.campaignStatusUpdate(
-  //     {
-  //       id: SUBSCRIBE_CAMPAIGN_STATUS,
-  //       callback: (e) => {
-  //         if (e.status === 'complete') {
-  //           dispatch(
-  //             setCampaignList(
-  //               data.map((campaign) => ({
-  //                 ...campaign,
-  //                 status: campaign.id === +campaignId ? 'complete' : campaign.status,
-  //               })),
-  //             ),
-  //           )
-  //         }
-  //       },
-  //     },
-  //     campaignId,
-  //   )
-  // }
-  // const onUnsubscribeCampaignStatus = () => {
-  //   socket.unsubscribe(SUBSCRIBE_CAMPAIGN_STATUS)
-  // }
+  useCampaignUpdates()
 
   const handleStartOrStop = async (id: number, currentStatus: TCampaignStatus) => {
     dispatch(asyncStartOrStopCampaign(id, currentStatus))
-    // if (currentStatus === 'pause') {
-    //   onSubscribeCampaignStatus(id.toString())
-    // } else {
-    //   onUnsubscribeCampaignStatus()
-    // }
   }
 
   const handleEditCampaign = useCallback((id: number) => {
@@ -108,10 +81,18 @@ export const CampaignListTable = (): JSX.Element => {
     setModal({ modalName: MODAL_NAMES.EDIT_CAMPAIGN, isOpen: true })
   }, [])
 
-  const disabled = (campaign: TCampaign) =>
-    campaign.status === CAMPAIGN_STATUSES.COMPLETE ||
-    campaign.leadCount === 0 ||
-    campaign.leadLists.filter((l) => l.active).length === 0
+  const validateAction = (campaign: TCampaign) => {
+    let tooltipMsg = ''
+    if (campaign.status === CAMPAIGN_STATUSES.HOLD) return tooltipMsg
+    if (campaign.status === CAMPAIGN_STATUSES.COMPLETE) {
+      tooltipMsg = t(`tooltip.cannot-action-complete-campaign`)
+    } else if (campaign.leadCount === 0) {
+      tooltipMsg = t(`tooltip.cannot-action-no-leads-campaign`)
+    } else if (campaign.leadLists.filter((l) => l.active).length === 0) {
+      tooltipMsg = t(`tooltip.cannot-action-inactive-lists-campaign`)
+    }
+    return tooltipMsg
+  }
 
   const orderBy = select((state) => state.campaigns.orderBy)
   const order = select((state) => state.campaigns.order)
@@ -166,10 +147,14 @@ export const CampaignListTable = (): JSX.Element => {
       leads: <InfoCell title={campaign.leadCount} />,
       agents: <InfoCell title={campaign.agentCount} />,
       action: (
-        <ActionBtn
-          disabled={disabled(campaign)}
-          status={campaign.status}
+        <ButtonWithTooltip
+          showTooltip={!!validateAction(campaign)}
+          buttonDisabled={!!validateAction(campaign)}
           onClick={() => handleStartOrStop(campaign.id, campaign.status)}
+          tooltipText={validateAction(campaign)}
+          iconType="info"
+          buttonType="action"
+          actionStatus={campaign.status}
         />
       ),
       view: (
@@ -182,20 +167,28 @@ export const CampaignListTable = (): JSX.Element => {
       ),
       edit: (
         <ButtonWithTooltip
-          showTooltip={campaign.status === CAMPAIGN_STATUSES.ACTIVE}
-          buttonDisabled={campaign.status === CAMPAIGN_STATUSES.ACTIVE}
+          showTooltip={isCampaignDisabledAction(campaign.status as TCampaignActiveStatus)}
+          buttonDisabled={isCampaignDisabledAction(
+            campaign.status as TCampaignActiveStatus,
+          )}
           onClick={() => handleEditCampaign(campaign.id)}
-          tooltipText={t(`tooltip.cannot-edit-active-campaign`)}
+          tooltipText={t(`tooltip.cannot-edit-active-campaign`, {
+            status: campaignDisabledActionStatusesMap[campaign.status],
+          })}
           iconType="info"
           buttonType="edit"
         />
       ),
       delete: (
         <ButtonWithTooltip
-          showTooltip={campaign.status === CAMPAIGN_STATUSES.ACTIVE}
-          buttonDisabled={campaign.status === CAMPAIGN_STATUSES.ACTIVE}
+          showTooltip={isCampaignDisabledAction(campaign.status as TCampaignActiveStatus)}
+          buttonDisabled={isCampaignDisabledAction(
+            campaign.status as TCampaignActiveStatus,
+          )}
           onClick={() => handleDelete(campaign.id)}
-          tooltipText={t(`tooltip.cannot-delete-active-campaign`)}
+          tooltipText={t(`tooltip.cannot-delete-active-campaign`, {
+            status: campaignDisabledActionStatusesMap[campaign.status],
+          })}
           iconType="info"
           buttonType="delete"
         />

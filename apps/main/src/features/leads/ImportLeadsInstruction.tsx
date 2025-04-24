@@ -55,7 +55,7 @@ const LIST = [
   },
   {
     label: 'instructions.fileSize',
-    value: 'Up to 20Mb',
+    value: 'Up to 4Mb',
     icon: <ResizeIcon />,
   },
   {

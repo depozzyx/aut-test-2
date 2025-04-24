@@ -8,6 +8,7 @@ const bgColor: Record<TCampaignStatus, keyof TDefaultPalette> = {
   active: 'base500',
   pause: 'base600',
   complete: 'base300',
+  hold: 'main20',
 }
 
 export const StyledChip = styled(FilledChip)<{ status: TCampaignStatus }>((props) => {

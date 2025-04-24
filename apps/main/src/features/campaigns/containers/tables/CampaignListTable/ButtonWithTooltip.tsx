@@ -6,7 +6,9 @@ import { EyeIcon } from '@peiko/components/icons/EyeIcon'
 import { InfoIcon } from '@peiko/components/icons/InfoIcon'
 import { ErrorIcon } from '@peiko/components/icons/ErrorIcon'
 import { PopupPosition } from 'reactjs-popup/dist/types'
-import { Tooltip } from './Tooltip'
+import { TCampaignStatus } from '@/features/campaigns/types'
+import { Tooltip } from '@peiko/components/Tooltip'
+import { ActionBtn } from '@/features/campaigns/components/ActionBtn'
 
 interface Props {
   showTooltip: boolean
@@ -16,7 +18,8 @@ interface Props {
   customTooltipTextComponent?: JSX.Element
   tooltipPosition?: PopupPosition
   iconType?: 'info' | 'error'
-  buttonType: 'edit' | 'delete' | 'view'
+  buttonType: 'edit' | 'delete' | 'view' | 'action'
+  actionStatus?: TCampaignStatus
 }
 
 export const ButtonWithTooltip: React.FC<Props> = ({
@@ -28,6 +31,7 @@ export const ButtonWithTooltip: React.FC<Props> = ({
   tooltipPosition = 'top right',
   iconType = 'info',
   buttonType,
+  actionStatus,
 }) => {
   const buttonMap = {
     edit: (
@@ -44,6 +48,13 @@ export const ButtonWithTooltip: React.FC<Props> = ({
       <IconButton onClick={onClick} iconColor="main3" disabled={buttonDisabled}>
         <EyeIcon width="24px" height="24px" />
       </IconButton>
+    ),
+    action: (
+      <ActionBtn
+        disabled={buttonDisabled}
+        status={actionStatus ?? 'pause'}
+        onClick={onClick}
+      />
     ),
   }
 

@@ -24,7 +24,8 @@ export const Header: FC = () => {
   const { menuDisabled, showErrorMessage } = useDisableClickOnCall()
 
   useEffect(() => {
-    console.warn('HEADER get asyncGetAgentAssignedCampaigns')
+    // eslint-disable-next-line no-console
+    // console.info('HEADER get asyncGetAgentAssignedCampaigns')
     dispatch(asyncGetAgentAssignedCampaigns())
   }, [])
 

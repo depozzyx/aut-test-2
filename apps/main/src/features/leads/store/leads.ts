@@ -15,7 +15,7 @@ import {
 import { TFormik } from '@peiko/types/formik'
 import { TOrder } from '@/types/entities/order'
 import { ORDER } from '@/constants/order'
-import { TImportError, TPreparedFiles } from '../types/files'
+import { TImportError, TImportProgress, TPreparedFiles } from '../types/files'
 import { dataURIToBlob } from '../utils/dataURIToBlob'
 
 export type TInit = {
@@ -129,6 +129,16 @@ const leads = createSlice({
     setStatuses(state, action: PayloadAction<TLeadStatusData[]>) {
       state.statuses = action.payload
     },
+    updateImportFileProgress(state, action: PayloadAction<TImportProgress>) {
+      const { id, importProgress } = action.payload
+      state.filesForImport = state.filesForImport.map((item) => {
+        if (item.id === id) {
+          // console.debug(`import file progress update ${importProgress}`)
+          return { ...item, importProgress }
+        }
+        return item
+      })
+    },
   },
 })
 
@@ -140,6 +150,7 @@ export const {
   setLeadsGroups,
   setLeadsGroup,
   setImportFiles,
+  updateImportFileProgress,
   updateImportFiles,
   deleteImportFile,
   setSelectError,
@@ -294,8 +305,10 @@ export const importFilesAsync =
 
       const formData = new FormData()
 
-      if (typeof file.data === 'string')
+      if (typeof file.data === 'string') {
         formData.append('file', dataURIToBlob(file.data), file.name)
+        formData.append('fileId', file.id)
+      }
       if (selectedLeadsGroup) formData.append('leadListId', selectedLeadsGroup.toString())
       if (checkNumberUnique)
         formData.append('checkNumberUnique', checkNumberUnique.toString())

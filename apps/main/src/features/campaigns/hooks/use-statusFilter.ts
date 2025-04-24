@@ -18,6 +18,7 @@ export const useStatusFilter = (): TReturn => {
     { value: CAMPAIGN_STATUSES.ACTIVE, label: t('statuses.active') },
     { value: CAMPAIGN_STATUSES.PAUSE, label: t('statuses.pause') },
     { value: CAMPAIGN_STATUSES.COMPLETE, label: t('statuses.complete') },
+    { value: CAMPAIGN_STATUSES.HOLD, label: t('statuses.hold') },
   ]
 
   const handleOnChange = useCallback((value: TCampaignStatus) => {

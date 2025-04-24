@@ -23,7 +23,7 @@ import { authSocket } from '../../../api/socket/auth'
 export const Sidebar = (): JSX.Element => {
   const { t } = useTranslation('auth')
   const { dispatch, select } = useRedux()
-  const { pbxStatus, hasCurrentRTCSession } = select(agentStatusSelector)
+  const { hasCurrentRTCSession } = select(agentStatusSelector)
 
   const { logoutAsync, user } = useAuth()
   const links = useMenuLinks()
@@ -31,13 +31,8 @@ export const Sidebar = (): JSX.Element => {
   const { menuDisabled, sidebarDisabled, showErrorMessage } = useDisableClickOnCall()
 
   const handleLogout = () => {
-    if (menuDisabled) {
-      showErrorMessage()
-    } else if (pbxStatus.status !== 'offline') {
-      dispatch(agentActions.setStatusAsync('finish', undefined, logoutAsync))
-      dispatch(setSelectedCampaignId(null))
-      dispatch(agentActions.setSipCanConnect(false))
-    } else logoutAsync()
+    if (menuDisabled) showErrorMessage()
+    else logoutAsync()
   }
 
   const onSubscribeAgentStatus = () =>

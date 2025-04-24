@@ -84,8 +84,8 @@ export const SelectAgentCampaignModal = ({
       open={showModal}
       maxWidth="612px"
       containerWidth="100%"
-      disableCloseOutside
-      hideCloseButton
+      disableCloseOutside={!!agentAssignedCampaigns.length}
+      hideCloseButton={!!agentAssignedCampaigns.length}
       onClose={handleClose}
     >
       {agentAssignedCampaigns.length === 0 && (
