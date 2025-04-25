@@ -72,7 +72,7 @@ export const LeadList: FC = () => {
       </Box>
       <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
         <Pagination
-          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
+          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 10))}
           currentPage={page}
           onChange={onChangePage}
         />

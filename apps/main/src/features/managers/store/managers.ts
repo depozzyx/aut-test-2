@@ -106,6 +106,7 @@ export const asyncGetManagerList =
       dispatch(setIsLoading(true))
       const { data } = await managerApi.getManagers(params)
       dispatch(setManagersList(data.data))
+      dispatch(setPagination(data.pagination))
       dispatch(modalsActions.resetModalsState())
       onsuccess?.()
     } catch (e) {

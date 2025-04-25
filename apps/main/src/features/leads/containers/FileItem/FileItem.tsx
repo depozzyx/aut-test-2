@@ -134,7 +134,7 @@ export const FileItem: FC<TPreparedFiles & { onDelete: (id: string) => void }> =
                     </>
                   )}
                 </Text>
-                {(startImporting || importProgress !== 100) && (
+                {(startImporting || importProgress !== 100) && !error && (
                   <Container>
                     <LoaderIcon />
                   </Container>

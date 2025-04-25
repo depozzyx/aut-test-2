@@ -157,7 +157,7 @@ export const AgentsList = (): JSX.Element => {
         </TableContainer>
         <PaginationContainer>
           <Pagination
-            lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 8))}
+            lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 10))}
             currentPage={page}
             onChange={handleChangePage}
           />
