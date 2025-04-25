@@ -94,7 +94,7 @@ export const ActivityLogs: FC<{
       </Flex>
       <Flex justify="center" margin="48px 0 0">
         <Pagination
-          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
+          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 10))}
           currentPage={page}
           onChange={onChangePage}
         />

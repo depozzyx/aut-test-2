@@ -210,7 +210,7 @@ const CampaignViewPage: NextPage = () => {
                   }}
                 >
                   <Pagination
-                    lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
+                    lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 10))}
                     currentPage={page}
                     onChange={onChangePage}
                   />

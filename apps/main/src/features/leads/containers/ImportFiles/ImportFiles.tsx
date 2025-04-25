@@ -8,7 +8,7 @@ import useTranslation from 'next-translate/useTranslation'
 import React, { FC, useEffect, useState } from 'react'
 import { CloudIcon } from '@/icons/CloudIcon'
 import { useRedux } from '@/hooks/use-redux'
-import { nanoid } from '@reduxjs/toolkit'
+import { v4 as uuidV4 } from 'uuid'
 import { ROUTES } from '@/constants/routes'
 import Trans from 'next-translate/Trans'
 import { Checkbox } from '@peiko/components/inputs/checkboxes/Checkbox/Checkbox'
@@ -67,32 +67,50 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
   const [error, setError] = useState<string | null>(null)
 
   const onDrop = async (files: File[]) => {
+    const newFiles = files
+      .filter(
+        (file) =>
+          !filesForImport.some(
+            (existingFile) =>
+              existingFile.name === file.name && existingFile.size === file.size,
+          ),
+      )
+      .sort((a, b) => b.size - a.size)
+
+    if (newFiles.length === 0) return
+
+    const allFiles = [...filesForImport, ...newFiles]
     setError(null)
-    if (files.length > MAX_FILES || filesForImport.length + files.length > MAX_FILES) {
+    if (allFiles.length > MAX_FILES) {
       setError(t('validation.max-files', { count: MAX_FILES }))
       return
     }
     const limitSize = MAX_FILE_SIZE_MB * 1000 * 1000
     // console.debug({ limitSize, fileSize: files[0].size })
-    const has = files.some((f) => f.size > limitSize)
-    if (has) {
+    const isSizeMoreThanLimit =
+      allFiles.some((f) => f.size > limitSize) ||
+      allFiles.reduce((acc, f) => acc + f.size, 0) > limitSize
+
+    if (isSizeMoreThanLimit) {
       setError(t('validation.max-file-size', { size: MAX_FILE_SIZE_MB }))
       return
     }
 
-    const preparedFilesPromises: Promise<TPreparedFiles>[] = files.map(async (file) => {
-      const { name, size, type } = file
-      const reader = new FileReader()
+    const preparedFilesPromises: Promise<TPreparedFiles>[] = newFiles.map(
+      async (file) => {
+        const { name, size, type } = file
+        const reader = new FileReader()
 
-      const data = await new Promise<string | ArrayBuffer | null>((resolve) => {
-        reader.onload = () => {
-          resolve(reader.result)
-        }
-        reader.readAsDataURL(file)
-      })
+        const data = await new Promise<string | ArrayBuffer | null>((resolve) => {
+          reader.onload = () => {
+            resolve(reader.result)
+          }
+          reader.readAsDataURL(file)
+        })
 
-      return { name, size, type, data, id: nanoid() }
-    })
+        return { name, size, type, data, id: uuidV4() }
+      },
+    )
 
     const preparedFiles = await Promise.all(preparedFilesPromises)
 

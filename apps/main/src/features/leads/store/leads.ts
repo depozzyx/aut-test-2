@@ -74,13 +74,13 @@ const leads = createSlice({
     },
     setImportFiles(state, action: PayloadAction<TInit['filesForImport']>) {
       const preparedData: TInit['filesForImport'] = action.payload.map((file) =>
-        state.filesForImport.find(
+        state.filesForImport.some(
           (item) => item.name === file.name && item.size === file.size,
         )
           ? { ...file, duplicate: true }
           : file,
       )
-      state.filesForImport = state.filesForImport.concat(preparedData)
+      state.filesForImport = [...state.filesForImport, ...preparedData]
     },
     updateImportFiles(state, action: PayloadAction<TInit['filesForImport']>) {
       state.filesForImport = action.payload
@@ -131,13 +131,17 @@ const leads = createSlice({
     },
     updateImportFileProgress(state, action: PayloadAction<TImportProgress>) {
       const { id, importProgress } = action.payload
-      state.filesForImport = state.filesForImport.map((item) => {
-        if (item.id === id) {
-          // console.debug(`import file progress update ${importProgress}`)
-          return { ...item, importProgress }
-        }
-        return item
-      })
+      const file = state.filesForImport.find((f) => f.id === id)
+      if (file) {
+        // const d = new Date()
+        // eslint-disable-next-line no-console
+        // console.debug(
+        //   `${d.getMinutes()}:${d.getSeconds()} updating progress of ${
+        //     file.name
+        //   } to ${importProgress}`,
+        // )
+        file.importProgress = importProgress
+      }
     },
   },
 })

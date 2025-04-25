@@ -29,7 +29,7 @@ export const ApiKeyManagement = (): JSX.Element => {
     dispatch(
       setPagination({
         page: newPage,
-        limit: limit ?? 8,
+        limit: limit ?? 10,
         total,
       }),
     )
@@ -66,7 +66,7 @@ export const ApiKeyManagement = (): JSX.Element => {
         </Flex>
         <Flex justify="center" align="center" width="100%" margin="40px 0 0 0">
           <Pagination
-            lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 8))}
+            lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 10))}
             currentPage={page}
             onChange={handleChangePage}
           />

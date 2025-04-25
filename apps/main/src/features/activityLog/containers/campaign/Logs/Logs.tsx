@@ -44,7 +44,7 @@ export const Logs = (): JSX.Element => {
       <PaginationContainer>
         <Pagination
           size="s"
-          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 15))}
+          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 10))}
           currentPage={page}
           onChange={onChangePage}
         />
