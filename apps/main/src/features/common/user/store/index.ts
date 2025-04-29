@@ -91,15 +91,22 @@ const logout = (): TAsyncAction => (dispatch) => {
   dispatch(removeUser())
 }
 
-export const logoutAsync = (): TAsyncAction => async (dispatch) => {
+export const logoutAsync = (): TAsyncAction => async (dispatch, getState) => {
   try {
-    dispatch(setLoading(true))
+    const agentStatus = getState().agentStatus.pbxStatus.status
 
+    dispatch(setLoading(true))
+    dispatch(agentActions.setSipCanConnect(false))
+    dispatch(setSelectedCampaignId(null))
+    if (agentStatus !== 'offline') {
+      await apiAgents.changeWorkStatus({
+        workStatus: 'finish',
+        campaignId: '-1',
+      })
+    }
     await apiAuth.logout()
     authorized.remove()
     dispatch(removeUser())
-    dispatch(setSelectedCampaignId(null))
-    dispatch(agentActions.setSipCanConnect(false))
   } catch (e) {
     handleRestError({ e, dispatch })
   } finally {

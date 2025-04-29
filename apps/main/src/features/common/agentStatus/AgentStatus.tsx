@@ -59,6 +59,7 @@ export const AgentStatus: FC = () => {
   const selectedCampaignId = select(selectSelectedCampaignId)
   const router = useRouter()
 
+  // store updates
   useEffect(() => {
     if (user?.workStatus) dispatch(agentActions.setStatus(user?.workStatus))
   }, [user])

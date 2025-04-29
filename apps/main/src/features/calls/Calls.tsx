@@ -197,8 +197,10 @@ export const Calls: FC = () => {
     //   disconnect()
     // }
     onUnsubscribeCampaignStatus()
-    disconnect()
     dispatch(agentActions.setSipCanConnect(false))
+    if (selectedCampaignId) {
+      dispatch(setSelectedCampaignId(null))
+    }
   })
 
   const [onSelectedCampaign, setOnSelectedCampaign] = useState(true)
