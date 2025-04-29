@@ -47,11 +47,13 @@ export const Header: FC = () => {
     }, 500)
   }
 
-  const disconnectSip = () => hangupSip(true)
+  const disconnectSipEchoTest = () => {
+    if (rtcSession) hangupSip(true)
+  }
 
   const onClickEchoTest = () => {
     if (rtcSession) {
-      hangupSip(true)
+      disconnectSipEchoTest()
     } else {
       dispatch(agentActions.setHasCurrentRTCSession(true))
       dispatch(agentActions.setSipCanConnect(false))
@@ -83,12 +85,12 @@ export const Header: FC = () => {
             </div>
           )}
           {rtcSession && rtcSession?.status !== 8 && (
-            <CallTimer onClick={disconnectSip} />
+            <CallTimer onClick={disconnectSipEchoTest} />
           )}
           <UserProfile
             disabled={menuDisabled}
             onClickEchoTest={onClickEchoTest}
-            disconnectSip={disconnectSip}
+            disconnectSip={disconnectSipEchoTest}
             rtcSession={rtcSession}
           />
         </Flex>
