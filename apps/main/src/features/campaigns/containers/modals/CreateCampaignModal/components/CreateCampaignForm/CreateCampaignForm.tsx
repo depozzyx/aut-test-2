@@ -263,7 +263,7 @@ export const CreateCampaignForm: FC<Props> = ({
         }
       }
     } else if (option?.label === '-') {
-      formik.setFieldValue('holdTime', '')
+      formik.setFieldValue('holdTime', 0)
       formik.setFieldValue('assignedAgentIds', [])
       await getSettings(formik)
     }

@@ -23,6 +23,7 @@ import {
 type TProps = {
   // campaigns: Partial<TCampaign>[]
   onSelectedCampaign: boolean
+  onSelectCampaign: (id: string) => void
   callback: (value: string) => void
   onClose: () => void
   // campaignCompleted: boolean
@@ -32,6 +33,7 @@ export const SelectAgentCampaignModal = ({
   // campaigns,
   callback,
   onSelectedCampaign,
+  onSelectCampaign,
   // campaignCompleted,
   onClose,
 }: TProps): JSX.Element => {
@@ -60,8 +62,9 @@ export const SelectAgentCampaignModal = ({
     }),
     onSubmit: (formData) => {
       dispatch(setSelectedCampaignId(formData.campaignId))
-      if (formData.campaignId && onSelectedCampaign) {
-        callback(formData.campaignId)
+      if (formData.campaignId) {
+        onSelectCampaign(formData.campaignId)
+        if (onSelectedCampaign) callback(formData.campaignId)
       }
     },
   })
