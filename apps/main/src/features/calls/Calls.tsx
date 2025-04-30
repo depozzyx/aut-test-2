@@ -34,6 +34,7 @@ import { TAgentDashboard } from '@/api-rest/agents/types'
 import { isString } from 'formik'
 // import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { ButtonWithTooltip } from '@/features/campaigns/containers/tables/CampaignListTable/ButtonWithTooltip'
+import { notificationActions } from '@/features/common/notifications/store'
 import { CallButton } from './components/CallButton/CallButton'
 import { CallWindow } from './components/CallWindow'
 import { useSIPService } from './hooks/useSIPService'
@@ -96,6 +97,7 @@ export const Calls: FC = () => {
   const { pbxStatus, checkCampaignId, sipCanConnect, hasCurrentRTCSession } =
     select(agentStatusSelector)
   const [callDuration, setCallDuration] = useState(0)
+  const [hasCampaignSubscription, setHasCampaignSubscription] = useState(false)
 
   const {
     connect,
@@ -123,6 +125,7 @@ export const Calls: FC = () => {
   }
 
   const onUnsubscribeCampaignStatus = () => {
+    setHasCampaignSubscription(false)
     socket.unsubscribe(SUBSCRIBE_CAMPAIGN_STATUS)
   }
 
@@ -146,14 +149,25 @@ export const Calls: FC = () => {
   const [completed, setCompleted] = useState(false)
 
   const onSubscribeCampaignStatus = (campaignId: string) => {
+    if (hasCampaignSubscription) {
+      onUnsubscribeCampaignStatus()
+    }
+    setHasCampaignSubscription(true)
     campaignSocket.campaignStatusUpdate(
       {
         id: SUBSCRIBE_CAMPAIGN_STATUS,
         callback: (e) => {
-          if (e.status === 'complete') {
+          if (e.status === 'complete' || e.status === 'pause') {
             const { status } = store.getState().agentStatus.pbxStatus
             // eslint-disable-next-line no-console
-            console.info(`Received completed event, current Agent Status ${status}`)
+            console.info(`Received completed event, current Agent Status: ${status}`)
+            dispatch(
+              notificationActions.setNotification({
+                key: `notifications:agent.campaign-${e.status}`,
+                status: 'info',
+                values: {},
+              }),
+            )
             if (status === 'pause') {
               // eslint-disable-next-line no-console
               console.info('set oncomplete callback')
@@ -366,18 +380,12 @@ export const Calls: FC = () => {
           <div
             style={{
               minWidth: '150px',
-              // cursor: 'pointer',
             }}
           >
-            {/* <div style={{ fontSize: '14px', color: 'main22', marginBottom: '4px' }}> */}
-            {/*  {t('agents.dashboard.current-campaign')} */}
-            {/* </div> */}
             <Text color="main22"> {t('agents.dashboard.current-campaign')}</Text>
             <Flex align="start" justify="start" gap="8px">
               <div
                 style={{
-                  // fontSize: '18px',
-                  // fontWeight: '600',
                   display: 'flex',
                   flexDirection: 'column',
                 }}
@@ -524,12 +532,13 @@ export const Calls: FC = () => {
           <SelectAgentCampaignModal
             // campaigns={campaigns}
             onSelectedCampaign={onSelectedCampaign}
+            onSelectCampaign={onSubscribeCampaignStatus}
             callback={(id: string | undefined) => {
               if (id) {
                 // dispatch(agentActions.setSipCanConnect(true))
                 // dispatch(agentActions.setStatusAsync('start'))
                 setOnSelectedCampaign(false)
-                onSubscribeCampaignStatus(id)
+                // onSubscribeCampaignStatus(id) // cause already subscribed in modal submit
               }
             }}
             // campaignCompleted={campaignCompleted}

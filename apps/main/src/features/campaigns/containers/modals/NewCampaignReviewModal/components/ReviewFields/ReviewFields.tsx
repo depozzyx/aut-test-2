@@ -12,6 +12,7 @@ import {
   asyncCreateCampaign,
 } from '@/features/campaigns/store/create-campaign'
 import { TCampaignTableType } from '@/features/campaigns/types'
+import { selectLeadStatuses } from '@/features/leads/store/leads'
 import { Field } from './ReviewFields.styled'
 
 type TProps = {
@@ -23,6 +24,7 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
   const { setModal } = useModals()
   const { select, dispatch } = useRedux()
   const formDataForReview = select(selectFormDataForReview, shallowEqual)
+  const leadStatusOptions = select(selectLeadStatuses)
 
   const handleBack = () => {
     setModal({ modalName: MODAL_NAMES.CREATE_CAMPAIGN, isOpen: true })
@@ -54,15 +56,19 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
 
   const leadStatuses = useMemo(() => {
     if (!formDataForReview) return
-    if (formDataForReview.filterLeadStatuses.length > 1) {
-      return t('review-campaign.lead-statuses', {
-        count: formDataForReview.filterLeadStatuses.length,
-      })
-    }
-    if (formDataForReview.filterLeadStatuses.length === 1) {
-      return t('review-campaign.lead-status')
-    }
-    return 0
+    return leadStatusOptions
+      .filter((status) => formDataForReview.filterLeadStatuses.includes(status.value))
+      .map((status) => status.name)
+      .join(', ')
+    // if (formDataForReview.filterLeadStatuses.length > 1) {
+    //   return leadStatusOptions
+    //     .filter((status) => formDataForReview.filterLeadStatuses.includes(status.value))
+    //     .map((status) => status.name)
+    // }
+    // if (formDataForReview.filterLeadStatuses.length === 1) {
+    //   return t('review-campaign.lead-status')
+    // }
+    // return 0
   }, [formDataForReview?.filterLeadStatuses])
 
   // const recycleRules = useMemo(() => {
@@ -100,7 +106,11 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
           label={t('create-campaign.coefficient-label')}
           value={formDataForReview?.coefficient}
         />
-        <Field label={t('create-campaign.lead-statuses-review')} value={leadStatuses} />
+        <Field
+          label={t('create-campaign.lead-statuses-review')}
+          value={leadStatuses}
+          fullHeight
+        />
         {/* <Field label={t('create-campaign.recycle-rules')} value={recycleRules} /> */}
         <Field
           label={t('create-campaign.workHours-label')}

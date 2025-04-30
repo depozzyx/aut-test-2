@@ -11,7 +11,9 @@
   "agent": {
     "success-delete": "<value>{{ agentName }}</value> <translate>was successfully deleted</translate>",
     "create-success": "<translate>New agent</translate> <value>{{ agentName }}</value> <translate>was successfully added</translate>",
-    "update-success": "<translate>Agent`s info was successfully updated</translate>"
+    "update-success": "<translate>Agent`s info was successfully updated</translate>",
+    "campaign-pause": "<translate>Campaign has been paused</translate>",
+    "campaign-complete": "<translate>Campaign has been completed</translate>"
   },
   "settings": {
     "user-data-changed": "<translate>Changes saved</translate>"
