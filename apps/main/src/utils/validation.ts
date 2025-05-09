@@ -103,7 +103,7 @@ export const createCampaignValidationSchema = yup.object().shape({
   leadListIds: yup.array().of(yup.number()).default([]),
   holdTime: yup
     .number()
-    .min(0, 'Minimum 0')
+    .min(1, 'Minimum 1s')
     .max(60, 'Maximum 60 seconds')
     .default(0)
     .required('This field is required'),

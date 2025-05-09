@@ -175,7 +175,7 @@ export const Calls: FC = () => {
             } else if (status !== 'offline') {
               onCompleteCampaign()
             }
-            onUnsubscribeCampaignStatus()
+            if (e.status === 'complete') onUnsubscribeCampaignStatus()
           }
         },
       },
@@ -342,7 +342,7 @@ export const Calls: FC = () => {
       ? parseFloat(agent.ongoingTime)
       : agent.ongoingTime
     const seconds = Math.ceil(loggedTime + ongoingTime)
-    return seconds > 0 ? formatDuration(seconds) : ''
+    return seconds >= 0 ? formatDuration(seconds) : ''
   }
   const reFetchTimeout = 5000
   useEffect(() => {
@@ -419,7 +419,9 @@ export const Calls: FC = () => {
               {t('agents.dashboard.time-online')}
             </div>
             <div style={{ fontSize: '18px', fontWeight: '600' }}>
-              {agentDashboard?.timeOnline ? getTimeOnline(agentDashboard) : '0s'}
+              {agentDashboard?.timeOnline || agentDashboard?.ongoingTime
+                ? getTimeOnline(agentDashboard)
+                : '0s'}
             </div>
           </div>
 
@@ -508,7 +510,7 @@ export const Calls: FC = () => {
             {t('noCalls')}
           </Text>
         )}
-        {pbxStatus.status === 'oncall' && lead && (
+        {pbxStatus.status === 'oncall' && (
           <Card padding="32px 68px" fullWidth maxWidth={582}>
             <Text styles={{ textAlign: 'center', marginBottom: '40px' }} variant="f2">
               {t('newCall')}
@@ -517,7 +519,7 @@ export const Calls: FC = () => {
               <CallWindow
                 endedCall={endedCall}
                 setDuration={(duration) => setCallDuration(duration)}
-                callData={lead}
+                callData={lead || undefined}
                 leadStatuses={leadStatuses}
               />
               <CallButton onClick={() => endCall(true)} isLoading={endedCall}>
