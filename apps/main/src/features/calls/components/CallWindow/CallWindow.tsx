@@ -9,8 +9,10 @@ import { getLeadStatus } from '@/features/leads/containers/LeadsTable'
 import { Wrapper } from './CallWindow.styled'
 import { TCallsInit } from '../../../../api/socket/call/types'
 
+const unknownString = 'unknown'
+
 export const CallWindow: FC<{
-  callData: TCallsInit
+  callData?: TCallsInit
   endedCall: boolean
   setDuration: (duration: number) => void
   leadStatuses: TLeadStatusData[]
@@ -36,22 +38,25 @@ export const CallWindow: FC<{
       </Wrapper>
       <Flex justify="start" direction="column">
         <Text>
-          {t('campaign')}: {callData.campaign.name}
+          {t('campaign')}: {callData?.campaign?.name || unknownString}
         </Text>
         <Text>
-          {t('lead')}: {callData.lead.name}
+          {t('lead')}: {callData?.lead?.name || unknownString}
         </Text>
         <Text>
-          {t('phone')}: {callData.lead.phone}
+          {t('phone')}: {callData?.lead?.phone || unknownString}
         </Text>
         <Text>
-          {t('timezone')}: {callData.lead.timezone}
+          {t('timezone')}: {callData?.lead?.timezone || unknownString}
         </Text>
         <Text>
-          {t('status')}: {getLeadStatus(leadStatuses, callData.lead.status)}
+          {t('status')}:{' '}
+          {callData?.lead?.status
+            ? getLeadStatus(leadStatuses, callData?.lead?.status)
+            : unknownString}
         </Text>
         <Text>
-          {t('source')}: {callData.lead.source}
+          {t('source')}: {callData?.lead?.source || unknownString}
         </Text>
       </Flex>
     </Flex>

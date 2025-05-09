@@ -53,7 +53,7 @@ export const ActiveAgentsTable = memo((): JSX.Element => {
       ? parseFloat(agent.ongoingTime)
       : agent.ongoingTime
     const seconds = Math.ceil(loggedTime + ongoingTime)
-    return seconds > 0 ? formatDuration(seconds) : ''
+    return seconds >= 0 ? formatDuration(seconds) : ''
   }
 
   const headers: THeader<TActiveAgentsRowKeys>[] = [
