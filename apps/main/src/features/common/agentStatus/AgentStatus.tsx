@@ -145,7 +145,8 @@ export const AgentStatus: FC = () => {
         disabled={
           pbxStatus.status === 'oncall' ||
           pbxStatus.status === 'ringing' ||
-          hasCurrentRTCSession
+          hasCurrentRTCSession ||
+          (pbxStatus.status === 'pause' && pbxStatus.reason === 'feedback')
         }
         onChange={checkAndSetCampaign}
       />

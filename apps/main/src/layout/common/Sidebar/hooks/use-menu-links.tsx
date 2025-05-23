@@ -178,12 +178,12 @@ export const useMenuLinks = (): TMenuItem[] => {
         //   disabled: false,
         //   availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
         // },
-        {
-          title: t('settings_activity_log'),
-          link: ROUTES.SETTINGS_ACTIVITY_LOG_GENERAL,
-          disabled: false,
-          availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
-        },
+        // {
+        //   title: t('settings_activity_log'),
+        //   link: ROUTES.SETTINGS_ACTIVITY_LOG_GENERAL,
+        //   disabled: false,
+        //   availableRoles: [ERoles.MANAGER, ERoles.ADMIN],
+        // },
       ],
     },
   ]
