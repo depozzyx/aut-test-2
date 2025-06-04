@@ -75,7 +75,7 @@ module.exports = {
     'no-console': [
       'error',
       {
-        allow: ['warn', 'error'],
+        allow: ['warn', 'error', 'info', 'debug'],
       },
     ],
     'import/no-extraneous-dependencies': 'off',
@@ -86,6 +86,14 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      },
+    ],
+    '@typescript-eslint/no-explicit-any': 'off',
   },
   settings: {
     'import/resolver': {

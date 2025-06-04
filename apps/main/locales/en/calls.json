@@ -7,7 +7,7 @@
   "failure": "Failure",
   "selectCampaignTitle": "Select campaign",
   "selectPlaceholder": "Select...",
-  "noCampaignError": "Contact your admin, because your campaign is inactive or don’t exist!",
+  "noCampaignError": "Contact your admin, because your campaign is inactive or don't exist!",
   "onCompleteCampaignMessage": "Your lead queue for calls is empty. Thank you for your work!",
   "campaign": "Campaign",
   "lead": "Lead",
@@ -37,5 +37,27 @@
       "time-online": "Time Online: ",
       "not-online": "(Go online to join the selected campaign.)"
     }
+  },
+  "health-check": {
+    "system-check-title": "System Health Check",
+    "healthy": "System is healthy",
+    "unhealthy": "System is unhealthy",
+    "close": "Close",
+    "api-status": "API Connection",
+    "websocket-status": "WebSocket Connection",
+    "sip-status": "SIP Connection",
+    "success": "Success",
+    "failed": "Failed",
+    "checking": "Checking...",
+    "waiting": "Waiting...",
+    "retry": "Retry",
+    "retry-timeout": "Please wait...",
+    "support-team": "Support Team",
+    "support-message-with-link": "We apologize for the temporary inconvenience. Please contact <supportTeam>our support team</supportTeam> for assistance.",
+    "support-message": "We apologize for the temporary inconvenience. Please contact our support team for assistance.",
+    "confirm-close-title": "Are you sure you want to close the system check with errors?",
+    "confirm-close-desc": "We do not guarantee stable system operation after this. If you have issues, please contact support.",
+    "confirm-close-ok": "Yes, close and continue",
+    "cancel": "Cancel"
   }
 }

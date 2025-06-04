@@ -2,9 +2,13 @@ import { Flex } from '@/components/Flex'
 import { Card } from '@peiko/components/Card'
 import { Text } from '@peiko/components/Text'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState, useCallback } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import dynamic from 'next/dynamic'
+import JsSIP from 'jssip'
+import { UAConfiguration } from 'jssip/lib/UA'
+import { decrypt } from '@peiko/utils/crypto-js'
+import { API_SECRET_KEY } from '@/constants/config'
 
 import { CallIcon } from '@/icons/CallIcon'
 import { useRedux } from '@/hooks/use-redux'
@@ -32,9 +36,10 @@ import { formatDuration } from '@/utils/date-to-string'
 import { CardTile } from '@/features/settings/components/CardTile'
 import { TAgentDashboard } from '@/api-rest/agents/types'
 import { isString } from 'formik'
-// import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { ButtonWithTooltip } from '@/features/campaigns/containers/tables/CampaignListTable/ButtonWithTooltip'
 import { notificationActions } from '@/features/common/notifications/store'
+import { useCounter } from '@/features/leads/hooks/useCounter'
+import { ERoles } from '@/constants/profile'
 import { CallButton } from './components/CallButton/CallButton'
 import { CallWindow } from './components/CallWindow'
 import { useSIPService } from './hooks/useSIPService'
@@ -42,6 +47,7 @@ import { agentActions, agentStatusSelector } from '../common/agentStatus/store'
 import { errorActions, handleRestError } from '../common/error'
 import { socket } from '../../api/socket/Socket'
 import { campaignSocket } from '../../api/socket/campaign'
+import { HealthCheckStatusModal } from './components/HealthCheckStatusModal'
 
 const SelectAgentCampaignModal = dynamic(
   () =>
@@ -89,7 +95,30 @@ const checkStatus = async (dispatch: TDispatch) => {
   }
 }
 
+export type THealthCheckStep = 'pending' | 'loading' | 'success' | 'error'
+export type THealthStatus = {
+  isHealthy: boolean
+  api: {
+    status: THealthCheckStep
+    progress: number
+    error?: string
+  }
+  websocket: {
+    status: THealthCheckStep
+    progress: number
+    error?: string
+  }
+  sip: {
+    status: THealthCheckStep
+    progress: number
+    error?: string
+  }
+}
+
 export const Calls: FC = () => {
+  const FEEDBACK_TIMEOUT = 60000 // 60 seconds
+  const REFETCH_AGENT_DASHBOARD_TIMEOUT = 5000 // 5 seconds
+
   const { t } = useTranslation('calls')
 
   const { dispatch, select } = useRedux()
@@ -109,9 +138,12 @@ export const Calls: FC = () => {
     endedCall,
     setEndedCall,
     setLead,
+    onSubscribeCalls,
+    onUnsubscribeCalls,
   } = useSIPService()
 
-  const { user } = useAuth()
+  const { user, pbxAuth } = useAuth()
+  // const { user } = useAuth()
   const { modalState, setModal } = useModals()
   const [campaignCompleted, setCampaignCompleted] = useState(false)
 
@@ -187,8 +219,9 @@ export const Calls: FC = () => {
   useEffect(() => {
     if (sipCanConnect && !hasCurrentRTCSession && !ua?.isConnected()) {
       // eslint-disable-next-line no-console
-      console.info(`CONNECTING ... [${pbxStatus.status}]`)
+      console.info(`CONNECTING TO SIP... [${pbxStatus.status}]`)
       connect()
+      onSubscribeCalls()
       keepAlive()
       // setTimeout(() => {
       //   // eslint-disable-next-line no-console
@@ -198,19 +231,337 @@ export const Calls: FC = () => {
     }
   }, [ua, hasCurrentRTCSession, sipCanConnect])
 
+  /**
+   * PBX AND SIP SYSTEM HEALTH CHECK
+   * */
+  const apiCounter = useCounter(99, 1500)
+  const wsCounter = useCounter(99, 1500)
+  const sipCounter = useCounter(99, 1500)
+  const [healthStatus, setHealthStatus] = useState<THealthStatus>({
+    isHealthy: false,
+    api: { status: 'pending', progress: 0 },
+    websocket: { status: 'pending', progress: 0 },
+    sip: { status: 'pending', progress: 0 },
+  })
+  const handleCloseHealthCheck = async () => {
+    setModal({ modalName: MODAL_NAMES.HEALTH_CHECK_STATUS, isOpen: false })
+    setHealthStatus({
+      isHealthy: false,
+      api: { status: 'pending', progress: 0 },
+      websocket: { status: 'pending', progress: 0 },
+      sip: { status: 'pending', progress: 0 },
+    })
+    if (healthStatus.isHealthy) {
+      await openModal()
+    }
+  }
+  const testSIPConnection = useCallback(async () => {
+    if (!pbxAuth) return false
+
+    return new Promise<boolean>((resolve) => {
+      // eslint-disable-next-line no-console
+      console.info('Starting SIP test connection...')
+
+      const sipOptions = {
+        pcConfig: {
+          rtcpMuxPolicy: 'negotiate' as 'require',
+          iceServers: [
+            {
+              urls: process.env.NEXT_PUBLIC_SIP_COTURN_URL as string,
+              username: process.env.NEXT_PUBLIC_SIP_COTURN_USER,
+              credential: process.env.NEXT_PUBLIC_SIP_COTURN_PASSWORD,
+            },
+          ],
+          iceTransportPolicy: 'relay',
+        },
+        mediaConstraints: {
+          audio: true,
+          video: false,
+        },
+        rtcOfferConstraints: {
+          offerToReceiveAudio: true,
+        },
+      }
+
+      const configuration: UAConfiguration = {
+        uri: `sip:${pbxAuth.username}@${pbxAuth.domain}`,
+        password: decrypt(pbxAuth.password, API_SECRET_KEY),
+        sockets: new JsSIP.WebSocketInterface(`wss://${pbxAuth.domain}:7777/ws`),
+        register: true,
+        ...sipOptions,
+        // connection_recovery_min_interval: 1,
+        // connection_recovery_max_interval: 1,
+      }
+
+      const testUA = new JsSIP.UA(configuration)
+
+      let isResolved = false
+      let testSession: any = null
+      const timeout = setTimeout(() => {
+        if (testUA && !isResolved) {
+          console.error('SIP test connection timeout')
+          if (testSession) testSession.terminate()
+          testUA.terminateSessions()
+          testUA.unregister()
+          testUA.stop()
+          resolve(false)
+        }
+      }, 10000)
+
+      testUA.on('connected', () => {
+        console.info('SIP test websocket connected')
+      })
+      testUA.on('disconnected', () => {
+        console.info('SIP test websocket disconnected')
+      })
+      testUA.on('registered', () => {
+        console.info('SIP test registration successful')
+        testSession = testUA?.call('*43', {
+          mediaConstraints: { audio: true, video: false },
+        })
+        testSession.on('progress', () => {
+          console.info('SIP test call is in progress...')
+        })
+        testSession.on('confirmed', () => {
+          console.info('SIP test call established!')
+          if (testSession) {
+            setTimeout(() => {
+              testSession?.terminate()
+            }, 1000)
+          }
+        })
+        testSession.on('ended', () => {
+          console.info('SIP test call ended')
+          if (testUA && !isResolved) {
+            isResolved = true
+            clearTimeout(timeout)
+            setTimeout(() => {
+              testUA?.terminateSessions()
+              testUA?.unregister()
+              testUA?.stop()
+              resolve(true)
+            }, 1000)
+          }
+        })
+        testSession.on('failed', (e: any) => {
+          console.error('SIP test call failed', e)
+          if (testUA && !isResolved) {
+            isResolved = true
+            clearTimeout(timeout)
+            setTimeout(() => {
+              testUA?.terminateSessions()
+              testUA?.unregister()
+              testUA?.stop()
+              resolve(false)
+            }, 1000)
+          }
+        })
+      })
+      testUA.on('registrationFailed', (e) => {
+        console.error('SIP test registration failed:', e)
+        if (testUA && !isResolved) {
+          isResolved = true
+          clearTimeout(timeout)
+          setTimeout(() => {
+            testUA?.terminateSessions()
+            testUA?.unregister()
+            testUA?.stop()
+            resolve(false)
+          }, 1000)
+        }
+      })
+
+      testUA?.start()
+    })
+  }, [pbxAuth])
+  const checkSystemHealth = useCallback(async () => {
+    setHealthStatus((prev) => ({
+      ...prev,
+      api: { status: 'loading', progress: 0 },
+      websocket: { ...prev.websocket, status: 'pending', progress: 0 },
+      sip: { ...prev.sip, status: 'pending', progress: 0 },
+      isHealthy: false,
+    }))
+    apiCounter.resetCount()
+    apiCounter.startCounter()
+    let apiError = ''
+    let apiOk = false
+    let healthData: any = null
+    // eslint-disable-next-line no-promise-executor-return
+    await new Promise((resolve) => setTimeout(resolve, 1300))
+    try {
+      const response = await apiCalls.checkPbxApiHealth('api')
+      healthData = response.data.data
+      if (!healthData.API_STATUS.isConnected) {
+        apiError =
+          healthData.API_STATUS.error ||
+          healthData.API_STATUS.details?.lastError ||
+          healthData.API_STATUS.details?.apiStatus?.endpoints?.['agent-status']?.error ||
+          healthData.API_STATUS.status ||
+          'API error'
+      } else {
+        apiOk = true
+      }
+    } catch (e) {
+      apiError = 'API error'
+    }
+    apiCounter.stopCounter()
+    setHealthStatus((prev) => ({
+      ...prev,
+      api: {
+        status: apiOk ? 'success' : 'error',
+        progress: 100,
+        error: apiOk ? undefined : apiError,
+      },
+      websocket: { ...prev.websocket, status: 'pending', progress: 0 },
+      sip: { ...prev.sip, status: 'pending', progress: 0 },
+      isHealthy: false,
+    }))
+
+    if (!apiOk) {
+      setHealthStatus((prev) => ({
+        ...prev,
+        websocket: { status: 'pending', progress: 0 },
+        sip: { status: 'pending', progress: 0 },
+        isHealthy: false,
+      }))
+      setModal({ modalName: MODAL_NAMES.HEALTH_CHECK_STATUS, isOpen: true })
+      return
+    }
+    setHealthStatus((prev) => ({
+      ...prev,
+      websocket: { status: 'loading', progress: 0 },
+    }))
+    wsCounter.resetCount()
+    wsCounter.startCounter()
+    let wsError = ''
+    let wsOk = false
+    // eslint-disable-next-line no-promise-executor-return
+    await new Promise((resolve) => setTimeout(resolve, 1300))
+    try {
+      const wsResponse = await apiCalls.checkPbxApiHealth('ws')
+      const wsData = wsResponse.data.data
+      if (!wsData.WS_STATUS.isConnected) {
+        wsError =
+          wsData.WS_STATUS.readyState ||
+          wsData.WS_STATUS.stats?.lastEvent ||
+          wsData.WS_STATUS.stats?.lastReconnect ||
+          'WebSocket error'
+      } else {
+        wsOk = true
+      }
+    } catch (e) {
+      wsError = 'WebSocket error'
+    }
+    wsCounter.stopCounter()
+    setHealthStatus((prev) => ({
+      ...prev,
+      websocket: {
+        status: wsOk ? 'success' : 'error',
+        progress: 100,
+        error: wsOk ? undefined : wsError,
+      },
+      sip: { ...prev.sip, status: 'pending', progress: 0 },
+      isHealthy: false,
+    }))
+
+    if (!wsOk) {
+      setHealthStatus((prev) => ({
+        ...prev,
+        sip: { status: 'pending', progress: 0 },
+        isHealthy: false,
+      }))
+      setModal({ modalName: MODAL_NAMES.HEALTH_CHECK_STATUS, isOpen: true })
+      return
+    }
+    setHealthStatus((prev) => ({
+      ...prev,
+      sip: { status: 'loading', progress: 0 },
+    }))
+    sipCounter.resetCount()
+    sipCounter.startCounter()
+    let sipError = ''
+    let sipOk = false
+    // eslint-disable-next-line no-promise-executor-return
+    await new Promise((resolve) => setTimeout(resolve, 1300))
+    try {
+      const sipResult = await testSIPConnection()
+      if (!sipResult) {
+        sipError = 'SIP registration test failed'
+      } else {
+        sipOk = true
+      }
+    } catch (e) {
+      sipError = 'SIP error'
+    }
+    sipCounter.stopCounter()
+
+    if (ua) {
+      ua.terminateSessions()
+      ua.unregister()
+      ua.stop()
+    }
+    disconnect()
+
+    setHealthStatus((prev) => ({
+      ...prev,
+      sip: {
+        status: sipOk ? 'success' : 'error',
+        progress: 100,
+        error: sipOk ? undefined : sipError,
+      },
+      isHealthy: apiOk && wsOk && sipOk,
+    }))
+    setModal({ modalName: MODAL_NAMES.HEALTH_CHECK_STATUS, isOpen: true })
+  }, [apiCounter, wsCounter, sipCounter, setModal, testSIPConnection, disconnect])
+  useEffect(() => {
+    if (healthStatus.api.status === 'loading' && healthStatus.api.progress < 99) {
+      setHealthStatus((prev) =>
+        prev.api.status === 'loading' && prev.api.progress < 99
+          ? { ...prev, api: { ...prev.api, progress: apiCounter.count } }
+          : prev,
+      )
+    }
+  }, [apiCounter.count])
+  useEffect(() => {
+    if (
+      healthStatus.websocket.status === 'loading' &&
+      healthStatus.websocket.progress < 99
+    ) {
+      setHealthStatus((prev) =>
+        prev.websocket.status === 'loading' && prev.websocket.progress < 99
+          ? { ...prev, websocket: { ...prev.websocket, progress: wsCounter.count } }
+          : prev,
+      )
+    }
+  }, [wsCounter.count])
+  useEffect(() => {
+    if (healthStatus.sip.status === 'loading' && healthStatus.sip.progress < 99) {
+      setHealthStatus((prev) =>
+        prev.sip.status === 'loading' && prev.sip.progress < 99
+          ? { ...prev, sip: { ...prev.sip, progress: sipCounter.count } }
+          : prev,
+      )
+    }
+  }, [sipCounter.count])
+
   useMount(() => {
+    if (user?.role === 'agent') {
+      checkSystemHealth()
+    }
     // eslint-disable-next-line no-console
-    console.debug('on mount isConnected: ', ua?.isConnected())
+    console.info('on mount isConnected: ', ua?.isConnected())
     dispatch(getLeadStatuses())
     checkStatus(dispatch)
   })
   useUnmount(() => {
     // eslint-disable-next-line no-console
-    console.debug('disconnect on unmount')
+    console.info('disconnect on unmount')
     // if (['offline', 'finish', 'pause'].includes(pbxStatus.status)) {
     //   disconnect()
     // }
     onUnsubscribeCampaignStatus()
+    onUnsubscribeCalls()
     dispatch(agentActions.setSipCanConnect(false))
     if (selectedCampaignId) {
       dispatch(setSelectedCampaignId(null))
@@ -272,24 +623,36 @@ export const Calls: FC = () => {
 
   const onCallFeedback = async (status: string) => {
     try {
-      if (!lead) return
+      if (!lead) {
+        console.error('Lead info for feedback not provided close feedback and unpause')
+        dispatch(agentActions.setStatusAsync('unpause'))
+        return
+      }
       const holdTimeSec = lead?.campaign?.holdTime
       await apiCalls.feedback({
         status,
         requestId: lead.requestId,
       })
       await resetAllData()
-      if (holdTimeSec || holdTimeSec === 0) {
+      if (holdTimeSec) {
+        console.info(
+          `[SET HOLD for ${holdTimeSec} sec]! -> and unpause after`,
+          new Date(),
+        )
         dispatch(agentActions.setStatusAsync('pause', 'hold'))
         // un hold after timeout
         setTimeout(() => {
+          console.info(
+            `[CAMPAIGN HOLD TIMER set for ${holdTimeSec} seconds]! -> unpause`,
+            new Date(),
+          )
           const { status } = store.getState().agentStatus.pbxStatus
           if (completed) {
             onCompleteCampaign()
             setCompleted(false)
           } else {
             // eslint-disable-next-line no-console
-            console.debug(`campaign is not completed yet ${status} => unpause`)
+            console.info(`campaign is not completed yet ${status} => unpause`)
             dispatch(agentActions.setStatusAsync('unpause'))
           }
         }, holdTimeSec * 1000)
@@ -334,6 +697,8 @@ export const Calls: FC = () => {
   useEffect(() => {
     getCurrentAgentDashboard(dispatch, setAgentDashboard)
   }, [selectedCampaignId])
+
+  // get time online
   const getTimeOnline = (agent: TAgentDashboard) => {
     const loggedTime = isString(agent.timeOnline)
       ? parseFloat(agent.timeOnline)
@@ -344,17 +709,72 @@ export const Calls: FC = () => {
     const seconds = Math.ceil(loggedTime + ongoingTime)
     return seconds >= 0 ? formatDuration(seconds) : ''
   }
-  const reFetchTimeout = 5000
+
+  // re-fetch agent dashboard data every 5 seconds
+  // const reFetchTimeout = 5000
   useEffect(() => {
-    if (reFetchTimeout) {
+    if (user?.role !== ERoles.AGENT && REFETCH_AGENT_DASHBOARD_TIMEOUT) {
       const interval = setInterval(() => {
         getCurrentAgentDashboard(dispatch, setAgentDashboard)
-      }, reFetchTimeout)
+      }, REFETCH_AGENT_DASHBOARD_TIMEOUT)
 
       return () => clearInterval(interval)
     }
-  }, [reFetchTimeout, dispatch])
+  }, [REFETCH_AGENT_DASHBOARD_TIMEOUT, dispatch])
 
+  // AUT-198 - Auto-move agent from feedback to hold after 60s if no feedback is given
+  const [feedbackTimeoutId, setFeedbackTimeoutId] = useState<NodeJS.Timeout | null>(null)
+
+  // (also if pbx agent state is another - system should update it)
+  useEffect(() => {
+    const isAgentOnFeedback =
+      pbxStatus.status === 'pause' && pbxStatus.reason === 'feedback'
+    const holdTimeoutSec = lead?.campaign?.holdTime || 1
+
+    if (user?.role === ERoles.AGENT && isAgentOnFeedback) {
+      const timeoutId = setTimeout(() => {
+        console.info(`[FEEDBACK TIMOUT 60 sec]! => hold`, new Date())
+        dispatch(agentActions.setStatusAsync('pause', 'hold'))
+
+        // Only set the unpause timer if we successfully transitioned to hold
+        if (holdTimeoutSec) {
+          console.info(
+            `[UNPAUSE after auto HOLD by campaign hold time setting ${holdTimeoutSec} s] -> unpause`,
+            new Date(),
+          )
+          setTimeout(() => {
+            const { status } = store.getState().agentStatus.pbxStatus
+            if (status === 'pause') {
+              console.info(
+                `[CAMPAIGN HOLD TIMER ${holdTimeoutSec}] -> unpause`,
+                new Date(),
+              )
+              if (completed) {
+                onCompleteCampaign()
+                setCompleted(false)
+              } else {
+                dispatch(agentActions.setStatusAsync('unpause'))
+              }
+            }
+          }, holdTimeoutSec * 1000)
+        }
+      }, +FEEDBACK_TIMEOUT)
+      setFeedbackTimeoutId(timeoutId)
+
+      // clear on out
+      return () => {
+        clearTimeout(timeoutId)
+        setFeedbackTimeoutId(null)
+      }
+    }
+    // if changed - clear
+    if (feedbackTimeoutId) {
+      clearTimeout(feedbackTimeoutId)
+      setFeedbackTimeoutId(null)
+    }
+  }, [pbxStatus.status, pbxStatus.reason, dispatch, lead?.campaign?.holdTime, completed])
+
+  // Show selected campaign name
   const showSelectedCampaignName = (): string => {
     let result = '-'
     if (selectedCampaignId && !agentDashboard?.currentCampaignName) {
@@ -368,8 +788,39 @@ export const Calls: FC = () => {
     return result
   }
 
+  // Check if health check modal should be shown
+  const isChecking =
+    healthStatus.api.status === 'loading' ||
+    healthStatus.websocket.status === 'loading' ||
+    healthStatus.sip.status === 'loading' ||
+    (healthStatus.sip.status === 'pending' &&
+      (healthStatus.api.status === 'error' || healthStatus.websocket.status === 'error'))
+
+  const shouldShowHealthModal =
+    isChecking ||
+    (modalState?.modalName === MODAL_NAMES.HEALTH_CHECK_STATUS && modalState.isOpen)
+
+  if (shouldShowHealthModal) {
+    return (
+      <HealthCheckStatusModal
+        status={healthStatus}
+        onClose={handleCloseHealthCheck}
+        onRetry={checkSystemHealth}
+        open
+      />
+    )
+  }
+
   return (
     <>
+      <HealthCheckStatusModal
+        status={healthStatus}
+        onClose={handleCloseHealthCheck}
+        onRetry={checkSystemHealth}
+        open={
+          modalState?.modalName === MODAL_NAMES.HEALTH_CHECK_STATUS && modalState.isOpen
+        }
+      />
       <Card fullWidth styles={{ marginTop: '40px', padding: '24px' }}>
         <CardTile>{t('agents.dashboard.title')}</CardTile>
         <Flex
@@ -437,74 +888,74 @@ export const Calls: FC = () => {
       </Card>
 
       <Flex justify="center" align="center" styles={{ flex: 1 }}>
-        {lead?.requestId &&
-          endedCall &&
-          pbxStatus.status === 'pause' &&
-          pbxStatus.reason === 'feedback' && (
-            <Card
-              padding="32px 60px"
-              fullWidth
-              styles={{ textAlign: 'center' }}
-              maxWidth="max-content"
+        {pbxStatus.status === 'pause' && pbxStatus.reason === 'feedback' && (
+          <Card
+            padding="32px 60px"
+            fullWidth
+            styles={{ textAlign: 'center' }}
+            maxWidth="max-content"
+          >
+            <Text variant="f2">{t('feedback')}</Text>
+            <Flex
+              justify="center"
+              direction="row"
+              styles={{ marginTop: '24px', marginBottom: '24px' }}
             >
-              <Text variant="f2">{t('feedback')}</Text>
-              <Flex
-                justify="center"
-                direction="row"
-                styles={{ marginTop: '24px', marginBottom: '24px' }}
+              <Flex align="start" direction="column">
+                <Text>
+                  {`${t('lead')}: `} {lead?.lead?.name || 'unknown'}
+                </Text>
+                <Text>
+                  {`${t('country')}: `}{' '}
+                  {lead?.leadCountryCode
+                    ? getCountryName(lead?.leadCountryCode)
+                    : 'unknown'}
+                </Text>
+              </Flex>
+            </Flex>
+            <Flex justify="center">
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: `repeat(${gridRepeatCount(
+                    leadStatuses.length,
+                  )}, 1fr)`,
+                  gridRowGap: '24px',
+                  gridColumnGap: '32px',
+                }}
               >
-                <Flex align="start" direction="column">
-                  <Text>
-                    {`${t('lead')}: `} {lead.lead.name}
-                  </Text>
-                  <Text>
-                    {`${t('country')}: `} {getCountryName(lead.leadCountryCode)}
-                  </Text>
-                </Flex>
-              </Flex>
-              <Flex justify="center">
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: `repeat(${gridRepeatCount(
-                      leadStatuses.length,
-                    )}, 1fr)`,
-                    gridRowGap: '24px',
-                    gridColumnGap: '32px',
-                  }}
-                >
-                  {leadStatuses
-                    .filter((status) => !status.feedbackDisabled)
-                    .map(({ name, value }) => (
-                      <div key={value}>
-                        <Text
-                          styles={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            textAlign: 'center',
-                            cursor: 'pointer',
-                            padding: '6px',
-                            border: '1px solid',
-                            borderColor: palette.overlay,
-                            borderRadius: '4px',
-                            width: '100px',
-                            height: '55px',
-                            ':hover': {
-                              borderColor: palette.main21,
-                            },
-                          }}
-                          variant="f8"
-                          onClick={() => onCallFeedback(value)}
-                        >
-                          {name}
-                        </Text>
-                      </div>
-                    ))}
-                </div>
-              </Flex>
-            </Card>
-          )}
+                {leadStatuses
+                  .filter((status) => !status.feedbackDisabled)
+                  .map(({ name, value }) => (
+                    <div key={value}>
+                      <Text
+                        styles={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          textAlign: 'center',
+                          cursor: 'pointer',
+                          padding: '6px',
+                          border: '1px solid',
+                          borderColor: palette.overlay,
+                          borderRadius: '4px',
+                          width: '100px',
+                          height: '55px',
+                          ':hover': {
+                            borderColor: palette.main21,
+                          },
+                        }}
+                        variant="f8"
+                        onClick={() => onCallFeedback(value)}
+                      >
+                        {name}
+                      </Text>
+                    </div>
+                  ))}
+              </div>
+            </Flex>
+          </Card>
+        )}
         {!(pbxStatus.status === 'oncall') && !lead && !endedCall && !callDuration && (
           <Text styles={{ textAlign: 'center' }} variant="f4">
             {t('noCalls')}
