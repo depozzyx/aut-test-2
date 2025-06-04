@@ -40,6 +40,8 @@ export const useSIPService = (
   setEndedCall: (endedCall: boolean) => void
   lead: TCallsInit | null
   setLead: (lead: TCallsInit | null) => void
+  onSubscribeCalls: () => void
+  onUnsubscribeCalls: () => void
 } => {
   const { pbxAuth } = useAuth()
   const { dispatch } = useRedux()
@@ -93,7 +95,7 @@ export const useSIPService = (
     console.log('disconnect => unregister and stop')
     ua?.unregister()
     ua?.stop()
-    if (!echoTestMode) onUnsubscribeCalls()
+    // if (!echoTestMode) onUnsubscribeCalls()
   }
 
   const makeEchoTest = () => {
@@ -121,12 +123,14 @@ export const useSIPService = (
     if (isClient) await hangupAsync()
   }
 
+  const initCallCallback = (e: TCallsInit) => {
+    // console.info(`FROM PBX WS INIT CALL \n: ${JSON.stringify(e, null, 2)}`) // TODO tmp added for check init call event data
+    setLead(e)
+  }
   const onSubscribeCalls = () => {
     callSocket.callInit({
       id: TEXTS.SUBSCRIBE_CALLS,
-      callback: (e) => {
-        setLead(e)
-      },
+      callback: initCallCallback,
     })
     callSocket.callEnd({
       id: TEXTS.SUBSCRIBE_CALLS_END,
@@ -136,7 +140,7 @@ export const useSIPService = (
 
   const connect = () => {
     ua?.start()
-    if (!echoTestMode) onSubscribeCalls()
+    // onSubscribeCalls()
   }
 
   const keepAlive = () => {
@@ -160,105 +164,112 @@ export const useSIPService = (
   }
 
   useEffect(() => {
-    if (pbxAuth)
-      setUA(() => {
-        const password = decrypt(pbxAuth?.password, API_SECRET_KEY)
-        // console.warn(password) // debug
+    if (pbxAuth) {
+      if (ua) {
+        ua.terminateSessions()
+        ua.unregister()
+        ua.stop()
+      } else {
+        setUA(() => {
+          const password = decrypt(pbxAuth?.password, API_SECRET_KEY)
+          // console.warn(password) // debug
 
-        const configuration: UAConfiguration = {
-          uri: `sip:${pbxAuth?.username}@${pbxAuth?.domain}`,
-          password,
-          sockets: jsSIPSocket,
-          register: true,
-          ...sipOptions,
-          connection_recovery_min_interval: 1,
-          connection_recovery_max_interval: 1,
-        }
-        const user = new JsSIP.UA(configuration)
+          const configuration: UAConfiguration = {
+            uri: `sip:${pbxAuth?.username}@${pbxAuth?.domain}`,
+            password,
+            sockets: jsSIPSocket,
+            register: true,
+            ...sipOptions,
+            // connection_recovery_min_interval: 1,
+            // connection_recovery_max_interval: 1,
+          }
+          const user = new JsSIP.UA(configuration)
 
-        user.on('registered', () => {
-          console.warn('SIP registered')
-        })
+          user.on('registered', () => {
+            console.warn('SIP registered')
+          })
 
-        user.on('connected', () => {
-          console.warn('SIP connected')
-        })
+          user.on('connected', () => {
+            console.warn('SIP connected')
+          })
 
-        user.on('disconnected', (e) => {
-          console.warn('Disconnected from SIP server', e)
-          dispatch(agentActions.setSipConnected(false))
-        })
+          user.on('disconnected', (e) => {
+            console.warn('Disconnected from SIP server', e)
+            dispatch(agentActions.setSipConnected(false))
+          })
 
-        user.on(
-          'newRTCSession',
-          ({ session }: IncomingRTCSessionEvent | OutgoingRTCSessionEvent): void => {
-            // console.warn('New session started', session?.direction)
+          user.on(
+            'newRTCSession',
+            ({ session }: IncomingRTCSessionEvent | OutgoingRTCSessionEvent): void => {
+              // console.warn('New session started', session?.direction)
 
-            const answerCall = async () => {
-              if (session) {
-                session.answer(sipOptions)
-                if (echoTestMode && setCurrentSession) {
-                  dispatch(agentActions.setHasCurrentRTCSession(true))
-                  setCurrentSession(session)
-                }
-              } else {
-                console.warn('No call session')
-              }
-            }
-            setTimeout(() => {
-              answerCall()
-            }, 2000)
-
-            session.on('peerconnection', ({ peerconnection }) => {
-              // eslint-disable-next-line no-param-reassign
-              peerconnection.ontrack = (event) => {
-                console.warn('New track added:', event.track)
-                const remoteStream = event.streams[0]
-                const audioElement = document.createElement('audio')
-                audioElement.srcObject = remoteStream
-                audioElement.autoplay = true
-                document.body.appendChild(audioElement)
-              }
-            })
-
-            session.on('icecandidate', (event) => {
-              const iceCandidate = event?.candidate
-              if (typeof iceCandidateTimeout === 'number')
-                clearTimeout(iceCandidateTimeout)
-
-              iceCandidateTimeout = setTimeout(() => event.ready(), 5000)
-
-              if (
-                iceCandidate &&
-                iceCandidate.type === 'srflx' &&
-                iceCandidate.relatedAddress &&
-                iceCandidate.relatedPort
-              ) {
-                if (iceCandidateTimeout != null) {
-                  event.ready()
+              const answerCall = async () => {
+                if (session) {
+                  session.answer(sipOptions)
+                  if (echoTestMode && setCurrentSession) {
+                    dispatch(agentActions.setHasCurrentRTCSession(true))
+                    setCurrentSession(session)
+                  }
+                } else {
+                  console.warn('No call session')
                 }
               }
-            })
+              setTimeout(() => {
+                answerCall()
+              }, 2000)
 
-            session.on('ended', (e) => {
-              console.warn('Call ended', e)
-            })
+              session.on('peerconnection', ({ peerconnection }) => {
+                // eslint-disable-next-line no-param-reassign
+                peerconnection.ontrack = (event) => {
+                  console.warn('New track added:', event.track)
+                  const remoteStream = event.streams[0]
+                  const audioElement = document.createElement('audio')
+                  audioElement.srcObject = remoteStream
+                  audioElement.autoplay = true
+                  document.body.appendChild(audioElement)
+                }
+              })
 
-            session.on('failed', (e) => {
-              console.error('Call failed', e)
-              if (e.cause) dispatch(errorActions.showGlobalError(e.cause))
-            })
-          },
-        )
+              session.on('icecandidate', (event) => {
+                const iceCandidate = event?.candidate
+                if (typeof iceCandidateTimeout === 'number')
+                  clearTimeout(iceCandidateTimeout)
 
-        user.on('registrationFailed', (e) => {
-          console.error('Registration failed', e)
-          // todo set new work status
-          if (e.cause) dispatch(errorActions.showGlobalError(e.cause))
+                iceCandidateTimeout = setTimeout(() => event.ready(), 5000)
+
+                if (
+                  iceCandidate &&
+                  iceCandidate.type === 'srflx' &&
+                  iceCandidate.relatedAddress &&
+                  iceCandidate.relatedPort
+                ) {
+                  if (iceCandidateTimeout != null) {
+                    event.ready()
+                  }
+                }
+              })
+
+              session.on('ended', (e) => {
+                console.warn('Call ended', e)
+              })
+
+              session.on('failed', (e) => {
+                console.error('Call failed', e)
+                if (e.cause) dispatch(errorActions.showGlobalError('SIP Call Failed'))
+              })
+            },
+          )
+
+          user.on('registrationFailed', (e) => {
+            console.error('SIP Registration Failed', e)
+            // todo set new work status
+            if (e.cause) dispatch(errorActions.showGlobalError('SIP Registration Failed'))
+          })
+
+          return user
         })
-
-        return user
-      })
+      }
+    }
   }, [pbxAuth])
 
   return {
@@ -273,5 +284,7 @@ export const useSIPService = (
     endedCall,
     setEndedCall,
     setLead,
+    onSubscribeCalls,
+    onUnsubscribeCalls,
   }
 }

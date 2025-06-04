@@ -41,3 +41,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# tmp files for local development (for ex. notes.txt)
+/tmp/*
