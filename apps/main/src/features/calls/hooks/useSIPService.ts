@@ -24,6 +24,19 @@ const TEXTS = {
   SUBSCRIBE_CALLS_END: 'Subscribe calls end',
 }
 
+export const SipSessionStatusMap = {
+  0: 'STATUS_NULL',
+  1: 'STATUS_INVITE_SENT',
+  2: 'STATUS_1XX_RECEIVED',
+  3: 'STATUS_INVITE_RECEIVED',
+  4: 'STATUS_WAITING_FOR_ANSWER',
+  5: 'STATUS_ANSWERED',
+  6: 'STATUS_WAITING_FOR_ACK',
+  7: 'STATUS_CANCELED',
+  8: 'STATUS_TERMINATED',
+  9: 'STATUS_CONFIRMED',
+}
+
 export const useSIPService = (
   echoTestMode?: boolean,
   currentSession?: RTCSession | null,
@@ -103,7 +116,8 @@ export const useSIPService = (
   }
 
   const hangupSip = (isEchoTest?: boolean) => {
-    console.warn('hangupSip', currentSession?.status)
+    console.warn('hangupSip', SipSessionStatusMap[currentSession?.status || 0])
+    // IF TERMINATED
     if (currentSession && currentSession?.status !== 8) {
       currentSession.terminate()
       dispatch(agentActions.setHasCurrentRTCSession(false))
@@ -112,7 +126,11 @@ export const useSIPService = (
       setCurrentSession(null)
     }
     if (isEchoTest) {
-      console.warn('hangup sip echo test and disconnect', currentSession?.status)
+      // todo: add status text in log output
+      console.warn(
+        'hangup sip echo test and disconnect',
+        SipSessionStatusMap[currentSession?.status || 0],
+      )
       ua?.terminateSessions()
       disconnect()
     }

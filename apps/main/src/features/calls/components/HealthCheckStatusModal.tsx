@@ -113,6 +113,7 @@ type TStep = {
   details?: string
   message?: string
 }
+const DEFAULT_TIMEOUT = 10
 
 export const HealthCheckStatusModal = ({
   status,
@@ -121,7 +122,7 @@ export const HealthCheckStatusModal = ({
   open = true,
 }: Props): JSX.Element | null => {
   const { t } = useTranslation('calls')
-  const [retryTimeout, setRetryTimeout] = useState(0)
+  const [retryTimeout, setRetryTimeout] = useState(DEFAULT_TIMEOUT)
 
   useEffect(() => {
     if (retryTimeout > 0) {
@@ -134,7 +135,7 @@ export const HealthCheckStatusModal = ({
 
   const handleRetry = () => {
     if (retryTimeout === 0) {
-      setRetryTimeout(10)
+      setRetryTimeout(DEFAULT_TIMEOUT)
       onRetry()
     }
   }

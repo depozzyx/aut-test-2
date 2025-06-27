@@ -14,6 +14,11 @@ const agentStatusUpdate = ({
   })
 }
 
+const unsubscribeStatusUpdate = (id: string): void => {
+  socket.unsubscribe(id)
+}
+
 export const agentSocket = {
   agentStatusUpdate,
+  unsubscribeStatusUpdate,
 }

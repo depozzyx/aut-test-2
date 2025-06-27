@@ -129,7 +129,12 @@ class SocketClass {
         callback()
       })
       this.disconnect()
-      store.dispatch(errorActions.setSocketError(true))
+      // TypeError: v.dispatch is not a function
+      try {
+        store?.dispatch(errorActions.setSocketError(true))
+      } catch {
+        //
+      }
       console.error(e)
     })
 
@@ -138,7 +143,12 @@ class SocketClass {
       if (error === E_SOCKET_ERRORS.AUTH) {
         this.disconnect()
       }
-      store.dispatch(errorActions.setSocketError(true))
+      // TypeError: v.dispatch is not a function
+      try {
+        store?.dispatch(errorActions.setSocketError(true))
+      } catch {
+        //
+      }
     })
   }
 

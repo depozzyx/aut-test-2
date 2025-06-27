@@ -109,7 +109,9 @@ const setStatusAsync =
         reason,
         campaignId,
       })
-      dispatch(setStatus(data.data.workStatus))
+      if ((data.data.workStatus as string) !== 'ringing') {
+        dispatch(setStatus(data.data.workStatus))
+      }
       onSuccess?.()
     } catch (e) {
       handleRestError({ e, dispatch })

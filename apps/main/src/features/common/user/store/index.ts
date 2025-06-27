@@ -99,10 +99,12 @@ export const logoutAsync = (): TAsyncAction => async (dispatch, getState) => {
     dispatch(agentActions.setSipCanConnect(false))
     dispatch(setSelectedCampaignId(null))
     if (agentStatus !== 'offline') {
-      await apiAgents.changeWorkStatus({
-        workStatus: 'finish',
-        campaignId: '-1',
-      })
+      await apiAgents
+        .changeWorkStatus({
+          workStatus: 'finish',
+          campaignId: '-1',
+        })
+        .catch(() => null)
     }
     await apiAuth.logout()
     authorized.remove()

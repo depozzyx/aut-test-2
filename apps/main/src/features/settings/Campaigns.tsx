@@ -7,7 +7,6 @@ import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSel
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { Box } from '@peiko/components/Box'
 import { Card } from '@peiko/components/Card'
-import { required } from '@/utils/validation'
 import { useSettings } from '@/features/settings/hooks/useSettings'
 import { TFormik } from '@peiko/types/formik'
 import {
@@ -76,42 +75,83 @@ export const Campaigns: FC = () => {
     setIsLoaded(true)
   }
 
+  const showSelectAmount = (v: string) =>
+    ![emptyOption.value, hideWholePhoneOption].includes(v)
+
+  const isMainBlockChanged = (formik: TFormik) =>
+    originalSettings[campaignSettingKeys.mode] !== formik.values.campaignMode ||
+    originalSettings[campaignSettingKeys.coefficient] !==
+      formik.values.campaignCoefficient ||
+    originalSettings[campaignSettingKeys.workHours] !== formik.values.campaignWorkHours
+
+  const isHidePhoneAgentBlockChanged = (formik: TFormik) =>
+    originalSettings[campaignSettingKeys.hidePhoneAgent] !==
+      formik.values.campaignHidePhoneAgent ||
+    originalSettings[campaignSettingKeys.hidePhoneAmountAgent] !==
+      formik.values.campaignHidePhoneAmountAgent
+
+  const isHidePhoneManagerBlockChanged = (formik: TFormik) =>
+    originalSettings[campaignSettingKeys.hidePhoneManager] !==
+      formik.values.campaignHidePhoneManager ||
+    originalSettings[campaignSettingKeys.hidePhoneAmountManager] !==
+      formik.values.campaignHidePhoneAmountManager
+
+  const isMainBlockValid = (formik: TFormik) =>
+    !!formik.values.campaignMode && !!formik.values.campaignCoefficient
+
+  const isHidePhoneAgentBlockValid = (formik: TFormik) => {
+    const showAmount = showSelectAmount(formik.values.campaignHidePhoneAgent)
+    if (showAmount) {
+      return !!formik.values.campaignHidePhoneAmountAgent
+    }
+    return true
+  }
+
+  const isHidePhoneManagerBlockValid = (formik: TFormik) => {
+    const showAmount = showSelectAmount(formik.values.campaignHidePhoneManager)
+    if (showAmount) {
+      return !!formik.values.campaignHidePhoneAmountManager
+    }
+    return true
+  }
+
   const formik = useFormik({
     initialValues,
-    validationSchema: yup.object().shape({
-      campaignMode: required,
-      campaignCoefficient: required,
-      campaignHidePhoneAmountManager: yup.string(),
-    }),
+    validationSchema: yup.object().shape({}),
     onSubmit: async (values) => {
+      const changedFields: { [key: string]: string } = {}
+      if (isMainBlockChanged(formik)) {
+        changedFields[campaignSettingKeys.mode] = values.campaignMode
+        changedFields[campaignSettingKeys.coefficient] = values.campaignCoefficient
+        changedFields[campaignSettingKeys.workHours] = values.campaignWorkHours
+      }
+      if (isHidePhoneAgentBlockChanged(formik)) {
+        changedFields[campaignSettingKeys.hidePhoneAgent] = values.campaignHidePhoneAgent
+        changedFields[campaignSettingKeys.hidePhoneAmountAgent] =
+          values.campaignHidePhoneAmountAgent
+      }
+      if (isHidePhoneManagerBlockChanged(formik)) {
+        changedFields[campaignSettingKeys.hidePhoneManager] =
+          values.campaignHidePhoneManager
+        changedFields[campaignSettingKeys.hidePhoneAmountManager] =
+          values.campaignHidePhoneAmountManager
+      }
       await changeSettingsAsync({
-        formData: { data: values },
+        formData: { data: changedFields },
         formik,
       })
       await getSettings(formik)
     },
   })
 
+  const isSaveEnabled =
+    (isMainBlockChanged(formik) && isMainBlockValid(formik)) ||
+    (isHidePhoneAgentBlockChanged(formik) && isHidePhoneAgentBlockValid(formik)) ||
+    (isHidePhoneManagerBlockChanged(formik) && isHidePhoneManagerBlockValid(formik))
+
   useEffect(() => {
     getSettings(formik)
   }, [])
-
-  const isChanged = () => {
-    let changed = false
-    Object.keys(originalSettings).forEach((key) => {
-      if (originalSettings[key] !== formik.values[key]) changed = true
-    })
-    return changed
-  }
-
-  const showSelectAmount = (v: string) =>
-    ![emptyOption.value, hideWholePhoneOption].includes(v)
-
-  const isHidePhoneAmountInvalid = () =>
-    (showSelectAmount(formik.values.campaignHidePhoneManager) &&
-      !formik.values.campaignHidePhoneAmountManager) ||
-    (showSelectAmount(formik.values.campaignHidePhoneAgent) &&
-      !formik.values.campaignHidePhoneAmountAgent)
 
   const maskPhoneSection = (
     <Box
@@ -224,9 +264,7 @@ export const Campaigns: FC = () => {
           type="submit"
           size="s"
           isLoading={formik.isSubmitting}
-          disabled={
-            !formik.isValid || !formik.dirty || !isChanged() || isHidePhoneAmountInvalid()
-          }
+          disabled={!isSaveEnabled}
         >
           {t('change-campaign-settings.save')}
         </FilledButton>
