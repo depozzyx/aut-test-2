@@ -171,7 +171,9 @@ export const Calls: FC = () => {
   const onCompleteCampaign = () => {
     // eslint-disable-next-line no-console
     console.info('run oncomplete callback => set agent status [finish]')
-    dispatch(agentActions.setStatusAsync('finish'))
+    if (pbxStatus.status !== 'offline') {
+      dispatch(agentActions.setStatusAsync('finish'))
+    }
     dispatch(agentActions.setSipCanConnect(false))
     disconnect()
     checkIfAllCampaignsCompleted()
@@ -205,7 +207,16 @@ export const Calls: FC = () => {
               console.info('set oncomplete callback')
               setCompleted(true)
             } else if (status !== 'offline') {
-              onCompleteCampaign()
+              // Check if agent is on call or on feedback of last call
+              const isInCall = status === 'oncall'
+              const isInFeedback = status === 'pause' && pbxStatus.reason === 'feedback'
+
+              if (isInCall || isInFeedback) {
+                console.info('Agent is in call or feedback, will complete after')
+                setCompleted(true)
+              } else {
+                onCompleteCampaign()
+              }
             }
             if (e.status === 'complete') onUnsubscribeCampaignStatus()
           }
@@ -260,7 +271,7 @@ export const Calls: FC = () => {
 
     return new Promise<boolean>((resolve) => {
       // eslint-disable-next-line no-console
-      console.info('Starting SIP test connection...')
+      console.info(`Starting SIP-[${pbxAuth?.username}] test connection ...`)
 
       const sipOptions = {
         pcConfig: {
@@ -323,10 +334,10 @@ export const Calls: FC = () => {
           console.info('SIP test call is in progress...')
         })
         testSession.on('confirmed', () => {
-          console.info('SIP test call established!')
-          if (testSession) {
+          console.info(`sip test session status= ${testSession?.status}`)
+          if (testSession?.terminate && testSession?.status !== 8) {
             setTimeout(() => {
-              testSession?.terminate()
+              testSession.terminate()
             }, 1000)
           }
         })
@@ -514,6 +525,7 @@ export const Calls: FC = () => {
     }))
     setModal({ modalName: MODAL_NAMES.HEALTH_CHECK_STATUS, isOpen: true })
   }, [apiCounter, wsCounter, sipCounter, setModal, testSIPConnection, disconnect])
+
   useEffect(() => {
     if (healthStatus.api.status === 'loading' && healthStatus.api.progress < 99) {
       setHealthStatus((prev) =>
@@ -646,12 +658,11 @@ export const Calls: FC = () => {
             `[CAMPAIGN HOLD TIMER set for ${holdTimeSec} seconds]! -> unpause`,
             new Date(),
           )
-          const { status } = store.getState().agentStatus.pbxStatus
+          const { status, reason } = store.getState().agentStatus.pbxStatus
           if (completed) {
             onCompleteCampaign()
             setCompleted(false)
-          } else {
-            // eslint-disable-next-line no-console
+          } else if (reason !== 'manual' && status === 'pause') {
             console.info(`campaign is not completed yet ${status} => unpause`)
             dispatch(agentActions.setStatusAsync('unpause'))
           }
@@ -711,16 +722,27 @@ export const Calls: FC = () => {
   }
 
   // re-fetch agent dashboard data every 5 seconds
-  // const reFetchTimeout = 5000
+  // useEffect(() => {
+  //   if (user?.role !== ERoles.AGENT && REFETCH_AGENT_DASHBOARD_TIMEOUT) {
+  //     const interval = setInterval(() => {
+  //       getCurrentAgentDashboard(dispatch, setAgentDashboard)
+  //     }, REFETCH_AGENT_DASHBOARD_TIMEOUT)
+  //
+  //     return () => clearInterval(interval)
+  //   }
+  // }, [REFETCH_AGENT_DASHBOARD_TIMEOUT, dispatch])
+
+  const reFetchTimeout = 5000
   useEffect(() => {
-    if (user?.role !== ERoles.AGENT && REFETCH_AGENT_DASHBOARD_TIMEOUT) {
+    console.info(`user role ${user?.role}`)
+    if (user?.role === ERoles.AGENT && reFetchTimeout) {
       const interval = setInterval(() => {
         getCurrentAgentDashboard(dispatch, setAgentDashboard)
-      }, REFETCH_AGENT_DASHBOARD_TIMEOUT)
+      }, reFetchTimeout)
 
       return () => clearInterval(interval)
     }
-  }, [REFETCH_AGENT_DASHBOARD_TIMEOUT, dispatch])
+  }, [user?.role, REFETCH_AGENT_DASHBOARD_TIMEOUT, dispatch])
 
   // AUT-198 - Auto-move agent from feedback to hold after 60s if no feedback is given
   const [feedbackTimeoutId, setFeedbackTimeoutId] = useState<NodeJS.Timeout | null>(null)
@@ -743,7 +765,7 @@ export const Calls: FC = () => {
             new Date(),
           )
           setTimeout(() => {
-            const { status } = store.getState().agentStatus.pbxStatus
+            const { status, reason } = store.getState().agentStatus.pbxStatus
             if (status === 'pause') {
               console.info(
                 `[CAMPAIGN HOLD TIMER ${holdTimeoutSec}] -> unpause`,
@@ -752,7 +774,7 @@ export const Calls: FC = () => {
               if (completed) {
                 onCompleteCampaign()
                 setCompleted(false)
-              } else {
+              } else if (reason !== 'manual') {
                 dispatch(agentActions.setStatusAsync('unpause'))
               }
             }
@@ -888,7 +910,7 @@ export const Calls: FC = () => {
       </Card>
 
       <Flex justify="center" align="center" styles={{ flex: 1 }}>
-        {pbxStatus.status === 'pause' && pbxStatus.reason === 'feedback' && (
+        {pbxStatus.status === 'pause' && pbxStatus.reason === 'feedback' && lead && (
           <Card
             padding="32px 60px"
             fullWidth
@@ -956,11 +978,14 @@ export const Calls: FC = () => {
             </Flex>
           </Card>
         )}
-        {!(pbxStatus.status === 'oncall') && !lead && !endedCall && !callDuration && (
-          <Text styles={{ textAlign: 'center' }} variant="f4">
-            {t('noCalls')}
-          </Text>
-        )}
+        {!(pbxStatus.status === 'oncall' || pbxStatus.status === 'pause') &&
+          !lead &&
+          !endedCall &&
+          !callDuration && (
+            <Text styles={{ textAlign: 'center' }} variant="f4">
+              {t('noCalls')}
+            </Text>
+          )}
         {pbxStatus.status === 'oncall' && (
           <Card padding="32px 68px" fullWidth maxWidth={582}>
             <Text styles={{ textAlign: 'center', marginBottom: '40px' }} variant="f2">

@@ -58,6 +58,7 @@ export const AgentStatus: FC = () => {
   const { user } = useAuth()
   const selectedCampaignId = select(selectSelectedCampaignId)
   const router = useRouter()
+  const [changeStatusDisable, setChangeStatusDisable] = useState(false)
 
   // store updates
   useEffect(() => {
@@ -66,6 +67,7 @@ export const AgentStatus: FC = () => {
 
   // update available options
   useEffect(() => {
+    // console.info(`pbxStatus ${JSON.stringify(pbxStatus)}`)
     if (pbxStatus.status === 'offline') {
       setOptions(
         INIT_OPTIONS(t).filter(
@@ -99,10 +101,18 @@ export const AgentStatus: FC = () => {
         INIT_OPTIONS(t).filter(({ value }) => value === 'pause' || value === 'finish'),
       )
     }
-  }, [pbxStatus.status])
+  }, [pbxStatus.status, pbxStatus.reason])
 
+  const setChangeStatusTemporaryDisabled = (timeout: number) => {
+    setChangeStatusDisable(true)
+    setTimeout(() => setChangeStatusDisable(false), timeout)
+  }
   const checkAndSetCampaign = async (e: SingleValue<TSelectOption>) => {
     if (e?.value && typeof e.value === 'string') {
+      // set timeout to protect from trying to set status between previous setting and backend handling
+      // TODO after response to previous setting received via ws we can enable select
+      setChangeStatusTemporaryDisabled(5000)
+
       if (e?.value === 'start') {
         if (!selectedCampaignId) {
           dispatch(agentActions.setCheckCampaignId(true))
@@ -119,11 +129,19 @@ export const AgentStatus: FC = () => {
               console.info('TIMEOUT for connect to SIP before change work status')
               dispatch(agentActions.setStatusAsync('start'))
             }, 500)
-            // dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
           }
         }
       } else {
-        dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
+        // Add special handling for pause status when on hold
+        if (
+          e?.value === 'pause' &&
+          pbxStatus.status === 'pause' &&
+          pbxStatus.reason === 'hold'
+        ) {
+          dispatch(agentActions.setStatusAsync('pause', 'manual'))
+        } else {
+          dispatch(agentActions.setStatusAsync(e?.value as TAgentWorkStatus))
+        }
         if (e?.value === 'finish') {
           // eslint-disable-next-line no-console
           console.debug('else agent status change command: ', e?.value)
@@ -143,6 +161,7 @@ export const AgentStatus: FC = () => {
         options={options}
         readOnlySelection
         disabled={
+          changeStatusDisable ||
           pbxStatus.status === 'oncall' ||
           pbxStatus.status === 'ringing' ||
           hasCurrentRTCSession ||

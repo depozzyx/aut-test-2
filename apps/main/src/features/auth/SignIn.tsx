@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useRef } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { useFormik } from 'formik'
 import { loginValidationSchema } from '@/utils/validation'
@@ -22,6 +22,9 @@ export const SignIn: FC = () => {
   const { dispatch } = useRedux()
   const turnstile = useTurnstile()
 
+  const emailRef = useRef<HTMLInputElement>(null)
+  const passwordRef = useRef<HTMLInputElement>(null)
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -29,14 +32,35 @@ export const SignIn: FC = () => {
       captchaToken: '',
     },
     validationSchema: loginValidationSchema,
-    onSubmit: (formData) => {
-      dispatch(signInAsync({ formData, formik }))
+    onSubmit: async (formData) => {
+      await formik.validateForm()
+      if (formik.isValid) {
+        dispatch(signInAsync({ formData, formik }))
+      }
     },
   })
 
   const resetCaptchaToken = () => {
     turnstile.reset()
     formik.setFieldValue('captchaToken', undefined)
+  }
+
+  const onCaptchaVerify = async (token: string) => {
+    formik.setFieldValue('captchaToken', token)
+  }
+
+  const loginDisabled = (): boolean => {
+    if (CLOUDFLARE_CAPTCHA_SITE_KEY) {
+      return Boolean(
+        !formik.values.captchaToken ||
+          (formik.touched.email && formik.errors.email) ||
+          (formik.touched.password && formik.errors.password),
+      )
+    }
+    return Boolean(
+      (formik.touched.email && formik.errors.email) ||
+        (formik.touched.password && formik.errors.password),
+    )
   }
 
   return (
@@ -57,6 +81,8 @@ export const SignIn: FC = () => {
                 formik={formik}
                 width={300}
                 startAdornment={<EmailIcon width="24px" height="24px" />}
+                onInput={formik.handleChange}
+                ref={emailRef}
               />
               {!formik.errors.email && (
                 <Text variant="f10" color="main21">
@@ -75,6 +101,8 @@ export const SignIn: FC = () => {
                 formik={formik}
                 width={300}
                 startAdornment={<LockIcon width="24px" height="24px" />}
+                onInput={formik.handleChange}
+                ref={passwordRef}
               />
             </Flex>
             <NextLink href={ROUTES.FORGOT_PASSWORD}>
@@ -90,10 +118,11 @@ export const SignIn: FC = () => {
               </Text>
             </NextLink>
             {CLOUDFLARE_CAPTCHA_SITE_KEY && (
-              <Flex align="center" width={300}>
+              <Flex align="center" width={300} onClick={() => emailRef.current?.focus()}>
                 <Turnstile
+                  tabIndex={-1}
                   sitekey={CLOUDFLARE_CAPTCHA_SITE_KEY}
-                  onVerify={(token) => formik.setFieldValue('captchaToken', token)}
+                  onVerify={onCaptchaVerify}
                   onExpire={resetCaptchaToken}
                   onError={resetCaptchaToken}
                   theme="light"
@@ -102,12 +131,7 @@ export const SignIn: FC = () => {
               </Flex>
             )}
           </Flex>
-          <FilledButton
-            type="submit"
-            size="s"
-            width="100%"
-            disabled={!formik.isValid || !formik.dirty}
-          >
+          <FilledButton type="submit" size="s" width="100%" disabled={loginDisabled()}>
             {t('sign-in.action')}
           </FilledButton>
         </Flex>

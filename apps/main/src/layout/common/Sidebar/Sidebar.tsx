@@ -23,7 +23,7 @@ import { authSocket } from '../../../api/socket/auth'
 export const Sidebar = (): JSX.Element => {
   const { t } = useTranslation('auth')
   const { dispatch, select } = useRedux()
-  const { hasCurrentRTCSession } = select(agentStatusSelector)
+  const { hasCurrentRTCSession, pbxStatus } = select(agentStatusSelector)
 
   const { logoutAsync, user } = useAuth()
   const links = useMenuLinks()
@@ -44,7 +44,7 @@ export const Sidebar = (): JSX.Element => {
     })
 
   const onUnsubscribeAgentStatus = () => {
-    socket.unsubscribe('Subscribe agent status')
+    agentSocket.unsubscribeStatusUpdate('Subscribe agent status')
   }
 
   const onSubscribeManagerAuth = () =>
@@ -81,7 +81,9 @@ export const Sidebar = (): JSX.Element => {
     if (user?.role === ERoles.AGENT) {
       const handleBeforeUnload = (event: BeforeUnloadEvent) => {
         event.preventDefault()
-        dispatch(agentActions.setStatusAsync('finish'))
+        if (pbxStatus.status !== 'offline') {
+          dispatch(agentActions.setStatusAsync('finish'))
+        }
         dispatch(setSelectedCampaignId(null))
       }
 

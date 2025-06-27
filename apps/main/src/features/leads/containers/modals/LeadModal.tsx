@@ -71,7 +71,7 @@ export const LeadModal = ({
 
   const formik = useFormik({
     initialValues: {
-      name: '',
+      name: leadData.name,
     },
     onSubmit: async () => null,
     validationSchema: editLeadValidationSchema,
@@ -158,6 +158,11 @@ export const LeadModal = ({
         isEditable: true,
         isEditing: false,
         value: leadData.timezone,
+      },
+    })
+    formik.resetForm({
+      values: {
+        name: leadData.name,
       },
     })
   }
@@ -257,7 +262,10 @@ export const LeadModal = ({
                       size="s"
                       placeholder={t(`view-lead.placeholders.${key}`)}
                       value={fields[typedKey].value}
-                      onChange={(e) => handleInputChange(typedKey, e)}
+                      onChange={(e) => {
+                        handleInputChange(typedKey, e)
+                        formik.setFieldValue('name', e)
+                      }}
                     />
                   )}
                   {!fields[typedKey].isEditing && (
@@ -280,6 +288,9 @@ export const LeadModal = ({
                             isEditing: false,
                           },
                         }))
+                        if (key === 'name') {
+                          formik.setFieldValue('name', leadData.name)
+                        }
                       }}
                       iconColor="main13"
                     >
