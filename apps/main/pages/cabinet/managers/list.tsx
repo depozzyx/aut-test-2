@@ -11,7 +11,7 @@ const ManagersListPage: NextPage = () => {
   useTitle(t('page-titles:managers-list'))
 
   return (
-    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
+    <Permissions roles={[ERoles.ADMIN, ERoles.SUPERADMIN, ERoles.MANAGER]}>
       <CabinetLayout title={t('managers_list')}>
         <ManagersList />
       </CabinetLayout>

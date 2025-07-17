@@ -23,6 +23,11 @@
     "create-success": "<translate>New manager</translate> <value>{{ managerName }}</value> <translate>was successfully added</translate>",
     "update-success": "<translate>Manager`s info was successfully updated</translate>"
   },
+  "admin": {
+    "success-delete": "<value>{{ name }}</value> <translate>was successfully deleted</translate>",
+    "create-success": "<translate>New admin</translate> <value>{{ name }}</value> <translate>was successfully added</translate>",
+    "update-success": "<translate>Admin`s info was successfully updated</translate>"
+  },
   "api-key": {
     "seccess-generate": "<translate>API key was successfully revoked</translate>",
     "success-revoke": "<translate>API key was successfully revoked</translate>",

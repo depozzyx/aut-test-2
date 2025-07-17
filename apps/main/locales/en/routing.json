@@ -20,6 +20,7 @@
   "import_leads_instructions": "API import instructions",
   "import_leads_instructions_title": "Import Leads Instruction",
   "settings": "Settings",
+  "settings_admins_list": "Admins list",
   "settings_account_management": "Account management",
   "settings_campaigns_management": "Campaigns management",
   "settings_leads_management": "Leads management",
@@ -27,6 +28,7 @@
   "settings_activity_log": "Activity log",
   "managers": "Managers",
   "managers_list": "Managers list",
+  "admins_list": "Admins list",
   "create_manager": "Create new Manager",
   "calls": "Calls",
   "campaign_view": "Campaign"

@@ -34,7 +34,7 @@ const refreshAuthLogic = async () => {
     .then(() => Promise.resolve())
     .catch((e) => {
       if (!axios.isAxiosError(e) || !e.response) return
-      store.dispatch(userActions.logout())
+      store.dispatch(userActions.logoutAsync())
       return Promise.reject(e)
     })
 }

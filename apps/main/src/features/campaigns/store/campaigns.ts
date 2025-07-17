@@ -18,6 +18,7 @@ import { notificationActions } from '@/features/common/notifications/store'
 import { modalsActions } from '@/features/common/modals/store'
 import { TOrder } from '@/types/entities/order'
 import { ORDER } from '@/constants/order'
+import { calculateNewPage } from '@/utils/pagination'
 import {
   TActiveCampaign,
   TAgentAssignedCampaign,
@@ -80,7 +81,7 @@ const campaigns = createSlice({
       state.selectedId = action.payload
     },
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
-      state.pagination = action.payload
+      state.pagination = calculateNewPage(action.payload)
     },
     setCampaignList(state, action: PayloadAction<TInit['campaignList']>) {
       state.campaignList = action.payload

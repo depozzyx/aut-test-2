@@ -8,8 +8,8 @@ import { apiProfile } from '@/api-rest/profile'
 import { TProfile } from '@/types/entities/profile'
 import { apiAgents } from '@/api-rest/agents'
 import { TPbxAuthRes } from '@/api-rest/agents/types'
-import { setSelectedCampaignId } from '@/features/agents/store/agents'
 import { agentActions } from '@/features/common/agentStatus/store'
+import { socket } from '../../../../api/socket/Socket'
 // import { ROUTES } from '@/constants/routes'
 
 export type TInit = {
@@ -87,6 +87,7 @@ const getProfile = (): TAsyncAction => async (dispatch) => {
 }
 
 const logout = (): TAsyncAction => (dispatch) => {
+  dispatch(agentActions.setSipCanConnect(false))
   authorized.remove()
   dispatch(removeUser())
 }
@@ -97,7 +98,7 @@ export const logoutAsync = (): TAsyncAction => async (dispatch, getState) => {
 
     dispatch(setLoading(true))
     dispatch(agentActions.setSipCanConnect(false))
-    dispatch(setSelectedCampaignId(null))
+    // dispatch(setSelectedCampaignId(null))
     if (agentStatus !== 'offline') {
       await apiAgents
         .changeWorkStatus({
@@ -106,6 +107,7 @@ export const logoutAsync = (): TAsyncAction => async (dispatch, getState) => {
         })
         .catch(() => null)
     }
+    socket.logoutCleanup()
     await apiAuth.logout()
     authorized.remove()
     dispatch(removeUser())

@@ -1,0 +1,38 @@
+{
+  "empty-data": "No data",
+  "add-admin": "Add Admin",
+  "DESC": "Newest",
+  "ASC": "Oldest",
+  "list-headers": {
+    "id": "ID",
+    "username": "User Name",
+    "email": "Email",
+    "pbxName": "PBX Name",
+    "creation-date": "Creation Date",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "sort-by": "Sort By",
+  "create-admin": {
+    "title": "Create new admin",
+    "email": "Email",
+    "username": "User Name",
+    "password": "Password",
+    "hideLeadPhones": "Hide Phones",
+    "showLeadPhones": "Show Phones",
+    "action": "Create Admin"
+  },
+  "edit-admin": {
+    "title": "Edit admin",
+    "email": "Email",
+    "username": "User Name",
+    "password": "Password",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "delete-admin": {
+    "title": "<translate>Are you sure you want to delete <value>{{ name }}</value>?</translate>",
+    "delete-btn": "Delete",
+    "cancel-btn": "Cancel"
+  }
+}

@@ -20,6 +20,7 @@ import {
   selectInitFormData,
   selectEditManagerIsLoading,
 } from '../../store/edit-manager'
+import { TUserRoles, USER_ROLES } from '../../../../types/roles'
 
 type TFormValues = {
   email?: string
@@ -50,7 +51,11 @@ export const EditManagerForm = (): JSX.Element => {
       hideLeadPhones: 'false',
     },
     validationSchema: createManagerValidationSchema.omit(
-      user?.role === ERoles.ADMIN ? ['email', 'password'] : [],
+      [USER_ROLES.ADMIN as TUserRoles, USER_ROLES.SUPERADMIN as TUserRoles].includes(
+        user?.role ?? USER_ROLES.AGENT,
+      )
+        ? ['email', 'password']
+        : [],
     ),
     onSubmit: (formData) => {
       const payload = { ...formData }
@@ -82,17 +87,20 @@ export const EditManagerForm = (): JSX.Element => {
       <Flex direction="column" align="center" gap={48} margin="40px 0 0 0">
         <Flex gap={24}>
           <Flex direction="column" gap={16} maxWidth="326px" width="100%">
-            {user?.role === ERoles.ADMIN && (
-              <FormikInput
-                size="s"
-                name="email"
-                label={{ label: t('edit-manager.email') }}
-                id="email"
-                formik={formik}
-                width={326}
-                styles={{ padding: '0 14px' }}
-              />
-            )}
+            {
+              (user?.role === ERoles.ADMIN,
+              ERoles.SUPERADMIN && (
+                <FormikInput
+                  size="s"
+                  name="email"
+                  label={{ label: t('edit-manager.email') }}
+                  id="email"
+                  formik={formik}
+                  width={326}
+                  styles={{ padding: '0 14px' }}
+                />
+              ))
+            }
             <FormikInput
               size="s"
               name="username"
@@ -102,53 +110,59 @@ export const EditManagerForm = (): JSX.Element => {
               width={326}
               styles={{ padding: '0 14px' }}
             />
-            {user?.role === ERoles.ADMIN && (
-              <FormikInput
-                size="s"
-                name="password"
-                type="password"
-                label={{ label: t('edit-manager.password') }}
-                id="password"
-                placeholder="********"
-                formik={formik}
-                width={326}
-                styles={{ padding: '0 14px' }}
-              />
-            )}
-            {user?.role === ERoles.ADMIN && (
-              <Flex gap="22px" justify="start" width={326}>
-                <Flex
-                  gap="4px"
-                  styles={{ cursor: 'pointer' }}
-                  onClick={() => formik.setFieldValue('hideLeadPhones', 'false')}
-                >
-                  <RadioButton
-                    name="true"
-                    onChange={() => formik.setFieldValue('hideLeadPhones', 'false')}
-                    inputProps={{
-                      value: 'false',
-                      checked: formik.values.hideLeadPhones === 'false',
-                    }}
-                  />
-                  <Text>{t('create-manager.showLeadPhones')}</Text>
+            {
+              (user?.role === ERoles.ADMIN,
+              ERoles.SUPERADMIN && (
+                <FormikInput
+                  size="s"
+                  name="password"
+                  type="password"
+                  label={{ label: t('edit-manager.password') }}
+                  id="password"
+                  placeholder="********"
+                  formik={formik}
+                  width={326}
+                  styles={{ padding: '0 14px' }}
+                />
+              ))
+            }
+            {
+              (user?.role === ERoles.ADMIN,
+              ERoles.SUPERADMIN && (
+                <Flex gap="22px" justify="start" width={326}>
+                  <Flex
+                    gap="4px"
+                    styles={{ cursor: 'pointer' }}
+                    onClick={() => formik.setFieldValue('hideLeadPhones', 'false')}
+                  >
+                    <RadioButton
+                      name="true"
+                      onChange={() => formik.setFieldValue('hideLeadPhones', 'false')}
+                      inputProps={{
+                        value: 'false',
+                        checked: formik.values.hideLeadPhones === 'false',
+                      }}
+                    />
+                    <Text>{t('create-manager.showLeadPhones')}</Text>
+                  </Flex>
+                  <Flex
+                    gap="4px"
+                    styles={{ cursor: 'pointer' }}
+                    onClick={() => formik.setFieldValue('hideLeadPhones', 'true')}
+                  >
+                    <RadioButton
+                      name="true"
+                      onChange={() => formik.setFieldValue('hideLeadPhones', 'true')}
+                      inputProps={{
+                        value: 'true',
+                        checked: formik.values.hideLeadPhones === 'true',
+                      }}
+                    />
+                    <Text>{t('create-manager.hideLeadPhones')}</Text>
+                  </Flex>
                 </Flex>
-                <Flex
-                  gap="4px"
-                  styles={{ cursor: 'pointer' }}
-                  onClick={() => formik.setFieldValue('hideLeadPhones', 'true')}
-                >
-                  <RadioButton
-                    name="true"
-                    onChange={() => formik.setFieldValue('hideLeadPhones', 'true')}
-                    inputProps={{
-                      value: 'true',
-                      checked: formik.values.hideLeadPhones === 'true',
-                    }}
-                  />
-                  <Text>{t('create-manager.hideLeadPhones')}</Text>
-                </Flex>
-              </Flex>
-            )}
+              ))
+            }
           </Flex>
         </Flex>
         <Flex align="center" justify="center" gap={24}>

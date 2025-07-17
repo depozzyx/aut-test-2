@@ -72,6 +72,7 @@ module.exports = {
       'validation',
       'activity-log',
     ],
+    '/cabinet/settings/admins-list': ['user', 'routing', 'admins', 'validation'],
     '/cabinet/settings/api-key-management': ['user', 'routing', 'api-key', 'validation'],
     '/cabinet/settings/campaigns-management': ['settings', 'routing'],
     '/cabinet/settings/leads-management': ['settings', 'routing'],

@@ -18,11 +18,21 @@ import {
   setSelectedId,
   setOrderBy,
 } from '@/features/managers/store/managers'
+import { TrashIcon } from '@peiko/components/icons/TrashIcon'
+import { userSelectors } from '@/features/common/user'
+import { EPermissions } from '@/constants/profile'
 import { useManagerList } from '../../hooks/use-managersList'
 import { InfoCell } from '../../components/InfoCell'
 import { SORT_BY } from '../../constants'
 
-type TManagerRowKeys = 'id' | 'username' | 'date' | 'email' | 'pbxName' | 'edit'
+type TManagerRowKeys =
+  | 'id'
+  | 'username'
+  | 'date'
+  | 'email'
+  | 'pbxName'
+  | 'edit'
+  | 'delete'
 
 export const ManagerListTable = (): JSX.Element => {
   const { t } = useTranslation('managers')
@@ -34,10 +44,16 @@ export const ManagerListTable = (): JSX.Element => {
 
   const { isLoading } = useManagerList()
   const managersList = select(selectManagersList, shallowEqual)
+  const user = select(userSelectors.user)
 
   const handleEditCampaign = useCallback((id: number) => {
     dispatch(setSelectedId(id))
     setModal({ modalName: MODAL_NAMES.EDIT_MANAGER, isOpen: true })
+  }, [])
+
+  const handleDelete = useCallback((id: number) => {
+    dispatch(setSelectedId(id))
+    setModal({ modalName: MODAL_NAMES.DELETE_MANAGER, isOpen: true })
   }, [])
 
   const headers: THeader<TManagerRowKeys>[] = [
@@ -82,7 +98,12 @@ export const ManagerListTable = (): JSX.Element => {
       ),
       value: 'pbxName',
     },
-    { label: t('list-headers.edit'), value: 'edit' },
+    ...(user.user?.permissions.includes(EPermissions.UPDATE_MANAGER)
+      ? [{ label: t('list-headers.edit'), value: 'edit' } as THeader<TManagerRowKeys>]
+      : []),
+    ...(user.user?.permissions.includes(EPermissions.DELETE_MANAGER)
+      ? [{ label: t('list-headers.delete'), value: 'delete' } as THeader<TManagerRowKeys>]
+      : []),
   ]
 
   const rows = managersList.map((manager) => ({
@@ -99,6 +120,11 @@ export const ManagerListTable = (): JSX.Element => {
           iconColor="transparent"
         >
           <EditIcon width="24px" height="24px" />
+        </IconButton>
+      ),
+      delete: (
+        <IconButton onClick={() => handleDelete(manager.id)} iconColor="main13">
+          <TrashIcon width="24px" height="24px" />
         </IconButton>
       ),
     },

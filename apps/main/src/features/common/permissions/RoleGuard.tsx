@@ -10,6 +10,7 @@ type TProps = {
 }
 
 const REPLACE_ROUTES = {
+  superadmin: ROUTES.SETTINGS_ADMINS_LIST,
   admin: ROUTES.MANAGERS_LIST,
   agent: ROUTES.AGENT_CALLS,
   manager: ROUTES.DASHBOARD_ACTIVE_CAMPAIGNS,

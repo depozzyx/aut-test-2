@@ -8,7 +8,7 @@ import { useAuth } from '@/features/common/user'
 import { useDisableClickOnCall } from 'main/src/hooks/use-disable-click-on-call'
 import { useRedux } from '@/hooks/use-redux'
 import { asyncGetAgentAssignedCampaigns } from '@/features/campaigns/store/campaigns'
-import { agentActions } from '@/features/common/agentStatus/store'
+import { agentActions, agentStatusSelector } from '@/features/common/agentStatus/store'
 import { useSIPService } from '@/features/calls/hooks/useSIPService'
 import { RTCSession } from 'jssip/lib/RTCSession'
 import { CallTimer } from './CallTimer'
@@ -16,12 +16,16 @@ import { Container } from './Header.styled'
 
 const logo = '/images/logo.png'
 
+let makeEchoTimeout: ReturnType<typeof setTimeout> | null = null
+
 export const Header: FC = () => {
-  const { dispatch } = useRedux()
+  const { dispatch, select } = useRedux()
   const { headerRef } = useHeaderHeight()
   const { user } = useAuth()
 
   const { menuDisabled, showErrorMessage } = useDisableClickOnCall()
+
+  const { isEchoTestMode } = select(agentStatusSelector)
 
   useEffect(() => {
     // eslint-disable-next-line no-console
@@ -34,29 +38,42 @@ export const Header: FC = () => {
     true,
     rtcSession,
     setRtcSession,
+    {
+      onError: offEchoTest,
+      onCallEnd: offEchoTest,
+    },
   )
 
+  const disconnectSipEchoTest = () => {
+    if (rtcSession) hangupSip(true)
+  }
+
+  function offEchoTest() {
+    if (makeEchoTimeout) {
+      clearTimeout(makeEchoTimeout)
+    }
+    disconnectSipEchoTest()
+    dispatch(agentActions.setHasCurrentRTCSession(false))
+    dispatch(agentActions.setEchoTestMode(false))
+  }
   const connectToSip = () => {
     const isSipConnected = ua?.isConnected()
     if (!isSipConnected) {
       connect()
     }
 
-    setTimeout(() => {
+    makeEchoTimeout = setTimeout(() => {
       makeEchoTest()
     }, 500)
   }
 
-  const disconnectSipEchoTest = () => {
-    if (rtcSession) hangupSip(true)
-  }
-
   const onClickEchoTest = () => {
-    if (rtcSession) {
-      disconnectSipEchoTest()
+    if (isEchoTestMode) {
+      offEchoTest()
     } else {
       dispatch(agentActions.setHasCurrentRTCSession(true))
       dispatch(agentActions.setSipCanConnect(false))
+      dispatch(agentActions.setEchoTestMode(true))
       connectToSip()
     }
   }
@@ -84,14 +101,13 @@ export const Header: FC = () => {
               <AgentStatus />
             </div>
           )}
-          {rtcSession && rtcSession?.status !== 8 && (
-            <CallTimer onClick={disconnectSipEchoTest} />
+          {isEchoTestMode && rtcSession && rtcSession?.status !== 8 && (
+            <CallTimer onClick={onClickEchoTest} />
           )}
           <UserProfile
             disabled={menuDisabled}
             onClickEchoTest={onClickEchoTest}
             disconnectSip={disconnectSipEchoTest}
-            rtcSession={rtcSession}
           />
         </Flex>
       </Flex>

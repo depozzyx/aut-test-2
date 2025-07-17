@@ -29,6 +29,9 @@ const postManager = (data: TPostManagerReq): TAxiosResponse<TPostManagerRes> =>
 const updateManager = (data: TUpdateManagerReq): TAxiosResponse<TUpdateManagerRes> =>
   api.put('/manager', data)
 
+const deleteManager = (id: number): TAxiosResponse<TUpdateManagerRes> =>
+  api.delete(`/manager/${id}`)
+
 const getManager = (): TAxiosResponse<any> => api.get('/manager')
 
 const getManagers = (params: TManagersReq): TAxiosResponse<TManagersRes> =>
@@ -43,4 +46,5 @@ export const managerApi = {
   updateManager,
   getManager,
   getManagers,
+  deleteManager,
 }

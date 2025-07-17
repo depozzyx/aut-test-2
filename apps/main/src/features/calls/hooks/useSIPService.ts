@@ -5,7 +5,7 @@ import {
   IncomingRTCSessionEvent,
   OutgoingRTCSessionEvent,
 } from 'jssip/lib/UA'
-import { AnswerOptions, RTCSession } from 'jssip/lib/RTCSession'
+import { AnswerOptions, EndEvent, RTCSession } from 'jssip/lib/RTCSession'
 import { useAuth } from '@/features/common/user'
 import { useRedux } from '@/hooks/use-redux'
 import { errorActions, handleRestError } from '@/features/common/error'
@@ -36,11 +36,16 @@ export const SipSessionStatusMap = {
   8: 'STATUS_TERMINATED',
   9: 'STATUS_CONFIRMED',
 }
+export type SipHandlers = {
+  onError?: (error: any) => void
+  onCallEnd?: (event: EndEvent) => void
+}
 
 export const useSIPService = (
   echoTestMode?: boolean,
   currentSession?: RTCSession | null,
   setCurrentSession?: (session: RTCSession | null) => void,
+  handlers: SipHandlers = {},
 ): {
   connect: () => void
   keepAlive: () => void
@@ -64,7 +69,8 @@ export const useSIPService = (
 
   const [lead, setLead] = useState<TCallsInit | null>(null)
 
-  let iceCandidateTimeout: NodeJS.Timeout | number | null = null
+  let iceCandidateTimeout: ReturnType<typeof setTimeout> | null = null
+  let answerTimeout: ReturnType<typeof setTimeout> | null = null
 
   const sipOptions: AnswerOptions = {
     pcConfig: {
@@ -118,6 +124,9 @@ export const useSIPService = (
   const hangupSip = (isEchoTest?: boolean) => {
     console.warn('hangupSip', SipSessionStatusMap[currentSession?.status || 0])
     // IF TERMINATED
+    if (answerTimeout) {
+      clearTimeout(answerTimeout)
+    }
     if (currentSession && currentSession?.status !== 8) {
       currentSession.terminate()
       dispatch(agentActions.setHasCurrentRTCSession(false))
@@ -222,7 +231,7 @@ export const useSIPService = (
               // console.warn('New session started', session?.direction)
 
               const answerCall = async () => {
-                if (session) {
+                if (session && session?.status !== 8) {
                   session.answer(sipOptions)
                   if (echoTestMode && setCurrentSession) {
                     dispatch(agentActions.setHasCurrentRTCSession(true))
@@ -232,7 +241,7 @@ export const useSIPService = (
                   console.warn('No call session')
                 }
               }
-              setTimeout(() => {
+              answerTimeout = setTimeout(() => {
                 answerCall()
               }, 2000)
 
@@ -250,8 +259,9 @@ export const useSIPService = (
 
               session.on('icecandidate', (event) => {
                 const iceCandidate = event?.candidate
-                if (typeof iceCandidateTimeout === 'number')
+                if (iceCandidateTimeout) {
                   clearTimeout(iceCandidateTimeout)
+                }
 
                 iceCandidateTimeout = setTimeout(() => event.ready(), 5000)
 
@@ -268,11 +278,13 @@ export const useSIPService = (
               })
 
               session.on('ended', (e) => {
+                handlers.onCallEnd?.(e)
                 console.warn('Call ended', e)
               })
 
               session.on('failed', (e) => {
-                console.error('Call failed', e)
+                console.error('Call failed!', e)
+                if (handlers.onError) handlers.onError(e)
                 if (e.cause) dispatch(errorActions.showGlobalError('SIP Call Failed'))
               })
             },

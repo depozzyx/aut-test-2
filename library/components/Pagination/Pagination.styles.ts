@@ -19,6 +19,9 @@ export const PaginationBtn = styled(FilledIconButton)((props) => {
   } = props
 
   return css`
+    width: unset;
+    padding-left: 5px;
+    padding-right: 5px;
     min-width: 40px;
     max-width: 100px;
     border-radius: 8px;

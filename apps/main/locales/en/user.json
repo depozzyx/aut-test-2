@@ -2,7 +2,8 @@
   "roles": {
     "admin": "Admin",
     "manager": "Manager",
-    "agent": "Agent"
+    "agent": "Agent",
+    "superadmin": "Superadmin"
   },
   "agentStatus": {
     "start": "Online",

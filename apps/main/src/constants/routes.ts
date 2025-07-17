@@ -18,6 +18,7 @@ export const ROUTES = {
   LEADS_LIST: '/cabinet/leads/list',
   IMPORT_LEADS: '/cabinet/leads/import',
   IMPORT_LEADS_INSTRUCTIONS: '/cabinet/leads/import-instructions',
+  SETTINGS_ADMINS_LIST: '/cabinet/settings/admins-list',
   SETTINGS_ACCOUNT_MANAGEMENT: '/cabinet/settings/account-management',
   SETTINGS_API_KEY_MANAGEMENT: '/cabinet/settings/api-key-management',
   SETTINGS_CAMPAIGNS_MANAGEMENT: '/cabinet/settings/campaigns-management',

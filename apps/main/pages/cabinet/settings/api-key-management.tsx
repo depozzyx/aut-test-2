@@ -11,7 +11,7 @@ const ApiKeyManagementPage: NextPage = () => {
   useTitle(t('page-titles:api-key-management'))
 
   return (
-    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
+    <Permissions roles={[ERoles.ADMIN, ERoles.SUPERADMIN, ERoles.MANAGER]}>
       <CabinetLayout title={t('settings_api_key_management')}>
         <ApiKeyManagement />
       </CabinetLayout>

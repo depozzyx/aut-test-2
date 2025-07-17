@@ -13,6 +13,7 @@ import {
 } from '@/api-rest/lead-list/types'
 import { TOrder } from '@/types/entities/order'
 import { ORDER } from '@/constants/order'
+import { calculateNewPage } from '@/utils/pagination'
 
 export type TInit = {
   leadListCatalog: TLeadListCatalog[]
@@ -41,7 +42,7 @@ const leadList = createSlice({
   initialState: init,
   reducers: {
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
-      state.pagination = action.payload
+      state.pagination = calculateNewPage(action.payload)
     },
     setLeadListCatalog(
       state,

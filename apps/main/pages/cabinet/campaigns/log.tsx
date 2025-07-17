@@ -11,7 +11,7 @@ const CampaignsLogPage: NextPage = () => {
   useTitle(t('page-titles:campaigns-log'))
 
   return (
-    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
+    <Permissions roles={[ERoles.ADMIN, ERoles.SUPERADMIN, ERoles.MANAGER]}>
       <CabinetLayout title={t('campaigns_log')}>
         <CampaignLog />
       </CabinetLayout>

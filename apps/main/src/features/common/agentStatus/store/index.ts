@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { TSelector, TAsyncAction } from '@/store'
-import { handleRestError } from '@/features/common/error'
 import { apiAgents } from '@/api-rest/agents'
 import { TAgentWorkStatus } from '@/features/agents/types'
 import { AgentStatus, TAgentStatus } from '@/api-rest/agents/types'
@@ -13,6 +12,7 @@ export type TInit = {
   sipCanConnect: boolean
   sipConnected: boolean
   hasCurrentRTCSession: boolean
+  isEchoTestMode: boolean
 }
 
 const init: TInit = {
@@ -27,6 +27,7 @@ const init: TInit = {
   sipCanConnect: false,
   sipConnected: false,
   hasCurrentRTCSession: false,
+  isEchoTestMode: false,
 }
 
 const agentStatus = createSlice({
@@ -55,6 +56,9 @@ const agentStatus = createSlice({
     setHasCurrentRTCSession(state, action: PayloadAction<TInit['hasCurrentRTCSession']>) {
       state.hasCurrentRTCSession = action.payload
     },
+    setEchoTestMode(state, action: PayloadAction<TInit['isEchoTestMode']>) {
+      state.isEchoTestMode = action.payload
+    },
     reset: () => init,
   },
 })
@@ -69,6 +73,7 @@ const {
   setSipConnected,
   setHasCurrentRTCSession,
   reset,
+  setEchoTestMode,
 } = agentStatus.actions
 
 const checkStoredAndPbxAgentStatus = async (
@@ -114,7 +119,7 @@ const setStatusAsync =
       }
       onSuccess?.()
     } catch (e) {
-      handleRestError({ e, dispatch })
+      // handleRestError({ e, dispatch })
     } finally {
       dispatch(setLoading(false))
     }
@@ -129,6 +134,7 @@ export const agentActions = {
   setSipConnected,
   setHasCurrentRTCSession,
   reset,
+  setEchoTestMode,
 }
 // selectors
 export const agentStatusSelector: TSelector<TInit> = (state) => state.agentStatus

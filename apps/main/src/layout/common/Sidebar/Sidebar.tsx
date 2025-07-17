@@ -13,7 +13,6 @@ import { useRedux } from '@/hooks/use-redux'
 import { useUnmount } from 'react-use'
 import { ERoles } from '@/constants/profile'
 import { useEffect } from 'react'
-import { setSelectedCampaignId } from '@/features/agents/store/agents'
 import { SidebarItem } from './components/SidebarItem'
 import { Accordion, Container, MenuItem } from './styles/Sidebar.styled'
 import { agentSocket } from '../../../api/socket/agent'
@@ -23,7 +22,7 @@ import { authSocket } from '../../../api/socket/auth'
 export const Sidebar = (): JSX.Element => {
   const { t } = useTranslation('auth')
   const { dispatch, select } = useRedux()
-  const { hasCurrentRTCSession, pbxStatus } = select(agentStatusSelector)
+  const { hasCurrentRTCSession } = select(agentStatusSelector)
 
   const { logoutAsync, user } = useAuth()
   const links = useMenuLinks()
@@ -76,24 +75,6 @@ export const Sidebar = (): JSX.Element => {
       onUnsubscribeManagerAuth()
     }
   })
-
-  useEffect(() => {
-    if (user?.role === ERoles.AGENT) {
-      const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-        event.preventDefault()
-        if (pbxStatus.status !== 'offline') {
-          dispatch(agentActions.setStatusAsync('finish'))
-        }
-        dispatch(setSelectedCampaignId(null))
-      }
-
-      window.addEventListener('beforeunload', handleBeforeUnload)
-
-      return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload)
-      }
-    }
-  }, [])
 
   return (
     <Container>

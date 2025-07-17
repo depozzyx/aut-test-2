@@ -99,7 +99,7 @@ const CampaignViewPage: NextPage = () => {
   ]
 
   return (
-    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
+    <Permissions roles={[ERoles.ADMIN, ERoles.SUPERADMIN, ERoles.MANAGER]}>
       <CabinetLayout
         title={tRouting('campaign_view')}
         breadCrumbs={

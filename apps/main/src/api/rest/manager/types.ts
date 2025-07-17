@@ -87,3 +87,5 @@ export type TApiKeysListRes = {
   data: TApiKey[]
   pagination: TPagination
 }
+
+export type TDeleteManagerRes = TPostManagerRes

@@ -17,7 +17,6 @@ import { EnvelopeIcon } from '@/icons/EnvelopeIcon'
 import { agentStatusSelector } from '@/features/common/agentStatus/store'
 import { useRedux } from '@/hooks/use-redux'
 import { CallIcon } from '@/icons/CallIcon'
-import { RTCSession } from 'jssip/lib/RTCSession'
 import { CallButton } from '@/features/calls/components/CallButton/CallButton'
 import { Divider, ItemWrapper } from './ProfilePopover.styled'
 
@@ -26,7 +25,6 @@ export interface IProfilePopoverProps {
   phone?: string
   email?: string
   userRole?: TUserRoles
-  rtcSession: RTCSession | null
   onClickEchoTest: () => void
   disconnectSip: () => void
 }
@@ -53,7 +51,6 @@ export const ProfilePopover = ({
   name,
   email,
   userRole,
-  rtcSession,
   onClickEchoTest,
   disconnectSip,
 }: IProfilePopoverProps): JSX.Element => {
@@ -78,7 +75,7 @@ export const ProfilePopover = ({
   }
 
   const { select } = useRedux()
-  const { pbxStatus } = select(agentStatusSelector)
+  const { pbxStatus, isEchoTestMode } = select(agentStatusSelector)
 
   return (
     <Flex direction="column" align="center" gap={30}>
@@ -106,7 +103,7 @@ export const ProfilePopover = ({
         {userRole === ERoles.AGENT && pbxStatus.status === 'offline' && (
           <PopoverMenuItem
             icon={
-              rtcSession && rtcSession?.status !== 8 ? (
+              isEchoTestMode ? (
                 <CallButton size="s">
                   <CallIcon />
                 </CallButton>
@@ -114,9 +111,7 @@ export const ProfilePopover = ({
                 <UserRoleIcon userRole={userRole} />
               )
             }
-            title={
-              rtcSession && rtcSession?.status !== 8 ? 'Finish echo test' : 'Echo Test'
-            }
+            title={isEchoTestMode ? 'Finish echo test' : 'Echo Test'}
             onClick={onClickEchoTest}
             cursor="pointer"
           />
