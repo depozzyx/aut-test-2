@@ -8,6 +8,9 @@ import { modalsActions } from '@/features/common/modals'
 import { handleRestError } from '@/features/common/error'
 import { ORDER } from '@/constants/order'
 
+import { calculateNewPage } from '@/utils/pagination'
+import { notificationActions } from '../../common/notifications/store'
+
 export type TInit = {
   isLoading: boolean
   pagination: TPagination
@@ -15,6 +18,7 @@ export type TInit = {
   selectedId: number | null
   orderBy?: TManagerOrderBy
   order?: TOrder
+  deletedManagerData?: TManager
 }
 
 const init: TInit = {
@@ -28,6 +32,7 @@ const init: TInit = {
   selectedId: null,
   orderBy: undefined,
   order: undefined,
+  deletedManagerData: undefined,
 }
 
 const managers = createSlice({
@@ -55,13 +60,16 @@ const managers = createSlice({
       state.order = action.payload
     },
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
-      state.pagination = action.payload
+      state.pagination = calculateNewPage(action.payload)
     },
     setManagersList(state, action: PayloadAction<TInit['managersList']>) {
       state.managersList = action.payload
     },
     setSelectedId(state, action: PayloadAction<TInit['selectedId']>) {
       state.selectedId = action.payload
+    },
+    setDeletedManagerData(state, action: PayloadAction<TInit['deletedManagerData']>) {
+      state.deletedManagerData = action.payload
     },
     reset: () => init,
   },
@@ -75,6 +83,7 @@ export const {
   setOrder,
   setSelectedId,
   reset,
+  setDeletedManagerData,
 } = managers.actions
 
 export const selectManagers: TSelector<TInit> = (state) => state.managers
@@ -97,6 +106,11 @@ export const selectSelectedId = createSelector(
   (state) => state.selectedId,
 )
 
+export const selectSelectedManager = createSelector(
+  selectManagers,
+  ({ selectedId, managersList }) => managersList.find(({ id }) => id === selectedId),
+)
+
 export default managers.reducer
 
 export const asyncGetManagerList =
@@ -109,6 +123,36 @@ export const asyncGetManagerList =
       dispatch(setPagination(data.pagination))
       dispatch(modalsActions.resetModalsState())
       onsuccess?.()
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    } finally {
+      dispatch(setIsLoading(false))
+    }
+  }
+
+export const asyncRemoveManager =
+  (id: number): TAsyncAction =>
+  async (dispatch) => {
+    try {
+      dispatch(setIsLoading(true))
+      const {
+        data: { data },
+      } = await managerApi.deleteManager(id)
+      dispatch(setDeletedManagerData(data))
+      dispatch(modalsActions.resetModalsState())
+      dispatch(
+        notificationActions.setNotification({
+          key: 'notifications:manager.success-delete',
+          status: 'success',
+          values: { managerName: data.username ?? '' },
+        }),
+      )
+      dispatch(
+        asyncGetManagerList({
+          page: 1,
+          limit: 10,
+        }),
+      )
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {

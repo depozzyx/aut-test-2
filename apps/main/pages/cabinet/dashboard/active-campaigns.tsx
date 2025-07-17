@@ -12,7 +12,7 @@ const ActiveCampaignsPage: NextPage = () => {
   useTitle(t('page-titles:dashboard-campaigns'))
 
   return (
-    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
+    <Permissions roles={[ERoles.ADMIN, ERoles.SUPERADMIN, ERoles.MANAGER]}>
       <CabinetLayout title={t('dashboard')}>
         <ActiveCampaigns />
       </CabinetLayout>

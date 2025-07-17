@@ -113,7 +113,7 @@ export const useCampaignsManager = (
   ])
 
   useEffect(() => {
-    fetchWithParams(1)
+    fetchWithParams(page ?? 1)
   }, [
     dispatch,
     limit,

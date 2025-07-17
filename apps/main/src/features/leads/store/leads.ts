@@ -15,6 +15,7 @@ import {
 import { TFormik } from '@peiko/types/formik'
 import { TOrder } from '@/types/entities/order'
 import { ORDER } from '@/constants/order'
+import { calculateNewPage } from '@/utils/pagination'
 import { TImportError, TImportProgress, TPreparedFiles } from '../types/files'
 import { dataURIToBlob } from '../utils/dataURIToBlob'
 
@@ -61,7 +62,7 @@ const leads = createSlice({
   initialState: init,
   reducers: {
     setPagination(state, action: PayloadAction<TPagination>) {
-      state.pagination = action.payload
+      state.pagination = calculateNewPage(action.payload)
     },
     setLeadsList(state, action: PayloadAction<TLeadsList[]>) {
       state.leadsList = action.payload
@@ -120,7 +121,7 @@ const leads = createSlice({
       state,
       action: PayloadAction<TInit['leadsGroupsPagination']>,
     ) {
-      state.leadsGroupsPagination = action.payload
+      state.leadsGroupsPagination = calculateNewPage(action.payload)
     },
     reset: () => init,
     resetLeadGroups(state) {

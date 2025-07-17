@@ -9,7 +9,7 @@ const ImportLeadsPage: NextPage = () => {
   const { t } = useTranslation('routing')
 
   return (
-    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
+    <Permissions roles={[ERoles.ADMIN, ERoles.SUPERADMIN, ERoles.MANAGER]}>
       <CabinetLayout title={t('import_leads')}>
         <ImportLeads />
       </CabinetLayout>

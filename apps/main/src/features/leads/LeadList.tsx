@@ -21,6 +21,7 @@ import { useFormik } from 'formik'
 import { cleanObject } from '@/utils/object'
 import { TFormik } from '@peiko/types/formik'
 import { LeadListFilters } from '@/features/leads/containers/Filters/LeadListFilters'
+import { getMaxPage } from '../../utils/pagination'
 
 export const LeadList: FC = () => {
   const { dispatch, select } = useRedux()
@@ -38,10 +39,6 @@ export const LeadList: FC = () => {
     shallowEqual,
   )
 
-  useEffect(() => {
-    dispatch(asyncGetLeadLists({ page, limit, orderBy, order }))
-  }, [orderBy, order])
-
   const filters: TFormik = useFormik({
     initialValues: {
       id: '',
@@ -53,10 +50,21 @@ export const LeadList: FC = () => {
     onSubmit: () => undefined,
   })
 
+  useEffect(() => {
+    dispatch(
+      asyncGetLeadLists({ page, limit, orderBy, order, ...cleanObject(filters.values) }),
+    )
+  }, [orderBy, order])
+
   const onChangePage = (page: number) =>
     dispatch(asyncGetLeadLists({ page, orderBy, order, ...cleanObject(filters.values) }))
 
-  const onChangeFilters = () => onChangePage(1)
+  const onChangeFilters = () =>
+    onChangePage(
+      filters.values.limit !== limit
+        ? getMaxPage({ total, page, limit: filters.values.limit }, page)
+        : 1,
+    )
 
   useEffect(() => {
     onChangeFilters()

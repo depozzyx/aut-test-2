@@ -10,7 +10,7 @@ import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
 import { useRedux } from '@/hooks/use-redux'
 import { FeaturePermission } from '@/features/common/permissions/FeaturePermissions'
-import { EManagerPermissions } from '@/constants/profile'
+import { EPermissions } from '@/constants/profile'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { LimitSelect } from '@/components/limit-select'
@@ -116,7 +116,7 @@ export const AgentsList = (): JSX.Element => {
 
   const handleChangePage = useCallback(
     (newPage) => fetchAgentsList(newPage),
-    [orderBy, order, statusFilter],
+    [limit, page, total, statusFilter],
   )
 
   const changeLimit = (option: SingleValue<TSelectOption>) =>
@@ -139,7 +139,7 @@ export const AgentsList = (): JSX.Element => {
         <Panel>
           <Flex width="100%" justify="flex-end" align="center" gap="16px">
             <LimitSelect limit={limit} onChange={changeLimit} />
-            <FeaturePermission permissions={[EManagerPermissions.CREATE_AGENT]}>
+            <FeaturePermission permissions={[EPermissions.CREATE_AGENT]}>
               <FilledButton
                 size="m"
                 maxWidth="236px"

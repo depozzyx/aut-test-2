@@ -19,6 +19,9 @@ import editAgentReducer from '@/features/agents/store/edit-agent'
 import agentAnalyticsReducer from '@/features/agents/store/agent-analytics'
 import campaignAnalyticsReducer from '@/features/campaigns/store/campaign-analytics'
 import managersReducer from '@/features/managers/store/managers'
+import adminsReducer from '@/features/admins/store/admins'
+import createAdminReducer from '@/features/admins/store/create-admin'
+import editAdminReducer from '@/features/admins/store/edit-admin'
 import createManagerReducer from '@/features/managers/store/create-manager'
 import editManagerReducer from '@/features/managers/store/edit-manager'
 import apiKeyReducer from '@/features/settings/store/api-key'
@@ -50,6 +53,9 @@ const store = configureStore({
     createManager: createManagerReducer,
     editManager: editManagerReducer,
     apiKey: apiKeyReducer,
+    admins: adminsReducer,
+    createAdmin: createAdminReducer,
+    editAdmin: editAdminReducer,
   },
 })
 

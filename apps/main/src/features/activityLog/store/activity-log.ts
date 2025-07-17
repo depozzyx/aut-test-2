@@ -4,6 +4,7 @@ import { TPagination } from '@/types/entities/pagination'
 import { handleRestError } from '@/features/common/error'
 import { TActivityLogsReq } from '@/api-rest/activity-logs/types'
 import { activityLogApi } from '@/api-rest/activity-logs'
+import { calculateNewPage } from '@/utils/pagination'
 import { groupLogsByDate } from '../utils/groupLogsByDate'
 import { GroupedLogs } from '../types/activity-log'
 
@@ -30,7 +31,7 @@ const activityLog = createSlice({
   initialState: init,
   reducers: {
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
-      state.pagination = action.payload
+      state.pagination = calculateNewPage(action.payload)
     },
     setFilters(state, action: PayloadAction<TInit['filters']>) {
       state.filters = action.payload

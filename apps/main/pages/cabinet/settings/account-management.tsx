@@ -30,7 +30,7 @@ const AccountManagementPage: NextPage = () => {
     }
   })
   return (
-    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER, ERoles.AGENT]}>
+    <Permissions roles={[ERoles.ADMIN, ERoles.SUPERADMIN, ERoles.MANAGER, ERoles.AGENT]}>
       <CabinetLayout title={t('settings_account_management')}>
         {user?.role !== USER_ROLES.AGENT && <UserData />}
         <ChangePassword />

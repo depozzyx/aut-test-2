@@ -17,7 +17,7 @@ import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { StatusFilter } from '@/features/campaigns/containers/filters/StatusFilter'
 import { FeaturePermission } from '@/features/common/permissions/FeaturePermissions'
-import { EManagerPermissions } from '@/constants/profile'
+import { EPermissions } from '@/constants/profile'
 import { TValue } from '@/components/DropdownMenu/DropdownMenu'
 import { useRedux } from '@/hooks/use-redux'
 import { LimitSelect } from '@/components/limit-select'
@@ -103,9 +103,10 @@ export const CampaignsList = (): JSX.Element => {
             <RangeDayPicker onChange={handleChangeDate} />
             <LimitSelect limit={limit} onChange={handleChangeLimit} />
           </Flex>
-          <FeaturePermission permissions={[EManagerPermissions.CREATE_CAMPAIGN]}>
+          <FeaturePermission permissions={[EPermissions.CREATE_CAMPAIGN]}>
             <FilledButton
               size="m"
+              styles={{ marginLeft: '10px' }}
               maxWidth="236px"
               width="100%"
               startIcon={<PlusIcon width="24px" height="24px" color="main22" />}

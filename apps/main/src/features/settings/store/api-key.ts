@@ -9,6 +9,7 @@ import { modalsActions } from '@/features/common/modals/store'
 import { managerApi } from '@/api-rest/manager'
 import { TApiKey } from '@/api-rest/manager/types'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { calculateNewPage } from '@/utils/pagination'
 
 export type TInit = {
   isLoading: boolean
@@ -43,7 +44,7 @@ const apiKey = createSlice({
       state.apiKeysList = action.payload
     },
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
-      state.pagination = action.payload
+      state.pagination = calculateNewPage(action.payload)
     },
     setSelectedId(state, action: PayloadAction<TInit['selectedId']>) {
       state.selectedId = action.payload

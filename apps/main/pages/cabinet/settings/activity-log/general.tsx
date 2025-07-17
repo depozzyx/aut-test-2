@@ -11,7 +11,7 @@ const ActivityLogPage: NextPage = () => {
   useTitle(t('page-titles:activity-log'))
 
   return (
-    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
+    <Permissions roles={[ERoles.ADMIN, ERoles.SUPERADMIN, ERoles.MANAGER]}>
       <CabinetLayout
         padding="12px 12px 12px 24px"
         title={t('settings_activity_log')}

@@ -15,6 +15,7 @@ import { TOrder } from '@/types/entities/order'
 import { notificationActions } from '@/features/common/notifications/store'
 import { modalsActions } from '@/features/common/modals/store'
 import { ORDER } from '@/constants/order'
+import { calculateNewPage } from '@/utils/pagination'
 
 export type TInit = {
   selectedId: null | number | string
@@ -61,7 +62,7 @@ const agents = createSlice({
       state.selectedId = action.payload
     },
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
-      state.pagination = action.payload
+      state.pagination = calculateNewPage(action.payload)
     },
     setAgentsList(
       state,

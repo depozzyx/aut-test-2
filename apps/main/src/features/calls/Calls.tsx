@@ -2,7 +2,7 @@ import { Flex } from '@/components/Flex'
 import { Card } from '@peiko/components/Card'
 import { Text } from '@peiko/components/Text'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, useEffect, useState, useCallback } from 'react'
+import React, { FC, useEffect, useState, useCallback, useRef } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import dynamic from 'next/dynamic'
 import JsSIP from 'jssip'
@@ -48,6 +48,7 @@ import { errorActions, handleRestError } from '../common/error'
 import { socket } from '../../api/socket/Socket'
 import { campaignSocket } from '../../api/socket/campaign'
 import { HealthCheckStatusModal } from './components/HealthCheckStatusModal'
+import { TCampaignStatus } from '../campaigns/types'
 
 const SelectAgentCampaignModal = dynamic(
   () =>
@@ -85,11 +86,11 @@ const getCurrentAgentDashboard = async (
     handleRestError({ e, dispatch })
   }
 }
-
 const checkStatus = async (dispatch: TDispatch) => {
+  await getActiveCampaigns(dispatch)
   const { data } = await apiAgents.getAgentStatus()
   dispatch(agentActions.setPBXStatus(data.data))
-  if (data.data.status === 'online') {
+  if (data.data.status !== 'offline') {
     dispatch(agentActions.setStatusAsync('finish'))
     dispatch(setSelectedCampaignId(null))
   }
@@ -168,9 +169,16 @@ export const Calls: FC = () => {
     }
   }
 
-  const onCompleteCampaign = () => {
+  const onCompleteCampaign = (status: TCampaignStatus) => {
     // eslint-disable-next-line no-console
     console.info('run oncomplete callback => set agent status [finish]')
+    dispatch(
+      notificationActions.setNotification({
+        key: `notifications:agent.campaign-${status}`,
+        status: 'info',
+        values: {},
+      }),
+    )
     if (pbxStatus.status !== 'offline') {
       dispatch(agentActions.setStatusAsync('finish'))
     }
@@ -181,6 +189,14 @@ export const Calls: FC = () => {
   }
 
   const [completed, setCompleted] = useState(false)
+  const completedRef = useRef(completed)
+  useEffect(() => {
+    completedRef.current = completed
+  }, [completed])
+  const leadRef = useRef(lead)
+  useEffect(() => {
+    leadRef.current = lead
+  }, [lead])
 
   const onSubscribeCampaignStatus = (campaignId: string) => {
     if (hasCampaignSubscription) {
@@ -195,13 +211,7 @@ export const Calls: FC = () => {
             const { status } = store.getState().agentStatus.pbxStatus
             // eslint-disable-next-line no-console
             console.info(`Received completed event, current Agent Status: ${status}`)
-            dispatch(
-              notificationActions.setNotification({
-                key: `notifications:agent.campaign-${e.status}`,
-                status: 'info',
-                values: {},
-              }),
-            )
+
             if (status === 'pause') {
               // eslint-disable-next-line no-console
               console.info('set oncomplete callback')
@@ -215,7 +225,7 @@ export const Calls: FC = () => {
                 console.info('Agent is in call or feedback, will complete after')
                 setCompleted(true)
               } else {
-                onCompleteCampaign()
+                onCompleteCampaign(e.status)
               }
             }
             if (e.status === 'complete') onUnsubscribeCampaignStatus()
@@ -239,6 +249,9 @@ export const Calls: FC = () => {
       //   console.info('TIMER')
       //   dispatch(agentActions.setStatusAsync('start'))
       // }, 500)
+    }
+    if (!sipCanConnect && ua?.isConnected()) {
+      disconnect()
     }
   }, [ua, hasCurrentRTCSession, sipCanConnect])
 
@@ -267,9 +280,9 @@ export const Calls: FC = () => {
     }
   }
   const testSIPConnection = useCallback(async () => {
-    if (!pbxAuth) return false
+    if (!pbxAuth) return 'SIP not registered'
 
-    return new Promise<boolean>((resolve) => {
+    return new Promise<string>((resolve) => {
       // eslint-disable-next-line no-console
       console.info(`Starting SIP-[${pbxAuth?.username}] test connection ...`)
 
@@ -315,7 +328,7 @@ export const Calls: FC = () => {
           testUA.terminateSessions()
           testUA.unregister()
           testUA.stop()
-          resolve(false)
+          resolve('Connection timeout')
         }
       }, 10000)
 
@@ -337,7 +350,7 @@ export const Calls: FC = () => {
           console.info(`sip test session status= ${testSession?.status}`)
           if (testSession?.terminate && testSession?.status !== 8) {
             setTimeout(() => {
-              testSession.terminate()
+              if (testSession?.status !== 8) testSession.terminate()
             }, 1000)
           }
         })
@@ -350,7 +363,7 @@ export const Calls: FC = () => {
               testUA?.terminateSessions()
               testUA?.unregister()
               testUA?.stop()
-              resolve(true)
+              resolve('')
             }, 1000)
           }
         })
@@ -363,7 +376,7 @@ export const Calls: FC = () => {
               testUA?.terminateSessions()
               testUA?.unregister()
               testUA?.stop()
-              resolve(false)
+              resolve(e?.cause ?? 'Unknown reason')
             }, 1000)
           }
         })
@@ -377,7 +390,7 @@ export const Calls: FC = () => {
             testUA?.terminateSessions()
             testUA?.unregister()
             testUA?.stop()
-            resolve(false)
+            resolve('Registration failed')
           }, 1000)
         }
       })
@@ -497,8 +510,8 @@ export const Calls: FC = () => {
     await new Promise((resolve) => setTimeout(resolve, 1300))
     try {
       const sipResult = await testSIPConnection()
-      if (!sipResult) {
-        sipError = 'SIP registration test failed'
+      if (sipResult) {
+        sipError = `SIP registration test failed. ${sipResult}`
       } else {
         sipOk = true
       }
@@ -557,15 +570,16 @@ export const Calls: FC = () => {
     }
   }, [sipCounter.count])
 
-  useMount(() => {
+  useMount(async () => {
     if (user?.role === 'agent') {
       checkSystemHealth()
     }
     // eslint-disable-next-line no-console
     console.info('on mount isConnected: ', ua?.isConnected())
     dispatch(getLeadStatuses())
-    checkStatus(dispatch)
+    await checkStatus(dispatch)
   })
+
   useUnmount(() => {
     // eslint-disable-next-line no-console
     console.info('disconnect on unmount')
@@ -580,7 +594,54 @@ export const Calls: FC = () => {
     }
   })
 
+  useEffect(() => {
+    if (user?.role === ERoles.AGENT) {
+      const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+        const { pbxStatus } = store.getState().agentStatus
+        const isInFeedback =
+          pbxStatus.status === 'pause' && pbxStatus.reason === 'feedback'
+
+        if (isInFeedback && leadRef.current) {
+          apiCalls.feedback({
+            status: 'NAF',
+            requestId: leadRef.current.requestId,
+          })
+        }
+        if (pbxStatus.status !== 'offline') {
+          apiAgents.changeWorkStatus({
+            workStatus: 'finish',
+          })
+        }
+        event.preventDefault()
+      }
+
+      window.addEventListener('beforeunload', handleBeforeUnload)
+
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload)
+      }
+    }
+  }, [])
+
   const [onSelectedCampaign, setOnSelectedCampaign] = useState(true)
+
+  const selectCampaign = async (): Promise<number | null> => {
+    const campaignsData = await getActiveCampaigns(dispatch)
+    if (!campaignsData.length) {
+      return null
+    }
+    if (campaignsData.length === 1) {
+      const campaignId = campaignsData[0].id
+      if (campaignId) {
+        dispatch(setSelectedCampaignId(String(campaignId)))
+        onSubscribeCampaignStatus(String(campaignId))
+        return campaignId
+      }
+    } else {
+      openModal()
+    }
+    return null
+  }
 
   // set agent working campaign
   const setCampaignId = async (createCallback?: boolean): Promise<number | null> => {
@@ -588,22 +649,7 @@ export const Calls: FC = () => {
       if (createCallback) {
         setOnSelectedCampaign(true)
       }
-      const campaignsData = await getActiveCampaigns(dispatch)
-      // setCampaigns([])
-      if (campaignsData.length) {
-        if (campaignsData.length === 1) {
-          const campaignId = campaignsData[0].id
-          if (campaignId) {
-            dispatch(setSelectedCampaignId(String(campaignId)))
-            onSubscribeCampaignStatus(String(campaignId))
-            return campaignId
-          }
-        } else {
-          openModal()
-        }
-      } else {
-        openModal()
-      }
+      return selectCampaign()
     }
     return null
   }
@@ -614,7 +660,7 @@ export const Calls: FC = () => {
       setCampaignId(true).then((id) => {
         if (id) {
           // eslint-disable-next-line no-console
-          console.info('checkCampaignId with callback to -> start')
+          console.info('checkCampaignId with callback to -> start ', id)
           if (pbxStatus.status !== 'online') {
             dispatch(agentActions.setSipCanConnect(true))
             // eslint-disable-next-line no-console
@@ -659,8 +705,8 @@ export const Calls: FC = () => {
             new Date(),
           )
           const { status, reason } = store.getState().agentStatus.pbxStatus
-          if (completed) {
-            onCompleteCampaign()
+          if (completedRef.current) {
+            onCompleteCampaign('complete')
             setCompleted(false)
           } else if (reason !== 'manual' && status === 'pause') {
             console.info(`campaign is not completed yet ${status} => unpause`)
@@ -700,7 +746,7 @@ export const Calls: FC = () => {
         ),
       )
     } else {
-      await openModal()
+      await selectCampaign()
     }
   }
 
@@ -751,35 +797,10 @@ export const Calls: FC = () => {
   useEffect(() => {
     const isAgentOnFeedback =
       pbxStatus.status === 'pause' && pbxStatus.reason === 'feedback'
-    const holdTimeoutSec = lead?.campaign?.holdTime || 1
-
     if (user?.role === ERoles.AGENT && isAgentOnFeedback) {
       const timeoutId = setTimeout(() => {
-        console.info(`[FEEDBACK TIMOUT 60 sec]! => hold`, new Date())
-        dispatch(agentActions.setStatusAsync('pause', 'hold'))
-
-        // Only set the unpause timer if we successfully transitioned to hold
-        if (holdTimeoutSec) {
-          console.info(
-            `[UNPAUSE after auto HOLD by campaign hold time setting ${holdTimeoutSec} s] -> unpause`,
-            new Date(),
-          )
-          setTimeout(() => {
-            const { status, reason } = store.getState().agentStatus.pbxStatus
-            if (status === 'pause') {
-              console.info(
-                `[CAMPAIGN HOLD TIMER ${holdTimeoutSec}] -> unpause`,
-                new Date(),
-              )
-              if (completed) {
-                onCompleteCampaign()
-                setCompleted(false)
-              } else if (reason !== 'manual') {
-                dispatch(agentActions.setStatusAsync('unpause'))
-              }
-            }
-          }, holdTimeoutSec * 1000)
-        }
+        console.info(`[FEEDBACK TIMOUT 60 sec]! => hold`, new Date(), `leadId: ${lead} `)
+        onCallFeedback('NAF')
       }, +FEEDBACK_TIMEOUT)
       setFeedbackTimeoutId(timeoutId)
 

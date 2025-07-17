@@ -1,0 +1,1 @@
+export { DeleteManagerModal } from './DeleteManagerModal'

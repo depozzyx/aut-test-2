@@ -55,14 +55,18 @@ const SOCKET_CONFIG = {
   path: '',
   transports: ['websocket'],
   reconnection: true,
-  reconnectionDelay: 5000,
+  reconnectionDelay: 3000,
   reconnectionAttempts: 1000000,
 }
 
 class SocketClass {
   private io?: Socket
 
+  private reconnectTimer: null | ReturnType<typeof setTimeout> = null
+
   private hasReconnect?: boolean
+
+  private isConnecting = false
 
   private scope: Map<string, TScope>
 
@@ -84,19 +88,24 @@ class SocketClass {
   }
 
   private async connect() {
-    if (!this.io) {
+    if (!this.isConnected()) {
+      this.isConnecting = true
       try {
         const { data } = await apiAuth.loginWS()
         this.io = io(API_SOCKET_URL, {
           ...SOCKET_CONFIG,
           auth: { token: data.data.token },
         })
+        if (this.reconnectTimer) {
+          clearTimeout(this.reconnectTimer)
+        }
       } catch (e) {
         if (!axios.isAxiosError(e) || !e.response) return
         const { data } = e.response
         const { message } = data
-        this.disconnect()
+        // this.disconnect()
         store.dispatch(errorActions.showGlobalError(message))
+        this.isConnecting = false
         return
       }
     }
@@ -111,12 +120,15 @@ class SocketClass {
       this.subscription('subscribe')
     }
 
-    this.io.on('connect', () => {
+    this.io?.on('connect', () => {
+      console.info('Socket connect')
+      this.isConnecting = false
       this.io?.on(EVENT_AUTH, connect)
     })
 
-    this.io.on('disconnect', () => {
+    this.io?.on('disconnect', () => {
       // need show in toastify
+      console.info('Socket disconnect')
       this.subscription('unsubscribe')
       this.hasReconnect = true
       this.disconnectCallback.forEach((callback) => {
@@ -124,24 +136,31 @@ class SocketClass {
       })
     })
 
-    this.io.on('error', (e) => {
+    this.io?.on('error', (e) => {
+      console.info('Socket onError', e)
       this.errorCallback.forEach((callback) => {
         callback()
       })
-      this.disconnect()
+      if (e === 'Invalid credentials') {
+        // this.disconnect()
+        this.reconnectTimer = setTimeout(
+          () => this.connect(),
+          SOCKET_CONFIG.reconnectionDelay,
+        )
+      }
       // TypeError: v.dispatch is not a function
       try {
         store?.dispatch(errorActions.setSocketError(true))
       } catch {
         //
       }
-      console.error(e)
     })
 
-    this.io.on('exception', (e: TExceptionError) => {
+    this.io?.on('exception', (e: TExceptionError) => {
+      console.info('Socket onException', e)
       const { error } = e
       if (error === E_SOCKET_ERRORS.AUTH) {
-        this.disconnect()
+        // this.disconnect()
       }
       // TypeError: v.dispatch is not a function
       try {
@@ -242,7 +261,7 @@ class SocketClass {
       this.subscription('subscribe')
     }
 
-    if (!this.io) this.connect()
+    if (!this.io && !this.isConnecting) this.connect()
   }
 
   unsubscribe(id: TUnsubscribeProps): void {
@@ -323,6 +342,11 @@ class SocketClass {
     this.errorCallback.delete(id)
   }
 
+  logoutCleanup(): void {
+    this.disconnect()
+    this.scope.clear()
+  }
+
   disconnect(): void {
     if (this.io) {
       this.io.removeAllListeners()
@@ -330,7 +354,6 @@ class SocketClass {
       this.io = undefined
     }
     this.hasReconnect = false
-    this.scope.clear()
     this.disconnectCallback.clear()
     this.reconnectCallback.clear()
   }

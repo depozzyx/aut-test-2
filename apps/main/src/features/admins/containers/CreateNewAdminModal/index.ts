@@ -1,0 +1,1 @@
+export { CreateNewAdminModal } from './CreateNewAdminModal'

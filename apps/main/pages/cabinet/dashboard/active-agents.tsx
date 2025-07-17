@@ -11,7 +11,7 @@ const ActiveAgentsPage: NextPage = () => {
   useTitle(t('page-titles:dashboard-agents'))
 
   return (
-    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
+    <Permissions roles={[ERoles.ADMIN, ERoles.SUPERADMIN, ERoles.MANAGER]}>
       <CabinetLayout title={t('dashboard')}>
         <ActiveAgents />
       </CabinetLayout>

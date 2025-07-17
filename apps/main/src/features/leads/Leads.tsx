@@ -11,6 +11,7 @@ import { LeadFilters } from '@/features/leads/containers/Filters/LeadFilters'
 import { useFormik } from 'formik'
 import { TFormik } from '@peiko/types/formik'
 import { cleanObject } from '@/utils/object'
+import { getMaxPage } from '@/utils/pagination'
 import { LeadsTable } from './containers/LeadsTable'
 
 import {
@@ -56,19 +57,6 @@ export const Leads: FC = () => {
     dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit }))
   }, [])
 
-  useEffect(() => {
-    if (secondMount)
-      dispatch(getLeadList({ page: 1, limit, orderBy, order, leadListId: leadsGroup }))
-  }, [leadsGroup, secondMount, orderBy, order])
-
-  useUnmount(() => {
-    dispatch(reset())
-  })
-
-  useEffect(() => {
-    if (!leadsGroup) setSecondMount(true)
-  }, [leadsGroup])
-
   const filters: TFormik = useFormik({
     initialValues: {
       id: '',
@@ -82,6 +70,28 @@ export const Leads: FC = () => {
     onSubmit: () => undefined,
   })
 
+  useEffect(() => {
+    if (secondMount)
+      dispatch(
+        getLeadList({
+          page: 1,
+          limit,
+          orderBy,
+          order,
+          leadListId: leadsGroup,
+          ...cleanObject(filters.values),
+        }),
+      )
+  }, [leadsGroup, secondMount, orderBy, order])
+
+  useUnmount(() => {
+    dispatch(reset())
+  })
+
+  useEffect(() => {
+    if (!leadsGroup) setSecondMount(true)
+  }, [leadsGroup])
+
   const onChangePage = (page: number) =>
     dispatch(
       getLeadList({
@@ -93,7 +103,12 @@ export const Leads: FC = () => {
       }),
     )
 
-  const onChangeFilters = () => onChangePage(1)
+  const onChangeFilters = () =>
+    onChangePage(
+      filters.values.limit !== limit
+        ? getMaxPage({ total, page, limit: filters.values.limit }, page)
+        : 1,
+    )
 
   useEffect(() => {
     onChangeFilters()

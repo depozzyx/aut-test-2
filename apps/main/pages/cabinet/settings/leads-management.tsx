@@ -11,7 +11,7 @@ const LeadsManagementPage: NextPage = () => {
   useTitle(t('page-titles:leads-management'))
 
   return (
-    <Permissions roles={[ERoles.ADMIN, ERoles.MANAGER]}>
+    <Permissions roles={[ERoles.ADMIN, ERoles.SUPERADMIN, ERoles.MANAGER]}>
       <CabinetLayout title={t('settings_leads_management')}>
         <LeadStatuses />
       </CabinetLayout>

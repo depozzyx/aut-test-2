@@ -9,7 +9,8 @@
     "email": "Email",
     "pbxName": "PBX Name",
     "creation-date": "Creation Date",
-    "edit": "Edit"
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "sort-by": "Sort By",
   "create-manager": {
@@ -28,5 +29,10 @@
     "password": "Password",
     "cancel": "Cancel",
     "save": "Save"
+  },
+  "delete-manager": {
+    "title": "<translate>Are you sure you want to delete <value>{{ managerName }}</value>?</translate>",
+    "delete-btn": "Delete",
+    "cancel-btn": "Cancel"
   }
 }

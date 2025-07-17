@@ -16,7 +16,18 @@ const options = limits.map((l) => ({ label: l.toString(), value: l }))
 
 export const LimitSelect: FC<Props> = ({ formik, limit, onChange }: Props) =>
   formik ? (
-    <FormikSelect formik={formik} name="limit" options={options} />
+    <FormikSelect
+      formik={formik}
+      styles={{ minWidth: '90px' }}
+      name="limit"
+      options={options}
+    />
   ) : (
-    <Select name="limit" options={options} onChange={onChange} value={limit} />
+    <Select
+      name="limit"
+      styles={{ minWidth: '90px' }}
+      options={options}
+      onChange={onChange}
+      value={limit}
+    />
   )
