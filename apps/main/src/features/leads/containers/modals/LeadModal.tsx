@@ -43,6 +43,7 @@ type Fields = {
   leadList: Field
   lastCallAt: Field
   country: Field
+  rank: Field
 }
 
 export const LeadModal = ({
@@ -91,7 +92,7 @@ export const LeadModal = ({
     timezone: {
       isEditable: false,
       isEditing: false,
-      value: leadData.timezone,
+      value: `${leadData.tzId} (${leadData.timezone})`,
     },
     phone: {
       isEditable: false,
@@ -116,6 +117,10 @@ export const LeadModal = ({
     country: {
       isEditable: false,
       value: getCountryName(leadData.countryCode) || '',
+    },
+    rank: {
+      isEditable: false,
+      value: leadData.rank.toString() || '0',
     },
   })
 
@@ -157,7 +162,7 @@ export const LeadModal = ({
       timezone: {
         isEditable: true,
         isEditing: false,
-        value: leadData.timezone,
+        value: `${leadData.tzId} (${leadData.timezone})`,
       },
     })
     formik.resetForm({
@@ -195,9 +200,8 @@ export const LeadModal = ({
   useEffect(() => {
     setCanSave(
       (fields.name.value.trim() !== leadData.name ||
-        fields.status.value !== leadData.status ||
-        fields.timezone.value !== leadData.timezone) &&
-        ![fields.name.value, fields.status.value, fields.timezone.value].includes(''),
+        fields.status.value !== leadData.status) &&
+        ![fields.name.value, fields.status.value].includes(''),
     )
   }, [fields])
 

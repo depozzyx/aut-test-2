@@ -35,7 +35,7 @@ export const UserProfile = ({
   onClickEchoTest: () => void
   disconnectSip: () => void
 }): JSX.Element => {
-  const { user } = useAuth()
+  const { user, pbxAuth } = useAuth()
 
   const { applyStyle, resetStyle } = useToggleStyle({
     selector: '#customPopupOverlay',
@@ -55,6 +55,7 @@ export const UserProfile = ({
           userRole={user?.role}
           email={user?.email}
           name={user?.username ?? ''}
+          pbxName={pbxAuth?.username ?? ''}
           onClickEchoTest={onClickEchoTest}
           disconnectSip={disconnectSip}
         />

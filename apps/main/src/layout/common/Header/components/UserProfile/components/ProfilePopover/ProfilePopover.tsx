@@ -16,14 +16,15 @@ import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { EnvelopeIcon } from '@/icons/EnvelopeIcon'
 import { agentStatusSelector } from '@/features/common/agentStatus/store'
 import { useRedux } from '@/hooks/use-redux'
-import { CallIcon } from '@/icons/CallIcon'
-import { CallButton } from '@/features/calls/components/CallButton/CallButton'
+import { LoaderIcon } from '@peiko/components/icons/Loader'
+import { Container } from '@peiko/components/loaders/Loader/Loader.styles'
 import { Divider, ItemWrapper } from './ProfilePopover.styled'
 
 export interface IProfilePopoverProps {
   name?: string
   phone?: string
   email?: string
+  pbxName?: string
   userRole?: TUserRoles
   onClickEchoTest: () => void
   disconnectSip: () => void
@@ -51,6 +52,7 @@ export const ProfilePopover = ({
   name,
   email,
   userRole,
+  pbxName,
   onClickEchoTest,
   disconnectSip,
 }: IProfilePopoverProps): JSX.Element => {
@@ -86,7 +88,7 @@ export const ProfilePopover = ({
         <Flex direction="column" align="center">
           <Text variant="f4">{name}</Text>
           <Text variant="f6" color="main22">
-            {t(`roles.${userRole}`)}
+            {t(`roles.${userRole}`)} {pbxName && `(${pbxName})`}
           </Text>
         </Flex>
       </Flex>
@@ -104,15 +106,15 @@ export const ProfilePopover = ({
           <PopoverMenuItem
             icon={
               isEchoTestMode ? (
-                <CallButton size="s">
-                  <CallIcon />
-                </CallButton>
+                <Container>
+                  <LoaderIcon />
+                </Container>
               ) : (
                 <UserRoleIcon userRole={userRole} />
               )
             }
-            title={isEchoTestMode ? 'Finish echo test' : 'Echo Test'}
-            onClick={onClickEchoTest}
+            title={isEchoTestMode ? 'Echo test calling' : 'Echo Test'}
+            onClick={!isEchoTestMode ? onClickEchoTest : undefined}
             cursor="pointer"
           />
         )}{' '}
