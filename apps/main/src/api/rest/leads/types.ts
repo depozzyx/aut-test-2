@@ -99,6 +99,8 @@ export type TLeadData = {
   name: string
   phone: string
   timezone: string
+  tzId: string
+  rank: number
   status: string
   source: string
   leadListId?: number

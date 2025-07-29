@@ -12,9 +12,8 @@ import { CloseIcon } from '@peiko/components/icons/CloseIcon'
 import { BaseButton } from '@peiko/components/buttons/BaseButton'
 import { useRedux } from '@/hooks/use-redux'
 import { LoaderIcon } from '@peiko/components/icons/Loader/LoaderIcon'
-import styled, { keyframes } from 'styled-components'
 
-import { TLoaderProps } from '@peiko/components/loaders/Loader/types'
+import { Container } from '@peiko/components/loaders/Loader/Loader.styles'
 import { TPreparedFiles } from '../../types/files'
 import { useCounter } from '../../hooks/useCounter'
 import { DuplicateText, ProgressBar } from './FileItem.styled'
@@ -24,29 +23,6 @@ import {
   selectFilesForImport,
   updateImportFiles,
 } from '../../store/leads'
-
-const rotateLoader = keyframes`
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-  } 
-`
-
-export const Container = styled.span<{
-  position?: TLoaderProps['position']
-  top?: TLoaderProps['top']
-  left?: TLoaderProps['left']
-}>`
-  margin-left: 8px;
-  line-height: 0;
-  animation: ${rotateLoader} 2s linear infinite;
-  top: ${({ top }) => top || 0};
-  left: ${({ left }) => left || 0};
-  position: ${({ position }) => position || 'relative'};
-  z-index: ${({ position, theme }) => (position === 'fixed' ? theme.zIndex.medium : 1)};
-`
 
 export const FileItem: FC<TPreparedFiles & { onDelete: (id: string) => void }> = ({
   id,

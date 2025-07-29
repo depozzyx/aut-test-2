@@ -71,7 +71,6 @@ export const Header: FC = () => {
     if (isEchoTestMode) {
       offEchoTest()
     } else {
-      dispatch(agentActions.setHasCurrentRTCSession(true))
       dispatch(agentActions.setSipCanConnect(false))
       dispatch(agentActions.setEchoTestMode(true))
       connectToSip()

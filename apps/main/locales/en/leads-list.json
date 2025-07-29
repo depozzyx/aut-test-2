@@ -56,7 +56,8 @@
       "campaign": "campaign",
       "leadList": "lead list",
       "lastCallAt": "last call",
-      "country": "country"
+      "country": "country",
+      "rank": "rank"
     },
     "placeholders": {
       "name": "name",

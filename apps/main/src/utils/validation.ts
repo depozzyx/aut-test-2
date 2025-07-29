@@ -110,7 +110,11 @@ export const createCampaignValidationSchema = yup.object().shape({
   mode: yup.string().required('This field is required'),
   coefficient: yup.string().required('This field is required'),
   workHours: yup.string().required('This field is required'),
-  filterLeadStatuses: yup.array().of(yup.string()).default([]),
+  filterLeadStatuses: yup
+    .array()
+    .of(yup.string())
+    .min(1, 'This field must have at least 1 item')
+    .default([]),
   // recycleRules: recycleRulesSchema,
 })
 
