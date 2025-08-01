@@ -20,17 +20,17 @@ export const LeadStatusLogTable = ({
 
   const columns: { label: string; key: string }[] = [
     { label: t('view-lead.logs.date'), key: 'date' },
-    { label: t('view-lead.logs.oldStatus'), key: 'oldStatus' },
-    { label: t('view-lead.logs.newStatus'), key: 'newStatus' },
+    { label: t('view-lead.logs.status'), key: 'status' },
+    { label: t('view-lead.logs.duration'), key: 'duration' },
     { label: t('view-lead.logs.user'), key: 'user' },
   ]
 
   const data = logs.map((log) => ({
     id: log.id,
     date: formatCreatedAt(log.createdAt),
-    oldStatus: getLeadStatus(leadStatuses, log.details.status.old),
-    newStatus: getLeadStatus(leadStatuses, log.details.status.new),
-    user: log.user.username,
+    status: getLeadStatus(leadStatuses, log.status),
+    duration: log.duration,
+    user: log.user,
   }))
 
   const getColumnFlexWidth = (key: string) =>

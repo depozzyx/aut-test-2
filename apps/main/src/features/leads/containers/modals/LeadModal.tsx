@@ -221,8 +221,8 @@ export const LeadModal = ({
       onClose={onCloseModal}
       containerWidth="100%"
     >
-      <Flex justify="center" align="center" direction="column" gap="10px">
-        <Flex direction="column" width="100%" styles={{ marginTop: '10px' }}>
+      <Flex justify="center" align="center" direction="column" gap="5px">
+        <Flex direction="column" width="100%" styles={{ marginTop: '5px' }}>
           {Object.keys(fields).map((key) => {
             const typedKey = key as keyof Fields
             return (
@@ -232,7 +232,7 @@ export const LeadModal = ({
                   borderBottom: `1px solid ${theme.palette.main22}`,
                 }}
               >
-                <Flex justify="start" align="center" width="35%" padding="14px">
+                <Flex justify="start" align="center" width="35%" padding="10px">
                   <Text variant="f8">{t(`view-lead.fields.${key}`)}</Text>
                 </Flex>
                 <Flex justify="start" align="center" width="45%">

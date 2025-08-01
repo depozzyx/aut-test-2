@@ -46,6 +46,9 @@ type TCampaignRowKeys =
   | 'action'
   | 'date'
   | 'status'
+  | 'holdTime'
+  | 'mode'
+  | 'workHours'
   | 'leads'
   | 'agents'
   | 'edit'
@@ -130,6 +133,9 @@ export const CampaignListTable = (): JSX.Element => {
       ),
       value: 'status',
     },
+    { label: t('campaign-list-headers.hold-time'), value: 'holdTime' },
+    { label: t('campaign-list-headers.mode'), value: 'mode' },
+    { label: t('campaign-list-headers.work-hours'), value: 'workHours' },
     { label: t('campaign-list-headers.leads'), value: 'leads' },
     { label: t('campaign-list-headers.agents'), value: 'agents' },
     { label: t('campaign-list-headers.action'), value: 'action' },
@@ -145,6 +151,9 @@ export const CampaignListTable = (): JSX.Element => {
       date: <InfoCell title={formatCreatedAt(campaign.createdAt)} />,
       status: <StatusChip status={campaign.status} />,
       leads: <InfoCell title={campaign.leadCount} />,
+      holdTime: <InfoCell title={campaign.holdTime} />,
+      mode: <InfoCell title={campaign.mode} />,
+      workHours: <InfoCell title={campaign.workHours} />,
       agents: <InfoCell title={campaign.agentCount} />,
       action: (
         <ButtonWithTooltip

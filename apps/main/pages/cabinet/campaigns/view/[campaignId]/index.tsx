@@ -33,6 +33,7 @@ import {
   selectLeadsOrder,
 } from '@/features/leads/store/leads'
 import { ROUTES } from '@/routes'
+import { TCampaign } from '@/features/campaigns/types'
 
 const CampaignViewPage: NextPage = () => {
   const { t } = useTranslation('campaigns')
@@ -46,6 +47,7 @@ const CampaignViewPage: NextPage = () => {
   const { dispatch, select } = useRedux()
   const campaignId = Number(router.query.campaignId)
   const [campaignInfo, setCampaignInfo] = useState<TCampaignInfo>()
+  const [campaign, setCampaign] = useState<TCampaign>()
 
   const {
     pagination: { total, page, limit },
@@ -74,8 +76,12 @@ const CampaignViewPage: NextPage = () => {
       if (!campaignId) return
       try {
         setLoading(true)
-        const { data } = await apiCampaigns.getCampaignInfoById(campaignId)
-        if (data.data) setCampaignInfo(data.data)
+        const [info, campaign] = await Promise.all([
+          apiCampaigns.getCampaignInfoById(campaignId),
+          apiCampaigns.getCampaignById(campaignId.toString()),
+        ])
+        if (info.data) setCampaignInfo(info.data.data)
+        if (campaign.data) setCampaign(campaign.data.data)
       } catch (e) {
         setLoading(false)
         handleRestError({ e, dispatch })
@@ -90,7 +96,23 @@ const CampaignViewPage: NextPage = () => {
     { name: t('view.name'), value: campaignInfo?.name },
     {
       name: t('view.status'),
-      value: campaignInfo?.status && t(`statuses.${campaignInfo.status}`).toLowerCase(),
+      value: campaignInfo?.status && t(`statuses.${campaignInfo.status}`),
+    },
+    {
+      name: t('view.mode-label'),
+      value: campaign?.mode && t(`modes.${campaign?.mode}`),
+    },
+    {
+      name: t('view.holdTime-label'),
+      value: campaign?.holdTime ?? 0,
+    },
+    {
+      name: t('view.workHours-label'),
+      value: campaign?.workHours ?? '',
+    },
+    {
+      name: t('view.coefficient-label'),
+      value: campaign?.coefficient ?? '',
     },
     {
       name: t('view.callsToday'),
@@ -130,7 +152,7 @@ const CampaignViewPage: NextPage = () => {
             <Flex direction="column">
               <Flex gap={40}>
                 <Card fullWidth maxWidth={300}>
-                  <CardTile styles={{ marginBottom: '40px' }}>
+                  <CardTile styles={{ marginBottom: '4px' }}>
                     {t('view.info.title')}
                   </CardTile>
                   <Flex
@@ -176,7 +198,7 @@ const CampaignViewPage: NextPage = () => {
                   </Flex>
                 </Card>
                 <Card fullWidth maxWidth={300}>
-                  <CardTile styles={{ marginBottom: '40px' }}>
+                  <CardTile styles={{ marginBottom: '4px' }}>
                     {t('view.agentsCalls.title')}
                   </CardTile>
                   {campaignInfo?.agentsCalls && (

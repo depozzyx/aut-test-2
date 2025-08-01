@@ -2,10 +2,15 @@
   "add-campaign": "Add new Campaign",
   "empty-data": "No data",
   "statuses": {
+    "new": "New",
     "active": "Active",
     "pause": "Paused",
     "complete": "Completed",
     "hold": "On Hold"
+  },
+  "modes": {
+    "adaptive": "Adaptive",
+    "fixed": "Fixed"
   },
   "tooltip": {
     "cannot-edit-active-campaign": "You can not edit {{ status }} campaign, wait for complete or pause it",
@@ -24,7 +29,10 @@
     "action": "Action",
     "debug": "Debug",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "mode": "Mode",
+    "work-hours": "Work Hours",
+    "hold-time": "Hold Time"
   },
   "active-campaigns-headers": {
     "campaign-name": "Campaign Name",
@@ -60,7 +68,7 @@
     "hold-time-placeholder": "max 60s",
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
-    "workHours-label": "Work Hours (UTC-0)",
+    "workHours-label": "Work Hours (local time)",
     "lead-statuses": "Select lead statuses to filter calls",
     "lead-statuses-review": "Lead statuses filter for calls",
     "recycle-rules": "Recycle Rules",
@@ -82,7 +90,7 @@
     "hold-time-placeholder": "max 60s",
     "mode-label": "Mode",
     "coefficient-label": "Coefficient",
-    "workHours-label": "Work Hours (UTC-0)",
+    "workHours-label": "Work Hours (local timecampaign-list-headers)",
     "lead-statuses": "Select lead statuses to filter calls",
     "lead-statuses-review": "Filtered lead statuses for calls"
   },
@@ -138,6 +146,10 @@
     "breadCrumbs": {
       "campaigns": "Campaigns",
       "campaign": "Campaign"
-    }
+    },
+    "holdTime-label": "Hold Time (sec)",
+    "mode-label": "Mode",
+    "coefficient-label": "Coefficient",
+    "workHours-label": "Work Hours"
   }
 }

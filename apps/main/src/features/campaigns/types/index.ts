@@ -6,7 +6,7 @@ import { TLeadList } from '@/features/campaigns/hooks/use-getCampaignById'
 
 export type TCampaignTableType = 'active' | 'list'
 
-export type TCampaignStatus = 'active' | 'pause' | 'complete' | 'hold'
+export type TCampaignStatus = 'new' | 'active' | 'pause' | 'complete' | 'hold'
 
 export type TCampaignActiveStatus = 'active' | 'hold'
 
@@ -40,6 +40,10 @@ export type TCampaign = {
   name: string
   createdAt: string
   agentCount: number
+  holdTime: number
+  workHours: string
+  mode: string
+  coefficient: string
   leadCount: number
   leadLists: TLeadList[]
   assignedAgents: []

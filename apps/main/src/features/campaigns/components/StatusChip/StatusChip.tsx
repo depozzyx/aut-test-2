@@ -9,6 +9,7 @@ interface IStatusChipProps {
 }
 
 export const statusColor: Record<TCampaignStatus, keyof DefaultTheme['palette']> = {
+  new: 'main3',
   active: 'main',
   pause: 'main10-100',
   complete: 'main7-100',

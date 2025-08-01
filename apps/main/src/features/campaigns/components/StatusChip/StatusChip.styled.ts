@@ -5,6 +5,7 @@ import { statusColor } from './StatusChip'
 import { TCampaignStatus } from '../../types'
 
 const bgColor: Record<TCampaignStatus, keyof TDefaultPalette> = {
+  new: 'main14',
   active: 'base500',
   pause: 'base600',
   complete: 'base300',

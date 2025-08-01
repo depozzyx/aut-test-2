@@ -27,7 +27,9 @@
     "AA": "Answering Machine Auto",
     "BA": "Busy Auto",
     "NA": "No Answer",
-    "NNA": "Number Not Available"
+    "NNA": "Number Not Available",
+    "NAA": "No Available Agents",
+    "CTNA": "Congestion Number Auto"
   },
   "agents": {
     "dashboard": {
