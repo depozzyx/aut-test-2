@@ -90,8 +90,10 @@ export type TUpsertCustomStatusReq = {
 export type TLeadStatusLog = {
   id: number
   createdAt: string
-  details: Record<string, Record<string, string>>
-  user: { username: string }
+  status: string
+  duration: number
+  userId: number
+  user: string
 }
 
 export type TLeadData = {
