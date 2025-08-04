@@ -31,8 +31,10 @@ import {
   selectOrderBy,
   selectOrder,
   setPagination,
+  selectSearchTerm,
 } from './store/agents'
 import { AgentsListTable } from './containers/tables/AgentsListTable'
+import { AgentSearchField } from './components/AgentSearchField'
 
 const DeleteAgentModal = dynamic(
   () =>
@@ -77,12 +79,14 @@ export const AgentsList = (): JSX.Element => {
     orderBy,
     order,
     statusFilter,
+    agentNameFilter,
   } = select(
     createStructuredSelector({
       pagination: selectAgentsPagination,
       orderBy: selectOrderBy,
       order: selectOrder,
       statusFilter: selectStatusFilter,
+      agentNameFilter: selectSearchTerm,
     }),
     shallowEqual,
   )
@@ -90,18 +94,6 @@ export const AgentsList = (): JSX.Element => {
   const openCreateNewAgentModal = () => {
     setModal({ modalName: MODAL_NAMES.CREATE_AGENT, isOpen: true })
   }
-
-  useEffect(() => {
-    dispatch(
-      asyncGetAgentsList({
-        page: 1,
-        limit: limit ?? 10,
-        orderBy,
-        order,
-        workStatus: statusFilter,
-      }),
-    )
-  }, [limit, orderBy, order, statusFilter])
 
   const fetchAgentsList = (newPage?: number) =>
     dispatch(
@@ -111,12 +103,17 @@ export const AgentsList = (): JSX.Element => {
         orderBy,
         order,
         workStatus: statusFilter,
+        search: agentNameFilter,
       }),
     )
 
+  useEffect(() => {
+    fetchAgentsList(page)
+  }, [limit, orderBy, order, statusFilter, agentNameFilter])
+
   const handleChangePage = useCallback(
     (newPage) => fetchAgentsList(newPage),
-    [limit, page, total, statusFilter],
+    [limit, page, total, statusFilter, agentNameFilter],
   )
 
   const changeLimit = (option: SingleValue<TSelectOption>) =>
@@ -137,8 +134,11 @@ export const AgentsList = (): JSX.Element => {
     <>
       <Container>
         <Panel>
-          <Flex width="100%" justify="flex-end" align="center" gap="16px">
-            <LimitSelect limit={limit} onChange={changeLimit} />
+          <Flex width="100%" justify="space-between" align="center" gap="16px">
+            <Flex width="100%" justify="space-between" align="center" gap="16px">
+              <AgentSearchField />
+              <LimitSelect limit={limit} onChange={changeLimit} />
+            </Flex>
             <FeaturePermission permissions={[EPermissions.CREATE_AGENT]}>
               <FilledButton
                 size="m"

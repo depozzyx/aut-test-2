@@ -57,3 +57,17 @@ export const Container = styled.span<{
   position: ${({ position }) => position || 'relative'};
   z-index: ${({ position, theme }) => (position === 'fixed' ? theme.zIndex.medium : 1)};
 `
+
+export const RotateContainer = styled.span<{
+  position?: TLoaderProps['position']
+  top?: TLoaderProps['top']
+  left?: TLoaderProps['left']
+  isRotating: boolean
+}>`
+  line-height: 0;
+  animation: ${({ isRotating }) => (isRotating ? rotate : 'none')} 1s linear;
+  top: ${({ top }) => top || 0};
+  left: ${({ left }) => left || 0};
+  position: ${({ position }) => position || 'relative'};
+  z-index: ${({ position, theme }) => (position === 'fixed' ? theme.zIndex.medium : 1)};
+`

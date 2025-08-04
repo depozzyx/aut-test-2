@@ -14,11 +14,13 @@ import {
   selectUpdateAgentIsLoading,
 } from '@/features/agents/store/edit-agent'
 import { editAgentValidationSchema } from '@/utils/validation'
+import { useAuth } from '@/features/common/user'
 
 export const EditAgentForm = (): JSX.Element => {
   const { t } = useTranslation('agents')
   const { resetModals } = useModals()
   const { select, dispatch } = useRedux()
+  const { user } = useAuth()
 
   const { isLoading, initFormData } = select(
     createStructuredSelector({
@@ -62,6 +64,19 @@ export const EditAgentForm = (): JSX.Element => {
               width={326}
               styles={{ padding: '0 14px' }}
             />
+            {user?.role && ['admin', 'superadmin', 'manager'].includes(user.role) && (
+              <FormikInput
+                size="s"
+                name="password"
+                type="password"
+                label={{ label: t('edit-agent.password') }}
+                id="password"
+                placeholder="********"
+                formik={formik}
+                width={326}
+                styles={{ padding: '0 14px' }}
+              />
+            )}
           </Flex>
         </Flex>
         <Flex align="center" justify="center" gap={24}>

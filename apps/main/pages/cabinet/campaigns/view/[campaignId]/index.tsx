@@ -99,20 +99,20 @@ const CampaignViewPage: NextPage = () => {
       value: campaignInfo?.status && t(`statuses.${campaignInfo.status}`),
     },
     {
-      name: t('view.mode-label'),
-      value: campaign?.mode && t(`modes.${campaign?.mode}`),
-    },
-    {
       name: t('view.holdTime-label'),
       value: campaign?.holdTime ?? 0,
     },
     {
-      name: t('view.workHours-label'),
-      value: campaign?.workHours ?? '',
+      name: t('view.mode-label'),
+      value: campaign?.mode && t(`modes.${campaign?.mode}`),
     },
     {
       name: t('view.coefficient-label'),
       value: campaign?.coefficient ?? '',
+    },
+    {
+      name: t('view.workHours-label'),
+      value: campaign?.workHours ?? '',
     },
     {
       name: t('view.callsToday'),
@@ -211,7 +211,7 @@ const CampaignViewPage: NextPage = () => {
                   </CardTile>
                   {campaignInfo?.byLeadStatuses && (
                     <LeadListCallStatisticTable
-                      maxHeight="190px"
+                      maxHeight="230px"
                       data={campaignInfo.byLeadStatuses}
                     />
                   )}

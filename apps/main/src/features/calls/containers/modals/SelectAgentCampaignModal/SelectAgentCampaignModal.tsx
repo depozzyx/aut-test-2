@@ -3,10 +3,10 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
 import { Text } from '@peiko/components/Text'
-// import { TCampaign } from '@/features/campaigns/types'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
+import { RefreshIcon } from '@peiko/components/icons/Refresh/RefreshIcon'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { required } from '@/utils/validation'
@@ -15,10 +15,12 @@ import { setSelectedCampaignId } from '@/features/agents/store/agents'
 import { Flex } from '@/components/Flex'
 import { useRedux } from '@/hooks/use-redux'
 import {
-  // asyncGetAgentAssignedCampaigns,
+  asyncGetAgentAssignedCampaigns,
   selectAgentAssignedCampaigns,
   selectIsCampaignSelected,
 } from '@/features/campaigns/store/campaigns'
+import { BaseIconButton } from '@peiko/components/buttons/BaseIconButton'
+import { RotateContainer } from '@peiko/components/loaders/Loader/Loader.styles'
 
 type TProps = {
   // campaigns: Partial<TCampaign>[]
@@ -42,6 +44,7 @@ export const SelectAgentCampaignModal = ({
   const { dispatch, select } = useRedux()
   const agentAssignedCampaigns = select(selectAgentAssignedCampaigns)
   const isCampaignSelected = select(selectIsCampaignSelected)
+  const [isRotating, setIsRotating] = useState(false)
 
   const showModal =
     modalState?.modalName === MODAL_NAMES.SELECT_AGENT_CAMPAIGN && modalState.isOpen
@@ -81,6 +84,16 @@ export const SelectAgentCampaignModal = ({
     resetModals()
   }
 
+  const refreshCampaigns = () => {
+    setIsRotating(true)
+    dispatch(asyncGetAgentAssignedCampaigns())
+    setTimeout(() => setIsRotating(false), 1000)
+  }
+
+  useEffect(() => {
+    formik.setValues({ campaignId: agentAssignedCampaigns[0]?.id || null })
+  }, [agentAssignedCampaigns])
+
   return (
     <ModalMessage
       title={title}
@@ -99,17 +112,24 @@ export const SelectAgentCampaignModal = ({
       {agentAssignedCampaigns.length > 1 && (
         <Flex direction="column" align="center" gap={40} margin="40px 0 0 0">
           <Flex align="center" justify="center" direction="column" gap={8}>
-            <FormikSelect
-              placeholder={t('selectPlaceholder')}
-              formik={formik}
-              options={agentAssignedCampaigns.map(({ id, name }) => ({
-                label: String(name),
-                value: String(id),
-              }))}
-              name="campaignId"
-              width="326px"
-              maxMenuHeight={200}
-            />
+            <Flex align="center" justify="center" direction="row" gap={8}>
+              <FormikSelect
+                placeholder={t('selectPlaceholder')}
+                formik={formik}
+                options={agentAssignedCampaigns.map(({ id, name }) => ({
+                  label: String(name),
+                  value: String(id),
+                }))}
+                name="campaignId"
+                width="326px"
+                maxMenuHeight={200}
+              />
+              <RotateContainer isRotating={isRotating}>
+                <BaseIconButton onClick={refreshCampaigns}>
+                  <RefreshIcon color="main4" size="s" />
+                </BaseIconButton>
+              </RotateContainer>
+            </Flex>
             <Text variant="f8">(Go online to join the selected campaign.)</Text>
           </Flex>
           <Flex align="center" justify="center">

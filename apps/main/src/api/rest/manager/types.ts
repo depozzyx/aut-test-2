@@ -13,6 +13,7 @@ export type TManagerOrderBy =
 export type TManagersReq = {
   orderBy?: TManagerOrderBy
   order?: TOrder
+  search?: string
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TManager = {

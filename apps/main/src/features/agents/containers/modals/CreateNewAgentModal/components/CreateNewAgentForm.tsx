@@ -36,6 +36,7 @@ const FormikInput = dynamic(
 
 export const CreateNewAgentForm = (): JSX.Element => {
   const [showMessage, setShowMessage] = useState(true)
+  const [errorMessage, setErrorMessage] = useState('')
   const { t } = useTranslation('agents')
   const { select, dispatch } = useRedux()
   const isLoading = select(selectCreateAgentsIsLoading)
@@ -50,13 +51,24 @@ export const CreateNewAgentForm = (): JSX.Element => {
     validationSchema: createAgentValidationSchema,
     onSubmit: (formData) => {
       dispatch(
-        asyncCreateAgent({ formData, formik }, () =>
-          dispatch(
-            asyncGetAgentsList({
-              page: 1,
-              limit: 10,
-            }),
-          ),
+        asyncCreateAgent(
+          { formData, formik },
+          () => {
+            setErrorMessage('')
+            dispatch(
+              asyncGetAgentsList({
+                page: 1,
+                limit: 10,
+              }),
+            )
+          },
+          (status, data) => {
+            if (status === 400 && data.message) {
+              setErrorMessage(data.message)
+              return true
+            }
+            return false
+          },
         ),
       )
     },
@@ -112,6 +124,15 @@ export const CreateNewAgentForm = (): JSX.Element => {
               )}
             </Flex>
           </Flex>
+          {errorMessage && (
+            <Snackbar
+              status="info"
+              onClose={() => setErrorMessage('')}
+              message={errorMessage}
+              withAnimation={false}
+              maxWidth="326px"
+            />
+          )}
           <Flex align="center" justify="center" gap={24}>
             <FilledButton
               type="submit"

@@ -8,6 +8,7 @@ import { TFormPropsAsync } from '@peiko/types/formik'
 import { modalsActions } from '@/features/common/modals'
 import { TAdmin, TCreateAdminReq } from '@/api-rest/admin/types'
 import { adminApi } from '@/api-rest/admin'
+import { TResponse } from '@peiko/types/handle-rest-error'
 
 export type TInit = {
   isLoading: boolean
@@ -58,6 +59,7 @@ export const asyncCreateAdmin =
       formik?: FormikHelpers<TCreateAdminReq>
     },
     onsuccess?: () => void,
+    onerror?: (status: number, data: TResponse<any>) => boolean | void,
   ): TAsyncAction =>
   async (dispatch) => {
     try {
@@ -78,7 +80,7 @@ export const asyncCreateAdmin =
       dispatch(modalsActions.resetModalsState())
       onsuccess?.()
     } catch (e) {
-      handleRestError({ e, dispatch, formik })
+      handleRestError({ e, dispatch, formik, custom: onerror })
     } finally {
       dispatch(setIsLoading(false))
     }

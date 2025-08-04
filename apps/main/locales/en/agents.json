@@ -33,6 +33,7 @@
     "title": "Edit agent`s info",
     "agent-name": "Agent Name",
     "email": "Email",
+    "password": "Password",
     "role": "Role",
     "assigned-campaigns": "Assigned Campaigns",
     "save-btn": "Save",
