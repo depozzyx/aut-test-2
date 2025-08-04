@@ -120,7 +120,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
         leadListIds: data?.leadLists,
         holdTime: data?.holdTime,
         mode: data?.mode,
-        coefficient: data?.coefficient,
+        coefficient: data?.coefficient.toString(),
         filterLeadStatuses: data?.filterLeadStatuses,
         // recycleRules: data?.recycleRules,
         workHours: data?.workHours || workHours[0],

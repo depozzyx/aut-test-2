@@ -1,5 +1,6 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import useTranslation from 'next-translate/useTranslation'
+import { createStructuredSelector } from 'reselect'
 import { useUnmount } from 'react-use'
 import dynamic from 'next/dynamic'
 import { shallowEqual } from 'react-redux'
@@ -16,8 +17,15 @@ import { TSelectOption } from '@/components/MutliSelect/types'
 import { LimitSelect } from '@/components/limit-select'
 import { userSelectors } from '@/features/common/user'
 import { ManagerListTable } from './containers/ManagerListTable'
-import { reset, selectPagination, setPagination } from './store/managers'
+import {
+  asyncGetManagerList,
+  reset,
+  selectPagination,
+  selectSearchTerm,
+  setPagination,
+} from './store/managers'
 import { EPermissions } from '../../constants/profile'
+import { ManagerSearchField } from './components/ManagerSearchField'
 
 const EditManagerModal = dynamic(
   () => import('./containers/EditManagerModal').then((mod) => mod.EditManagerModal),
@@ -47,23 +55,37 @@ export const ManagersList = (): JSX.Element => {
   const { setModal } = useModals()
   const user = select(userSelectors.user)
 
-  const { total, page, limit } = select(selectPagination, shallowEqual)
+  const {
+    pagination: { total, page, limit },
+    nameFilter,
+  } = select(
+    createStructuredSelector({
+      pagination: selectPagination,
+      nameFilter: selectSearchTerm,
+    }),
+    shallowEqual,
+  )
 
   const addManager = () => {
     setModal({ modalName: MODAL_NAMES.CREATE_MANAGER, isOpen: true })
   }
 
+  const fetchAgentsList = (newPage?: number) =>
+    dispatch(
+      asyncGetManagerList({
+        page: newPage || 1,
+        limit: limit ?? 10,
+        search: nameFilter,
+      }),
+    )
+
+  useEffect(() => {
+    fetchAgentsList(page)
+  }, [nameFilter, limit, page, total])
+
   const handleChangePage = useCallback(
-    (newPage) => {
-      dispatch(
-        setPagination({
-          page: newPage,
-          limit: limit ?? 10,
-          total,
-        }),
-      )
-    },
-    [limit, page, total],
+    (newPage) => fetchAgentsList(newPage),
+    [nameFilter, limit, page, total],
   )
 
   const changeLimit = (option: SingleValue<TSelectOption>) =>
@@ -84,7 +106,10 @@ export const ManagersList = (): JSX.Element => {
     <>
       <Flex width="100%" height="100%" direction="column" padding="16px 0 0 0">
         <Flex width="100%" justify="flex-end" align="center" gap="16px">
-          <LimitSelect limit={limit} onChange={changeLimit} />
+          <Flex width="100%" justify="space-between" align="center" gap="16px">
+            <ManagerSearchField />
+            <LimitSelect limit={limit} onChange={changeLimit} />
+          </Flex>
           {user.user?.permissions.includes(EPermissions.CREATE_MANAGER) && (
             <FilledButton
               size="m"

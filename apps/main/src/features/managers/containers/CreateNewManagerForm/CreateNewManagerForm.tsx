@@ -1,6 +1,6 @@
 import useTranslation from 'next-translate/useTranslation'
 import { useFormik } from 'formik'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
@@ -14,11 +14,13 @@ import {
   selectCreateManagerIsLoading,
 } from '@/features/managers/store/create-manager'
 import { asyncGetManagerList } from '@/features/managers/store/managers'
+import { Snackbar } from '@/components/Snackbar'
 
 export const CreateNewManagerForm = (): JSX.Element => {
   const { t } = useTranslation('managers')
   const { select, dispatch } = useRedux()
   const isLoading = select(selectCreateManagerIsLoading)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const formik = useFormik({
     initialValues: {
@@ -30,13 +32,22 @@ export const CreateNewManagerForm = (): JSX.Element => {
     validationSchema: createManagerValidationSchema,
     onSubmit: (formData) => {
       dispatch(
-        asyncCreateManager({ formData, formik }, () =>
-          dispatch(
-            asyncGetManagerList({
-              page: 1,
-              limit: 10,
-            }),
-          ),
+        asyncCreateManager(
+          { formData, formik },
+          () =>
+            dispatch(
+              asyncGetManagerList({
+                page: 1,
+                limit: 10,
+              }),
+            ),
+          (status, data) => {
+            if (status === 400 && data.message) {
+              setErrorMessage(data.message)
+              return true
+            }
+            return false
+          },
         ),
       )
     },
@@ -109,6 +120,15 @@ export const CreateNewManagerForm = (): JSX.Element => {
               </Flex>
             </Flex>
           </Flex>
+          {errorMessage && (
+            <Snackbar
+              status="info"
+              onClose={() => setErrorMessage('')}
+              message={errorMessage}
+              withAnimation={false}
+              maxWidth="326px"
+            />
+          )}
           <Flex align="center" justify="center" gap={24}>
             <FilledButton
               type="submit"

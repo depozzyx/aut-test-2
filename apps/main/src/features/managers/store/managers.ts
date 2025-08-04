@@ -19,6 +19,7 @@ export type TInit = {
   orderBy?: TManagerOrderBy
   order?: TOrder
   deletedManagerData?: TManager
+  searchTerm: string
 }
 
 const init: TInit = {
@@ -33,6 +34,7 @@ const init: TInit = {
   orderBy: undefined,
   order: undefined,
   deletedManagerData: undefined,
+  searchTerm: '',
 }
 
 const managers = createSlice({
@@ -62,6 +64,9 @@ const managers = createSlice({
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
       state.pagination = calculateNewPage(action.payload)
     },
+    setSearchTerm(state, action: PayloadAction<TInit['searchTerm']>) {
+      state.searchTerm = action.payload
+    },
     setManagersList(state, action: PayloadAction<TInit['managersList']>) {
       state.managersList = action.payload
     },
@@ -84,6 +89,7 @@ export const {
   setSelectedId,
   reset,
   setDeletedManagerData,
+  setSearchTerm,
 } = managers.actions
 
 export const selectManagers: TSelector<TInit> = (state) => state.managers
@@ -110,7 +116,10 @@ export const selectSelectedManager = createSelector(
   selectManagers,
   ({ selectedId, managersList }) => managersList.find(({ id }) => id === selectedId),
 )
-
+export const selectSearchTerm = createSelector(
+  selectManagers,
+  ({ searchTerm }) => searchTerm,
+)
 export default managers.reducer
 
 export const asyncGetManagerList =

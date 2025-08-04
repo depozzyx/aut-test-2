@@ -8,6 +8,7 @@ import { TFormPropsAsync } from '@peiko/types/formik'
 import { notificationActions } from '@/features/common/notifications/store'
 import { TCreateAgentFormData } from '@/features/agents/types'
 import { modalsActions } from '@/features/common/modals'
+import { TResponse } from '@peiko/types/handle-rest-error'
 
 export type TInit = {
   isLoading: boolean
@@ -53,6 +54,7 @@ export const asyncCreateAgent =
       formik?: FormikHelpers<TCreateAgentFormData>
     },
     onsuccess?: () => void,
+    onerror?: (status: number, data: TResponse<any>) => boolean | void,
   ): TAsyncAction =>
   async (dispatch) => {
     try {
@@ -80,7 +82,7 @@ export const asyncCreateAgent =
       dispatch(modalsActions.resetModalsState())
       onsuccess?.()
     } catch (e) {
-      handleRestError({ e, dispatch, formik })
+      handleRestError({ e, dispatch, formik, custom: onerror })
     } finally {
       dispatch(setIsLoading(false))
     }

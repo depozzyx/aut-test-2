@@ -19,7 +19,7 @@ export const CampaignAgentsCalls = ({ agentsCalls }: Props): JSX.Element => {
       styles={{
         width: '100%',
         maxWidth: '400px',
-        maxHeight: '170px',
+        maxHeight: '266px',
         overflowY: 'auto',
       }}
     >
