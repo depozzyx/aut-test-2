@@ -70,22 +70,27 @@ export const ManagersList = (): JSX.Element => {
     setModal({ modalName: MODAL_NAMES.CREATE_MANAGER, isOpen: true })
   }
 
-  const fetchAgentsList = (newPage?: number) =>
+  const fetchManagerList = (newPage?: number) => {
     dispatch(
       asyncGetManagerList({
         page: newPage || 1,
         limit: limit ?? 10,
+
         search: nameFilter,
       }),
     )
+  }
+  useEffect(() => {
+    fetchManagerList(page)
+  }, [limit])
 
   useEffect(() => {
-    fetchAgentsList(page)
-  }, [nameFilter, limit, page, total])
+    fetchManagerList(1)
+  }, [nameFilter])
 
   const handleChangePage = useCallback(
-    (newPage) => fetchAgentsList(newPage),
-    [nameFilter, limit, page, total],
+    (newPage) => fetchManagerList(newPage),
+    [limit, page, total, nameFilter],
   )
 
   const changeLimit = (option: SingleValue<TSelectOption>) =>

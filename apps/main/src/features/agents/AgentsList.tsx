@@ -95,7 +95,7 @@ export const AgentsList = (): JSX.Element => {
     setModal({ modalName: MODAL_NAMES.CREATE_AGENT, isOpen: true })
   }
 
-  const fetchAgentsList = (newPage?: number) =>
+  const fetchAgentsList = (newPage?: number) => {
     dispatch(
       asyncGetAgentsList({
         page: newPage || 1,
@@ -106,10 +106,15 @@ export const AgentsList = (): JSX.Element => {
         search: agentNameFilter,
       }),
     )
+  }
 
   useEffect(() => {
     fetchAgentsList(page)
-  }, [limit, orderBy, order, statusFilter, agentNameFilter])
+  }, [limit, orderBy, order])
+
+  useEffect(() => {
+    fetchAgentsList(1)
+  }, [statusFilter, agentNameFilter])
 
   const handleChangePage = useCallback(
     (newPage) => fetchAgentsList(newPage),

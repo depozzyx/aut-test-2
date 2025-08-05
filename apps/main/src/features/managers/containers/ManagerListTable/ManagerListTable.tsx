@@ -17,11 +17,11 @@ import {
   selectManagersList,
   setSelectedId,
   setOrderBy,
+  selectIsLoading,
 } from '@/features/managers/store/managers'
 import { TrashIcon } from '@peiko/components/icons/TrashIcon'
 import { userSelectors } from '@/features/common/user'
 import { EPermissions } from '@/constants/profile'
-import { useManagerList } from '../../hooks/use-managersList'
 import { InfoCell } from '../../components/InfoCell'
 import { SORT_BY } from '../../constants'
 
@@ -42,8 +42,8 @@ export const ManagerListTable = (): JSX.Element => {
   const orderBy = select((state) => state.managers.orderBy)
   const order = select((state) => state.managers.order)
 
-  const { isLoading } = useManagerList()
   const managersList = select(selectManagersList, shallowEqual)
+  const isLoading = select(selectIsLoading, shallowEqual)
   const user = select(userSelectors.user)
 
   const handleEditCampaign = useCallback((id: number) => {

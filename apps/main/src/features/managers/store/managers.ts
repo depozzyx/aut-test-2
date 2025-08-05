@@ -111,6 +111,7 @@ export const selectSelectedId = createSelector(
   selectManagers,
   (state) => state.selectedId,
 )
+export const selectIsLoading = createSelector(selectManagers, (state) => state.isLoading)
 
 export const selectSelectedManager = createSelector(
   selectManagers,
