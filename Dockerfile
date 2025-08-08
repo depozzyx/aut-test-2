@@ -1,5 +1,5 @@
 # BUILD STEP
-FROM node:18.17.1 As build
+FROM node:20.19.4 As build
 
 WORKDIR /app
 COPY . .
