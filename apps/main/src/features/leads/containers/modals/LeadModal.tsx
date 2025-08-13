@@ -31,6 +31,7 @@ type Field = {
   isEditable: boolean
   isEditing?: boolean
   value: string
+  display?: (val: TLeadData) => string
 }
 
 type Fields = {
@@ -88,11 +89,13 @@ export const LeadModal = ({
       isEditable: true,
       isEditing: false,
       value: leadData.status,
+      display: (val: TLeadData) => getLeadStatus(leadStatuses, val.status),
     },
     timezone: {
       isEditable: false,
       isEditing: false,
-      value: `${leadData.tzId} (${leadData.timezone})`,
+      value: leadData.timezone,
+      display: (val: TLeadData) => `${val.tzId} (${val.timezone})`,
     },
     phone: {
       isEditable: false,
@@ -150,19 +153,14 @@ export const LeadModal = ({
     setFields({
       ...fields,
       name: {
-        isEditable: true,
+        ...fields.name,
         isEditing: false,
         value: leadData.name,
       },
       status: {
-        isEditable: true,
+        ...fields.status,
         isEditing: false,
         value: leadData.status,
-      },
-      timezone: {
-        isEditable: true,
-        isEditing: false,
-        value: `${leadData.tzId} (${leadData.timezone})`,
       },
     })
     formik.resetForm({
@@ -176,8 +174,6 @@ export const LeadModal = ({
     const payload: TUpdateLeadReq = {
       name: leadData.name !== fields.name.value ? fields.name.value : undefined,
       status: leadData.status !== fields.status.value ? fields.status.value : undefined,
-      timezone:
-        leadData.timezone !== fields.timezone.value ? fields.timezone.value : undefined,
     }
     Object.keys(payload).forEach((key) => {
       const typedKey = key as keyof TUpdateLeadReq
@@ -213,6 +209,12 @@ export const LeadModal = ({
       handleRestError({ e, dispatch })
     }
   }
+  const getFieldText = (field: Field): string => {
+    if (field.display) {
+      return field.display(leadData)
+    }
+    return field.value
+  }
 
   return (
     <ModalMessage
@@ -236,15 +238,6 @@ export const LeadModal = ({
                   <Text variant="f8">{t(`view-lead.fields.${key}`)}</Text>
                 </Flex>
                 <Flex justify="start" align="center" width="45%">
-                  {/* {fields[typedKey].isEditing && key === 'timezone' && ( */}
-                  {/*  <Select */}
-                  {/*    name={key} */}
-                  {/*    options={timezones.map((t) => ({ label: t, value: t }))} */}
-                  {/*    value={fields[key].value} */}
-                  {/*    width="100%" */}
-                  {/*    onChange={(e) => handleInputChange(key, String(e?.value))} */}
-                  {/*  /> */}
-                  {/* )} */}
                   {fields[typedKey].isEditing && key === 'status' && (
                     <Select
                       name={key}
@@ -273,11 +266,7 @@ export const LeadModal = ({
                     />
                   )}
                   {!fields[typedKey].isEditing && (
-                    <Text variant="f8">
-                      {typedKey === 'status'
-                        ? getLeadStatus(leadStatuses, fields[typedKey].value)
-                        : fields[typedKey].value}
-                    </Text>
+                    <Text variant="f8">{getFieldText(fields[typedKey])}</Text>
                   )}
                 </Flex>
                 <Flex justify="end" align="center" width="20%">
