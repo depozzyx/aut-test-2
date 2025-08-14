@@ -208,24 +208,26 @@ export const Calls: FC = () => {
         id: SUBSCRIBE_CAMPAIGN_STATUS,
         callback: (e) => {
           if (e.status === 'complete' || e.status === 'pause') {
-            const { status, reason } = store.getState().agentStatus.pbxStatus
-            // eslint-disable-next-line no-console
-            console.info(`Received completed event, current Agent Status: ${status}`)
+            setTimeout(() => {
+              const { status, reason } = store.getState().agentStatus.pbxStatus
+              // eslint-disable-next-line no-console
+              console.info(`Received completed event, current Agent Status: ${status}`)
 
-            if (status !== 'offline') {
-              // Check if agent is on call or on feedback of last call
-              const isInCall = status === 'oncall'
-              const isInFeedback = status === 'pause' && reason === 'feedback'
+              if (status !== 'offline') {
+                // Check if agent is on call or on feedback of last call
+                const isInCall = status === 'oncall'
+                const isInFeedback = status === 'pause' && reason === 'feedback'
 
-              if (isInCall || isInFeedback) {
-                console.info('Agent is in call or feedback, will complete after')
-                setCompleted(true)
-              } else {
-                console.info('set oncomplete callback')
-                onCompleteCampaign(e.status)
+                if (isInCall || isInFeedback) {
+                  console.info('Agent is in call or feedback, will complete after')
+                  setCompleted(true)
+                } else {
+                  console.info('set oncomplete callback')
+                  onCompleteCampaign(e.status)
+                }
               }
-            }
-            if (e.status === 'complete') onUnsubscribeCampaignStatus()
+              if (e.status === 'complete') onUnsubscribeCampaignStatus()
+            }, 2000)
           } else if (e.status === 'active') {
             setCompleted(false)
           }
