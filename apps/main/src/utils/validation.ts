@@ -18,7 +18,6 @@ export const emailValidation = yup
 
 export const passwordValidation = yup
   .string()
-  .nullable()
   .test(
     'password-strength',
     'Password must be at least 8 characters long, include numbers, uppercase and lowercase letters, and have no spaces',
