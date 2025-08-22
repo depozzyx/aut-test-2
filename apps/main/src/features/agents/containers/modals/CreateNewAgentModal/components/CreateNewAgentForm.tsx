@@ -14,8 +14,6 @@ import {
 } from '@/features/agents/store/create-agent'
 import { asyncGetAgentsList } from '@/features/agents/store/agents'
 import { generateRandomString } from '@/utils/generate-random-string.helper'
-import { BaseIconButton } from '@peiko/components/buttons/BaseIconButton'
-import { RefreshIcon } from '@peiko/components/icons/Refresh/RefreshIcon'
 
 // const FormikCheckbox = dynamic(
 //   () =>
@@ -120,15 +118,6 @@ export const CreateNewAgentForm = (): JSX.Element => {
                 formik={formik}
                 width={326}
                 styles={{ padding: '0 14px' }}
-                endAdornment={
-                  <BaseIconButton onClick={generatePassword}>
-                    <RefreshIcon size="s" />
-                  </BaseIconButton>
-                }
-                endAdornmentStyles={{
-                  transform: 'scale(0.8)',
-                  paddingRight: '0 !important',
-                }}
               />
               {/* {formik.values.password && (
                 <FormikCheckbox
@@ -150,9 +139,12 @@ export const CreateNewAgentForm = (): JSX.Element => {
             />
           )}
           <Flex align="center" justify="center" gap={24}>
+            <FilledButton onClick={generatePassword} width="180px">
+              {t('create-agent.generate-password')}
+            </FilledButton>
             <FilledButton
               type="submit"
-              width="236px"
+              width="180px"
               isLoading={isLoading}
               disabled={!formik.dirty || !formik.isValid || isLoading}
             >
