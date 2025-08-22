@@ -13,16 +13,19 @@ import {
   selectCreateAgentsIsLoading,
 } from '@/features/agents/store/create-agent'
 import { asyncGetAgentsList } from '@/features/agents/store/agents'
+import { generateRandomString } from '@/utils/generate-random-string.helper'
+import { BaseIconButton } from '@peiko/components/buttons/BaseIconButton'
+import { RefreshIcon } from '@peiko/components/icons/Refresh/RefreshIcon'
 
-const FormikCheckbox = dynamic(
-  () =>
-    import('@peiko/components/inputs/formik-adapters/FormikCheckbox').then(
-      (mod) => mod.FormikCheckbox,
-    ),
-  {
-    ssr: false,
-  },
-)
+// const FormikCheckbox = dynamic(
+//   () =>
+//     import('@peiko/components/inputs/formik-adapters/FormikCheckbox').then(
+//       (mod) => mod.FormikCheckbox,
+//     ),
+//   {
+//     ssr: false,
+//   },
+// )
 
 const FormikInput = dynamic(
   () =>
@@ -35,7 +38,6 @@ const FormikInput = dynamic(
 )
 
 export const CreateNewAgentForm = (): JSX.Element => {
-  const [showMessage, setShowMessage] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
   const { t } = useTranslation('agents')
   const { select, dispatch } = useRedux()
@@ -45,7 +47,7 @@ export const CreateNewAgentForm = (): JSX.Element => {
     initialValues: {
       username: '',
       email: '',
-      sendToEmail: true,
+      sendToEmail: false,
       password: '',
     },
     validationSchema: createAgentValidationSchema,
@@ -73,6 +75,11 @@ export const CreateNewAgentForm = (): JSX.Element => {
       )
     },
   })
+
+  const generatePassword = () => {
+    const password = generateRandomString(8, 'aA#!')
+    formik.setFieldValue('password', password)
+  }
 
   return (
     <Flex
@@ -113,15 +120,24 @@ export const CreateNewAgentForm = (): JSX.Element => {
                 formik={formik}
                 width={326}
                 styles={{ padding: '0 14px' }}
+                endAdornment={
+                  <BaseIconButton onClick={generatePassword}>
+                    <RefreshIcon size="s" />
+                  </BaseIconButton>
+                }
+                endAdornmentStyles={{
+                  transform: 'scale(0.8)',
+                  paddingRight: '0 !important',
+                }}
               />
-              {formik.values.password && (
+              {/* {formik.values.password && (
                 <FormikCheckbox
                   size="s"
                   name="sendToEmail"
                   label={t('create-agent.send-password')}
                   formik={formik}
                 />
-              )}
+              )} */}
             </Flex>
           </Flex>
           {errorMessage && (
@@ -145,7 +161,7 @@ export const CreateNewAgentForm = (): JSX.Element => {
           </Flex>
         </Flex>
       </form>
-      {showMessage && (
+      {/* {showMessage && (
         <Snackbar
           status="info"
           onClose={() => setShowMessage(false)}
@@ -153,7 +169,7 @@ export const CreateNewAgentForm = (): JSX.Element => {
           withAnimation={false}
           maxWidth="326px"
         />
-      )}
+      )} */}
     </Flex>
   )
 }
