@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
@@ -132,10 +132,7 @@ export const UsersList = ({
     fetchUsersList(1)
   }, [statusFilter, nameFilter])
 
-  const handleChangePage = useCallback(
-    (newPage) => fetchUsersList(newPage),
-    [limit, page, total, statusFilter, nameFilter],
-  )
+  const handleChangePage = (newPage: number) => fetchUsersList(newPage)
 
   const changeLimit = (option: SingleValue<TSelectOption>) =>
     option &&
