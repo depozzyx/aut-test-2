@@ -1,11 +1,13 @@
 import { useState, useCallback } from 'react'
 import useSWR from 'swr'
 import { useRedux } from '@/hooks/use-redux'
-import { apiAgents } from '@/api-rest/agents'
-import { TAgent, TAgentsReq } from '@/api-rest/agents/types'
+import { TAgentsReq } from '@/api-rest/agents/types'
 import { handleRestError } from '@/features/common/error'
 import { TPagination } from '@/types/entities/pagination'
 import { setAgentNameFilter } from '@/features/agents/store/agent-analytics'
+import { apiUsers } from '../../../api/rest/users'
+import { ERoles } from '../../../constants/profile'
+import { TUser } from '../../../api/rest/users/types'
 
 type TAgentOption = {
   label: string
@@ -28,7 +30,7 @@ export const useAgentNameFilter = (): TReturn => {
   })
 
   const fetcher = (params: TAgentsReq) =>
-    apiAgents.getAgentsList(params).then((res) => res.data)
+    apiUsers.getUsersList(ERoles.AGENT, params).then((res) => res.data)
 
   useSWR(
     ['/agents', pagination.page, pagination.limit],
@@ -40,7 +42,7 @@ export const useAgentNameFilter = (): TReturn => {
     {
       revalidateOnFocus: false,
       onSuccess: (data) => {
-        const formattedData = data.data.map((agent: TAgent) => ({
+        const formattedData = data.data.map((agent: TUser) => ({
           label: agent.username,
           value: agent.id,
         }))

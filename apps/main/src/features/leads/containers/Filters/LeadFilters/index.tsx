@@ -27,10 +27,11 @@ import { useCampaignNameFilter } from '@/features/campaigns/hooks/use-campaignNa
 
 type Props = {
   filters: TFormik
+  disabled?: boolean
   onResetFilters: () => void
 }
 
-export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
+export const LeadFilters: FC<Props> = ({ filters, onResetFilters, disabled }: Props) => {
   const { t } = useTranslation('leads-list')
   const { select, dispatch } = useRedux()
 
@@ -98,6 +99,7 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
     <Flex gap={10} align="center">
       <Input
         type="number"
+        disabled={disabled}
         name="id"
         size="s"
         width="120px"
@@ -118,6 +120,7 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
       />
       <FormikInput
         formik={filters}
+        disabled={disabled}
         name="name"
         placeholder={t('leads.filters.placeholders.name')}
         width="200px"
@@ -136,6 +139,7 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
       />
       <FormikInput
         formik={filters}
+        disabled={disabled}
         name="phone"
         placeholder={t('leads.filters.placeholders.phone')}
         width="200px"
@@ -155,6 +159,7 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
       />
       <FormikSelect
         formik={filters}
+        disabled={disabled}
         name="status"
         width="200px"
         placeholder={t('leads.filters.placeholders.status')}
@@ -168,6 +173,7 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
       />
       <FormikSelect
         formik={filters}
+        disabled={disabled}
         name="campaignId"
         placeholder={t('leads.filters.placeholders.campaignName')}
         options={campaignOptions.filter((v) =>
@@ -181,6 +187,7 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
       />
       <FormikSelect
         formik={filters}
+        disabled={disabled}
         name="leadListId"
         placeholder={t('leads.filters.placeholders.leadList')}
         options={leadsGroups
@@ -200,7 +207,7 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters }: Props) => {
         maxMenuHeight={200}
         width="200px"
       />
-      <LimitSelect formik={filters} />
+      <LimitSelect disabled={disabled} formik={filters} />
       <BaseIconButton onClick={onResetFilters}>
         <CloseIcon color={filtersChanged() ? 'main4' : 'transparent'} size="ml" />
       </BaseIconButton>

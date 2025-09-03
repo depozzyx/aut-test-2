@@ -18,6 +18,7 @@ import { StyledTrigger } from './CampaignNameFilter.styled'
 type TProps = {
   type: TCampaignTableType
   useIdForValue?: boolean
+  disabled?: boolean
   setCampaignOptions?: (options: TValue[]) => void
 }
 
@@ -25,6 +26,7 @@ export const CampaignNameFilter = ({
   type,
   setCampaignOptions,
   useIdForValue = true,
+  disabled,
 }: TProps): JSX.Element => {
   const { select, dispatch } = useRedux()
   const { t } = useTranslation('campaigns')
@@ -52,6 +54,7 @@ export const CampaignNameFilter = ({
   return (
     <DropdownMenu
       multiple
+      disabled={disabled}
       maxHeight="350px"
       triggerElement={(isOpen) => (
         <StyledTrigger>

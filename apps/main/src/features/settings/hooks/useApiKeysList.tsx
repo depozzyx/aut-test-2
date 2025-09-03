@@ -1,16 +1,16 @@
 import useSWR from 'swr'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
-import { TManagersReq } from '@/api-rest/manager/types'
 import { useRedux } from '@/hooks/use-redux'
 import { handleRestError } from '@/features/common/error'
-import { managerApi } from '@/api-rest/manager'
 import {
   selectOrder,
   selectPagination,
   setApiKeysList,
   setPagination,
 } from '@/features/settings/store/api-key'
+import { managerApi } from '@/api-rest/manager'
+import { TManagersReq } from '@/api-rest/manager/types'
 
 type TReturn = {
   isLoading: boolean

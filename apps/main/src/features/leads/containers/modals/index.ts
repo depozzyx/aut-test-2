@@ -1,6 +1,9 @@
 export { LeadModal } from './LeadModal'
 export { ViewLeadListModal } from './ViewLeadListModal'
 export { EditLeadListModal } from './EditLeadListModal'
+export { UnknownStatusModal } from './UnknownStatusModal'
+export { ImportErrorsModal } from './ImportErrorsModal'
+export { DuplicatedNumbersModal } from './DuplicatedNumbersModal'
 
 export const timezones = [
   'UTC-12:00',

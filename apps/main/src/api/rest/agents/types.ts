@@ -52,6 +52,7 @@ export type TAgentDashboard = {
   callsHandled: string
   timeOnline: number
   ongoingTime: string
+  currentCampaignNearestCallTime: string
 }
 
 export type TCreateAgentRes = {

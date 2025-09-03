@@ -6,11 +6,13 @@ import { setSearchTerm, selectSearchTerm } from '../../store/campaigns'
 type TProps = {
   placeholder: string
   maxWidth?: string
+  disabled?: boolean
 }
 
 export const CampaignSearchField = ({
   placeholder,
   maxWidth = '374px',
+  disabled,
 }: TProps): JSX.Element => {
   const { select, dispatch } = useRedux()
 
@@ -24,6 +26,7 @@ export const CampaignSearchField = ({
     <Input
       width="100%"
       maxWidth={maxWidth}
+      disabled={disabled}
       size="s"
       value={searchTerm}
       name="search-campaign"

@@ -44,6 +44,7 @@ export const Popup = styled(PopupComponent)`
 export const Container = styled.div<{
   maxWidth: CSSProperties['maxWidth']
   containerWidth: CSSProperties['width']
+  left: CSSProperties['left']
 }>(
   (props) =>
     css`
@@ -55,6 +56,7 @@ export const Container = styled.div<{
       box-shadow: ${({ theme }) => theme.shadow.table};
       border-radius: 8px;
       width: ${props.containerWidth};
+      left: ${props.left ? props.left : '0px'};
     `,
 )
 

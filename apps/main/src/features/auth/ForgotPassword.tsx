@@ -31,7 +31,7 @@ export const ForgotPassword: FC = () => {
 
   const router = useRouter()
 
-  const { statusCode } = select(selectForgotPassword)
+  const { statusCode, isLoading } = select(selectForgotPassword)
 
   useUnmount(() => {
     dispatch(reset())
@@ -39,7 +39,17 @@ export const ForgotPassword: FC = () => {
 
   const [timer, setTimer] = useState(0)
   const [startTimer, setStartTimer] = useState(false)
+  const [submitDisabled, setSubmitDisabled] = useState(false)
 
+  const checkAndStartTimer = async (email: string): Promise<boolean> => {
+    const { data } = await apiAuth.checkResetPasswordTimer(email)
+    if (data?.data > 0) {
+      setTimer(data.data)
+      setStartTimer(true)
+      return false
+    }
+    return true
+  }
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -51,14 +61,13 @@ export const ForgotPassword: FC = () => {
         dispatch(setStatusCode('error'))
         return
       }
-
-      const { data } = await apiAuth.checkResetPasswordTimer(formData.email)
-      if (data?.data > 0) {
-        setTimer(data.data)
-        setStartTimer(true)
+      setSubmitDisabled(true)
+      const isTimerStarted = await checkAndStartTimer(formData.email)
+      if (!isTimerStarted) {
         dispatch(setStatusCode('error'))
       } else {
         dispatch(forgotPasswordAsync({ formData, formik }))
+        await checkAndStartTimer(formData.email)
       }
     },
   })
@@ -66,6 +75,12 @@ export const ForgotPassword: FC = () => {
   const handleHideNotification = () => {
     dispatch(setStatusCode(''))
   }
+
+  useEffect(() => {
+    if (!isLoading) {
+      checkAndStartTimer(formik.values.email)
+    }
+  }, [isLoading])
 
   const handleInputChange = async (email: string) => {
     setTimer(0)
@@ -97,6 +112,14 @@ export const ForgotPassword: FC = () => {
       return () => clearInterval(interval)
     }
   }, [startTimer])
+
+  useEffect(() => {
+    if (!formik.isValid || timer > 0 || !formik.dirty) {
+      setSubmitDisabled(true)
+    } else {
+      setSubmitDisabled(false)
+    }
+  }, [timer, formik.isValid, formik.dirty])
 
   return (
     <Flex direction="column" align="center" maxWidth={552} gap={12}>
@@ -154,7 +177,7 @@ export const ForgotPassword: FC = () => {
                 type="submit"
                 size="s"
                 width="100%"
-                disabled={!formik.isValid || timer > 0 || !formik.dirty}
+                disabled={submitDisabled}
                 styles={{ marginTop: '24px', maxWidth: '248px' }}
               >
                 {t('forgot-password.action')}

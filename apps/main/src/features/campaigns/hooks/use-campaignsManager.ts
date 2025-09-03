@@ -18,6 +18,7 @@ import {
   setFilterCampaignIds,
   selectFilterCampaignIds,
   selectOrder,
+  selectIsLoading,
 } from '@/features/campaigns/store/campaigns'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
@@ -40,6 +41,7 @@ type TReturn = {
     filterDate?: { from?: string | Date; to?: string | Date }
   }
   handlerResetFilters: (filterType: TFilterType) => void
+  isLoading: boolean
 }
 
 type TCampaignThunk = (
@@ -61,6 +63,7 @@ export const useCampaignsManager = (
     filterStatus,
     orderBy,
     order,
+    isLoading,
   } = select(
     createStructuredSelector({
       pagination: selectCampaignsPagination,
@@ -70,6 +73,7 @@ export const useCampaignsManager = (
       filterStatus: selectFilterStatus,
       orderBy: selectOrderBy,
       order: selectOrder,
+      isLoading: selectIsLoading,
     }),
     shallowEqual,
   )
@@ -114,16 +118,11 @@ export const useCampaignsManager = (
 
   useEffect(() => {
     fetchWithParams(page ?? 1)
-  }, [
-    dispatch,
-    limit,
-    searchTerm,
-    filterCampaignIds,
-    filterStatus,
-    filterDate,
-    orderBy,
-    order,
-  ])
+  }, [dispatch, limit])
+
+  useEffect(() => {
+    fetchWithParams(1)
+  }, [searchTerm, filterCampaignIds, filterStatus, filterDate, orderBy, order])
 
   useUnmount(() => {
     dispatch(reset())
@@ -202,5 +201,6 @@ export const useCampaignsManager = (
     pagination: { total, page, limit },
     filters,
     handlerResetFilters,
+    isLoading,
   }
 }

@@ -83,7 +83,7 @@ export const CabinetLayout: React.FC<TCabinetLayoutProps> = ({
     <Header />
     <ContentWrapper>
       <Sidebar />
-      <Content padding="12px 26px 26px 40px" {...props}>
+      <Content padding="12px 26px 26px 26px" {...props}>
         {breadCrumbs && breadCrumbs}
         <CustomPopupOverlay id="customPopupOverlay" />
         <Flex align="center" justify="space-between">

@@ -9,13 +9,14 @@
   },
   "preselectText": "Before initiating file upload, please select a leads list.",
   "selectLabel": "Select lead list",
-  "checkNumberUnique": "Check duplicate numbers",
+  "checkNumberUnique": "Your file will be check on duplicates",
   "fromFile": "Set status from import file",
   "default": "Set default status",
   "tooltip": {
     "title": "See the status descriptions",
     "code": "Code:",
-    "description": "Description:"
+    "description": "Description:",
+    "phone-number": "Phone number"
   },
   "selectPlaceholder": "Select",
   "dragFiles": "Drag and drop your file or",
@@ -27,7 +28,9 @@
   "submit": "Submit",
   "downloadTemplateText": "For better data import please download our template",
   "downloadTemplate": "Download now",
-  "duplicate": "Duplicate",
+  "duplicate": "Duplicate numbers",
+  "unknown-statuses": "Unknown statuses",
+  "validation-errors": "Validation errors",
   "error": "Error",
   "createNewList": "Create new list",
   "instructions": {
@@ -36,5 +39,47 @@
     "fileSize": "File size:",
     "fileData": "File data:",
     "importLink": "Import leads"
+  },
+  "DuplicatedNumbersModal": {
+    "title": "Duplicated numbers",
+    "description": "The following numbers are duplicated:",
+    "columns": {
+      "phone-numbers": "Phone number",
+      "where-duplicated": "Duplicated in"
+    },
+    "buttons": {
+      "submit": "Remove duplicate and proceed",
+      "cancel": "Cancel"
+    },
+    "where-duplicated": {
+      "in-database": "In this lead list in database",
+      "in-this-file": "In this file ({{fileName}})",
+      "in-file": "In {{fileName}}"
+    }
+  },
+  "ImportErrorsModal": {
+    "title": "Validation errors",
+    "description": "The following errors occurred during import:",
+    "columns": {
+      "property": "Property",
+      "value": "Value",
+      "errors": "Validation errors"
+    },
+    "buttons": {
+      "cancel": "Close"
+    }
+  },
+  "UnknownStatusModal": {
+    "title": "Unknown statuses",
+    "description": "The following statuses are unknown:",
+    "columns": {
+      "status": "Unknown status",
+      "create": "Create new",
+      "replace-with": "Replace with existed status or description of new status"
+    },
+    "buttons": {
+      "submit": "Submit",
+      "cancel": "Cancel"
+    }
   }
 }

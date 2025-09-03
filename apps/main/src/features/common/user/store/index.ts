@@ -17,6 +17,7 @@ export type TInit = {
   loading: boolean
   user: TProfile | null
   pbxAuth: TPbxAuthRes['data'] | null
+  version: string | null
 }
 
 const init: TInit = {
@@ -24,6 +25,7 @@ const init: TInit = {
   loading: false,
   user: null,
   pbxAuth: null,
+  version: null,
 }
 
 const userState = createSlice({
@@ -42,6 +44,9 @@ const userState = createSlice({
     setPBXAuth(state, action: PayloadAction<TPbxAuthRes['data']>) {
       state.pbxAuth = action.payload
     },
+    setVersion(state, action: PayloadAction<string>) {
+      state.version = action.payload
+    },
     removeUser(state) {
       state.user = null
     },
@@ -49,7 +54,8 @@ const userState = createSlice({
 })
 
 // actions
-const { setUser, setPBXAuth, setUserFetching, setLoading, removeUser } = userState.actions
+const { setUser, setPBXAuth, setUserFetching, setLoading, removeUser, setVersion } =
+  userState.actions
 // selectors
 const userSelector: TSelector<TInit> = (state) => state.user
 
@@ -76,6 +82,8 @@ const getProfile = (): TAsyncAction => async (dispatch) => {
       } = await apiAgents.getPBXAuth()
       dispatch(setPBXAuth(data))
     }
+    const { data: versionData } = await apiProfile.version()
+    dispatch(setVersion(versionData?.data?.version ?? ''))
   } catch (e) {
     handleRestError({
       e,

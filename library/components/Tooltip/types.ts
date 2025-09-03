@@ -43,4 +43,10 @@ export type TTooltipProps = {
    * @default main8
    */
   contentBorderColor?: keyof DefaultTheme['palette']
+
+  zIndex?: number
+  /**
+   * Time in ms to keep tooltip open after showing (auto-close)
+   */
+  liveTime?: number
 } & Omit<PopupProps, 'children'>

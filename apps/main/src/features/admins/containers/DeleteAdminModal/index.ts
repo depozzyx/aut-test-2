@@ -1,1 +1,0 @@
-export { DeleteAdminModal } from './DeleteAdminModal'

@@ -8,16 +8,18 @@ import { Select } from '@peiko/components/inputs/Select/Select'
 type Props = {
   formik?: TFormik
   limit?: number
+  disabled?: boolean
   onChange?: (option: SingleValue<TSelectOption>) => void
 }
 
 const limits = [10, 15, 25, 50, 100]
 const options = limits.map((l) => ({ label: l.toString(), value: l }))
 
-export const LimitSelect: FC<Props> = ({ formik, limit, onChange }: Props) =>
+export const LimitSelect: FC<Props> = ({ formik, limit, onChange, disabled }: Props) =>
   formik ? (
     <FormikSelect
       formik={formik}
+      disabled={disabled}
       styles={{ minWidth: '90px' }}
       name="limit"
       options={options}
@@ -25,6 +27,7 @@ export const LimitSelect: FC<Props> = ({ formik, limit, onChange }: Props) =>
   ) : (
     <Select
       name="limit"
+      disabled={disabled}
       styles={{ minWidth: '90px' }}
       options={options}
       onChange={onChange}

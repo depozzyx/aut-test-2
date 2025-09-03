@@ -14,12 +14,10 @@ export const useStatusFilter = (): TReturn => {
   const { t } = useTranslation('campaigns')
   const { dispatch } = useRedux()
 
-  const statusOptions = [
-    { value: CAMPAIGN_STATUSES.ACTIVE, label: t('statuses.active') },
-    { value: CAMPAIGN_STATUSES.PAUSE, label: t('statuses.pause') },
-    { value: CAMPAIGN_STATUSES.COMPLETE, label: t('statuses.complete') },
-    { value: CAMPAIGN_STATUSES.HOLD, label: t('statuses.hold') },
-  ]
+  const statusOptions = Object.keys(CAMPAIGN_STATUSES).map((key) => ({
+    value: CAMPAIGN_STATUSES[key as keyof typeof CAMPAIGN_STATUSES],
+    label: t(`statuses.${key.toLowerCase()}`),
+  }))
 
   const handleOnChange = useCallback((value: TCampaignStatus) => {
     dispatch(setFilterStatus(value))

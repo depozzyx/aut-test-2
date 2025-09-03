@@ -1,24 +1,24 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useRedux } from '@/hooks/use-redux'
 import { useUnmount } from 'react-use'
-import { Pagination } from '@peiko/components/Pagination'
-import { Box } from '@peiko/components/Box'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import dynamic from 'next/dynamic'
-import { LeadsTable } from './containers/LeadsTable'
+import { useRouter } from 'next/router'
 import {
-  getLeadList,
   getLeadsGroups,
   reset,
   selectLeadsGroup,
   selectLeadsGroupPagination,
-  selectLeadsOrderBy,
-  selectLeadsPagination,
   selectLeadsOrder,
+  importFilesSubmitAsync,
+  selectFilesForImport,
+  importFilesCheckAsync,
+  selectLeadIsChecking,
+  setLeadsGroup,
 } from './store/leads'
 import { ImportFiles } from './containers/ImportFiles'
-import { CreateLeads } from './containers/CreateLeads'
+import { ROUTES } from '../../constants/routes'
 
 const CreateLeadsGroup = dynamic(
   () => import('./containers/CreateLeadsGroup').then((mod) => mod.CreateLeadsGroup),
@@ -29,21 +29,16 @@ const CreateLeadsGroup = dynamic(
 
 export const ImportLeads: FC = () => {
   const { select, dispatch } = useRedux()
-  const [step, setStep] = useState<'import' | 'list'>('import')
+  const [currentLeadId, setCurrentLeadId] = useState<number>()
 
-  const {
-    pagination: { total, page, limit },
-    groupsPagination,
-    leadsGroup,
-    orderBy,
-    order,
-  } = select(
+  const router = useRouter()
+  const { groupsPagination, leadsGroup, order, files, leadIsChecking } = select(
     createStructuredSelector({
-      pagination: selectLeadsPagination,
       groupsPagination: selectLeadsGroupPagination,
       leadsGroup: selectLeadsGroup,
-      orderBy: selectLeadsOrderBy,
       order: selectLeadsOrder,
+      files: selectFilesForImport,
+      leadIsChecking: selectLeadIsChecking,
     }),
     shallowEqual,
   )
@@ -52,41 +47,37 @@ export const ImportLeads: FC = () => {
     dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit, order }))
   }, [])
 
-  useUnmount(() => dispatch(reset()))
+  useUnmount(() => {
+    dispatch(reset())
+    if (currentLeadId) {
+      dispatch(setLeadsGroup(currentLeadId))
+    }
+  })
 
   const onImportSubmit = () => {
-    setStep('list')
-    dispatch(getLeadList({ page, limit, orderBy, order, leadListId: leadsGroup }))
+    dispatch(importFilesSubmitAsync())
   }
 
-  const onChangePage = (page: number) =>
-    dispatch(getLeadList({ page, limit, orderBy, order, leadListId: leadsGroup }))
+  useEffect(() => {
+    if (files.length && files.every((file) => file?.importProgress === 100)) {
+      router.push(ROUTES.LEADS)
+      setCurrentLeadId(leadsGroup)
+    }
+  }, [files])
 
   useEffect(() => {
-    if (leadsGroup && step === 'list')
-      dispatch(getLeadList({ page, limit, orderBy, leadListId: leadsGroup, order }))
-  }, [leadsGroup, orderBy])
+    if (
+      !leadIsChecking &&
+      files.length &&
+      files.every((file) => file?.uploadProgress === 100)
+    ) {
+      dispatch(importFilesCheckAsync())
+    }
+  }, [leadsGroup, files.length, files.map((f) => f.uploadProgress).join(',')])
 
   return (
     <>
-      {step === 'import' && <ImportFiles onSubmit={onImportSubmit} />}
-      {step === 'list' && (
-        <>
-          <Box styles={{ marginLeft: 'auto', marginTop: '16px' }}>
-            <CreateLeads />
-          </Box>
-          <Box styles={{ marginTop: '8px' }}>
-            <LeadsTable reFetch={() => onChangePage(page)} />
-          </Box>
-          <Box styles={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}>
-            <Pagination
-              lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 10))}
-              currentPage={page}
-              onChange={onChangePage}
-            />
-          </Box>
-        </>
-      )}
+      <ImportFiles onSubmit={onImportSubmit} />
       <CreateLeadsGroup />
     </>
   )

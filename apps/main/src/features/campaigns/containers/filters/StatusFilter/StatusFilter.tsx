@@ -24,8 +24,11 @@ const CustomFilterBtn = forwardRef<
 })
 
 CustomFilterBtn.displayName = 'CustomFilterBtn'
+type TProps = {
+  disabled?: boolean
+}
 
-export const StatusFilter = (): JSX.Element => {
+export const StatusFilter = ({ disabled }: TProps): JSX.Element => {
   const { select } = useRedux()
 
   const { statusFilter } = select(
@@ -44,6 +47,7 @@ export const StatusFilter = (): JSX.Element => {
       selectedOptions={statusOptions.filter((item) => statusFilter === item.value)}
       minWidth="210px"
       options={statusOptions}
+      disabled={disabled}
       onChange={(selectedEl) => handleOnChange(selectedEl[0].value as TCampaignStatus)}
     />
   )

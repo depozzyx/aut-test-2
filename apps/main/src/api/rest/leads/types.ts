@@ -3,11 +3,52 @@ import { TOrder } from '@/types/entities/order'
 import { TPagination } from '@/types/entities/pagination'
 import { TLeadsGroup } from '@/types/leads/leads-list'
 import { TCampaignStatus } from '@/features/campaigns/types'
+import { DuplicatedPhoneNumbers, TImportError } from '@/features/leads/types/files'
 
 export type TImportReq = FormData
 
+export type TSubmitFile = {
+  fileId: string
+  unknownStatuses?: TUnknownStatuses[]
+}
+
+export type TImportSubmitReq = {
+  fileIds: TSubmitFile[]
+  campaignId?: number
+  leadListId: number
+  checkNumberUnique?: boolean
+  useDefaultStatus?: boolean
+}
+
+export type TImportCheckReq = {
+  fileIds: string[]
+  leadListId: number
+}
+
+export type TImportCheck = {
+  fileId: string
+  duplicatedPhoneNumbers?: DuplicatedPhoneNumbers[]
+}
+
+export type TImportCancelReq = {
+  fileIds: string[]
+}
+
 export type TImportLeadsRes = {
   statusCode: TGeneratedSuccessStatuses
+  data: TImportError
+}
+
+export type TImportCheckRes = {
+  statusCode: TGeneratedSuccessStatuses
+  data: TImportCheck[]
+}
+
+export type TUnknownStatuses = {
+  status: string
+  createNew: boolean
+  description?: string
+  replaceWith?: string
 }
 
 export enum ELeadsOrderBy {

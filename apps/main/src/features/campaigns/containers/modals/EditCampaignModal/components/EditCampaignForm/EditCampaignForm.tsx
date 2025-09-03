@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { shallowEqual } from 'react-redux'
 import { useFormik } from 'formik'
 import { createStructuredSelector } from 'reselect'
@@ -16,23 +16,25 @@ import {
   selectLeadListCatalogAsOptions,
   selectLeadListPagination,
 } from '@/features/leads/store/lead-list'
-import {
-  asyncGetAgentsList,
-  selectAgentsOptions,
-  selectAgentsPagination,
-} from '@/features/agents/store/agents'
+
 import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 import { coefficients, modes, workHours } from '@/constants/settings'
 import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
 import { hasArrayChanged } from '@/utils/array'
-// import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
-// import { TRecycleRule } from '@/api-rest/campaigns/types'
+import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
+import { TRecycleRule } from '@/api-rest/campaigns/types'
 import { createCampaignValidationSchema } from '@/utils/validation'
+import {
+  asyncGetUsersList,
+  selectUsersOptions,
+  selectUsersPagination,
+} from '@/features/users/store/users'
 import { asyncEditCampaign } from '../../../../../store/edit-campaign'
 import { TCampaignTableType } from '../../../../../types'
 import { useGetCampaignById } from '../../../../../hooks/use-getCampaignById'
 import { CAMPAIGN_STATUSES, INITIAL_REQUEST_PARAMS_EDIT } from '../../../../../constants'
+import { ERoles } from '../../../../../../../constants/profile'
 
 type TProps = {
   type: TCampaignTableType
@@ -44,9 +46,9 @@ type TFormValues = {
   leadListIds: number[]
   holdTime: number
   mode: string
-  coefficient: string
+  coefficient: number
   filterLeadStatuses: string[]
-  // recycleRules: TRecycleRule[]
+  recycleRules: TRecycleRule[]
   workHours?: string
 }
 
@@ -65,8 +67,8 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     createStructuredSelector({
       leadsPagination: selectLeadListPagination,
       leadListOptions: selectLeadListCatalogAsOptions,
-      agentsPagination: selectAgentsPagination,
-      agentsOptions: selectAgentsOptions,
+      agentsPagination: selectUsersPagination,
+      agentsOptions: selectUsersOptions,
     }),
     shallowEqual,
   )
@@ -75,7 +77,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
 
   useEffect(() => {
     Promise.all([
-      dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_EDIT)),
+      dispatch(asyncGetUsersList(ERoles.AGENT, INITIAL_REQUEST_PARAMS_EDIT)),
       dispatch(
         asyncGetLeadListCatalog({
           ...INITIAL_REQUEST_PARAMS_EDIT,
@@ -99,9 +101,9 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
       leadListIds: [],
       holdTime: 0,
       mode: '',
-      coefficient: '',
+      coefficient: 0,
       filterLeadStatuses: [],
-      // recycleRules: [],
+      recycleRules: [],
       workHours: workHours[0],
     },
     validationSchema: createCampaignValidationSchema,
@@ -120,9 +122,9 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
         leadListIds: data?.leadLists,
         holdTime: data?.holdTime,
         mode: data?.mode,
-        coefficient: data?.coefficient.toString(),
+        coefficient: data?.coefficient,
         filterLeadStatuses: data?.filterLeadStatuses,
-        // recycleRules: data?.recycleRules,
+        recycleRules: data?.recycleRules,
         workHours: data?.workHours || workHours[0],
       })
       if (data.status === CAMPAIGN_STATUSES.COMPLETE) {
@@ -148,6 +150,22 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     }
   }, [formik.values.leadListIds, data, initialLeadListIds])
 
+  useEffect(() => {
+    if (!formik.values?.recycleRules?.length) {
+      return
+    }
+    formik.values.recycleRules.forEach((rule) => {
+      rule.status.forEach((status) => {
+        if (!formik.values.filterLeadStatuses.includes(status)) {
+          formik.setFieldValue('filterLeadStatuses', [
+            ...formik.values.filterLeadStatuses,
+            status,
+          ])
+        }
+      })
+    })
+  }, [formik.values.recycleRules])
+
   const onLeadsScrollToBottom = useCallback(() => {
     const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 10))
     if (leadsPage < lastPage)
@@ -169,7 +187,8 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     const lastPage = agentsTotal === 0 ? 1 : Math.ceil(agentsTotal / (agentsLimit ?? 10))
     if (agentsPage < lastPage) {
       dispatch(
-        asyncGetAgentsList(
+        asyncGetUsersList(
+          ERoles.AGENT,
           {
             page: agentsPage + 1,
             limit: agentsLimit,
@@ -190,17 +209,41 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
       data.holdTime !== formik.values.holdTime ||
       data.mode !== formik.values.mode ||
       data.coefficient !== formik.values.coefficient ||
-      // JSON.stringify(data.recycleRules) !== JSON.stringify(formik.values.recycleRules) ||
+      JSON.stringify(data.recycleRules) !== JSON.stringify(formik.values.recycleRules) ||
       hasArrayChanged(data.filterLeadStatuses, formik.values.filterLeadStatuses))
 
-  // const isRecycleRulesInvalid = () =>
-  //   formik.values.recycleRules.length && !formik.values.recycleRules[0].status
+  const isRecycleRulesInvalid = () =>
+    formik.values.recycleRules?.length && !formik.values.recycleRules[0].status
+
+  const handleFilterLeadStatusesChange = () => {
+    setTimeout(() => formik.setTouched({ filterLeadStatuses: true }, true), 0)
+  }
+
+  const handleAssignedAgentIdsChange = () => {
+    setTimeout(() => formik.setTouched({ assignedAgentIds: true }, true), 0)
+  }
+
+  const refLeftColumn = useRef<HTMLDivElement>(null)
+  const refLeadStatuses = useRef<HTMLDivElement>(null)
+  const [height, setHeight] = useState<number>()
+
+  useEffect(() => {
+    if (refLeftColumn.current && refLeadStatuses.current) {
+      setHeight(refLeftColumn.current.clientHeight - refLeadStatuses.current.clientHeight)
+    }
+  }, [refLeftColumn.current?.clientHeight, refLeadStatuses.current?.clientHeight])
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
       <Flex direction="column" align="center" gap={48} margin="40px 0 0 0">
         <Flex direction="row" gap={48}>
-          <Flex direction="column" gap={16} maxWidth="424px" width="100%">
+          <Flex
+            ref={refLeftColumn}
+            direction="column"
+            gap={16}
+            maxWidth="424px"
+            width="100%"
+          >
             <FormikInput
               formik={formik}
               disabled={data?.status === CAMPAIGN_STATUSES.COMPLETE}
@@ -221,6 +264,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
               options={agentsOptions}
               onMenuScrollToBottom={onAgentsScrollToBottom}
               isSearchable
+              onChange={handleAssignedAgentIdsChange}
             />
             <FormikMultiSelect
               formik={formik}
@@ -264,7 +308,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
               disabled={data?.status === CAMPAIGN_STATUSES.COMPLETE}
               options={coefficients.map((number) => ({
                 label: String(number),
-                value: String(number),
+                value: number,
               }))}
               width={424}
               name="coefficient"
@@ -280,26 +324,25 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
             />
           </Flex>
           <Flex direction="column" gap={48} maxWidth="424px" width="100%">
-            <FormikMultiSelect
-              formik={formik}
-              name="filterLeadStatuses"
-              label={{ label: t('edit-campaign.lead-statuses') }}
-              size="s"
-              width={424}
-              options={leadStatuses.map(({ name: label, value }) => ({ label, value }))}
-              isSearchable
-            />
-            {/* <RecycleRules formik={formik} leadStatuses={leadStatuses} /> */}
+            <Flex ref={refLeadStatuses} direction="column" width="100%">
+              <FormikMultiSelect
+                formik={formik}
+                name="filterLeadStatuses"
+                label={{ label: t('edit-campaign.lead-statuses') }}
+                size="s"
+                width={424}
+                options={leadStatuses.map(({ name: label, value }) => ({ label, value }))}
+                isSearchable
+                onChange={handleFilterLeadStatusesChange}
+              />
+            </Flex>
+            <RecycleRules height={height} formik={formik} leadStatuses={leadStatuses} />
           </Flex>
         </Flex>
         <Flex align="center" justify="center" gap={24}>
           <FilledButton
             type="submit"
-            disabled={
-              !isChanged() ||
-              // || isRecycleRulesInvalid()
-              !formik.isValid
-            }
+            disabled={!isChanged() || isRecycleRulesInvalid() || !formik.isValid}
             width="202px"
           >
             {t('edit-campaign.save')}

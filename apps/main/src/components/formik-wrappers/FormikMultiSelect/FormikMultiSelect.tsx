@@ -21,6 +21,9 @@ export const FormikMultiSelect: React.FC<TProps> = memo(({ formik, ...props }) =
         field.name,
         selectedOptions.map((option) => option.value),
       )
+      if (props.onChange) {
+        props.onChange(selectedOptions)
+      }
     },
     [formik],
   )

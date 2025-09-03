@@ -1,8 +1,8 @@
 {
-  "add-agent": "Add new Agent",
+  "add-user": "Add new Agent",
   "empty-data": "No data",
   "headers": {
-    "agent-name": "Agent Name",
+    "username": "Agent Name",
     "email": "Email",
     "pbxName": "PBX Name",
     "creation-date": "Creation Date",
@@ -17,27 +17,30 @@
     "calls-handled": "Calls Handled",
     "time-online": "Time Online"
   },
-  "create-agent": {
+  "create": {
     "title": "Create new agent",
-    "action": "Create agent",
+    "username": "Agent Name",
+    "email": "Email",
     "password": "Password",
+    "action": "Create agent",
     "send-password": "Send password to email?",
-    "message": "If you leave the password field blank, it will be generated automatically by the system!"
+    "message": "If you leave the password field blank, it will be generated automatically by the system!",
+    "generate-password": "Generate Password"
   },
-  "delete-agent": {
-    "title": "<translate>Are you sure you want to delete <value>{{ agentName }}</value>?</translate>",
+  "delete": {
+    "title": "<translate>Are you sure you want to delete <value>{{ userName }}</value>?</translate>",
     "delete-btn": "Delete",
     "cancel-btn": "Cancel"
   },
-  "edit-agent": {
+  "edit": {
     "title": "Edit agent`s info",
-    "agent-name": "Agent Name",
+    "username": "Agent Name",
     "email": "Email",
     "password": "Password",
     "role": "Role",
     "assigned-campaigns": "Assigned Campaigns",
-    "save-btn": "Save",
-    "cancel-btn": "Cancel"
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "campaigns-amount": "{{ campaignsAmount }} campaigns",
   "active-agents": "Active Agents",

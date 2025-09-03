@@ -12,17 +12,18 @@ import { HeaderWithSort } from 'components/HeaderWithSort'
 import { StatisticsTypeResponse } from '@/features/campaigns/types'
 import { TCampaignOrderBy } from '@/api-rest/campaigns/types'
 import React from 'react'
-import { InfoCell } from '../../../components/InfoCell'
+import { InfoCell } from '@/components/InfoCell'
 import {
   selectActiveCampaignsForView,
   selectIsLoading,
   setOrderBy,
 } from '../../../store/campaigns'
-import { formatCreatedAt } from '../../../utils/formatCreateAt'
+import { formatCreatedAt, formatDelayedUntil } from '../../../utils/formatCreateAt'
 
 type TActiveCampaignsRowKeys =
   | 'name'
   | 'date'
+  | 'nextCall'
   | 'totalCalls'
   | 'onlineAgents'
   | 'onCallAgents'
@@ -77,6 +78,7 @@ export const ActiveCampaignsTable = (): JSX.Element => {
       ),
       value: 'date',
     },
+    { label: t('active-campaigns-headers.next-call'), value: 'nextCall' },
     { label: t('active-campaigns-headers.total-calls'), value: 'totalCalls' },
     { label: t('active-campaigns-headers.on-call-agents'), value: 'onCallAgents' },
     { label: t('active-campaigns-headers.online-agents'), value: 'onlineAgents' },
@@ -89,6 +91,7 @@ export const ActiveCampaignsTable = (): JSX.Element => {
       id: campaign.id,
       name: <InfoCell title={campaign.name} />,
       date: <InfoCell title={formatCreatedAt(campaign.createdAt)} />,
+      nextCall: <InfoCell title={formatDelayedUntil(campaign.nearestCallTime)} />,
       totalCalls: (
         <InfoCell title={`${getTotalCalls(campaign?.statistic)}`} highlightZero />
       ),

@@ -17,14 +17,28 @@ export const Tooltip: React.FC<TTooltipProps> = ({
   renderMenu,
   className,
   trigger,
+  zIndex,
+  liveTime,
+  onOpen,
   ...props
 }) => {
   const [client, setClient] = useState(false)
   const [open, setOpen] = useState(false)
+  const timerRef = React.useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     setClient(true)
   }, [])
+
+  useEffect(() => {
+    if (open && liveTime) {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(() => setOpen(false), liveTime)
+    }
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [open, liveTime])
 
   if (!client) {
     if (!trigger) return null
@@ -35,9 +49,12 @@ export const Tooltip: React.FC<TTooltipProps> = ({
     <S.Tooltip
       trigger={trigger}
       open={open}
-      onOpen={() => setOpen(true)}
+      onOpen={() => {
+        setOpen(true)
+        if (onOpen) onOpen()
+      }}
       onClose={() => setOpen(false)}
-      contentStyle={{ zIndex: 10 }}
+      contentStyle={{ zIndex: zIndex ?? 10 }}
       {...props}
     >
       <>

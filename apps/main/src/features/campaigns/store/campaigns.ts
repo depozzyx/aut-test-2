@@ -430,30 +430,15 @@ export const asyncStartOrStopCampaign =
   async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
-      const { campaignList, pagination } = getState().campaigns
-      const { name } = campaignList.find(({ id }) => id === campaignId) as TCampaign
+      const { pagination } = getState().campaigns
 
       if (
         currentStatus === CAMPAIGN_STATUSES.ACTIVE ||
         currentStatus === CAMPAIGN_STATUSES.HOLD
       ) {
         await apiCampaigns.stop(campaignId)
-        dispatch(
-          notificationActions.setNotification({
-            key: 'notifications:campaign.paused',
-            status: 'success',
-            values: { campaignName: name },
-          }),
-        )
       } else {
         await apiCampaigns.start(campaignId)
-        dispatch(
-          notificationActions.setNotification({
-            key: 'notifications:campaign.active',
-            status: 'success',
-            values: { campaignName: name },
-          }),
-        )
       }
 
       const params = {

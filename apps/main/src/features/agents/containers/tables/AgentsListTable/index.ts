@@ -1,1 +1,0 @@
-export { AgentsListTable } from './AgentsListTable'

@@ -1,6 +1,7 @@
 import { TCampaignActiveStatus } from '@/features/campaigns/types'
 
 export const CAMPAIGN_STATUSES = {
+  NEW: 'new',
   ACTIVE: 'active',
   PAUSE: 'pause',
   COMPLETE: 'complete',

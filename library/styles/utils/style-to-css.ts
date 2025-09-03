@@ -64,3 +64,19 @@ const JSToCSS = (obj: TStyle, theme: DefaultTheme): string => {
 
 export const styleToCss = (styles: TStyle, theme: DefaultTheme): string =>
   JSToCSS(styles, theme)
+
+export const cssStringToObject = (cssString: string): Record<string, string | number> =>
+  Object.fromEntries(
+    cssString
+      .split(';')
+      .map((rule: string) => rule.trim())
+      .filter(Boolean)
+      .map((rule) => {
+        const [property, value] = rule.split(':').map((s) => s.trim())
+        // Convert property to camelCase
+        const camelCaseProperty = property.replace(/-([a-z])/g, (_, char) =>
+          char.toUpperCase(),
+        )
+        return [camelCaseProperty, Number.isNaN(Number(value)) ? value : Number(value)]
+      }),
+  )

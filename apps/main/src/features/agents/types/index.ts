@@ -8,9 +8,10 @@ export type TAgentActiveWorkStatus =
   | 'on-call'
 export type TAgentOrderBy = 'workStatus' | 'username' | 'createdAt' | 'email' | 'pbxName'
 
-export type TCreateAgentFormData = {
+export type TCreateUserFormData = {
   username: string
   email: string
   password: string
   sendToEmail: boolean
+  hideLeadPhones?: boolean
 }

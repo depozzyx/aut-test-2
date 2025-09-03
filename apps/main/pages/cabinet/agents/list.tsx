@@ -3,8 +3,8 @@ import { useTitle } from 'react-use'
 import useTranslation from 'next-translate/useTranslation'
 import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
-import { AgentsList } from '@/features/agents/AgentsList'
 import { ERoles } from '@/constants/profile'
+import { UsersList } from '../../../src/features/users/UsersList'
 
 const AgentListPage: NextPage = () => {
   const { t } = useTranslation('routing')
@@ -13,7 +13,7 @@ const AgentListPage: NextPage = () => {
   return (
     <Permissions roles={[ERoles.ADMIN, ERoles.SUPERADMIN, ERoles.MANAGER]}>
       <CabinetLayout title={t('agents_list')}>
-        <AgentsList />
+        <UsersList role={ERoles.AGENT} />
       </CabinetLayout>
     </Permissions>
   )

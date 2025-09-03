@@ -24,6 +24,7 @@ export const Modal = memo(
     maxWidth,
     containerWidth,
     hideCloseButton,
+    left,
   }: TModalProps): JSX.Element | null => {
     const [isClient, setIsClient] = useState(false)
     const containerRef = useRef<HTMLDivElement>(null)
@@ -74,6 +75,7 @@ export const Modal = memo(
           tabIndex={0}
           containerWidth={containerWidth}
           maxWidth={maxWidth}
+          left={left}
         >
           {onClose && !hideCloseButton && (
             <S.Close onClick={onClose} iconColor="main5" size="s">

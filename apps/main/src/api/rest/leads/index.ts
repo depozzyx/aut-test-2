@@ -15,6 +15,10 @@ import {
   TLeadRes,
   TUpdateLeadReq,
   TLeadOptionsRes,
+  TImportCancelReq,
+  TImportSubmitReq,
+  TImportCheckReq,
+  TImportCheckRes,
 } from './types'
 
 const importLeads = (
@@ -28,6 +32,15 @@ const importLeads = (
     },
     timeout: 300_000,
   })
+
+const importSubmitLeads = (body: TImportSubmitReq): TAxiosResponse<TImportLeadsRes> =>
+  api.post('/leads/import-submit', body)
+
+const importCheckLeads = (body: TImportCheckReq): TAxiosResponse<TImportCheckRes> =>
+  api.post('/leads/import-check', body, {})
+
+const importCancelLeads = (body: TImportCancelReq): TAxiosResponse<TImportLeadsRes> =>
+  api.post('/leads/import-cancel', body)
 
 const leadsList = (params: TLeadsListReq): TAxiosResponse<TPaginatedRes<TLeadsList>> =>
   api.get('/leads', { params })
@@ -68,6 +81,8 @@ const deleteLead = (id: number): TAxiosResponse<TLeadCustomStatusRes> =>
 
 export const leadsApi = {
   importLeads,
+  importSubmitLeads,
+  importCancelLeads,
   leadsList,
   leadsGroup,
   createLeadGroup,
@@ -79,4 +94,5 @@ export const leadsApi = {
   updateLead,
   deleteLead,
   getLeadsForSelect,
+  importCheckLeads,
 }

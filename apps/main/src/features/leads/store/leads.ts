@@ -26,13 +26,13 @@ export type TInit = {
   leadsGroups: TLeadsGroup[]
   leadsGroupsPagination: TPagination
   selectedLeadsGroup?: TLeadsGroup['id']
-  checkNumberUnique: boolean
   useDefaultStatus: string
   selectError?: string
   filesForImport: TPreparedFiles[]
   orderBy?: ELeadsOrderBy
   order?: TOrder
   statuses: TLeadStatusData[]
+  leadIsChecking: boolean
 }
 
 const init: TInit = {
@@ -47,14 +47,14 @@ const init: TInit = {
     limit: 10,
     total: 1,
   },
-  checkNumberUnique: false,
   useDefaultStatus: 'fromFile',
-  isLoading: true,
+  isLoading: false,
   leadsGroups: [{ name: '-', id: 0 }],
   filesForImport: [],
   orderBy: undefined,
   order: undefined,
   statuses: [],
+  leadIsChecking: false,
 }
 
 const leads = createSlice({
@@ -87,15 +87,17 @@ const leads = createSlice({
       state.filesForImport = action.payload
     },
     deleteImportFile(state, action: PayloadAction<string>) {
+      leadsApi.importCancelLeads({ fileIds: [action.payload] })
       state.filesForImport = state.filesForImport.filter(
         (item) => item.id !== action.payload,
       )
     },
+    cancelImportFiles(state) {
+      leadsApi.importCancelLeads({ fileIds: state.filesForImport.map((file) => file.id) })
+      state.filesForImport = []
+    },
     setLeadsGroup(state, action: PayloadAction<TLeadsGroup['id']>) {
       state.selectedLeadsGroup = action.payload
-    },
-    setCheckNumberUnique(state, action: PayloadAction<boolean>) {
-      state.checkNumberUnique = action.payload
     },
     setUseDefaultStatus(state, action: PayloadAction<string>) {
       state.useDefaultStatus = action.payload
@@ -134,15 +136,11 @@ const leads = createSlice({
       const { id, importProgress } = action.payload
       const file = state.filesForImport.find((f) => f.id === id)
       if (file) {
-        // const d = new Date()
-        // eslint-disable-next-line no-console
-        // console.debug(
-        //   `${d.getMinutes()}:${d.getSeconds()} updating progress of ${
-        //     file.name
-        //   } to ${importProgress}`,
-        // )
         file.importProgress = importProgress
       }
+    },
+    setLeadIsChecking(state, action: PayloadAction<boolean>) {
+      state.leadIsChecking = action.payload
     },
   },
 })
@@ -158,12 +156,13 @@ export const {
   updateImportFileProgress,
   updateImportFiles,
   deleteImportFile,
+  cancelImportFiles,
   setSelectError,
   setLeadsGroupPagination,
   setLeadsOrderBy,
   reset,
   resetLeadGroups,
-  setCheckNumberUnique,
+  setLeadIsChecking,
   setUseDefaultStatus,
   setStatuses,
 } = leads.actions
@@ -208,9 +207,9 @@ export const selectFilesForImport = createSelector(
   ({ filesForImport }) => filesForImport,
 )
 
-export const selectCheckNumberUnique = createSelector(
+export const selectLeadIsChecking = createSelector(
   selectLeads,
-  ({ checkNumberUnique }) => checkNumberUnique,
+  ({ leadIsChecking }) => leadIsChecking,
 )
 
 export const selectUseDefaultStatus = createSelector(
@@ -288,8 +287,7 @@ export const createLeadsGroups =
 export const importFilesAsync =
   (fileId: string, setController: (controller: AbortController) => void): TAsyncAction =>
   async (dispatch, _store) => {
-    const { filesForImport, selectedLeadsGroup, checkNumberUnique, useDefaultStatus } =
-      _store().leads
+    const { filesForImport, selectedLeadsGroup, useDefaultStatus } = _store().leads
 
     const file = filesForImport.find((item) => item.id === fileId)
     if (!file) return
@@ -313,19 +311,37 @@ export const importFilesAsync =
       if (typeof file.data === 'string') {
         formData.append('file', dataURIToBlob(file.data), file.name)
         formData.append('fileId', file.id)
+        formData.append(
+          'fileIds',
+          filesForImport
+            .filter((item) => !item.error?.length)
+            .map((item) => item.id)
+            .join(','),
+        )
       }
       if (selectedLeadsGroup) formData.append('leadListId', selectedLeadsGroup.toString())
-      if (checkNumberUnique)
-        formData.append('checkNumberUnique', checkNumberUnique.toString())
       if (useDefaultStatus === 'default') formData.append('useDefaultStatus', 'true')
 
-      await leadsApi.importLeads(formData, controller)
+      const { data } = await leadsApi.importLeads(formData, controller)
 
       dispatch(
         updateImportFiles(
           filesForImport.map((item) => {
             if (item.duplicate) return item
-            if (item.id === file.id) return { ...file, imported: true }
+            if (item.id === file.id)
+              return {
+                ...file,
+                imported: true,
+                uploadProgress: 100,
+                unknownStatuses: data.data.unknownStatuses?.map((status) => ({
+                  status,
+                  createNew: false,
+                })),
+                unknownStatusesNotFixed: (data.data?.unknownStatuses?.length ?? 0) > 0,
+                duplicatedPhoneNumbers: data.data.duplicatedPhoneNumbers,
+                duplicatedPhoneNotFixed:
+                  (data.data?.duplicatedPhoneNumbers?.length ?? 0) > 0,
+              }
             return item
           }),
         ),
@@ -335,21 +351,31 @@ export const importFilesAsync =
         e,
         dispatch,
         custom: (_, data) => {
-          if (data.statusCode === 422) {
-            const { leadListId } = data.message as unknown as { leadListId: string }
-            dispatch(setSelectError(leadListId))
-            return false
-          }
-          const typedData = data as unknown as TImportError
-          const messages = Object.values(
-            typedData.errors?.validationErrors[0]?.constraints || {},
-          )
+          const messages = data.response?.message
+            ? [data.response?.message]
+            : ['Errors occurred during import']
+
+          const typedData = data.response as unknown as TImportError
 
           dispatch(
             updateImportFiles(
               filesForImport.map((item) => {
                 if (item.duplicate) return item
-                if (item.id === file.id) return { ...file, error: messages }
+                if (item.id === file.id)
+                  return {
+                    ...file,
+                    uploadProgress: 100,
+                    error: messages,
+                    validationErrors: typedData.validationErrors,
+                    unknownStatuses: typedData.unknownStatuses?.map((status) => ({
+                      status,
+                      createNew: false,
+                    })),
+                    unknownStatusesNotFixed: (typedData.unknownStatuses?.length ?? 0) > 0,
+                    duplicatedPhoneNumbers: typedData.duplicatedPhoneNumbers,
+                    duplicatedPhoneNotFixed:
+                      (typedData?.duplicatedPhoneNumbers?.length ?? 0) > 0,
+                  }
                 return item
               }),
             ),
@@ -359,6 +385,97 @@ export const importFilesAsync =
       })
     }
   }
+
+export const importFilesCheckAsync = (): TAsyncAction => async (dispatch, _store) => {
+  const { filesForImport, selectedLeadsGroup } = _store().leads
+
+  if (!selectedLeadsGroup) return
+
+  try {
+    dispatch(setLeadIsChecking(true))
+    const { data } = await leadsApi.importCheckLeads({
+      fileIds: filesForImport.map((item) => item.id),
+      leadListId: selectedLeadsGroup,
+    })
+
+    dispatch(
+      updateImportFiles(
+        filesForImport.map((item) => {
+          const fileDuplicates = data.data.find((dup) => dup.fileId === item.id)
+          return {
+            ...item,
+            duplicatedPhoneNumbers: fileDuplicates?.duplicatedPhoneNumbers ?? [],
+            duplicatedPhoneNotFixed:
+              (fileDuplicates?.duplicatedPhoneNumbers?.length ?? 0) > 0,
+          }
+        }),
+      ),
+    )
+  } catch (e) {
+    handleRestError({
+      e,
+      dispatch,
+      custom: (_, data) => {
+        const messages = data?.message
+          ? data?.message
+          : 'Errors occurred during files duplication check'
+        dispatch(setSelectError(messages))
+      },
+    })
+  } finally {
+    dispatch(setLeadIsChecking(false))
+  }
+}
+
+export const importFilesSubmitAsync = (): TAsyncAction => async (dispatch, _store) => {
+  const store = _store().leads
+  const { filesForImport, selectedLeadsGroup, useDefaultStatus } = store
+  dispatch(setIsLoading(true))
+  const fileIds = filesForImport
+    .filter((item) => !item.error?.length)
+    .map((item: TPreparedFiles) => ({
+      fileId: item.id,
+      unknownStatuses: item.unknownStatuses,
+    }))
+  if (!fileIds.length || !selectedLeadsGroup) return
+
+  try {
+    await leadsApi.importSubmitLeads({
+      fileIds,
+      leadListId: selectedLeadsGroup,
+      useDefaultStatus: useDefaultStatus === 'default',
+    })
+  } catch (e) {
+    handleRestError({
+      e,
+      dispatch,
+      custom: (_, data) => {
+        let messages = 'Errors occurred during files file import'
+        if (data?.message) {
+          if (Array.isArray(data.message)) {
+            messages = data.message.join(', ')
+          } else if (typeof data.message === 'object') {
+            messages = Object.values(data.message).join(', ')
+          } else {
+            messages = data.message
+          }
+        }
+        dispatch(setSelectError(messages))
+        return true
+      },
+    })
+  }
+}
+
+export const importFilesCancelAsync = (): TAsyncAction => async (dispatch, _store) => {
+  const { filesForImport } = _store().leads
+  const fileIds = filesForImport.map((item: TPreparedFiles) => item.id)
+  if (!fileIds.length) return
+
+  await leadsApi.importCancelLeads({ fileIds })
+
+  dispatch(cancelImportFiles())
+}
 
 export const getLeadStatuses = (): TAsyncAction => async (dispatch) => {
   try {

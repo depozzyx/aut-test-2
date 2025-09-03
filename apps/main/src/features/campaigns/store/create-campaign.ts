@@ -16,7 +16,7 @@ import {
   asyncGetCampaignsList,
 } from '@/features/campaigns/store/campaigns'
 import { notificationActions } from '@/features/common/notifications/store'
-import { selectAgentsOptions } from '@/features/agents/store/agents'
+import { selectUsersOptions } from '@/features/users/store/users'
 
 export type TInit = {
   isLoading: boolean
@@ -54,7 +54,7 @@ export const selectCreateCampaignFormData: TSelector<TInit['formData']> = create
 )
 
 export const selectFormDataForReview = createSelector(
-  [selectCreateCampaignFormData, selectLeadListCatalogAsOptions, selectAgentsOptions],
+  [selectCreateCampaignFormData, selectLeadListCatalogAsOptions, selectUsersOptions],
   (formData, leadListCatalog, agentsOptions) => {
     if (!formData) return null
 
@@ -80,7 +80,7 @@ export const selectFormDataForReview = createSelector(
 
     return {
       ...formData,
-      assignedAgentIds: agentsLabels,
+      assignedAgentLabel: agentsLabels,
       leadListIdsLabel: leadsLabels,
     }
   },
@@ -108,7 +108,7 @@ export const asyncCreateCampaign =
           assignedAgentIds: formData.assignedAgentIds || [],
           reserveAgentIds: formData.assignedAgentIds || [],
           filterLeadStatuses: formData.filterLeadStatuses || [],
-          // recycleRules: formData.recycleRules || [],
+          recycleRules: formData.recycleRules || [],
         }
 
         await apiCampaigns.createCampaign(dataForRequest)

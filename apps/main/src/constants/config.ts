@@ -12,3 +12,14 @@ export const { NEXT_PUBLIC_SUPPORT_EMAIL_CONTACT } = process.env
 
 // Math
 export const MAX_PRECISION = 80
+
+const iceServersUrls = (process.env.NEXT_PUBLIC_SIP_COTURN_URL ?? '').split(',')
+const iceServersUsernames = (process.env.NEXT_PUBLIC_SIP_COTURN_USER ?? '').split(',')
+const iceServersCredentials = (process.env.NEXT_PUBLIC_SIP_COTURN_PASSWORD ?? '').split(
+  ',',
+)
+export const ICE_SERVERS = iceServersUrls.map((url: string, index: number) => ({
+  urls: url,
+  username: iceServersUsernames?.[index],
+  credential: iceServersCredentials?.[index],
+}))

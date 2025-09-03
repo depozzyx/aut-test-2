@@ -65,7 +65,7 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
       value: yup
         .string()
         .matches(/^[A-Z]*$/, 'Only uppercase letters (A-Z)')
-        .max(10, '10 characters maximum')
+        .max(12, '12 characters maximum')
         .required('This field is required'),
       name: yup
         .string()
@@ -82,6 +82,7 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
         formik={formik}
         name="value"
         readOnly={editableItem.isSystem || !isEditing}
+        maxLength={12}
         width="174px"
         size="s"
         placeholder={t('change-lead-settings.status.valuePlaceholder')}
@@ -92,6 +93,7 @@ export const LeadStatusRow: FC<LeadStatusRowProps> = ({
         formik={formik}
         name="name"
         readOnly={editableItem.isSystem || !isEditing}
+        maxLength={30}
         width="174px"
         size="s"
         placeholder={t('change-lead-settings.status.namePlaceholder')}

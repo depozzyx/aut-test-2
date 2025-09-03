@@ -2,7 +2,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useMenuLinks } from '@/layout/common/Sidebar/hooks/use-menu-links'
 import { Flex } from '@/components/Flex'
-import { useAuth } from '@/features/common/user'
+import { useAuth, userSelectors } from '@/features/common/user'
 import { Text } from '@peiko/components/Text'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { LogoutIcon } from '@/icons/LogoutIcon'
@@ -23,6 +23,7 @@ export const Sidebar = (): JSX.Element => {
   const { t } = useTranslation('auth')
   const { dispatch, select } = useRedux()
   const { hasCurrentRTCSession } = select(agentStatusSelector)
+  const profile = select(userSelectors.user)
 
   const { logoutAsync, user } = useAuth()
   const links = useMenuLinks()
@@ -46,34 +47,30 @@ export const Sidebar = (): JSX.Element => {
     agentSocket.unsubscribeStatusUpdate('Subscribe agent status')
   }
 
-  const onSubscribeManagerAuth = () =>
+  const onSubscribeUserAuth = () =>
     authSocket.authUpdate({
-      id: 'Subscribe manager auth',
+      id: 'Subscribe auth change',
       callback: (e) => {
         if (!e.logged) logoutAsync()
       },
     })
 
-  const onUnsubscribeManagerAuth = () => {
-    socket.unsubscribe('Subscribe manager auth')
+  const onUnsubscribeUserAuth = () => {
+    socket.unsubscribe('Subscribe auth change')
   }
 
   useEffect(() => {
     if (user?.role === ERoles.AGENT) {
       setTimeout(() => onSubscribeAgentStatus(), 500)
     }
-    if (user?.role === ERoles.MANAGER) {
-      setTimeout(() => onSubscribeManagerAuth(), 500)
-    }
+    setTimeout(() => onSubscribeUserAuth(), 500)
   }, [])
 
   useUnmount(() => {
     if (user?.role === ERoles.AGENT) {
       onUnsubscribeAgentStatus()
     }
-    if (user?.role === ERoles.MANAGER) {
-      onUnsubscribeManagerAuth()
-    }
+    onUnsubscribeUserAuth()
   })
 
   return (
@@ -112,18 +109,25 @@ export const Sidebar = (): JSX.Element => {
           </Accordion>
         ))}
       </Flex>
-      <BaseButton
-        width="fit-content"
-        disabled={hasCurrentRTCSession}
-        onClick={handleLogout}
-      >
-        <MenuItem align="center" gap="8px" justify="space-between" padding="8px 16px">
-          <LogoutIcon color={menuDisabled || hasCurrentRTCSession ? 'overlay' : 'base'} />
-          <Text color={menuDisabled || hasCurrentRTCSession ? 'overlay' : 'base'}>
-            {t('logout-btn')}
-          </Text>
-        </MenuItem>
-      </BaseButton>
+      <Flex direction="row" justify="space-between" align="center" width="100%">
+        <BaseButton
+          width="fit-content"
+          disabled={hasCurrentRTCSession}
+          onClick={handleLogout}
+        >
+          <MenuItem align="center" gap="8px" justify="space-between" padding="8px 16px">
+            <LogoutIcon
+              color={menuDisabled || hasCurrentRTCSession ? 'overlay' : 'base'}
+            />
+            <Text color={menuDisabled || hasCurrentRTCSession ? 'overlay' : 'base'}>
+              {t('logout-btn')}
+            </Text>
+          </MenuItem>
+        </BaseButton>
+        <Text variant="f11" color="overlay" styles={{ padding: '0px 16px' }}>
+          {`v. ${profile?.version || ''}`}
+        </Text>{' '}
+      </Flex>
     </Container>
   )
 }

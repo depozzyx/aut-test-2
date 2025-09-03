@@ -30,4 +30,6 @@ export type TModalProps = {
   containerWidth?: CSSProperties['width']
 
   children?: React.ReactNode
+  left?: string
+  position?: CSSProperties['position']
 }
