@@ -19,6 +19,13 @@
     "cannot-action-no-leads-campaign": "You can't start a campaign without leads for calling",
     "cannot-action-inactive-lists-campaign": "You can't start a campaign without active lead lists"
   },
+  "statuses-tooltip": {
+    "new": "New Campaign",
+    "active": "Campaign in progress",
+    "pause": "Campaign manually changed to pause",
+    "complete": "Campaign called to all leads",
+    "hold": "Campaign waiting for agents"
+  },
   "campaign-list-headers": {
     "campaign-name": "Campaign Name",
     "creation-date": "Creation Date",
@@ -37,6 +44,7 @@
   "active-campaigns-headers": {
     "campaign-name": "Campaign Name",
     "creation-date": "Creation Date",
+    "next-call": "Delayed until",
     "call-volume": "Call Volume",
     "response-rate": "Response Rate",
     "conversion-rate": "Conversion Rate",
@@ -75,7 +83,8 @@
     "add-recycle-rule": "Add Rule",
     "recycle-rule-status": "Lead Status",
     "recycle-rule-delay": "Delay",
-    "recycle-rule-attempts": "Max Attempts"
+    "recycle-rule-attempts": "Max Attempts",
+    "recycle-rule-final-status": "Final status"
   },
   "edit-campaign": {
     "title": "Edit Campaign",
@@ -102,8 +111,8 @@
     "agents": "{{ count }} agents",
     "lead-status": "1 lead status",
     "lead-statuses": "{{ count }} lead statuses",
-    "recycle-rule": "1 recycle rule",
-    "recycle-rules": "{{ count }} recycle rules"
+    "recycle-rule": "1 recycle rule for statuses: {{ statuses }}",
+    "recycle-rules": "{{ count }} recycle rules for statuses: {{ statuses }}"
   },
   "active-campaigns": "Active Campaigns",
   "campaign-effectiveness": "Campaign Effectiveness",

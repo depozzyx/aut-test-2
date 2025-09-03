@@ -18,7 +18,7 @@ export const CampaignsTooltip = ({ campaigns }: ICampaignTooltipProps): JSX.Elem
   const { dispatch } = useRedux()
   const { setModal } = useModals()
 
-  const campaignsAmount = campaigns.length
+  const campaignsAmount = campaigns?.length ?? 0
 
   const handleOpenCampaignInfoModal = (campaign: TAssignedCampaign) => {
     dispatch(setSelectedAssignedCampaign(campaign))
@@ -45,7 +45,7 @@ export const CampaignsTooltip = ({ campaigns }: ICampaignTooltipProps): JSX.Elem
           }}
         >
           <Menu>
-            {campaigns.map((campaign) => (
+            {campaigns?.map((campaign) => (
               <MenuItem
                 key={campaign.id}
                 onClick={() => handleOpenCampaignInfoModal(campaign)}
@@ -54,7 +54,7 @@ export const CampaignsTooltip = ({ campaigns }: ICampaignTooltipProps): JSX.Elem
                   {campaign.name}
                 </Text>
               </MenuItem>
-            ))}
+            )) ?? []}
           </Menu>
         </div>
       )}

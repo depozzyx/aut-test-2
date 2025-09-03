@@ -3,7 +3,10 @@ import { socket } from '../Socket'
 import { TSubscribeProps } from '../types'
 
 const campaignStatusUpdate = (
-  { id, callback }: TSubscribeProps<{ status: TCampaignWSStatus['data'] }>,
+  {
+    id,
+    callback,
+  }: TSubscribeProps<{ status: TCampaignWSStatus['data']; nearestTime?: string }>,
   campaignId: string,
 ): void => {
   socket.subscribe({

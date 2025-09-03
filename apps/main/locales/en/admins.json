@@ -1,9 +1,9 @@
 {
   "empty-data": "No data",
-  "add-admin": "Add Admin",
+  "add-user": "Add Admin",
   "DESC": "Newest",
   "ASC": "Oldest",
-  "list-headers": {
+  "headers": {
     "id": "ID",
     "username": "User Name",
     "email": "Email",
@@ -13,25 +13,26 @@
     "delete": "Delete"
   },
   "sort-by": "Sort By",
-  "create-admin": {
+  "create": {
     "title": "Create new admin",
     "email": "Email",
-    "username": "User Name",
+    "username": "Admin Name",
     "password": "Password",
     "hideLeadPhones": "Hide Phones",
     "showLeadPhones": "Show Phones",
-    "action": "Create Admin"
+    "action": "Create Admin",
+    "generate-password": "Generate Password"
   },
-  "edit-admin": {
+  "edit": {
     "title": "Edit admin",
     "email": "Email",
-    "username": "User Name",
+    "username": "Admin Name",
     "password": "Password",
     "cancel": "Cancel",
     "save": "Save"
   },
-  "delete-admin": {
-    "title": "<translate>Are you sure you want to delete <value>{{ name }}</value>?</translate>",
+  "delete": {
+    "title": "<translate>Are you sure you want to delete <value>{{ userName }}</value>?</translate>",
     "delete-btn": "Delete",
     "cancel-btn": "Cancel"
   }

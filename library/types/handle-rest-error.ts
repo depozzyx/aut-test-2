@@ -10,7 +10,7 @@ export type TResponse<M> = {
 export type TErrorProps<M> = {
   e: unknown
   dispatch: Dispatch
-  custom?: (status: number, data: TResponse<M>) => boolean | void
+  custom?: (status: number, data: TResponse<M> | any) => boolean | void
   formik?: FormikHelpers<M>
 }
 

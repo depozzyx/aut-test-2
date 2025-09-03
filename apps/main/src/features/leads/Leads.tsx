@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRedux } from '@/hooks/use-redux'
 import { createStructuredSelector } from 'reselect'
@@ -23,6 +23,7 @@ import {
   selectLeadsOrderBy,
   selectLeadsOrder,
   selectLeadsPagination,
+  selectIsLoading,
 } from './store/leads'
 
 const CreateLeadsGroup = dynamic(
@@ -34,7 +35,6 @@ const CreateLeadsGroup = dynamic(
 
 export const Leads: FC = () => {
   const { select, dispatch } = useRedux()
-  const [secondMount, setSecondMount] = useState(false)
 
   const {
     pagination: { total, page, limit },
@@ -42,6 +42,7 @@ export const Leads: FC = () => {
     groupsPagination,
     orderBy,
     order,
+    isLoading,
   } = select(
     createStructuredSelector({
       pagination: selectLeadsPagination,
@@ -49,13 +50,12 @@ export const Leads: FC = () => {
       leadsGroup: selectLeadsGroup,
       orderBy: selectLeadsOrderBy,
       order: selectLeadsOrder,
+      isLoading: selectIsLoading,
     }),
     shallowEqual,
   )
 
-  useEffect(() => {
-    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit }))
-  }, [])
+  const [canLoadList, setCanLoadList] = React.useState<boolean>(false)
 
   const filters: TFormik = useFormik({
     initialValues: {
@@ -70,35 +70,17 @@ export const Leads: FC = () => {
     onSubmit: () => undefined,
   })
 
-  useEffect(() => {
-    if (secondMount)
-      dispatch(
-        getLeadList({
-          page: 1,
-          limit,
-          orderBy,
-          order,
-          leadListId: leadsGroup,
-          ...cleanObject(filters.values),
-        }),
-      )
-  }, [leadsGroup, secondMount, orderBy, order])
-
   useUnmount(() => {
     dispatch(reset())
   })
 
-  useEffect(() => {
-    if (!leadsGroup) setSecondMount(true)
-  }, [leadsGroup])
-
   const onChangePage = (page: number) =>
+    canLoadList &&
     dispatch(
       getLeadList({
         page,
         orderBy,
         order,
-        leadListId: leadsGroup,
         ...cleanObject(filters.values),
       }),
     )
@@ -112,12 +94,24 @@ export const Leads: FC = () => {
 
   useEffect(() => {
     onChangeFilters()
-  }, [filters.values])
+  }, [filters.values, orderBy, order, canLoadList])
+
+  useEffect(() => {
+    dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit }))
+    if (leadsGroup) {
+      filters.setFieldValue('leadListId', leadsGroup.toString())
+    }
+    setCanLoadList(true)
+  }, [])
 
   return (
     <>
       <Box styles={{ marginTop: '24px' }}>
-        <LeadFilters filters={filters} onResetFilters={filters.resetForm} />
+        <LeadFilters
+          disabled={isLoading}
+          filters={filters}
+          onResetFilters={filters.resetForm}
+        />
       </Box>
       <Box styles={{ marginTop: '6px' }}>
         <LeadsTable reFetch={() => onChangePage(page)} />

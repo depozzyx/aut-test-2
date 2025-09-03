@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic'
 import JsSIP from 'jssip'
 import { UAConfiguration } from 'jssip/lib/UA'
 import { decrypt } from '@peiko/utils/crypto-js'
-import { API_SECRET_KEY } from '@/constants/config'
+import { API_SECRET_KEY, ICE_SERVERS } from '@/constants/config'
 
 import { CallIcon } from '@/icons/CallIcon'
 import { useRedux } from '@/hooks/use-redux'
@@ -49,6 +49,7 @@ import { socket } from '../../api/socket/Socket'
 import { campaignSocket } from '../../api/socket/campaign'
 import { HealthCheckStatusModal } from './components/HealthCheckStatusModal'
 import { TCampaignStatus } from '../campaigns/types'
+import { formatDelayedUntil } from '../campaigns/utils/formatCreateAt'
 
 const SelectAgentCampaignModal = dynamic(
   () =>
@@ -230,6 +231,15 @@ export const Calls: FC = () => {
             }, 2000)
           } else if (e.status === 'active') {
             setCompleted(false)
+            if (e.nearestTime && formatDelayedUntil(e.nearestTime)) {
+              dispatch(
+                notificationActions.setNotification({
+                  key: `notifications:agent.campaign-${e.status}`,
+                  status: 'info',
+                  values: { nearestTime: formatDelayedUntil(e.nearestTime) },
+                }),
+              )
+            }
           }
         },
       },
@@ -290,13 +300,7 @@ export const Calls: FC = () => {
       const sipOptions = {
         pcConfig: {
           rtcpMuxPolicy: 'negotiate' as 'require',
-          iceServers: [
-            {
-              urls: process.env.NEXT_PUBLIC_SIP_COTURN_URL as string,
-              username: process.env.NEXT_PUBLIC_SIP_COTURN_USER,
-              credential: process.env.NEXT_PUBLIC_SIP_COTURN_PASSWORD,
-            },
-          ],
+          iceServers: ICE_SERVERS,
           iceTransportPolicy: 'relay',
         },
         mediaConstraints: {
@@ -707,7 +711,7 @@ export const Calls: FC = () => {
           )
           const { status, reason } = store.getState().agentStatus.pbxStatus
           if (completedRef.current) {
-            onCompleteCampaign('complete')
+            onCompleteCampaign(status)
             setCompleted(false)
           } else if (reason !== 'manual' && status === 'pause') {
             console.info(`campaign is not completed yet ${status} => unpause`)
@@ -832,6 +836,19 @@ export const Calls: FC = () => {
     return result
   }
 
+  const showDelayedUntil = (): string => {
+    let result = '-'
+    if (selectedCampaignId && !agentDashboard?.currentCampaignName) {
+      const found = agentAssignedCampaigns.find((c) => c.id === +selectedCampaignId)
+      if (found && found?.nearestCallTime) {
+        return formatDelayedUntil(found.nearestCallTime) || '-'
+      }
+    } else if (agentDashboard?.currentCampaignNearestCallTime) {
+      return formatDelayedUntil(agentDashboard.currentCampaignNearestCallTime) || '-'
+    }
+    return result
+  }
+
   // Check if health check modal should be shown
   const isChecking =
     healthStatus.api.status === 'loading' ||
@@ -908,6 +925,14 @@ export const Calls: FC = () => {
             {/*      'click to select campaign'} */}
             {/*  </div> */}
             {/* </FilledButton> */}
+          </div>
+          <div style={{ minWidth: '150px' }}>
+            <div style={{ fontSize: '14px', color: '#888', marginBottom: '4px' }}>
+              {t('agents.dashboard.next-call')}
+            </div>
+            <div style={{ fontSize: '18px', fontWeight: '600' }}>
+              {showDelayedUntil()}
+            </div>
           </div>
           <div style={{ minWidth: '150px' }}>
             <div style={{ fontSize: '14px', color: '#888', marginBottom: '4px' }}>

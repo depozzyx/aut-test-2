@@ -16,6 +16,7 @@ export type TDropdownMenuProps = {
   minWidth?: string
   maxHeight?: string
   selectedOptions?: TValue[]
+  disabled?: boolean
   onMenuScrollToBottom?: () => void
 }
 
@@ -116,6 +117,7 @@ export const DropdownMenu = memo(
 
     return (
       <ContextMenu
+        disabled={props.disabled}
         trigger={triggerElement}
         renderMenu={() => (
           <Menu

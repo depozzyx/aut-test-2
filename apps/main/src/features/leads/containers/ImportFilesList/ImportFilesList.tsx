@@ -7,7 +7,6 @@ import { useImportWebSocket } from '../../hooks/useImportWebSocket'
 
 export const ImportFilesList: FC = () => {
   const { select, dispatch } = useRedux()
-  //   const { count } = useCounter(10, 5000)
 
   const files = select(selectFilesForImport)
   useImportWebSocket()
@@ -15,7 +14,7 @@ export const ImportFilesList: FC = () => {
   const onDelete = (id: string) => dispatch(deleteImportFile(id))
 
   return (
-    <Flex direction="column" gap="8px" margin="0 0 24px">
+    <Flex direction="column" gap="8px" margin="0 0 12px">
       {files.map((file) => (
         <FileItem onDelete={onDelete} key={file.id} {...file} />
       ))}

@@ -13,19 +13,14 @@ import leadsReducer from '@/features/leads/store/leads'
 import activityLogReducer from '@/features/activityLog/store/activity-log'
 import editCampaignReducer from '@/features/campaigns/store/edit-campaign'
 import leadListReducer from '@/features/leads/store/lead-list'
-import agentsReducer from '@/features/agents/store/agents'
-import createAgentReducer from '@/features/agents/store/create-agent'
-import editAgentReducer from '@/features/agents/store/edit-agent'
 import agentAnalyticsReducer from '@/features/agents/store/agent-analytics'
+import agentReducer from '@/features/agents/store/agents'
 import campaignAnalyticsReducer from '@/features/campaigns/store/campaign-analytics'
-import managersReducer from '@/features/managers/store/managers'
-import adminsReducer from '@/features/admins/store/admins'
-import createAdminReducer from '@/features/admins/store/create-admin'
-import editAdminReducer from '@/features/admins/store/edit-admin'
-import createManagerReducer from '@/features/managers/store/create-manager'
-import editManagerReducer from '@/features/managers/store/edit-manager'
 import apiKeyReducer from '@/features/settings/store/api-key'
 import campaignLogReducer from '@/features/activityLog/store/campaign-log'
+import usersReducer from '@/features/users/store/users'
+import createUserReducer from '@/features/users/store/create-user'
+import editUserReducer from '@/features/users/store/edit-user'
 
 const store = configureStore({
   reducer: {
@@ -37,10 +32,8 @@ const store = configureStore({
     resetPassword: resetPasswordReducer,
     notifications: notificationsReducer,
     modals: modalsReducer,
-    agents: agentsReducer,
-    editAgent: editAgentReducer,
-    createAgent: createAgentReducer,
     agentAnalytics: agentAnalyticsReducer,
+    agents: agentReducer,
     campaigns: campaignsReducer,
     editCampaign: editCampaignReducer,
     createCampaign: createCampaignReducer,
@@ -49,13 +42,10 @@ const store = configureStore({
     leads: leadsReducer,
     leadList: leadListReducer,
     activityLog: activityLogReducer,
-    managers: managersReducer,
-    createManager: createManagerReducer,
-    editManager: editManagerReducer,
     apiKey: apiKeyReducer,
-    admins: adminsReducer,
-    createAdmin: createAdminReducer,
-    editAdmin: editAdminReducer,
+    users: usersReducer,
+    createUser: createUserReducer,
+    editUser: editUserReducer,
   },
 })
 

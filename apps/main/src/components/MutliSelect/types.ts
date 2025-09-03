@@ -116,4 +116,5 @@ export type TMultiSelectProps = {
    * Specify the default value of the input select
    */
   defaultValue?: TSelectOption[]
+  menuPortalTarget?: HTMLElement
 } & TStylesProps

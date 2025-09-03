@@ -1,9 +1,9 @@
 {
   "empty-data": "No data",
-  "add-manager": "Add Manager",
+  "add-user": "Add Manager",
   "DESC": "Newest",
   "ASC": "Oldest",
-  "list-headers": {
+  "headers": {
     "id": "ID",
     "username": "User Name",
     "email": "Email",
@@ -13,25 +13,26 @@
     "delete": "Delete"
   },
   "sort-by": "Sort By",
-  "create-manager": {
+  "create": {
     "title": "Create new Manager",
     "email": "Email",
-    "username": "User Name",
+    "username": "Manager Name",
     "password": "Password",
     "hideLeadPhones": "Hide Phones",
     "showLeadPhones": "Show Phones",
-    "action": "Create Manager"
+    "action": "Create Manager",
+    "generate-password": "Generate Password"
   },
-  "edit-manager": {
+  "edit": {
     "title": "Edit manager",
     "email": "Email",
-    "username": "User Name",
+    "username": "Manager Name",
     "password": "Password",
     "cancel": "Cancel",
     "save": "Save"
   },
-  "delete-manager": {
-    "title": "<translate>Are you sure you want to delete <value>{{ managerName }}</value>?</translate>",
+  "delete": {
+    "title": "<translate>Are you sure you want to delete <value>{{ userName }}</value>?</translate>",
     "delete-btn": "Delete",
     "cancel-btn": "Cancel"
   }

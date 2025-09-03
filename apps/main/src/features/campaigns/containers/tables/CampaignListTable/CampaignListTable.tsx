@@ -29,7 +29,7 @@ import { ROUTES } from '@/routes'
 import { TCampaignOrderBy } from '@/api-rest/campaigns/types'
 import { useCampaignUpdates } from '@/features/campaigns/hooks/use-active-campaigns-update'
 import { ButtonWithTooltip } from '@/features/campaigns/containers/tables/CampaignListTable/ButtonWithTooltip'
-import { InfoCell } from '../../../components/InfoCell'
+import { InfoCell } from '@/components/InfoCell'
 import { StatusChip } from '../../../components/StatusChip'
 import {
   selectIsLoading,
@@ -86,6 +86,8 @@ export const CampaignListTable = (): JSX.Element => {
 
   const validateAction = (campaign: TCampaign) => {
     let tooltipMsg = ''
+    if (campaign.requestedStatus)
+      return `Campaign is setting to ${campaign.requestedStatus}`
     if (campaign.status === CAMPAIGN_STATUSES.HOLD) return tooltipMsg
     if (campaign.status === CAMPAIGN_STATUSES.COMPLETE) {
       tooltipMsg = t(`tooltip.cannot-action-complete-campaign`)

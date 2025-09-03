@@ -8,6 +8,7 @@ import {
   selectLeadListPagination,
   selectLeadListsOrderBy,
   selectLeadListsOrder,
+  selectIsLoading,
 } from '@/features/leads/store/lead-list'
 import { createStructuredSelector } from 'reselect'
 // import {
@@ -30,11 +31,13 @@ export const LeadList: FC = () => {
     pagination: { total, page, limit },
     orderBy,
     order,
+    isLoading,
   } = select(
     createStructuredSelector({
       pagination: selectLeadListPagination,
       orderBy: selectLeadListsOrderBy,
       order: selectLeadListsOrder,
+      isLoading: selectIsLoading,
     }),
     shallowEqual,
   )
@@ -73,7 +76,11 @@ export const LeadList: FC = () => {
   return (
     <>
       <Box styles={{ marginTop: '24px' }}>
-        <LeadListFilters filters={filters} onResetFilters={filters.resetForm} />
+        <LeadListFilters
+          disabled={isLoading}
+          filters={filters}
+          onResetFilters={filters.resetForm}
+        />
       </Box>
       <Box styles={{ marginTop: '6px' }}>
         <LeadListTable reFetch={() => onChangePage(page)} />

@@ -1,5 +1,6 @@
 import useTranslation from 'next-translate/useTranslation'
 import { Text } from '@peiko/components/Text'
+import { Tooltip } from '@peiko/components/Tooltip'
 import { DefaultTheme } from 'styled-components'
 import { StyledChip } from './StatusChip.styled'
 import { TCampaignStatus } from '../../types'
@@ -20,14 +21,22 @@ export const StatusChip = ({ status }: IStatusChipProps): JSX.Element => {
   const { t } = useTranslation('campaigns')
 
   return (
-    <StyledChip status={status}>
-      <Text
-        variant="f10"
-        color={statusColor[status]}
-        styles={{ textTransform: 'uppercase' }}
-      >
-        {t(`statuses.${status}`)}
-      </Text>
-    </StyledChip>
+    <Tooltip
+      on={['hover']}
+      position="top center"
+      trigger={
+        <StyledChip status={status}>
+          <Text
+            variant="f10"
+            color={statusColor[status]}
+            styles={{ textTransform: 'uppercase' }}
+          >
+            {t(`statuses.${status}`)}
+          </Text>
+        </StyledChip>
+      }
+      renderMenu={() => <Text variant="f6">{t(`statuses-tooltip.${status}`)}</Text>}
+      padding="8px 12px"
+    />
   )
 }

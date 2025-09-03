@@ -2,7 +2,7 @@ import { Text } from '@peiko/components/Text'
 import styled from 'styled-components'
 
 export const ProgressBar = styled.div<{
-  importProgress: number
+  uploadProgress: number
   progress: number
   error?: boolean
 }>`
@@ -32,7 +32,7 @@ export const ProgressBar = styled.div<{
     position: absolute;
     top: 0;
     left: 0;
-    width: ${({ importProgress, error }) => (error ? 100 : importProgress ?? 0)}%;
+    width: ${({ uploadProgress, error }) => (error ? 100 : uploadProgress ?? 0)}%;
     height: 100%;
     background-color: ${({ theme, error }) =>
       error ? theme.palette.main13 : theme.palette.main11};

@@ -210,6 +210,7 @@ export type TInputProps = {
   maxWidth?: string
   startAdornmentStyles?: TStyle
   endAdornmentStyles?: TStyle
+  maxLength?: number
 } & TInputSizes &
   TInputMaskProps &
   TStylesProps

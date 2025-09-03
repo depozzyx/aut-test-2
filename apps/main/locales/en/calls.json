@@ -37,6 +37,7 @@
       "current-campaign": "Campaign: ",
       "calls-handled": "Calls Handled: ",
       "time-online": "Time Online: ",
+      "next-call": "Delayed until: ",
       "not-online": "(Go online to join the selected campaign.)"
     }
   },

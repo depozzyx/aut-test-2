@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 
 import { FilledButton } from '@peiko/components/buttons/FilledButton/FilledButton'
@@ -19,9 +19,10 @@ interface RecycleRule {
 type Props = {
   formik: TFormik
   leadStatuses: TLeadStatusData[]
+  height?: number
 }
 
-export const RecycleRules: FC<Props> = ({ formik, leadStatuses }: Props) => {
+export const RecycleRules: FC<Props> = ({ formik, leadStatuses, height }: Props) => {
   const { t } = useTranslation('campaigns')
 
   const { values, setFieldValue } = formik
@@ -29,7 +30,7 @@ export const RecycleRules: FC<Props> = ({ formik, leadStatuses }: Props) => {
   const handleAddRule = async () => {
     await setFieldValue(
       'recycleRules',
-      [{ status: null, delay: '00:15', attempts: 1 }, ...values.recycleRules],
+      [{ status: [], delay: '00:15', attempts: 1 }, ...(values.recycleRules ?? [])],
       false,
     )
   }
@@ -37,32 +38,34 @@ export const RecycleRules: FC<Props> = ({ formik, leadStatuses }: Props) => {
   const [disabled, setDisabled] = useState(false)
 
   useEffect(() => {
-    if (
-      !leadStatuses.length ||
-      leadStatuses.length === formik.values.recycleRules.length
-    ) {
-      return setDisabled(true)
+    const checkRuleValidation = async (rule: RecycleRule) => {
+      const res = await recycleRulesSchema.isValid(rule)
+      return res
     }
-    const firstRule = formik.values.recycleRules[0]
 
-    const checkRuleValidation = async () => {
-      const res = await recycleRulesSchema.isValid(firstRule)
-      setDisabled(!res)
-    }
-    if (!firstRule) {
-      setDisabled(false)
-    } else {
-      try {
-        checkRuleValidation()
-      } catch (e) {
+    checkRuleValidation(formik.values.recycleRules)
+      .then((result) => {
+        setDisabled(!result)
+      })
+      .catch(() => {
         setDisabled(true)
-      }
-    }
+      })
   }, [formik.values.recycleRules, leadStatuses])
 
+  const refHead = useRef<HTMLDivElement>(null)
+  const [recycleRulesHeight, setRecycleRulesHeight] = useState<string>('none')
+
+  useEffect(() => {
+    if (height && refHead.current) {
+      const maxHeight = height - refHead.current.offsetHeight - 48 - 26
+      setRecycleRulesHeight(`${maxHeight}px`)
+    }
+  }, [height])
+
   return (
-    <Flex maxWidth="424px" width="100%" direction="column">
+    <Flex maxWidth="424px" width="100%" direction="column" justify="flex-start">
       <Flex
+        ref={refHead}
         justify="space-between"
         width="424px"
         align="center"
@@ -79,29 +82,23 @@ export const RecycleRules: FC<Props> = ({ formik, leadStatuses }: Props) => {
           {t('create-campaign.add-recycle-rule')}
         </FilledButton>
       </Flex>
-      {values.recycleRules[0] && (
-        <Flex gap="12px" styles={{ marginBottom: '10px' }}>
-          <Text styles={{ width: '200px' }} variant="f8">
-            {t('create-campaign.recycle-rule-status')}
-          </Text>
-          <Text styles={{ width: '80px' }} variant="f8">
-            {t('create-campaign.recycle-rule-delay')}
-          </Text>
-          <Text variant="f8">{t('create-campaign.recycle-rule-attempts')}</Text>
-        </Flex>
-      )}
+
       <Flex
         direction="column"
-        styles={{ minHeight: '240px', maxHeight: '240px', overflowY: 'auto' }}
+        justify="flex-start"
+        styles={{
+          height: recycleRulesHeight,
+          overflowY: 'auto',
+        }}
       >
-        {values.recycleRules.map((rule: RecycleRule, index: number) => (
+        {values.recycleRules?.map((rule: RecycleRule, index: number) => (
           <RecycleRuleRow
             formik={formik}
             key={rule.status}
             index={index}
             statuses={leadStatuses.map(({ value, name: label }) => ({ label, value }))}
           />
-        ))}
+        )) ?? []}
       </Flex>
     </Flex>
   )

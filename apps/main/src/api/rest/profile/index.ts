@@ -9,6 +9,9 @@ type TResProfile = {
 
 const get = (): TAxiosResponse<TResProfile> => api.get('/users/me')
 
+const version = (): TAxiosResponse<{ data: { version: string } }> => api.get(`/version`)
+
 export const apiProfile = {
   get,
+  version,
 }

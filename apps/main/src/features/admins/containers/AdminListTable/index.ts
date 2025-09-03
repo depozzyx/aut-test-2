@@ -1,1 +1,0 @@
-export { AdminListTable } from './AdminListTable'

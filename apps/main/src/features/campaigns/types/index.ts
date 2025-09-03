@@ -26,6 +26,7 @@ export type TActiveCampaign = {
   intensityPerAgent: TGeneratedCallFrequency
   preferredCallTime: TGeneratedCallTime
   statistic?: StatisticsTypeResponse
+  nearestCallTime: string
 }
 
 export type TAgentAssignedCampaign = {
@@ -33,12 +34,14 @@ export type TAgentAssignedCampaign = {
   name: string
   createdAt: string
   status: TCampaignStatus
+  nearestCallTime: string
 }
 
 export type TCampaign = {
   id: number
   name: string
   createdAt: string
+  nearestCallTime: string
   agentCount: number
   holdTime: number
   workHours: string
@@ -50,6 +53,7 @@ export type TCampaign = {
   intensity: TGeneratedCallFrequency
   intensityPerAgent: TGeneratedCallFrequency
   status: TCampaignStatus
+  requestedStatus: TCampaignStatus
   preferredCallTime: TGeneratedCallTime
 }
 

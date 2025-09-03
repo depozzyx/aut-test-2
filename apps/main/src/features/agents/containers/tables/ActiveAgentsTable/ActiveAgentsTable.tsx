@@ -21,7 +21,7 @@ import {
   selectIsLoadingAgents,
   setOrderBy,
 } from '../../../store/agents'
-import { InfoColumn } from '../../../components/InfoColumn'
+import { InfoColumn } from '../../../../../components/InfoColumn'
 
 type TActiveAgentsRowKeys =
   | 'name'

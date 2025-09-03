@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, FC, useState } from 'react'
+import React, { useEffect, useCallback, FC, useState, useRef } from 'react'
 import { useFormik } from 'formik'
 import { shallowEqual, useStore } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
@@ -17,13 +17,7 @@ import {
   reset as resetLeadsList,
 } from '@/features/leads/store/lead-list'
 import { FormikMultiSelect } from '@/components/formik-wrappers/FormikMultiSelect'
-import {
-  asyncGetAgentsList,
-  selectAgentsPagination,
-  selectAgentsOptions,
-  reset as resetAgentsList,
-  setAgentsList,
-} from '@/features/agents/store/agents'
+
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 import { modes, coefficients, campaignSettingKeys, workHours } from '@/constants/settings'
@@ -40,7 +34,6 @@ import { Select } from '@peiko/components/inputs/Select/Select'
 import { SingleValue } from 'react-select'
 import { TSelectOption } from '@/components/MutliSelect/types'
 import { apiCampaigns } from '@/api-rest/campaigns'
-import { TAgent } from '@/api-rest/agents/types'
 import { TPagination } from '@/types/entities/pagination'
 import { handleRestError } from '@/features/common/error'
 import { TCampaign } from '@/features/campaigns/types'
@@ -49,9 +42,18 @@ import {
   INITIAL_REQUEST_PARAMS_CREATE,
   PAGINATION_REQUEST_TIME,
 } from '@/features/campaigns/constants'
-// import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
-// import { TRecycleRule } from '@/api-rest/campaigns/types'
+import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
+import { TRecycleRule } from '@/api-rest/campaigns/types'
 import { createCampaignValidationSchema } from '@/utils/validation'
+import {
+  asyncGetUsersList,
+  selectUsersOptions,
+  selectUsersPagination,
+  reset as resetUsersList,
+  setUsersList,
+} from '@/features/users/store/users'
+import { ERoles } from '../../../../../../../constants/profile'
+import { TUser } from '../../../../../../../api/rest/users/types'
 
 type Props = {
   selectedCampaignId: string
@@ -64,9 +66,9 @@ type TFormValues = {
   leadListIds: number[]
   holdTime: number
   mode: string
-  coefficient: string
+  coefficient: number
   filterLeadStatuses: string[]
-  // recycleRules: TRecycleRule[]
+  recycleRules: TRecycleRule[]
   workHours?: string
 }
 
@@ -130,8 +132,8 @@ export const CreateCampaignForm: FC<Props> = ({
     createStructuredSelector({
       leadsPagination: selectLeadListPagination,
       leadListOptions: selectLeadListCatalogAsOptions,
-      agentsPagination: selectAgentsPagination,
-      agentsOptions: selectAgentsOptions,
+      agentsPagination: selectUsersPagination,
+      agentsOptions: selectUsersOptions,
     }),
     shallowEqual,
   )
@@ -151,9 +153,9 @@ export const CreateCampaignForm: FC<Props> = ({
       leadListIds: [],
       holdTime: 0,
       mode: '',
-      coefficient: '',
+      coefficient: 0,
       filterLeadStatuses: [],
-      // recycleRules: [],
+      recycleRules: [],
       workHours: workHours[0],
     },
     validationSchema: createCampaignValidationSchema,
@@ -169,7 +171,7 @@ export const CreateCampaignForm: FC<Props> = ({
       campaignSettingKeys.workHours,
     ])
     await form.setFieldValue('mode', data.campaignMode)
-    await form.setFieldValue('coefficient', data.campaignCoefficient)
+    await form.setFieldValue('coefficient', parseInt(data.campaignCoefficient, 10))
     if (data.campaignWorkHours)
       await form.setFieldValue('workHours', data.campaignWorkHours)
   }
@@ -178,9 +180,9 @@ export const CreateCampaignForm: FC<Props> = ({
     if (!formDataForReview && modalState?.isOpen) {
       getSettings(formik)
       dispatch(resetLeadsList())
-      dispatch(resetAgentsList())
+      dispatch(resetUsersList())
       Promise.all([
-        dispatch(asyncGetAgentsList(INITIAL_REQUEST_PARAMS_CREATE)),
+        dispatch(asyncGetUsersList(ERoles.AGENT, INITIAL_REQUEST_PARAMS_CREATE)),
         dispatch(
           asyncGetLeadListCatalog({
             ...INITIAL_REQUEST_PARAMS_CREATE,
@@ -204,7 +206,7 @@ export const CreateCampaignForm: FC<Props> = ({
         holdTime,
         leadListIds,
         filterLeadStatuses,
-        // recycleRules,
+        recycleRules,
         workHours,
       } = formDataForReview
       formik.setFieldValue('name', name)
@@ -218,7 +220,7 @@ export const CreateCampaignForm: FC<Props> = ({
       }
       formik.setFieldValue('leadListIds', leadListIds)
       formik.setFieldValue('filterLeadStatuses', filterLeadStatuses)
-      // formik.setFieldValue('recycleRules', recycleRules)
+      formik.setFieldValue('recycleRules', recycleRules)
     } else {
       dispatch(reset())
     }
@@ -246,20 +248,20 @@ export const CreateCampaignForm: FC<Props> = ({
 
         if (campaign?.assignedAgents?.length) {
           const newAssignedAgentIds = campaign.assignedAgents.map(
-            (agent: TAgent) => agent.id,
+            (agent: TUser) => agent.id,
           )
-          const newOptions: TAgent[] = []
-          campaign.assignedAgents.forEach((agent: TAgent) => {
+          const newOptions: TUser[] = []
+          campaign.assignedAgents.forEach((agent: TUser) => {
             if (!agentsOptions.some((option) => option.value === agent.id)) {
               newOptions.push(agent)
             }
           })
           if (newOptions.length) {
-            dispatch(setAgentsList({ data: newOptions, append: true }))
+            dispatch(setUsersList({ data: newOptions, append: true }))
           }
           await formik.setFieldValue('assignedAgentIds', newAssignedAgentIds)
           await formik.setFieldValue('filterLeadStatuses', campaign.filterLeadStatuses)
-          // await formik.setFieldValue('recycleRules', campaign.recycleRules)
+          await formik.setFieldValue('recycleRules', campaign.recycleRules)
         }
       }
     } else if (option?.label === '-') {
@@ -288,13 +290,30 @@ export const CreateCampaignForm: FC<Props> = ({
     [leadsPage, leadsLimit, leadsTotal],
   )
 
+  useEffect(() => {
+    if (!formik.values?.recycleRules?.length) {
+      return
+    }
+    formik.values.recycleRules.forEach((rule) => {
+      rule.status.forEach((status) => {
+        if (!formik.values.filterLeadStatuses.includes(status)) {
+          formik.setFieldValue('filterLeadStatuses', [
+            ...formik.values.filterLeadStatuses,
+            status,
+          ])
+        }
+      })
+    })
+  }, [formik.values.recycleRules])
+
   const onAgentsScrollToBottom = useCallback(
     debounce(() => {
       const lastPage =
         agentsTotal === 0 ? 1 : Math.ceil(agentsTotal / (agentsLimit ?? 10))
       if (agentsPage < lastPage) {
         dispatch(
-          asyncGetAgentsList(
+          asyncGetUsersList(
+            ERoles.AGENT,
             {
               page: agentsPage + 1,
               limit: agentsLimit,
@@ -308,14 +327,38 @@ export const CreateCampaignForm: FC<Props> = ({
     [agentsPage, agentsLimit, agentsTotal],
   )
 
-  // const isRecycleRulesInvalid = () =>
-  //   formik.values.recycleRules.length && !formik.values.recycleRules[0].status
+  const isRecycleRulesInvalid = () =>
+    formik.values.recycleRules?.length && !formik.values.recycleRules[0].status
+
+  const handleFilterLeadStatusesChange = () => {
+    setTimeout(() => formik.setTouched({ filterLeadStatuses: true }, true), 0)
+  }
+
+  const handleAssignedAgentIdsChange = () => {
+    setTimeout(() => formik.setTouched({ assignedAgentIds: true }, true), 0)
+  }
+
+  const refLeftColumn = useRef<HTMLDivElement>(null)
+  const refLeadStatuses = useRef<HTMLDivElement>(null)
+  const [height, setHeight] = useState<number>()
+
+  useEffect(() => {
+    if (refLeftColumn.current && refLeadStatuses.current) {
+      setHeight(refLeftColumn.current.clientHeight - refLeadStatuses.current.clientHeight)
+    }
+  }, [refLeftColumn.current?.clientHeight, refLeadStatuses.current?.clientHeight])
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off" style={{ width: '100%' }}>
       <Flex width="100%" direction="column" align="center" gap={48} margin="40px 0 0 0">
         <Flex direction="row" gap={48}>
-          <Flex maxWidth="424px" width="100%" direction="column" gap={16}>
+          <Flex
+            ref={refLeftColumn}
+            maxWidth="424px"
+            width="100%"
+            direction="column"
+            gap={16}
+          >
             <Select
               name="campaignId"
               onChange={handleCampaignSelect}
@@ -349,6 +392,7 @@ export const CreateCampaignForm: FC<Props> = ({
               width={424}
               size="s"
               options={agentsOptions}
+              onChange={handleAssignedAgentIdsChange}
               onMenuScrollToBottom={onAgentsScrollToBottom}
               isSearchable
             />
@@ -387,7 +431,7 @@ export const CreateCampaignForm: FC<Props> = ({
               formik={formik}
               options={coefficients.map((number) => ({
                 label: String(number),
-                value: String(number),
+                value: number,
               }))}
               width={424}
               name="coefficient"
@@ -402,16 +446,19 @@ export const CreateCampaignForm: FC<Props> = ({
             />
           </Flex>
           <Flex direction="column" gap={48} maxWidth="424px" width="100%">
-            <FormikMultiSelect
-              formik={formik}
-              name="filterLeadStatuses"
-              label={{ label: t('create-campaign.lead-statuses') }}
-              size="s"
-              width={424}
-              options={leadStatuses.map(({ name: label, value }) => ({ label, value }))}
-              isSearchable
-            />
-            {/*  <RecycleRules formik={formik} leadStatuses={leadStatuses} /> */}
+            <Flex ref={refLeadStatuses} direction="column" width="100%">
+              <FormikMultiSelect
+                formik={formik}
+                name="filterLeadStatuses"
+                label={{ label: t('create-campaign.lead-statuses') }}
+                size="s"
+                width={424}
+                options={leadStatuses.map(({ name: label, value }) => ({ label, value }))}
+                isSearchable
+                onChange={handleFilterLeadStatusesChange}
+              />
+            </Flex>
+            <RecycleRules height={height} formik={formik} leadStatuses={leadStatuses} />
           </Flex>
         </Flex>
         <Flex align="center" justify="center" gap={24}>
@@ -420,11 +467,7 @@ export const CreateCampaignForm: FC<Props> = ({
           </OutlinedButton>
           <FilledButton
             type="submit"
-            disabled={
-              !formik.isValid ||
-              // || isRecycleRulesInvalid()
-              !formik.dirty
-            }
+            disabled={!formik.isValid || isRecycleRulesInvalid() || !formik.dirty}
             width="202px"
           >
             {t('create-campaign.review')}

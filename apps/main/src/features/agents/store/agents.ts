@@ -12,8 +12,6 @@ import {
 } from '@/api-rest/agents/types'
 import { TAgentActiveWorkStatus, TAgentOrderBy } from '@/features/agents/types'
 import { TOrder } from '@/types/entities/order'
-import { notificationActions } from '@/features/common/notifications/store'
-import { modalsActions } from '@/features/common/modals/store'
 import { ORDER } from '@/constants/order'
 import { calculateNewPage } from '@/utils/pagination'
 
@@ -198,27 +196,6 @@ export const selectAssignedCampaignsInfo = createSelector(
 
 export default agents.reducer
 
-export const asyncGetAgentsList =
-  (params: TAgentsReq, append = false, withLoading = true): TAsyncAction =>
-  async (dispatch) => {
-    try {
-      if (withLoading) {
-        dispatch(setIsLoading(true))
-      }
-      const {
-        data: { data, pagination },
-      } = await apiAgents.getAgentsList(params)
-      dispatch(setAgentsList({ data, append }))
-      dispatch(setPagination(pagination))
-    } catch (e) {
-      handleRestError({ e, dispatch })
-    } finally {
-      if (withLoading) {
-        dispatch(setIsLoading(false))
-      }
-    }
-  }
-
 export const asyncGetActiveAgents =
   (params: TAgentsReq): TAsyncAction =>
   async (dispatch) => {
@@ -229,36 +206,6 @@ export const asyncGetActiveAgents =
       } = await apiAgents.getActiveAgents(params)
       dispatch(setActiveAgents(data))
       dispatch(setPagination(pagination))
-    } catch (e) {
-      handleRestError({ e, dispatch })
-    } finally {
-      dispatch(setIsLoading(false))
-    }
-  }
-
-export const asyncRemoveAgent =
-  (id: number): TAsyncAction =>
-  async (dispatch) => {
-    try {
-      dispatch(setIsLoading(true))
-      const {
-        data: { data },
-      } = await apiAgents.deleteAgent(id)
-      dispatch(setDeletedAgentData(data))
-      dispatch(modalsActions.resetModalsState())
-      dispatch(
-        notificationActions.setNotification({
-          key: 'notifications:agent.success-delete',
-          status: 'success',
-          values: { agentName: data.username ?? '' },
-        }),
-      )
-      dispatch(
-        asyncGetAgentsList({
-          page: 1,
-          limit: 10,
-        }),
-      )
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {

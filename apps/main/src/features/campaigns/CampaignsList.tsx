@@ -69,6 +69,7 @@ export const CampaignsList = (): JSX.Element => {
     pagination: { page, total, limit },
     filters,
     handlerResetFilters,
+    isLoading,
   } = useCampaignsManager(asyncGetCampaignsList)
 
   const [selectedCampaignId, setSelectedCampaignId] = useState('')
@@ -94,14 +95,22 @@ export const CampaignsList = (): JSX.Element => {
       <Container>
         <Panel>
           <Flex gap={16} align="center" width="100%">
-            <CampaignSearchField placeholder={t('inputs:placeholder.search-campaign')} />
+            <CampaignSearchField
+              disabled={isLoading}
+              placeholder={t('inputs:placeholder.search-campaign')}
+            />
             <CampaignNameFilter
               type={CAMPAIGN_TABLE_TYPES.LIST}
               setCampaignOptions={setCampaignOptions}
+              disabled={isLoading}
             />
-            <StatusFilter />
-            <RangeDayPicker onChange={handleChangeDate} />
-            <LimitSelect limit={limit} onChange={handleChangeLimit} />
+            <StatusFilter disabled={isLoading} />
+            <RangeDayPicker disabled={isLoading} onChange={handleChangeDate} />
+            <LimitSelect
+              disabled={isLoading}
+              limit={limit}
+              onChange={handleChangeLimit}
+            />
           </Flex>
           <FeaturePermission permissions={[EPermissions.CREATE_CAMPAIGN]}>
             <FilledButton

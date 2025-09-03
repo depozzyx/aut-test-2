@@ -30,4 +30,7 @@ export enum EPermissions {
   DELETE_LEAD = 'delete_lead',
   GET_LEAD = 'get_lead',
   IMPORT_LEAD = 'import_lead',
+  CREATE_ADMIN = 'create_admin',
+  UPDATE_ADMIN = 'update_admin',
+  DELETE_ADMIN = 'delete_admin',
 }

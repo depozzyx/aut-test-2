@@ -28,9 +28,10 @@ export type TCampaignListReq = TActiveCampaignsReq
 export type TActiveCampaignsRes = any
 
 export type TRecycleRule = {
-  status: string
+  status: string[]
   delay: string
   attempts: number
+  finalStatus: string
 }
 
 export type TCreateCampaignReq = {
@@ -40,9 +41,9 @@ export type TCreateCampaignReq = {
   leadListIds?: number[] | []
   holdTime: number
   mode: string
-  coefficient: string
+  coefficient: number
   filterLeadStatuses: string[]
-  // recycleRules: TRecycleRule[]
+  recycleRules: TRecycleRule[]
   workHours?: string
 }
 

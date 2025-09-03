@@ -15,7 +15,7 @@ import { Text } from '@peiko/components/Text'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { Copy } from '@peiko/components/inputs/Input/components/Copy'
-import { InfoCell } from '../../components/InfoCell'
+import { InfoCell } from '@/components/InfoCell'
 import { useApiKeysList } from '../../hooks/useApiKeysList'
 
 type TApiKeyListRowKeys = 'id' | 'key' | 'createdAt' | 'action'

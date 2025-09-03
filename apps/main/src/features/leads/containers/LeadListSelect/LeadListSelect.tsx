@@ -8,7 +8,6 @@ import { TSelectProps } from '@peiko/components/inputs/Select/types'
 import {
   getLeadsGroups,
   selectLeadsGroup,
-  selectLeadsGroupError,
   selectLeadsGroupPagination,
   selectLeadsGroups,
   setLeadsGroup,
@@ -25,13 +24,11 @@ export const LeadListSelect: FC<LeadListSelectProps> = ({ withoutEmpty, ...props
   const {
     leadsGroup,
     leadsGroups,
-    error,
     pagination: { page, limit, total },
   } = select(
     createStructuredSelector({
       leadsGroup: selectLeadsGroup,
       leadsGroups: selectLeadsGroups,
-      error: selectLeadsGroupError,
       pagination: selectLeadsGroupPagination,
     }),
     shallowEqual,
@@ -49,7 +46,6 @@ export const LeadListSelect: FC<LeadListSelectProps> = ({ withoutEmpty, ...props
         .map(({ id, name }) => ({ label: name, value: id.toString() }))
         .filter((item) => (withoutEmpty ? item.label !== '-' : true))}
       value={leadsGroup !== undefined ? leadsGroup.toString() : ''}
-      error={error}
       onChange={(data) => {
         if (data) dispatch(setLeadsGroup(+data.value))
       }}

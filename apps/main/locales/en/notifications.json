@@ -5,6 +5,9 @@
     "create-success": "<value>{{ campaignName }}</value> <translate>was successfully created</translate>",
     "active": "<value>{{ campaignName }}</value> <translate>is active now</translate>",
     "paused": "<value>{{ campaignName }}</value> <translate>is paused</translate>",
+    "pause": "<value>{{ campaignName }}</value> <translate>is paused</translate>",
+    "hold": "<value>{{ campaignName }}</value> <translate>is on hold</translate>",
+    "complete": "<value>{{ campaignName }}</value> <translate>is completed</translate>",
     "success-download": "<translate>Custom Report was successfully downloaded</translate>",
     "export-error": "<translate>There is an error when exporting a custom report. Try again</translate>"
   },
@@ -13,20 +16,16 @@
     "create-success": "<translate>New agent</translate> <value>{{ agentName }}</value> <translate>was successfully added</translate>",
     "update-success": "<translate>Agent`s info was successfully updated</translate>",
     "campaign-pause": "<translate>Campaign has been paused</translate>",
-    "campaign-complete": "<translate>Campaign has been completed</translate>"
+    "campaign-complete": "<translate>Campaign has been completed</translate>",
+    "campaign-active": "<translate>Campaign active but delayed until <value>{{ nearestTime }}</value></translate>"
   },
   "settings": {
     "user-data-changed": "<translate>Changes saved</translate>"
   },
-  "manager": {
-    "success-delete": "<value>{{ managerName }}</value> <translate>was successfully deleted</translate>",
-    "create-success": "<translate>New manager</translate> <value>{{ managerName }}</value> <translate>was successfully added</translate>",
-    "update-success": "<translate>Manager`s info was successfully updated</translate>"
-  },
-  "admin": {
-    "success-delete": "<value>{{ name }}</value> <translate>was successfully deleted</translate>",
-    "create-success": "<translate>New admin</translate> <value>{{ name }}</value> <translate>was successfully added</translate>",
-    "update-success": "<translate>Admin`s info was successfully updated</translate>"
+  "user": {
+    "success-delete": "<value>{{ userName }}</value> <translate>was successfully deleted</translate>",
+    "create-success": "<translate>New {{ role }}</translate> <value>{{ userName }}</value> <translate>was successfully added</translate>",
+    "update-success": "<translate>{{ role }}`s info was successfully updated</translate>"
   },
   "api-key": {
     "seccess-generate": "<translate>API key was successfully revoked</translate>",

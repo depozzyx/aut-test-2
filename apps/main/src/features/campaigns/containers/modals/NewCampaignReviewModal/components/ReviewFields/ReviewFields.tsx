@@ -36,9 +36,9 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
 
   const agents = useMemo(() => {
     if (!formDataForReview) return
-    if (formDataForReview.assignedAgentIds.length > 1) {
+    if (formDataForReview.assignedAgentLabel.length > 1) {
       return t('review-campaign.agents', {
-        count: formDataForReview.assignedAgentIds.length,
+        count: formDataForReview.assignedAgentLabel.length,
       })
     }
     return `${formDataForReview.assignedAgentIds}`
@@ -60,37 +60,34 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
       .filter((status) => formDataForReview.filterLeadStatuses.includes(status.value))
       .map((status) => status.name)
       .join(', ')
-    // if (formDataForReview.filterLeadStatuses.length > 1) {
-    //   return leadStatusOptions
-    //     .filter((status) => formDataForReview.filterLeadStatuses.includes(status.value))
-    //     .map((status) => status.name)
-    // }
-    // if (formDataForReview.filterLeadStatuses.length === 1) {
-    //   return t('review-campaign.lead-status')
-    // }
-    // return 0
   }, [formDataForReview?.filterLeadStatuses])
 
-  // const recycleRules = useMemo(() => {
-  //   if (!formDataForReview) return
-  //   if (formDataForReview.recycleRules.length > 1) {
-  //     return t('review-campaign.recycle-rules', {
-  //       count: formDataForReview.recycleRules.length,
-  //     })
-  //   }
-  //   if (formDataForReview.recycleRules.length === 1) {
-  //     return t('review-campaign.recycle-rule')
-  //   }
-  //   return 0
-  // }, [formDataForReview?.recycleRules])
-  //
-  // if (!formDataForReview) {
-  //   return null
-  // }
+  const recycleRules = useMemo(() => {
+    if (!formDataForReview) return
+    const statuses = formDataForReview.recycleRules
+      .flatMap((rule) => rule.status)
+      .map((status) => leadStatusOptions.find((s) => s.value === status)?.name)
+      .join(', ')
+
+    if (formDataForReview.recycleRules.length > 1) {
+      return t('review-campaign.recycle-rules', {
+        count: formDataForReview.recycleRules.length,
+        statuses,
+      })
+    }
+    if (formDataForReview.recycleRules.length === 1) {
+      return t('review-campaign.recycle-rule', { statuses })
+    }
+    return 0
+  }, [formDataForReview?.recycleRules])
+
+  if (!formDataForReview) {
+    return null
+  }
 
   return (
-    <Flex direction="column" align="center" gap={48} margin="40px 0 0 0">
-      <Flex gap={24} direction="column" width="326px">
+    <Flex direction="column" align="center" gap={32} margin="20px 0 0 0">
+      <Flex gap={12} direction="column" width="326px">
         <Field
           label={t('create-campaign.campaign-name')}
           value={formDataForReview?.name}
@@ -111,7 +108,11 @@ export const ReviewFields = ({ type }: TProps): JSX.Element | null => {
           value={leadStatuses}
           fullHeight
         />
-        {/* <Field label={t('create-campaign.recycle-rules')} value={recycleRules} /> */}
+        <Field
+          label={t('create-campaign.recycle-rules')}
+          value={recycleRules}
+          fullHeight
+        />
         <Field
           label={t('create-campaign.workHours-label')}
           value={formDataForReview?.workHours}

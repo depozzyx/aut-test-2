@@ -1,4 +1,5 @@
 import * as yup from 'yup'
+import validator from 'validator'
 import { CLOUDFLARE_CAPTCHA_SITE_KEY } from '@/constants/config'
 
 export const string = yup.string()
@@ -11,7 +12,12 @@ export const required = yup.string().required('validation:required')
 
 export const emailValidation = yup
   .string()
-  .email('validation:invalid-email')
+  .required('validation:required')
+  .test(
+    'is-valid-email',
+    'validation:invalid-email',
+    (value) => !value || validator.isEmail(value),
+  )
   .min(5, 'Minimum 5 characters required')
   .max(60, 'Maximum 60 characters allowed')
   .required('This field is required')
@@ -65,7 +71,7 @@ export const editLeadValidationSchema = yup.object().shape({
 export const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/
 
 export const recycleRuleSchema = yup.object().shape({
-  status: yup.string().required('Field is required'),
+  status: yup.array().of(yup.string()).min(1, 'Field is required'),
   delay: yup
     .string()
     .matches(timeRegex, 'At least 00:15')
@@ -76,6 +82,7 @@ export const recycleRuleSchema = yup.object().shape({
     })
     .required('Field is required'),
   attempts: yup.number().min(1, 'Minimum 1').max(10, 'Maximum 10').required('At least 1'),
+  finalStatus: yup.string().required('Field is required'),
 })
 
 export const recycleRulesSchema = yup.array().of(recycleRuleSchema).default([])
@@ -114,7 +121,7 @@ export const createCampaignValidationSchema = yup.object().shape({
     .of(yup.string())
     .min(1, 'This field must have at least 1 item')
     .default([]),
-  // recycleRules: recycleRulesSchema,
+  recycleRules: recycleRulesSchema,
 })
 
 export const createLeadListValidationSchema = yup.object().shape({
@@ -141,19 +148,30 @@ export const createAgentValidationSchema = yup.object().shape({
       'Cannot contain only spaces',
       (value) => value === undefined || value === null || value.trim().length > 0,
     )
-    .min(5, 'Minimum 5 characters required')
+    .min(1, 'Minimum 1 characters required')
     .max(30, 'Maximum 30 characters allowed')
     .matches(/^[A-Za-z0-9 ]+$/, 'Only letters, numbers, and space are allowed')
     .required('This field is required'),
   email: emailValidation,
-  sendToEmail: boolean,
-  password: passwordValidation,
+  password: passwordValidation.required('validation:required'),
 })
 
-export const editAgentValidationSchema = createAgentValidationSchema.omit([
-  'sendToEmail',
-  'password',
-])
+export const editAgentValidationSchema = yup.object().shape({
+  username: yup
+    .string()
+    .trim()
+    .test(
+      'no-only-spaces',
+      'Cannot contain only spaces',
+      (value) => value === undefined || value === null || value.trim().length > 0,
+    )
+    .min(1, 'Minimum 1 characters required')
+    .max(30, 'Maximum 30 characters allowed')
+    .matches(/^[A-Za-z0-9 ]+$/, 'Only letters, numbers, and space are allowed')
+    .required('This field is required'),
+  email: emailValidation,
+  password: passwordValidation.optional(),
+})
 
 export const createManagerValidationSchema = yup.object().shape({
   username: yup
@@ -164,12 +182,29 @@ export const createManagerValidationSchema = yup.object().shape({
       'Cannot contain only spaces',
       (value) => value === undefined || value === null || value.trim().length > 0,
     )
-    .min(2, 'Minimum 2 characters required')
+    .min(1, 'Minimum 1 characters required')
     .max(30, 'Maximum 30 characters allowed')
     .matches(/^[A-Za-z0-9 ]+$/, 'Only letters, numbers, and space are allowed')
     .required('This field is required'),
   email: emailValidation,
-  password: passwordValidation,
+  password: passwordValidation.required('validation:required'),
+})
+
+export const editManagerValidationSchema = yup.object().shape({
+  username: yup
+    .string()
+    .trim()
+    .test(
+      'no-only-spaces',
+      'Cannot contain only spaces',
+      (value) => value === undefined || value === null || value.trim().length > 0,
+    )
+    .min(1, 'Minimum 1 characters required')
+    .max(30, 'Maximum 30 characters allowed')
+    .matches(/^[A-Za-z0-9 ]+$/, 'Only letters, numbers, and space are allowed')
+    .required('This field is required'),
+  email: emailValidation,
+  password: passwordValidation.optional(),
 })
 
 export const accountManagementValidationSchema = yup.object().shape({

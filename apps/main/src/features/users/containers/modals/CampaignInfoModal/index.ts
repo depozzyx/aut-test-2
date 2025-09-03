@@ -1,0 +1,1 @@
+export { CampaignInfoModal } from './CampaignInfoModal'

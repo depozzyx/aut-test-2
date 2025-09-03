@@ -9,9 +9,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { CloudIcon } from '@/icons/CloudIcon'
 import { useRedux } from '@/hooks/use-redux'
 import { v4 as uuidV4 } from 'uuid'
-import { ROUTES } from '@/constants/routes'
 import Trans from 'next-translate/Trans'
-import { Checkbox } from '@peiko/components/inputs/checkboxes/Checkbox/Checkbox'
 import { RadioButton } from '@peiko/components/inputs/RadioButton/RadioButton'
 import { Tooltip } from '@peiko/components/Tooltip'
 import { Trigger } from '@/features/agents/components/CampaignsTooltip/CampaignsTooltip.styled'
@@ -24,13 +22,14 @@ import { Button } from '@/features/leads/containers/LeadListSelect/LeadListSelec
 import { palette } from '@peiko/styles/palette'
 import { BottomText } from './ImportFiles.styled'
 import {
+  cancelImportFiles,
   getLeadStatuses,
-  selectCheckNumberUnique,
   selectFilesForImport,
+  selectIsLoading,
   selectLeadsGroup,
+  selectLeadsGroupError,
   selectLeadStatuses,
   selectUseDefaultStatus,
-  setCheckNumberUnique,
   setImportFiles,
   setUseDefaultStatus,
 } from '../../store/leads'
@@ -52,11 +51,11 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
   const { setModal } = useModals()
 
   const leadsGroup = select(selectLeadsGroup)
-  const allFilesImported = select(selectFilesForImport).every((item) => item.imported)
   const filesForImport = select(selectFilesForImport)
-  const checkNumberUnique = select(selectCheckNumberUnique)
   const useDefaultStatus = select(selectUseDefaultStatus)
   const leadStatuses = select(selectLeadStatuses)
+  const leadsGroupError = select(selectLeadsGroupError)
+  const isLoading = select(selectIsLoading)
 
   const setStatusSource = (value: string) => dispatch(setUseDefaultStatus(value))
 
@@ -65,6 +64,12 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
   }, [dispatch])
 
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (leadsGroupError) {
+      setError(leadsGroupError)
+    }
+  }, [leadsGroupError])
 
   const onDrop = async (files: File[]) => {
     const newFiles = files
@@ -86,7 +91,6 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
       return
     }
     const limitSize = MAX_FILE_SIZE_MB * 1000 * 1000
-    // console.debug({ limitSize, fileSize: files[0].size })
     const isSizeMoreThanLimit =
       allFiles.some((f) => f.size > limitSize) ||
       allFiles.reduce((acc, f) => acc + f.size, 0) > limitSize
@@ -118,7 +122,6 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
   }
 
   const handleSubmit = async () => {
-    // todo: preview with edit before upload to BE
     onSubmit()
   }
 
@@ -140,7 +143,9 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
     setModal({ modalName: MODAL_NAMES.CREATE_LEADS_GROUP, isOpen: true })
   }
 
-  const resetFiles = () => dispatch(setImportFiles([]))
+  const resetFiles = () => {
+    dispatch(cancelImportFiles())
+  }
 
   return (
     <Flex
@@ -183,13 +188,7 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
                 ),
               }}
             />
-            <Checkbox
-              size="s"
-              label={t('checkNumberUnique')}
-              value={checkNumberUnique}
-              onChange={(e) => dispatch(setCheckNumberUnique(e.value))}
-              name="numbers"
-            />
+            <Text variant="f6">{t('checkNumberUnique')}</Text>
           </Flex>
         </Flex>
         <Flex gap="12px" justify="center" styles={{ marginBottom: '14px' }}>
@@ -328,25 +327,29 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
             </Text>
           </Flex>
         </UploadFiles>
+        <ImportFilesList />
         {error && (
           <Text styles={{ color: palette.main13, textAlign: 'center' }} variant="f8">
             {error}
           </Text>
         )}
-        <ImportFilesList />
-        <Flex justify="space-between" gap="24px" margin="48px 0 0">
-          <OutlinedButton
-            link={{ href: ROUTES.DASHBOARD_ACTIVE_CAMPAIGNS }}
-            onClick={resetFiles}
-            width="100%"
-          >
+        <Flex justify="space-between" gap="24px" margin="12px 0 0">
+          <OutlinedButton onClick={resetFiles} width="100%">
             {t('cancel')}
           </OutlinedButton>
           <FilledButton
             disabled={
+              isLoading ||
               filesForImport.length === 0 ||
-              !allFilesImported ||
-              filesForImport.some((file) => file?.importProgress !== 100 || file.error)
+              filesForImport.some(
+                (file) =>
+                  file?.uploadProgress !== 100 ||
+                  file.error?.length ||
+                  ((file?.duplicatedPhoneNumbers?.length ?? 0) > 0 &&
+                    file.duplicatedPhoneNotFixed) ||
+                  (file?.validationErrors?.length ?? 0) > 0 ||
+                  file?.unknownStatusesNotFixed,
+              )
             }
             width="100%"
             onClick={handleSubmit}

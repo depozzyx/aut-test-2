@@ -1,18 +1,21 @@
-import { managerApi } from '@/api-rest/manager'
-import { TUpdateManagerReq } from '@/api-rest/manager/types'
 import { handleRestError } from '@/features/common/error'
 import useNotifications from '@/features/common/notifications/hooks/use-notifications'
 import { useAuth } from '@/features/common/user'
 import { useRedux } from '@/hooks/use-redux'
 import { TFormik } from '@peiko/types/formik'
+import { TUpdateUserReq } from '../../../api/rest/users/types'
+import { apiUsers } from '../../../api/rest/users'
 
 type TUpdateProfileArgs = {
-  updateProfileAsync: (data: { formik: TFormik; formData: TUpdateManagerReq }) => void
+  updateProfileAsync: (data: {
+    formik: TFormik
+    formData: Pick<TUpdateUserReq, 'username' | 'password'>
+  }) => void
 }
 
 export const useUpdateProfile = (): TUpdateProfileArgs => {
   const { dispatch } = useRedux()
-  const { getProfile } = useAuth()
+  const { getProfile, user } = useAuth()
   const { setNotification } = useNotifications()
 
   const updateProfileAsync: TUpdateProfileArgs['updateProfileAsync'] = async ({
@@ -20,7 +23,9 @@ export const useUpdateProfile = (): TUpdateProfileArgs => {
     formik,
   }) => {
     try {
-      await managerApi.updateManager(formData)
+      if (user?.role && user?.id) {
+        await apiUsers.updateMe(formData)
+      }
       getProfile()
       setNotification({
         key: 'notifications:settings.user-data-changed',

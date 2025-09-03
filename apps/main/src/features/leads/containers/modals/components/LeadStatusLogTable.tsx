@@ -3,10 +3,10 @@ import React from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import { TLeadStatusData, TLeadStatusLog } from '@/api-rest/leads/types'
-import { InfoCell } from '@/features/managers/components/InfoCell'
 import { useTheme } from 'styled-components'
 import { Text } from '@peiko/components/Text'
 import { getLeadStatus } from '@/features/leads/containers/LeadsTable'
+import { InfoCell } from '@/components/InfoCell'
 
 export const LeadStatusLogTable = ({
   logs,
@@ -29,7 +29,7 @@ export const LeadStatusLogTable = ({
     id: log.id,
     date: formatCreatedAt(log.createdAt),
     status: getLeadStatus(leadStatuses, log.status),
-    duration: log.duration,
+    duration: log.duration?.toString() ?? '',
     user: log.user,
   }))
 

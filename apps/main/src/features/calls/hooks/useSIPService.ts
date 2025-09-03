@@ -13,7 +13,7 @@ import { callSocket } from 'api/socket/call'
 import { socket } from 'api/socket/Socket'
 import { TCallsInit } from 'api/socket/call/types'
 import { apiAgents } from '@/api-rest/agents'
-import { API_SECRET_KEY } from '@/constants/config'
+import { API_SECRET_KEY, ICE_SERVERS } from '@/constants/config'
 import { decrypt } from '@peiko/utils/crypto-js'
 import { useStore } from 'react-redux'
 import { agentActions } from '@/features/common/agentStatus/store'
@@ -75,13 +75,7 @@ export const useSIPService = (
   const sipOptions: AnswerOptions = {
     pcConfig: {
       rtcpMuxPolicy: 'negotiate' as 'require',
-      iceServers: [
-        {
-          urls: process.env.NEXT_PUBLIC_SIP_COTURN_URL as string,
-          username: process.env.NEXT_PUBLIC_SIP_COTURN_USER,
-          credential: process.env.NEXT_PUBLIC_SIP_COTURN_PASSWORD,
-        },
-      ],
+      iceServers: ICE_SERVERS,
       iceTransportPolicy: 'relay',
     },
     mediaConstraints: {

@@ -119,4 +119,5 @@ export type TSelectProps = {
   onMenuScrollToBottom?: () => void
   readOnlySelection?: boolean
   // isOptionDisabled?: (option: TSelectOption) => boolean
+  menuPortalTarget?: HTMLElement
 } & TStylesProps

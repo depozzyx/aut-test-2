@@ -1,1 +1,0 @@
-export { InfoCell } from './InfoCell'

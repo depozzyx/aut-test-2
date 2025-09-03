@@ -1,5 +1,3 @@
-import { managerApi } from '@/api-rest/manager'
-import { TManagersReq } from '@/api-rest/manager/types'
 import { handleRestError } from '@/features/common/error'
 import { useRedux } from '@/hooks/use-redux'
 import { TEntityActions } from '@/types/activity-logs'
@@ -8,6 +6,9 @@ import { TPagination } from '@/types/entities/pagination'
 import useTranslation from 'next-translate/useTranslation'
 import { useState } from 'react'
 import { ORDER } from '@/constants/order'
+import { TUsersReq } from '../../../api/rest/users/types'
+import { apiUsers } from '../../../api/rest/users'
+import { ERoles } from '../../../constants/profile'
 
 type TValue<T = string> = {
   label: string
@@ -17,7 +18,7 @@ type TValue<T = string> = {
 export type TFilters = {
   actionTypes: TValue<TEntityActions>[]
   orders: TValue<TOrder>[]
-  getManagers: (params: TManagersReq) => void
+  getManagers: (params: TUsersReq) => void
   managers: TValue[]
   managerPagination: TPagination
 }
@@ -33,11 +34,11 @@ export const useFilters = (): TFilters => {
     total: 0,
   })
 
-  const getManagers = async (params: TManagersReq) => {
+  const getManagers = async (params: TUsersReq) => {
     try {
       const {
         data: { data, pagination },
-      } = await managerApi.getManagers(params)
+      } = await apiUsers.getUsersList(ERoles.MANAGER, params)
       setManagers((prev) =>
         prev.concat(
           data.map((item) => ({
