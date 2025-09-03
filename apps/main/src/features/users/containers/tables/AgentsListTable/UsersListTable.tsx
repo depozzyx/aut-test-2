@@ -16,6 +16,8 @@ import { HeaderWithSort } from '@/components/HeaderWithSort'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import {
   selectIsLoadingUsers,
+  selectOrder,
+  selectOrderBy,
   selectUsersList,
   setOrderBy,
   setSelectedId,
@@ -47,13 +49,12 @@ export const UsersListTable = ({
   const { select, dispatch } = useRedux()
   const { setModal } = useModals()
 
-  const orderBy = select((state) => state.users.orderBy)
-  const order = select((state) => state.users.order)
-
-  const { isLoading, data } = select(
+  const { isLoading, data, orderBy, order } = select(
     createStructuredSelector({
       isLoading: selectIsLoadingUsers,
       data: selectUsersList,
+      orderBy: selectOrderBy,
+      order: selectOrder,
     }),
     shallowEqual,
   )
