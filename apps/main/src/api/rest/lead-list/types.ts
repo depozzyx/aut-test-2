@@ -15,6 +15,8 @@ export type TLeadListCatalogReq = {
 } & Pick<TPagination, 'page' | 'limit'> & {
     withoutCampaigns?: boolean
     campaignId?: number | string | null
+    name?: string
+    ids?: number[]
   }
 
 export type TLeadListsReq = {

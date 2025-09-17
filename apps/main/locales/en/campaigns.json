@@ -59,7 +59,10 @@
   "delete-campaign": {
     "title": "<translate>Are you sure you want to delete <value>{{ campaignName }}</value>?</translate>",
     "cancel-btn": "Cancel",
-    "delete-btn": "Delete"
+    "delete-btn": "Delete",
+    "keepLeadLists": "Keep lead lists assigned to campaign",
+    "unattachLeadLists": "Unattach lead lists from campaign",
+    "deleteLeadLists": "Delete assigned lead lists and leads"
   },
   "create-campaign": {
     "title": "Create new Campaign",

@@ -21,6 +21,7 @@ import campaignLogReducer from '@/features/activityLog/store/campaign-log'
 import usersReducer from '@/features/users/store/users'
 import createUserReducer from '@/features/users/store/create-user'
 import editUserReducer from '@/features/users/store/edit-user'
+import callsReducer from '@/features/calls/store/calls'
 
 const store = configureStore({
   reducer: {
@@ -46,6 +47,7 @@ const store = configureStore({
     users: usersReducer,
     createUser: createUserReducer,
     editUser: editUserReducer,
+    calls: callsReducer,
   },
 })
 

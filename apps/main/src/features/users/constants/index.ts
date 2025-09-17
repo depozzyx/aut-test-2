@@ -1,4 +1,5 @@
-import { ERoles } from '../../../constants/profile'
+import { EPermissions, ERoles } from '../../../constants/profile'
+import { TUserPermissions } from '../../../types/permissions'
 
 export const USER_ORDER_BY = {
   CREATED_AT: 'createdAt',
@@ -32,4 +33,28 @@ export const roleUserTranslationKey: Record<
   [ERoles.AGENT]: 'agents',
   [ERoles.MANAGER]: 'managers',
   [ERoles.ADMIN]: 'admins',
+}
+
+export const userPermissions: {
+  [key in ERoles.AGENT | ERoles.MANAGER | ERoles.ADMIN]: {
+    edit: TUserPermissions
+    create: TUserPermissions
+    delete: TUserPermissions
+  }
+} = {
+  [ERoles.AGENT]: {
+    create: EPermissions.CREATE_AGENT as TUserPermissions,
+    edit: EPermissions.UPDATE_AGENT as TUserPermissions,
+    delete: EPermissions.DELETE_AGENT as TUserPermissions,
+  },
+  [ERoles.MANAGER]: {
+    create: EPermissions.CREATE_MANAGER as TUserPermissions,
+    edit: EPermissions.UPDATE_MANAGER as TUserPermissions,
+    delete: EPermissions.DELETE_MANAGER as TUserPermissions,
+  },
+  [ERoles.ADMIN]: {
+    create: EPermissions.CREATE_ADMIN as TUserPermissions,
+    edit: EPermissions.UPDATE_ADMIN as TUserPermissions,
+    delete: EPermissions.DELETE_ADMIN as TUserPermissions,
+  },
 }

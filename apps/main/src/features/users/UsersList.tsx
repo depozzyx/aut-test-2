@@ -10,7 +10,7 @@ import { PlusIcon } from '@peiko/components/icons/PlusIcon'
 import { Pagination } from '@peiko/components/Pagination'
 import { useRedux } from '@/hooks/use-redux'
 import { FeaturePermission } from '@/features/common/permissions/FeaturePermissions'
-import { EPermissions, ERoles } from '@/constants/profile'
+import { ERoles } from '@/constants/profile'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { LimitSelect } from '@/components/limit-select'
@@ -36,8 +36,7 @@ import {
 import { UserSearchField } from './components/UserSearchField'
 import { UsersListTable } from './containers/tables/AgentsListTable'
 import { TUserRowKeys } from './containers/tables/AgentsListTable/UsersListTable'
-import { roleUserTranslationKey } from './constants'
-import { TUserPermissions } from '../../types/permissions'
+import { roleUserTranslationKey, userPermissions } from './constants'
 
 const DeleteUserModal = dynamic(
   () => import('./containers/modals/DeleteUserModal').then((mod) => mod.DeleteUserModal),
@@ -70,14 +69,6 @@ const CreateNewUserModal = dynamic(
     ssr: false,
   },
 )
-
-const createPermissions: {
-  [key in ERoles.AGENT | ERoles.MANAGER | ERoles.ADMIN]: TUserPermissions
-} = {
-  [ERoles.AGENT]: EPermissions.CREATE_AGENT as TUserPermissions,
-  [ERoles.MANAGER]: EPermissions.CREATE_MANAGER as TUserPermissions,
-  [ERoles.ADMIN]: EPermissions.CREATE_AGENT as TUserPermissions,
-}
 
 export const UsersList = ({
   role,
@@ -157,7 +148,7 @@ export const UsersList = ({
               <UserSearchField />
               <LimitSelect limit={limit} onChange={changeLimit} />
             </Flex>
-            <FeaturePermission permissions={[createPermissions[role]]}>
+            <FeaturePermission permissions={[userPermissions[role].create]}>
               <FilledButton
                 size="m"
                 maxWidth="236px"

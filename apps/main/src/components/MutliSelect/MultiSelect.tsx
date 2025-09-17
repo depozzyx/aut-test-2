@@ -53,7 +53,13 @@ export const MultiSelect = memo(
     useEffect(() => {
       if (!options || !value) return
       setState({
-        optionSelected: options?.filter((option) => value.includes(option.value)),
+        optionSelected: options?.filter((option) =>
+          props.emitValues
+            ? value.some((v) => v === option.value)
+            : value.some(
+                (v) => typeof v === 'object' && 'value' in v && v.value === option.value,
+              ),
+        ),
       })
     }, [value, options])
 

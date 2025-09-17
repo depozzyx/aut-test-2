@@ -7,10 +7,11 @@ import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { handleRestError } from '@/features/common/error'
 import { TCampaign, TCampaignStatus } from '@/features/campaigns/types'
 import { TRecycleRule } from '@/api-rest/campaigns/types'
+import { TSelectOption } from '@peiko/components/inputs/Select/types'
 
 export type TAgent = {
   id: number
-  name: string
+  username: string
 }
 
 export type TLeadList = {
@@ -27,8 +28,8 @@ type TReturn = {
     id: number | string | null
     name: string
     status: TCampaignStatus
-    assignedAgents: number[]
-    leadLists: number[]
+    assignedAgents: TSelectOption<number>[]
+    leadLists: TSelectOption<number>[]
     holdTime: number
     mode: string
     coefficient: number
@@ -76,8 +77,14 @@ export const useGetCampaignById = (): TReturn => {
       id,
       name,
       status,
-      assignedAgents: assignedAgents.map((agent: TAgent) => agent?.id),
-      leadLists: leadLists.map((list: TLeadList) => list?.id),
+      assignedAgents: assignedAgents.map((agent: TAgent) => ({
+        value: agent?.id,
+        label: agent?.username,
+      })),
+      leadLists: leadLists.map((list: TLeadList) => ({
+        value: list?.id,
+        label: list?.name,
+      })),
       holdTime,
       mode,
       coefficient,

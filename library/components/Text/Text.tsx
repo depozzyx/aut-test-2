@@ -47,6 +47,7 @@ export const Text = React.forwardRef<
     <Tooltip
       on={['hover', 'focus']}
       position={tooltipPosition}
+      mouseEnterDelay={300}
       keepTooltipInside
       contentBorderColor="main2"
       arrowBorderColor="main2"

@@ -144,7 +144,7 @@ export function Table<R extends TRow, H extends THeader<keyof R['row']>>({
   ].join(' ')
 
   return (
-    <HorizontalScroll hideScrollbars={Boolean(loading)}>
+    <HorizontalScroll>
       <Box styles={{ width: '100%', minHeight }}>
         <InlineLoader variant="table" loading={loading} borderRadius={4} />
         <S.Table gridTemplateColumns={gridTemplateColumns}>

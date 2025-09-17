@@ -18,7 +18,7 @@ import { leadsApi } from '@/api-rest/leads'
 import { handleRestError } from '@/features/common/error'
 import dynamic from 'next/dynamic'
 import { getLeadStatus } from '@/features/leads/containers/LeadsTable'
-import { InfoColumn } from '../../components/InfoColumn'
+import { InfoColumn } from '@/components/InfoColumn'
 import {
   getLeadStatuses,
   selectIsLoading,

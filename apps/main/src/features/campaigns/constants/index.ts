@@ -68,7 +68,7 @@ export const INITIAL_REQUEST_PARAMS_CREATE = {
 
 export const INITIAL_REQUEST_PARAMS_EDIT = {
   page: 1,
-  limit: 100,
+  limit: 10,
 }
 
 export const PAGINATION_REQUEST_TIME = 300

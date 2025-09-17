@@ -49,7 +49,12 @@ const leadList = createSlice({
       action: PayloadAction<{ data: TInit['leadListCatalog']; append?: boolean }>,
     ) {
       if (action.payload.append) {
-        state.leadListCatalog = [...state.leadListCatalog, ...action.payload.data]
+        state.leadListCatalog = action.payload.data.reduce((acc, item) => {
+          if (!acc.find((i) => i.id === item.id)) {
+            acc.push(item)
+          }
+          return acc
+        }, state.leadListCatalog.slice())
       } else {
         state.leadListCatalog = action.payload.data
       }

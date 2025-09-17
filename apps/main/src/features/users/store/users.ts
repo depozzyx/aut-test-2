@@ -56,7 +56,12 @@ const users = createSlice({
       action: PayloadAction<{ data: TInit['usersList']; append?: boolean }>,
     ) {
       if (action.payload.append) {
-        state.usersList = [...state.usersList, ...action.payload.data]
+        state.usersList = action.payload.data.reduce((acc, item) => {
+          if (!acc.find((i) => i.id === item.id)) {
+            acc.push(item)
+          }
+          return acc
+        }, state.usersList.slice())
       } else {
         state.usersList = action.payload.data
       }

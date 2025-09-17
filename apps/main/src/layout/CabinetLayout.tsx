@@ -46,6 +46,7 @@ const Content = styled.div<TCabinetLayoutProps>((props) => {
   flex-direction: column;
   justify-content: ${props.justifyContent || 'flex-start'};
   width: 100%;
+  min-width: 0;
   max-width: ${props.maxWidth ?? '100%'};
   min-height: calc(100vh - var(--header-height));
   margin: 0 auto;
