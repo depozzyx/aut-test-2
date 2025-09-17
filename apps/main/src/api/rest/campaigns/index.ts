@@ -2,6 +2,7 @@
 import { api } from '../instance'
 import { TAxiosResponse } from '../types'
 import {
+  ECampaignDeleteOptions,
   TActiveCampaignsReq,
   TActiveCampaignsRes,
   TCampaignInfoRes,
@@ -20,7 +21,10 @@ const getCampaignList = (params: TCampaignListReq): TAxiosResponse<TActiveCampai
 const editCampaign = (data: TEditCampaignReq): TAxiosResponse<any> =>
   api.put('/campaign', data)
 
-const deleteCampaign = (id: number): TAxiosResponse<any> => api.delete(`/campaign/${id}`)
+const deleteCampaign = (
+  id: number,
+  deleteOptions: ECampaignDeleteOptions,
+): TAxiosResponse<any> => api.delete(`/campaign/${id}`, { params: { deleteOptions } })
 
 const createCampaign = (data: TCreateCampaignReq): TAxiosResponse<any> =>
   api.post('/campaign', data)

@@ -10,7 +10,7 @@ import { ROUTES } from '@/constants/routes'
 import { FileIcon2 } from '@/icons/FileIcon2'
 import { ResizeIcon } from '@/icons/ResizeIcon'
 import { DataIcon } from '@/icons/DataIcon'
-import { InfoColumn } from './components/InfoColumn'
+import { InfoColumn } from '../../components/InfoColumn'
 
 type TDataKeys = 'name' | 'phone' | 'status' | 'source' | 'id'
 

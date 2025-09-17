@@ -7,6 +7,12 @@ import { TGeneratedSuccessStatuses } from '@/constants/success-status'
 
 export type TCampaignOrderBy = 'createdAt' | 'status' | 'name'
 
+export enum ECampaignDeleteOptions {
+  DELETE_LEAD_LISTS = 'delete',
+  UNATTACH_LEAD_LISTS = 'unattach',
+  KEEP_LEAD_LISTS = 'keep',
+}
+
 export type TActiveCampaignsReq = {
   orderBy?: TCampaignOrderBy
   order?: TOrder

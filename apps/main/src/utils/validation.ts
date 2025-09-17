@@ -100,13 +100,13 @@ export const createCampaignValidationSchema = yup.object().shape({
     .max(30, 'Maximum 30 characters allowed')
     .matches(/^[A-Za-z0-9 \-_.!]+$/, 'Only letters, numbers, space, and -_.! are allowed')
     .required('This field is required'),
-  assignedAgentIds: yup
+  assignedAgent: yup
     .array()
-    .of(yup.number())
+    .of(yup.object())
     .min(1, 'This field must have at least 1 item')
     .default([]),
   reserveAgentIds: yup.array().of(yup.number()).default([]),
-  leadListIds: yup.array().of(yup.number()).default([]),
+  leadList: yup.array().of(yup.object()).default([]),
   holdTime: yup
     .number()
     .min(1, 'Minimum 1s')

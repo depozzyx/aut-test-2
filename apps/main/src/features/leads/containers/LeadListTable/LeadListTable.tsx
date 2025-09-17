@@ -38,7 +38,7 @@ import {
 } from '@/features/campaigns/constants'
 import { TCampaignActiveStatus } from '@/features/campaigns/types'
 import { ButtonWithTooltip } from '@/features/campaigns/containers/tables/CampaignListTable/ButtonWithTooltip'
-import { InfoColumn } from '../../components/InfoColumn'
+import { InfoColumn } from '../../../../components/InfoColumn'
 
 type TLeadListRowKeys =
   | 'id'

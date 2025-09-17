@@ -22,14 +22,13 @@ import { authSocket } from '../../../api/socket/auth'
 export const Sidebar = (): JSX.Element => {
   const { t } = useTranslation('auth')
   const { dispatch, select } = useRedux()
-  const { hasCurrentRTCSession } = select(agentStatusSelector)
+  const { hasCurrentRTCSession, pbxStatus } = select(agentStatusSelector)
   const profile = select(userSelectors.user)
 
   const { logoutAsync, user } = useAuth()
   const links = useMenuLinks()
   const { pathname } = useRouter()
   const { menuDisabled, sidebarDisabled, showErrorMessage } = useDisableClickOnCall()
-
   const handleLogout = () => {
     if (menuDisabled) showErrorMessage()
     else logoutAsync()
@@ -112,14 +111,23 @@ export const Sidebar = (): JSX.Element => {
       <Flex direction="row" justify="space-between" align="center" width="100%">
         <BaseButton
           width="fit-content"
-          disabled={hasCurrentRTCSession}
-          onClick={handleLogout}
+          onClick={
+            hasCurrentRTCSession || pbxStatus.status !== 'offline'
+              ? () => {
+                  // empty handler to disable logout when on call or not offline
+                }
+              : handleLogout
+          }
         >
           <MenuItem align="center" gap="8px" justify="space-between" padding="8px 16px">
             <LogoutIcon
               color={menuDisabled || hasCurrentRTCSession ? 'overlay' : 'base'}
             />
-            <Text color={menuDisabled || hasCurrentRTCSession ? 'overlay' : 'base'}>
+            <Text
+              showTooltip={hasCurrentRTCSession || pbxStatus.status !== 'offline'}
+              tooltipText={t('logout-btn-disabled-tooltip')}
+              color={menuDisabled || hasCurrentRTCSession ? 'overlay' : 'base'}
+            >
               {t('logout-btn')}
             </Text>
           </MenuItem>

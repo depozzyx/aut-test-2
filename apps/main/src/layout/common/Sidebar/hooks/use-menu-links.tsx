@@ -8,6 +8,7 @@ import { SettingsIcon } from '@/icons/SettingsIcon'
 import { UserWithTie } from '@peiko/components/icons/UserWithTie'
 import { useAuth } from '@/features/common/user'
 import { ERoles } from '@/constants/profile'
+import { FileIcon } from '@/components/icons/FileIcon'
 
 type TMenuItem = {
   title: string
@@ -146,6 +147,25 @@ export const useMenuLinks = (): TMenuItem[] => {
           disabled: false,
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
         },
+      ],
+    },
+    {
+      title: t('reports'),
+      icon: <FileIcon color="base" />,
+      availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
+      links: [
+        {
+          title: t('reports_cdr'),
+          link: ROUTES.REPORTS_CDR,
+          disabled: false,
+          availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
+        },
+        // {
+        //   title: t('reports_campaign_details_info'),
+        //   link: ROUTES.REPORTS_CAMPAIGN_DETAILS_INFO,
+        //   disabled: false,
+        //   availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
+        // },
       ],
     },
     {

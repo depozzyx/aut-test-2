@@ -8,8 +8,8 @@ import {
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { TSelector, TAsyncAction, TRootState } from '@/store'
 import {
+  ECampaignDeleteOptions,
   TActiveCampaignsReq,
-  // TAgentAssignedCampaignsReq,
   TCampaignOrderBy,
 } from '@/api-rest/campaigns/types'
 import { TPagination } from '@/types/entities/pagination'
@@ -332,7 +332,7 @@ const getCurrentCampaigns = ({
 }
 
 export const asyncRemoveCampaign =
-  (type: TCampaignTableType): TAsyncAction =>
+  (type: TCampaignTableType, deleteOptions: ECampaignDeleteOptions): TAsyncAction =>
   async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
@@ -349,7 +349,7 @@ export const asyncRemoveCampaign =
           ?.name as string
       }
 
-      await apiCampaigns.deleteCampaign(selectedId as number)
+      await apiCampaigns.deleteCampaign(selectedId as number, deleteOptions)
 
       dispatch(modalsActions.resetModalsState())
 

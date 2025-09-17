@@ -26,4 +26,6 @@ export const ROUTES = {
   SETTINGS_ACTIVITY_LOG_GENERAL: '/cabinet/settings/activity-log/general',
   SETTINGS_ACTIVITY_LOG_CAMPAIGN: '/cabinet/settings/activity-log/campaign',
   MANAGERS_LIST: '/cabinet/managers/list',
+  REPORTS_CDR: '/cabinet/reports/cdr',
+  REPORTS_CAMPAIGN_DETAILS_INFO: '/cabinet/reports/campaign-details-info',
 }

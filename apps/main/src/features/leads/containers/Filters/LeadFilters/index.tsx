@@ -208,7 +208,7 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters, disabled }: Pr
         width="200px"
       />
       <LimitSelect disabled={disabled} formik={filters} />
-      <BaseIconButton onClick={onResetFilters}>
+      <BaseIconButton disabled={!filtersChanged()} onClick={onResetFilters}>
         <CloseIcon color={filtersChanged() ? 'main4' : 'transparent'} size="ml" />
       </BaseIconButton>
     </Flex>

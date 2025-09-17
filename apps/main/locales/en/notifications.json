@@ -31,5 +31,8 @@
     "seccess-generate": "<translate>API key was successfully revoked</translate>",
     "success-revoke": "<translate>API key was successfully revoked</translate>",
     "unable-revoke": "<translate>Unable to revoke API key. Please try again</translate>"
+  },
+  "cdr": {
+    "recordNotFound": "<translate>Could not load call record</translate>"
   }
 }

@@ -1,4 +1,4 @@
-import { useState, memo, useCallback, useEffect, useMemo } from 'react'
+import { useState, memo, useCallback, useMemo, useEffect } from 'react'
 import { DateRange } from 'react-day-picker'
 import useTranslation from 'next-translate/useTranslation'
 import { startOfDay, addMonths, subMonths } from 'date-fns'
@@ -8,6 +8,7 @@ import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text'
 import { TextButton } from '@peiko/components/buttons/TextButton'
 import { getDateButtonLabel } from '@/inputs/RangeDayPicker/utils'
+import { PopupPosition } from 'reactjs-popup/dist/types'
 import { CustomFilledBtn, StyledRangeDayPicker } from './RangeDayPicker.styled'
 import { TRangeDayPickerProps } from './types'
 
@@ -47,16 +48,14 @@ export const RangeDayPicker = memo<TRangeDayPickerProps>(
       useState<TRangeDayPickerProps['dateValue']>(initialDate)
     const [currentToMonth, setCurrentToMonth] = useState<Date>(today)
     const [currentFromMonth, setCurrentFromMonth] = useState<Date>(subMonths(today, 1))
+    const [position, setPosition] = useState<PopupPosition>('bottom center')
 
     useEffect(() => {
-      if (dateValue) {
-        setSelectedDate({
-          from: dateValue.from,
-          to: dateValue.to,
-        })
-      }
+      setSelectedDate({
+        from: dateValue?.from,
+        to: dateValue?.to,
+      })
     }, [dateValue])
-
     const handleMonthChangeTo = useCallback((month: Date) => {
       setCurrentToMonth(month)
     }, [])
@@ -153,10 +152,34 @@ export const RangeDayPicker = memo<TRangeDayPickerProps>(
       </Flex>
     )
 
+    const handleBeforeOpen = useCallback((e: React.MouseEvent<HTMLElement>) => {
+      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
+      const viewportLeft = window.scrollX
+      const viewportRight = viewportLeft + window.innerWidth
+      const popUpWidth = 660
+      const popUpRight = (rect.right + rect.left) / 2 + popUpWidth / 2 + viewportLeft
+      const popUpLeft = (rect.right + rect.left) / 2 - popUpWidth / 2 + viewportLeft
+      if (popUpRight > viewportRight) return setPosition('bottom right')
+      if (popUpLeft < viewportLeft) return setPosition('bottom left')
+
+      setPosition('bottom center')
+    }, [])
+
+    const triggerFn = () => (
+      <span
+        style={{ display: 'inline-block' }}
+        onMouseDown={handleBeforeOpen} // fires before onClick opens the popup
+        role="button"
+        tabIndex={0}
+      >
+        {trigger ?? <CustomFilledBtn title={dateToShow} />}
+      </span>
+    )
+
     return (
       <ContextMenu
         on="click"
-        position="bottom center"
+        position={position}
         offsetY={12}
         contentStyle={contentStyle}
         containerStyles={containerStyles}
@@ -165,8 +188,9 @@ export const RangeDayPicker = memo<TRangeDayPickerProps>(
         customOpenHandler={customOpenHandler}
         zIndex={zIndex}
         className={menuClassName}
-        trigger={trigger ?? <CustomFilledBtn title={dateToShow} />}
+        trigger={triggerFn} // pass a function trigger
         renderMenu={() => <Calendar />}
+        repositionOnResize
       />
     )
   },

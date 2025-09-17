@@ -52,8 +52,9 @@ export const GlobalStyles = createGlobalStyle`
 
   // scrollbar
   *::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
+
   }
   *::-webkit-scrollbar-track {
     background-color: rgba(0, 0, 0, 0);

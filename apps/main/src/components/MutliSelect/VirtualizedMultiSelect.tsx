@@ -17,6 +17,7 @@ import { TSelectOption, TMultiSelectProps, TSelectEvent } from './types'
 import { Container, CustomLabel, StyledMultiSelect } from './MutliSelect.styled'
 
 const OPTION_HEIGHT = 38
+const BOTTOM_CALL_THROTTLE_MS = 700
 
 export const VirtualizedMultiSelect = memo(
   ({
@@ -41,7 +42,11 @@ export const VirtualizedMultiSelect = memo(
     useEffect(() => {
       if (!options || !value) return
       setState({
-        optionSelected: options?.filter((option) => value.includes(option.value)),
+        optionSelected: props.emitValues
+          ? value
+              .map((v) => options.find((option) => option.value === v))
+              .filter((option): option is TSelectOption => option !== undefined)
+          : (value as TSelectOption[]),
       })
     }, [value, options])
 
@@ -101,6 +106,23 @@ export const VirtualizedMultiSelect = memo(
       [],
     )
 
+    // Prevent multiple calls while we wait for new options to append
+    const bottomCallLockRef = useRef<{
+      locked: boolean
+      lastTs: number
+      lastLen: number
+    }>({
+      locked: false,
+      lastTs: 0,
+      lastLen: 0,
+    })
+
+    // Unlock when options length changes (new page appended or list replaced)
+    useEffect(() => {
+      bottomCallLockRef.current.locked = false
+      bottomCallLockRef.current.lastLen = Array.isArray(options) ? options.length : 0
+    }, [options?.length])
+
     const listRef = useRef<FixedSizeList>(null)
     const scrollPositionRef = useRef(0)
 
@@ -128,7 +150,16 @@ export const VirtualizedMultiSelect = memo(
             const scrollThreshold = itemCount * OPTION_HEIGHT - listHeight
 
             if (scrollOffset >= scrollThreshold - OPTION_HEIGHT) {
-              onMenuScrollToBottom?.()
+              const now = Date.now()
+              const { locked } = bottomCallLockRef.current
+              const elapsed = now - bottomCallLockRef.current.lastTs
+
+              // Fire only if not locked (waiting for append) AND not too frequent
+              if (!locked && elapsed >= BOTTOM_CALL_THROTTLE_MS) {
+                bottomCallLockRef.current.locked = true
+                bottomCallLockRef.current.lastTs = now
+                onMenuScrollToBottom?.()
+              }
             }
           }
         }

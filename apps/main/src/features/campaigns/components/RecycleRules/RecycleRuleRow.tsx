@@ -91,6 +91,7 @@ export const RecycleRuleRow: FC<Props> = ({ formik, index, statuses }) => {
           styles={menuPortalStyle}
           formik={formik}
           name={`recycleRules[${index}].status`}
+          emitValues
           label={{ label: t('create-campaign.recycle-rule-status') }}
           options={statuses.filter(
             (option) =>

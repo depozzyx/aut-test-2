@@ -4,11 +4,11 @@ import { CSSProperties, DefaultTheme } from 'styled-components'
 import { TStylesProps } from '@peiko/styles'
 import { TLabelProps } from '../types'
 
-export type TSelectOption = {
+export type TSelectOption<T = string | number | boolean> = {
   /**
    * The value of the option.
    */
-  readonly value: string | number | boolean
+  readonly value: T
   /**
    * The label of the option.
    */

@@ -14,9 +14,18 @@ const Container = styled(ScrollContainer)<{ gap: THorizontalContainerProps['gap'
 export const HorizontalScroll: React.FC<THorizontalContainerProps> = ({
   children,
   gap = 16,
+  hideScrollbars = false,
+  horizontal = true,
+  vertical = false,
   ...props
 }) => (
-  <Container gap={gap} {...props}>
+  <Container
+    gap={gap}
+    hideScrollbars={hideScrollbars}
+    horizontal={horizontal}
+    vertical={vertical}
+    {...props}
+  >
     {children}
   </Container>
 )

@@ -65,7 +65,8 @@ export const RotateContainer = styled.span<{
   isRotating: boolean
 }>`
   line-height: 0;
-  animation: ${({ isRotating }) => (isRotating ? rotate : 'none')} 1s linear;
+  display: inline-block;
+  animation: ${({ isRotating }) => (isRotating ? rotate : 'none')} 1s linear infinite;
   top: ${({ top }) => top || 0};
   left: ${({ left }) => left || 0};
   position: ${({ position }) => position || 'relative'};

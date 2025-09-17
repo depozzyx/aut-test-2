@@ -59,6 +59,7 @@ module.exports = {
     '/cabinet/agents/calls': ['user', 'routing', 'calls'],
     '/cabinet/managers/list': ['user', 'routing', 'managers'],
     '/cabinet/managers/create': ['user', 'routing', 'managers'],
+    '/cabinet/reports/cdr': ['user', 'routing', 'calls-list'],
     '/cabinet/settings/account-management': ['user', 'routing', 'settings', 'validation'],
     '/cabinet/settings/activity-log/general': [
       'user',

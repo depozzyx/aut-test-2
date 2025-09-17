@@ -4,11 +4,11 @@ import { CSSProperties, DefaultTheme } from 'styled-components'
 import { TStylesProps } from '@peiko/styles'
 import { TLabelProps } from '@peiko/components/inputs/types'
 
-export type TSelectOption = {
+export type TSelectOption<T = string | number | boolean> = {
   /**
    * The value of the option.
    */
-  readonly value: string | number | boolean
+  readonly value: T
   /**
    * The label of the option.
    */
@@ -46,7 +46,7 @@ export type TMultiSelectProps = {
   /**
    * Select is controlled component, so you need to specify the value of the input select if you need to change it.
    * */
-  value?: Array<TSelectOption['value']>
+  value?: Array<TSelectOption | string | number | boolean>
   /**
    * Specify if the select is searchable. It allows to search for options by typing.
    * */
@@ -117,4 +117,10 @@ export type TMultiSelectProps = {
    */
   defaultValue?: TSelectOption[]
   menuPortalTarget?: HTMLElement
+  /**
+   * Callback when the input value changes (search input).
+   * Signature matches react-select onInputChange: (inputValue) => void | string
+   */
+  onInputChange?: (inputValue: string) => void | string
+  emitValues?: boolean
 } & TStylesProps

@@ -14,28 +14,46 @@ export const FormikMultiSelect: React.FC<TProps> = memo(({ formik, ...props }) =
   const field = formik.getFieldProps(props.name)
   const { touched, error } = formik.getFieldMeta(props.name)
 
+  // allow forwarding a custom onSearch callback (server-side or external search)
+  const { onChange: propOnChange, onInputChange, ...restProps } = props as any
+
   const handleChange = useCallback(
     (selectedOptions: TSelectOption[]) => {
       formik.setFieldTouched(field.name, true)
       formik.setFieldValue(
         field.name,
-        selectedOptions.map((option) => option.value),
+        props.emitValues
+          ? selectedOptions.map((option) => option.value)
+          : selectedOptions,
       )
-      if (props.onChange) {
-        props.onChange(selectedOptions)
+      if (propOnChange) {
+        propOnChange(
+          props.emitValues
+            ? selectedOptions.map((option) => option.value)
+            : selectedOptions,
+        )
       }
     },
-    [formik],
+    [formik, propOnChange, field.name],
   )
 
   const fieldError = getFieldError({ touched, error, t })
 
+  const handleInputChange = useCallback(
+    (inputValue: string) => {
+      if (typeof onInputChange === 'function') onInputChange(inputValue)
+      return inputValue
+    },
+    [onInputChange],
+  )
+
   return (
     <VirtualizedMultiSelect
-      {...props}
+      {...(restProps as TMultiSelectProps)}
       value={field.value}
       onChange={handleChange as (p: TSelectEvent) => void}
       error={fieldError}
+      onInputChange={handleInputChange}
     />
   )
 })

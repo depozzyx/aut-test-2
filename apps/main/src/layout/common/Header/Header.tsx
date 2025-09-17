@@ -25,7 +25,7 @@ export const Header: FC = () => {
 
   const { menuDisabled, showErrorMessage } = useDisableClickOnCall()
 
-  const { isEchoTestMode } = select(agentStatusSelector)
+  const { isEchoTestMode, pbxStatus } = select(agentStatusSelector)
 
   useEffect(() => {
     // eslint-disable-next-line no-console
@@ -104,7 +104,7 @@ export const Header: FC = () => {
             <CallTimer onClick={onClickEchoTest} />
           )}
           <UserProfile
-            disabled={menuDisabled}
+            disabled={menuDisabled || pbxStatus.status !== 'offline'}
             onClickEchoTest={onClickEchoTest}
             disconnectSip={disconnectSipEchoTest}
           />
