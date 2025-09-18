@@ -1,5 +1,5 @@
 import PhoneInputComponent from 'react-phone-input-2'
-import ct from 'countries-and-timezones'
+import * as ct from 'countries-and-timezones'
 import 'react-phone-input-2/lib/style.css'
 import { Label } from '../Label'
 import {
