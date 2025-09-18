@@ -121,12 +121,20 @@ export const Sidebar = (): JSX.Element => {
         >
           <MenuItem align="center" gap="8px" justify="space-between" padding="8px 16px">
             <LogoutIcon
-              color={menuDisabled || hasCurrentRTCSession ? 'overlay' : 'base'}
+              color={
+                menuDisabled || hasCurrentRTCSession || pbxStatus.status !== 'offline'
+                  ? 'overlay'
+                  : 'base'
+              }
             />
             <Text
               showTooltip={hasCurrentRTCSession || pbxStatus.status !== 'offline'}
               tooltipText={t('logout-btn-disabled-tooltip')}
-              color={menuDisabled || hasCurrentRTCSession ? 'overlay' : 'base'}
+              color={
+                menuDisabled || hasCurrentRTCSession || pbxStatus.status !== 'offline'
+                  ? 'overlay'
+                  : 'base'
+              }
             >
               {t('logout-btn')}
             </Text>
