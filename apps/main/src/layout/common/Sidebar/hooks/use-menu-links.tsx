@@ -53,12 +53,12 @@ export const useMenuLinks = (): TMenuItem[] => {
           disabled: false,
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
         },
-        // {
-        //   title: t('dashboard_campaign_effectiveness'),
-        //   link: ROUTES.DASHBOARD_CAMPAIGN_EFFECTIVENESS,
-        //   disabled: false,
-        //   availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
-        // },
+        {
+          title: t('dashboard_live_call_statistics'),
+          link: ROUTES.DASHBOARD_CALL_STATISTICS,
+          disabled: false,
+          availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
+        },
       ],
     },
     {
@@ -122,6 +122,12 @@ export const useMenuLinks = (): TMenuItem[] => {
           disabled: false,
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
         },
+        {
+          title: t('agent_groups'),
+          link: ROUTES.AGENT_GROUPS,
+          disabled: false,
+          availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
+        },
         // {
         //   title: t('agents_analytics'),
         //   link: ROUTES.AGENTS_ANALYTICS,
@@ -160,12 +166,12 @@ export const useMenuLinks = (): TMenuItem[] => {
           disabled: false,
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
         },
-        // {
-        //   title: t('reports_campaign_details_info'),
-        //   link: ROUTES.REPORTS_CAMPAIGN_DETAILS_INFO,
-        //   disabled: false,
-        //   availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
-        // },
+        {
+          title: t('reports_campaign_statistics'),
+          link: ROUTES.REPORTS_CAMPAIGN_DETAILS_INFO,
+          disabled: false,
+          availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
+        },
       ],
     },
     {

@@ -40,16 +40,22 @@ export type TAgent = {
 export type TActiveAgent = {
   id: number
   name: string
+  pbxName: string
   workStatus: TAgentActiveWorkStatus
   currentCampaign?: null
-  callsHandled: string
-  timeOnline: number
-  ongoingTime: string
+  callsHandled: number
+  country: string
+  destination: string
+  leadStatus: string
+  status: string
+  onLineSince: number
+  leadId: number
+  lastCallAt: number
 }
 
 export type TAgentDashboard = {
   currentCampaignName: string
-  callsHandled: string
+  callsHandled: number
   timeOnline: number
   ongoingTime: string
   currentCampaignNearestCallTime: string

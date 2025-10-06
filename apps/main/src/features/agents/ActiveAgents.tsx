@@ -24,18 +24,16 @@ import { TSelectOption } from '@/components/MutliSelect/types'
 import { LimitSelect } from '@/components/limit-select'
 import { AgentSearchField } from './components/AgentSearchField'
 import { ActiveAgentsTable } from './containers/tables/ActiveAgentsTable'
+import { useActiveAgentUpdates } from '../campaigns/hooks/use-active-agents-update'
+import { getLeadStatuses } from '../leads/store/leads'
 
 export const ActiveAgents = (): JSX.Element => {
   const { t } = useTranslation('agents')
   const { select, dispatch } = useRedux()
 
-  const {
-    pagination: { total, page, limit },
-    orderBy,
-    order,
-    statusFilter,
-    searchTerm,
-  } = select(
+  useActiveAgentUpdates()
+
+  const { pagination, orderBy, order, statusFilter, searchTerm } = select(
     createStructuredSelector({
       pagination: selectAgentsPagination,
       orderBy: selectOrderBy,
@@ -46,24 +44,11 @@ export const ActiveAgents = (): JSX.Element => {
     shallowEqual,
   )
 
-  useEffect(() => {
-    dispatch(
-      asyncGetActiveAgents({
-        page: 1,
-        limit: limit ?? 10,
-        orderBy,
-        order,
-        ...(searchTerm && { search: searchTerm }),
-        ...(statusFilter && { workStatus: statusFilter }),
-      }),
-    )
-  }, [limit, searchTerm, orderBy, order, statusFilter])
-
   const fetchAgents = (newPage: number) =>
     dispatch(
       asyncGetActiveAgents({
         page: newPage,
-        limit: limit ?? 10,
+        limit: 10,
         orderBy,
         order,
         ...(searchTerm && { search: searchTerm }),
@@ -71,7 +56,7 @@ export const ActiveAgents = (): JSX.Element => {
       }),
     )
   const handleChangePage = useCallback(
-    (newPage) => fetchAgents(newPage),
+    (newPage) => dispatch(setPagination({ ...pagination, page: newPage })),
     [searchTerm, orderBy, order, statusFilter],
   )
 
@@ -80,20 +65,16 @@ export const ActiveAgents = (): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetchAgents(page)
-    }, 5000)
-
-    return () => clearInterval(interval)
-  }, [page, limit, searchTerm, orderBy, order, statusFilter])
+    dispatch(getLeadStatuses())
+    fetchAgents(1)
+  }, [dispatch])
 
   const changeLimit = (option: SingleValue<TSelectOption>) =>
     option &&
     dispatch(
       setPagination({
-        page,
+        ...pagination,
         limit: +option.value,
-        total,
       }),
     )
 
@@ -104,7 +85,7 @@ export const ActiveAgents = (): JSX.Element => {
         <Flex gap={16} align="center" width="100%">
           <AgentSearchField />
           <StatusFilter />
-          <LimitSelect limit={limit} onChange={changeLimit} />
+          <LimitSelect limit={pagination.limit} onChange={changeLimit} />
         </Flex>
       </Flex>
       <Flex
@@ -131,8 +112,12 @@ export const ActiveAgents = (): JSX.Element => {
       <ActiveAgentsTable />
       <Flex padding="40px 0 0 0" justify="center">
         <Pagination
-          lastPage={total === 0 ? 1 : Math.ceil(total / (limit ?? 10))}
-          currentPage={page}
+          lastPage={
+            pagination.total === 0
+              ? 1
+              : Math.ceil(pagination.total / (pagination.limit ?? 10))
+          }
+          currentPage={pagination.page}
           onChange={handleChangePage}
         />
       </Flex>

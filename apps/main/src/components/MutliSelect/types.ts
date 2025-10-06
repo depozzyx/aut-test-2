@@ -123,4 +123,5 @@ export type TMultiSelectProps = {
    */
   onInputChange?: (inputValue: string) => void | string
   emitValues?: boolean
+  hideSelectedOptions?: boolean
 } & TStylesProps

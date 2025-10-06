@@ -4,13 +4,14 @@
   "dashboard": "Dashboard",
   "dashboard_active_campaigns": "Active campaigns",
   "dashboard_active_agents": "Active agents",
-  "dashboard_campaign_effectiveness": "Campaign effectiveness",
+  "dashboard_live_call_statistics": "Live call statistics",
   "campaigns": "Campaigns",
   "campaigns_list": "Campaign list",
   "campaigns_analytics": "Campaign analytics",
   "campaigns_log": "Campaign log",
   "agents": "Agents",
   "agents_list": "Agent list",
+  "agent_groups": "Agent groups",
   "create_agent": "Create new Agent",
   "agents_analytics": "Agent analytics",
   "agents_calls": "Calls",
@@ -34,5 +35,5 @@
   "campaign_view": "Campaign",
   "reports": "Reports",
   "reports_cdr": "CDR",
-  "reports_campaign_details_info": "Campaign details info"
+  "reports_campaign_statistics": "Campaign statistics"
 }

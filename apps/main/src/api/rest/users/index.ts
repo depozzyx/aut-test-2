@@ -34,6 +34,9 @@ const updateUser = (
 const deleteUser = (role: ERoles, id: number): TAxiosResponse<TDeleteUserRes> =>
   api.delete(`/users/${role}/${id}`)
 
+const toggleBlockUser = (role: ERoles, id: number): TAxiosResponse<TDeleteUserRes> =>
+  api.post(`/users/toggle-status/${role}/${id}`)
+
 export const apiUsers = {
   createUser,
   getUsersList,
@@ -41,4 +44,5 @@ export const apiUsers = {
   updateUser,
   deleteUser,
   updateMe,
+  toggleBlockUser,
 }

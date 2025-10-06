@@ -15,7 +15,7 @@ export const useDisableClickOnCall = (): {
 
   const menuDisabled = pbxStatus.status === 'oncall' || pbxStatus.status === 'ringing'
 
-  const sidebarDisabled = pbxStatus.status !== 'offline' || hasCurrentRTCSession
+  const sidebarDisabled = pbxStatus.status !== 'offline'
 
   const showGlobalError = (msg: string) => dispatch(errorActions.showGlobalError(msg))
 

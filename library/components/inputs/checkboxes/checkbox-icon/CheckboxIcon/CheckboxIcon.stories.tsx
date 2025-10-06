@@ -79,7 +79,7 @@ export const WithBreakpointSize: Story = {
  */
 export const WithLabel: Story = {
   args: {
-    name: 'toogle',
+    name: 'toggle',
     label: 'Checkbox icon label',
     icon: <HeartIcon />,
     checkedIcon: <HeartFilledIcon />,
@@ -91,7 +91,7 @@ export const WithLabel: Story = {
  */
 export const Disabled: Story = {
   args: {
-    name: 'toogle',
+    name: 'toggle',
     label: 'Checkbox disabled',
     disabled: true,
     icon: <HeartIcon />,

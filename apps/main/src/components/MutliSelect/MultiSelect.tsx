@@ -7,6 +7,7 @@ import {
   DropdownIndicatorProps,
   NoticeProps,
   MenuProps,
+  MultiValue,
 } from 'react-select'
 import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { Text } from '@peiko/components/Text'
@@ -26,6 +27,7 @@ export const MultiSelect = memo(
     width,
     size = 's',
     isSearchable = false,
+    hideSelectedOptions = false,
     zIndex,
     ...props
   }: TMultiSelectProps): JSX.Element => {
@@ -33,7 +35,9 @@ export const MultiSelect = memo(
     const [open, setOpen] = useState(false)
     const [openCount, setOpenCount] = useState(0)
     const [hasScroll, setHasScroll] = useState(false)
-    const [state, setState] = useState<{ optionSelected: TSelectEvent | null }>({
+    const [state, setState] = useState<{
+      optionSelected: MultiValue<TSelectOption> | null
+    }>({
       optionSelected: null,
     })
 
@@ -53,19 +57,17 @@ export const MultiSelect = memo(
     useEffect(() => {
       if (!options || !value) return
       setState({
-        optionSelected: options?.filter((option) =>
-          props.emitValues
-            ? value.some((v) => v === option.value)
-            : value.some(
-                (v) => typeof v === 'object' && 'value' in v && v.value === option.value,
-              ),
-        ),
+        optionSelected: props.emitValues
+          ? (value
+              .map((v) => options.find((o) => o.value === v))
+              .filter((v) => v) as MultiValue<TSelectOption>)
+          : (value as MultiValue<TSelectOption>),
       })
     }, [value, options])
 
     const handleChange = (selected: TSelectEvent) => {
       setState({
-        optionSelected: selected,
+        optionSelected: Array.isArray(selected) ? selected : [selected],
       })
       if (onChange) onChange(selected)
     }
@@ -134,7 +136,7 @@ export const MultiSelect = memo(
             options={options}
             value={state.optionSelected}
             closeMenuOnSelect={false}
-            hideSelectedOptions={false}
+            hideSelectedOptions={hideSelectedOptions}
             components={{
               Menu,
               Option,

@@ -4,17 +4,26 @@
   "headers": {
     "username": "Agent Name",
     "email": "Email",
+    "status": "Status",
     "pbxName": "PBX Name",
     "creation-date": "Creation Date",
     "campaigns": "Campaigns",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "block": "Block"
   },
   "active-agents-headers": {
     "agent-name": "Agent Name",
     "work-status": "Agent Status",
     "current-campaign": "Campaign",
     "calls-handled": "Calls Handled",
+    "destination": "Destination",
+    "duration": "Duration",
+    "lead-status": "Lead Status",
+    "lead": "Lead",
+    "spy": "Spy",
+    "whisper": "Whisper",
+    "block": "Block",
     "time-online": "Time Online"
   },
   "create": {
@@ -74,5 +83,47 @@
     "campaign-name": "Campaign Name",
     "call-frequency": "Call Frequency",
     "close": "Close"
-  }
+  },
+  "whisper-spy": {
+    "title": {
+      "whisper": "Whisper: {{agent}} ({{exten}})",
+      "spy": "Spy: {{agent}} ({{exten}})"
+    },
+    "lead-info": {
+      "name": "Lead name",
+      "phone": "Phone",
+      "campaign": "Campaign"
+    },
+    "no-lead": "No lead information",
+    "close": "Close",
+    "hangup": "Hang up",
+    "hide": "Hide",
+    "errors": {
+      "start-whisper-spy": "Failed to start whisper or spy for {{agent}}"
+    }
+  },
+  "groups": {
+    "headers": {
+      "name": "Group Name",
+      "description": "Description",
+      "users": "Users",
+      "edit": "Edit"
+    },
+    "create": {
+      "title": "Create Agent Group",
+      "submit": "Create"
+    },
+    "edit": {
+      "title": "Edit Agent Group",
+      "submit": "Save"
+    },
+    "fields": {
+      "name": "Name",
+      "description": "Description",
+      "users": "Assign users"
+    },
+    "cancel": "Cancel"
+  },
+  "create-group": "Create group",
+  "edit-group": "Edit"
 }

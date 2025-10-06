@@ -111,6 +111,7 @@ export const UsersList = ({
         order,
         workStatus: statusFilter,
         search: nameFilter,
+        showBlocked: true,
       }),
     )
   }

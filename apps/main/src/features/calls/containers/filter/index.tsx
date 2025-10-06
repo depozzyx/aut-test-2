@@ -58,8 +58,8 @@ export const CallsFilters: FC<Props> = ({ filters, disabled }: Props) => {
 
   const handleChangeDate = useCallback((date) => {
     const newDate = {
-      from: date?.from ? startOfDay(date.from) : undefined,
-      to: date?.to ? endOfDay(date.to) : undefined,
+      from: date?.from ? startOfDay(date.from).valueOf() : undefined,
+      to: date?.to ? endOfDay(date.to).valueOf() : undefined,
     }
     filtersChanged({ date: newDate })
   }, [])
@@ -74,7 +74,10 @@ export const CallsFilters: FC<Props> = ({ filters, disabled }: Props) => {
   return (
     <Flex gap={10} width="100%">
       <RangeDayPicker
-        dateValue={filters.date}
+        dateValue={{
+          from: filters.date?.from ? new Date(filters.date?.from) : undefined,
+          to: filters.date?.to ? new Date(filters.date.to) : undefined,
+        }}
         disabled={disabled}
         onChange={handleChangeDate}
       />

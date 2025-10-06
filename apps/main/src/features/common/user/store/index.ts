@@ -76,12 +76,11 @@ const getProfile = (): TAsyncAction => async (dispatch) => {
     }
     const { data } = await apiProfile.get()
     dispatch(setUser(data.data))
-    if (data.data.role === 'agent') {
-      const {
-        data: { data },
-      } = await apiAgents.getPBXAuth()
-      dispatch(setPBXAuth(data))
-    }
+    const {
+      data: { data: pbxData },
+    } = await apiAgents.getPBXAuth()
+    dispatch(setPBXAuth(pbxData))
+
     const { data: versionData } = await apiProfile.version()
     dispatch(setVersion(versionData?.data?.version ?? ''))
   } catch (e) {

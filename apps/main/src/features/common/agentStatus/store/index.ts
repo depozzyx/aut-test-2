@@ -13,6 +13,13 @@ export type TInit = {
   sipConnected: boolean
   hasCurrentRTCSession: boolean
   isEchoTestMode: boolean
+  whisperSpy?: {
+    mode: 'whisper' | 'spy' | null
+    exten: string | null
+    agentId: number | null
+    agentName: string | null
+  }
+  whisperSpyLeadId?: number
 }
 
 const init: TInit = {
@@ -23,6 +30,8 @@ const init: TInit = {
     exten: '',
     reason: '',
   },
+  whisperSpy: undefined,
+  whisperSpyLeadId: undefined,
   checkCampaignId: false,
   sipCanConnect: false,
   sipConnected: false,
@@ -40,6 +49,12 @@ const agentStatus = createSlice({
     setPBXStatus(state, action: PayloadAction<TInit['pbxStatus']>) {
       // state.pbxStatus = { ...action.payload, status: 'oncall' } // debug
       state.pbxStatus = action.payload
+    },
+    setWhisperSpy(state, action: PayloadAction<TInit['whisperSpy']>) {
+      state.whisperSpy = action.payload
+    },
+    setWhisperSpyLeadId(state, action: PayloadAction<TInit['whisperSpyLeadId']>) {
+      state.whisperSpyLeadId = action.payload
     },
     setLoading(state, action: PayloadAction<TInit['loading']>) {
       state.loading = action.payload
@@ -74,6 +89,8 @@ const {
   setHasCurrentRTCSession,
   reset,
   setEchoTestMode,
+  setWhisperSpy,
+  setWhisperSpyLeadId,
 } = agentStatus.actions
 
 const checkStoredAndPbxAgentStatus = async (
@@ -135,6 +152,8 @@ export const agentActions = {
   setHasCurrentRTCSession,
   reset,
   setEchoTestMode,
+  setWhisperSpy,
+  setWhisperSpyLeadId,
 }
 // selectors
 export const agentStatusSelector: TSelector<TInit> = (state) => state.agentStatus

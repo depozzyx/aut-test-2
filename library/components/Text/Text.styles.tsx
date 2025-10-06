@@ -9,7 +9,7 @@ export const StyledText = styled.p<TText>((props) => {
 
   return css`
     position: relative;
-    color: ${props.color ? palette[props.color] : palette.main5};
+    color: ${props.color ? palette[props.color] : 'inherit'};
     transition: color 0.2s linear;
 
     ${variant && typeof variant === 'string' && fonts[variant]}

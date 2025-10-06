@@ -18,7 +18,7 @@ export type CDRListFilters = {
   phone?: string
   country?: string
   disposition?: string
-  date?: { from?: Date; to?: Date }
+  date?: { from?: number; to?: number }
 }
 
 export type TInit = {
@@ -42,8 +42,8 @@ const init: TInit = {
   order: 'DESC',
   filters: {
     date: {
-      from: startOfMonth(new Date()),
-      to: endOfDay(new Date()),
+      from: startOfMonth(new Date()).valueOf(),
+      to: endOfDay(new Date()).valueOf(),
     },
   },
 }
@@ -122,8 +122,8 @@ export const getCallsList =
         ...params,
         page: params.page ?? 1,
         limit: params.limit ?? 10,
-        dateFrom: date?.from ? new Date(date.from).getTime() : undefined,
-        dateTo: date?.to ? new Date(date.to).getTime() : undefined,
+        dateFrom: date?.from,
+        dateTo: date?.to,
       }
       const { data } = await apiCalls.cdrList(filter)
 
@@ -144,8 +144,8 @@ export const getCallsFile = async ({
   try {
     const filter = {
       ...params,
-      dateFrom: date?.from ? new Date(date.from).getTime() : undefined,
-      dateTo: date?.to ? new Date(date.to).getTime() : undefined,
+      dateFrom: date?.from,
+      dateTo: date?.to,
     }
 
     return apiCalls.cdrFile(filter)

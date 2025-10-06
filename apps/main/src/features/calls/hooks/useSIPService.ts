@@ -60,6 +60,8 @@ export const useSIPService = (
   setLead: (lead: TCallsInit | null) => void
   onSubscribeCalls: () => void
   onUnsubscribeCalls: () => void
+  whisperTo: (exten: string) => void
+  spyTo: (exten: string) => void
 } => {
   const { pbxAuth } = useAuth()
   const { dispatch } = useRedux()
@@ -115,13 +117,22 @@ export const useSIPService = (
     if (pbxAuth?.username) return apiCalls.makeEchoTest({ exten: pbxAuth.username })
   }
 
+  const whisperTo = (exten: string) => {
+    if (pbxAuth?.username) return apiCalls.whisperTo({ to: exten })
+  }
+
+  const spyTo = (exten: string) => {
+    if (pbxAuth?.username) return apiCalls.spyTo({ to: exten })
+  }
+
   const hangupSip = (isEchoTest?: boolean) => {
-    console.warn('hangupSip', SipSessionStatusMap[currentSession?.status || 0])
+    console.info('hangupSip', SipSessionStatusMap[currentSession?.status || 0])
     // IF TERMINATED
     if (answerTimeout) {
       clearTimeout(answerTimeout)
     }
     if (currentSession && currentSession?.status !== 8) {
+      console.info('Terminate current session')
       currentSession.terminate()
       dispatch(agentActions.setHasCurrentRTCSession(false))
     }
@@ -207,27 +218,28 @@ export const useSIPService = (
           const user = new JsSIP.UA(configuration)
 
           user.on('registered', () => {
-            console.warn('SIP registered')
+            console.info('SIP registered')
           })
 
           user.on('connected', () => {
-            console.warn('SIP connected')
+            console.info('SIP connected')
+            dispatch(agentActions.setSipConnected(true))
           })
 
-          user.on('disconnected', (e) => {
-            console.warn('Disconnected from SIP server', e)
+          user.on('disconnected', () => {
+            console.info('Disconnected from SIP server')
             dispatch(agentActions.setSipConnected(false))
           })
 
           user.on(
             'newRTCSession',
             ({ session }: IncomingRTCSessionEvent | OutgoingRTCSessionEvent): void => {
-              // console.warn('New session started', session?.direction)
+              console.info('New session started', session?.direction)
 
               const answerCall = async () => {
                 if (session && session?.status !== 8) {
                   session.answer(sipOptions)
-                  if (echoTestMode && setCurrentSession) {
+                  if (setCurrentSession) {
                     dispatch(agentActions.setHasCurrentRTCSession(true))
                     setCurrentSession(session)
                   }
@@ -242,7 +254,6 @@ export const useSIPService = (
               session.on('peerconnection', ({ peerconnection }) => {
                 // eslint-disable-next-line no-param-reassign
                 peerconnection.ontrack = (event) => {
-                  console.warn('New track added:', event.track)
                   const remoteStream = event.streams[0]
                   const audioElement = document.createElement('audio')
                   audioElement.srcObject = remoteStream
@@ -273,7 +284,7 @@ export const useSIPService = (
 
               session.on('ended', (e) => {
                 handlers.onCallEnd?.(e)
-                console.warn('Call ended', e)
+                console.info('Call ended')
               })
 
               session.on('failed', (e) => {
@@ -310,5 +321,7 @@ export const useSIPService = (
     setLead,
     onSubscribeCalls,
     onUnsubscribeCalls,
+    whisperTo,
+    spyTo,
   }
 }

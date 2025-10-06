@@ -26,6 +26,7 @@ export type TUser = {
   email: string
   username: string
   pbxName: string
+  status: string
   hideLeadPhones: boolean
   workStatus: TAgentWorkStatus
   assignedCampaigns: TAssignedCampaign[]
@@ -44,6 +45,7 @@ export type TUsersReq = {
   search?: string
   orderBy?: TAgentOrderBy
   order?: TOrder
+  showBlocked?: boolean
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TUpdateUserReq = {

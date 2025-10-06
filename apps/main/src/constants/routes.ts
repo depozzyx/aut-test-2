@@ -6,12 +6,14 @@ export const ROUTES = {
   RESET_PASSWORD: '/auth/reset-password',
   DASHBOARD_ACTIVE_CAMPAIGNS: '/cabinet/dashboard/active-campaigns',
   DASHBOARD_ACTIVE_AGENTS: '/cabinet/dashboard/active-agents',
+  DASHBOARD_CALL_STATISTICS: '/cabinet/dashboard/call-statistics',
   DASHBOARD_CAMPAIGN_EFFECTIVENESS: '/cabinet/dashboard/campaigns-effectiveness',
   CAMPAIGNS_LIST: '/cabinet/campaigns/list',
   CAMPAIGN_VIEW: (campaignId: number): string => `/cabinet/campaigns/view/${campaignId}`,
   CAMPAIGNS_ANALYTICS: '/cabinet/campaigns/analytics',
 
   AGENTS_LIST: '/cabinet/agents/list',
+  AGENT_GROUPS: '/cabinet/agents/groups',
   AGENTS_ANALYTICS: '/cabinet/agents/analytics',
   AGENT_CALLS: '/cabinet/agents/calls',
   LEADS: '/cabinet/leads',
@@ -27,5 +29,5 @@ export const ROUTES = {
   SETTINGS_ACTIVITY_LOG_CAMPAIGN: '/cabinet/settings/activity-log/campaign',
   MANAGERS_LIST: '/cabinet/managers/list',
   REPORTS_CDR: '/cabinet/reports/cdr',
-  REPORTS_CAMPAIGN_DETAILS_INFO: '/cabinet/reports/campaign-details-info',
+  REPORTS_CAMPAIGN_DETAILS_INFO: '/cabinet/reports/campaign-statistics',
 }

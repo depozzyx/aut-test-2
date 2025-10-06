@@ -196,6 +196,37 @@ export const asyncRemoveUser =
         asyncGetUsersList(role, {
           page: 1,
           limit: 10,
+          showBlocked: true,
+        }),
+      )
+    } catch (e) {
+      handleRestError({ e, dispatch })
+    } finally {
+      dispatch(setIsLoading(false))
+    }
+  }
+
+export const asyncToggleBlockUser =
+  (role: ERoles, id: number): TAsyncAction =>
+  async (dispatch) => {
+    try {
+      dispatch(setIsLoading(true))
+      const {
+        data: { data },
+      } = await apiUsers.toggleBlockUser(role, id)
+      dispatch(modalsActions.resetModalsState())
+      dispatch(
+        notificationActions.setNotification({
+          key: 'notifications:user.success-toggle-block',
+          status: 'success',
+          values: { userName: data.username ?? '', role },
+        }),
+      )
+      dispatch(
+        asyncGetUsersList(role, {
+          page: 1,
+          limit: 10,
+          showBlocked: true,
         }),
       )
     } catch (e) {

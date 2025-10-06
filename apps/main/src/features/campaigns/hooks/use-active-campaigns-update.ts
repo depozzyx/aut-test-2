@@ -1,6 +1,10 @@
 import { useMount, useUnmount } from 'react-use'
 import { useRedux } from '@/hooks/use-redux'
-import { setActiveCampaigns, setCampaignList } from '@/features/campaigns/store/campaigns'
+import {
+  refetch,
+  setActiveCampaigns,
+  setCampaignList,
+} from '@/features/campaigns/store/campaigns'
 import {
   StatisticsTypeResponse,
   TActiveCampaign,
@@ -22,27 +26,27 @@ export const useCampaignUpdates = (): void => {
     const { activeCampaigns, campaignList } = store.getState().campaigns
     const source = typeof data === 'string' ? campaignList : activeCampaigns
 
-    if (source.length) {
-      const field =
-        typeof data === 'string'
-          ? {
-              status: data,
-              requestedStatus: null,
-            }
-          : {
-              statistic: data,
-            }
-      const method = typeof data === 'string' ? setCampaignList : setActiveCampaigns
-      const mapper = (campaign: TActiveCampaign) => {
-        if (campaign.id === campaignId) {
-          return {
-            ...campaign,
-            ...field,
+    const field =
+      typeof data === 'string'
+        ? {
+            status: data,
+            requestedStatus: null,
           }
+        : {
+            statistic: data,
+          }
+    const method = typeof data === 'string' ? setCampaignList : setActiveCampaigns
+    const mapper = (campaign: TActiveCampaign) => {
+      if (campaign.id === campaignId) {
+        return {
+          ...campaign,
+          ...field,
         }
-        return campaign
       }
-      if (typeof data === 'string') {
+      return campaign
+    }
+    if (typeof data === 'string') {
+      if (campaignList.find((c: TCampaign) => c.id === campaignId)) {
         dispatch(
           notificationActions.setNotification({
             key: `notifications:campaign.${data}`,
@@ -54,9 +58,10 @@ export const useCampaignUpdates = (): void => {
           }),
         )
       }
-      const updatedData = source.map(mapper)
-      dispatch(method(updatedData))
+      dispatch(refetch())
     }
+    const updatedData = source.map(mapper)
+    dispatch(method(updatedData))
   }
 
   const onSubscribeCampaignStatistic = () =>
