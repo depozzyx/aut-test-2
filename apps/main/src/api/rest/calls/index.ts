@@ -15,6 +15,11 @@ const makeCall = (data: TMakeCallReq): TAxiosResponse<never> => api.post('/call'
 const makeEchoTest = (data: TMakeEchoTestReq): TAxiosResponse<never> =>
   api.post('/call/echo-test', data)
 
+const whisperTo = (data: { to: string }): TAxiosResponse<never> =>
+  api.post('/call/whisper', data)
+
+const spyTo = (data: { to: string }): TAxiosResponse<never> => api.post('/call/spy', data)
+
 const checkPbxApiHealth = (
   type?: 'api' | 'ws',
 ): TAxiosResponse<TPbxHealthCheckResponse> =>
@@ -41,4 +46,6 @@ export const apiCalls = {
   cdrList,
   cdrRecord,
   cdrFile,
+  whisperTo,
+  spyTo,
 }

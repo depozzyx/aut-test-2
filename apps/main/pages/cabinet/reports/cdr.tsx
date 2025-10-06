@@ -4,9 +4,11 @@ import { Permissions } from '@/features/common/permissions/Permissions'
 import { CabinetLayout } from '@/layout/CabinetLayout'
 import { ERoles } from '@/constants/profile'
 import { CallsList } from '@/features/calls/CallsList'
+import { useTitle } from 'react-use'
 
 const CallsListPage: NextPage = () => {
   const { t } = useTranslation('routing')
+  useTitle(t('page-titles:reports-cdr'))
 
   return (
     <Permissions roles={[ERoles.ADMIN, ERoles.SUPERADMIN, ERoles.MANAGER]}>

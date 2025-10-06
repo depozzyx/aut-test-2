@@ -15,8 +15,12 @@ export const HeaderWithSort: FC<THeaderWithSortProps> = ({
   onClick,
   order,
 }): JSX.Element => (
-  <Flex align="center" onClick={onClick} styles={{ cursor: 'pointer' }}>
-    <Text variant="f10" color="base">
+  <Flex align="center" onClick={onClick} styles={{ width: '100%', cursor: 'pointer' }}>
+    <Text
+      variant="f10"
+      color="base"
+      styles={{ width: '100%', textAlign: 'center', userSelect: 'none' }}
+    >
       {title}
     </Text>
     <SortIcon order={order} />

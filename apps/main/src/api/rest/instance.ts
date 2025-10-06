@@ -13,10 +13,20 @@ export const injectStore = (_store: TStore): void => {
   store = _store
 }
 
+const tz =
+  typeof Intl !== 'undefined' &&
+  Intl.DateTimeFormat &&
+  Intl.DateTimeFormat().resolvedOptions().timeZone
+    ? Intl.DateTimeFormat().resolvedOptions().timeZone
+    : undefined
+
 const axiosBaseConfig = {
   baseURL: API_REST_URL,
   timeout: AXIOS_TIMEOUT,
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    ...(tz ? { 'Time-Zone': tz } : {}),
+  },
   withCredentials: true,
 }
 

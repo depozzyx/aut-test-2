@@ -15,6 +15,7 @@ import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { HeaderWithSort } from '@/components/HeaderWithSort'
 import { formatCreatedAt } from '@/features/campaigns/utils/formatCreateAt'
 import {
+  asyncToggleBlockUser,
   selectIsLoadingUsers,
   selectOrder,
   selectOrderBy,
@@ -22,6 +23,8 @@ import {
   setOrderBy,
   setSelectedId,
 } from '@/features/users/store/users'
+import { SuccessIcon } from '@peiko/components/icons/SuccessIcon'
+import { ErrorIcon } from '@peiko/components/icons/ErrorIcon'
 import { roleUserTranslationKey, USER_ORDER_BY } from '../../../constants'
 import { ERoles } from '../../../../../constants/profile'
 import { CampaignsTooltip } from '../../../../agents/components/CampaignsTooltip'
@@ -35,10 +38,22 @@ export type TUserRowKeys =
   | 'edit'
   | 'delete'
   | 'campaigns'
+  | 'block'
+  | 'status'
 
 export const UsersListTable = ({
   role,
-  columns = ['username', 'email', 'pbxName', 'date', 'edit', 'delete', 'campaigns'],
+  columns = [
+    'username',
+    'email',
+    'status',
+    'pbxName',
+    'date',
+    'edit',
+    'delete',
+    'campaigns',
+    'block',
+  ],
 }: {
   role: ERoles
   columns?: TUserRowKeys[]
@@ -69,6 +84,10 @@ export const UsersListTable = ({
     setModal({ modalName: MODAL_NAMES.EDIT_USER, isOpen: true })
   }, [])
 
+  const handleBlock = useCallback((id: number) => {
+    dispatch(asyncToggleBlockUser(role, id))
+  }, [])
+
   const headers: THeader<TUserRowKeys>[] = [
     {
       label: (
@@ -90,6 +109,7 @@ export const UsersListTable = ({
       ),
       value: 'email' as TUserRowKeys,
     },
+    { label: t('headers.status'), value: 'status' as TUserRowKeys },
     {
       label: (
         <HeaderWithSort
@@ -112,6 +132,7 @@ export const UsersListTable = ({
     },
     { label: t('headers.campaigns'), value: 'campaigns' as TUserRowKeys },
     { label: t('headers.edit'), value: 'edit' as TUserRowKeys },
+    { label: t('headers.block'), value: 'block' as TUserRowKeys },
     { label: t('headers.delete'), value: 'delete' as TUserRowKeys },
   ].filter((header: THeader<TUserRowKeys>) => columns.includes(header.value))
 
@@ -121,6 +142,7 @@ export const UsersListTable = ({
       username: <InfoColumn title={user.username} />,
       email: <InfoColumn title={user.email} />,
       pbxName: <InfoColumn title={user.pbxName} />,
+      status: <InfoColumn title={user.status} />,
       date: <InfoColumn title={formatCreatedAt(user.createdAt)} />,
       campaigns: (
         <CampaignsTooltip
@@ -135,6 +157,18 @@ export const UsersListTable = ({
       delete: (
         <IconButton onClick={() => handleDelete(user.id)} iconColor="main13">
           <TrashIcon width="24px" height="24px" />
+        </IconButton>
+      ),
+      block: (
+        <IconButton
+          iconColor={user.status === 'blocked' ? 'main11' : 'main24'}
+          onClick={() => handleBlock(user.id)}
+        >
+          {user.status === 'blocked' ? (
+            <SuccessIcon width="24px" height="24px" />
+          ) : (
+            <ErrorIcon width="24px" height="24px" />
+          )}
         </IconButton>
       ),
     },

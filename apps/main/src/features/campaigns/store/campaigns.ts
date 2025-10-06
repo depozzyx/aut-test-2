@@ -45,6 +45,7 @@ export type TInit = {
   orderBy?: TCampaignOrderBy
   order?: TOrder
   isCampaignSelected: boolean // New state for campaign selection
+  refetchTrigger: number // New state to trigger refetch
 }
 
 const init: TInit = {
@@ -68,6 +69,7 @@ const init: TInit = {
   orderBy: undefined,
   order: undefined,
   isCampaignSelected: false, // Initialize as false
+  refetchTrigger: Date.now(), // New state to trigger refetch
 }
 
 const campaigns = createSlice({
@@ -139,6 +141,9 @@ const campaigns = createSlice({
       state.pagination = init.pagination
     },
     reset: () => init,
+    refetch: (state) => {
+      state.refetchTrigger = Date.now()
+    },
   },
 })
 
@@ -157,6 +162,7 @@ export const {
   setIsCampaignSelected, // New action
   resetFilters,
   reset,
+  refetch,
 } = campaigns.actions
 
 export const selectCampaigns: TSelector<TInit> = (state) => state.campaigns
@@ -179,6 +185,11 @@ export const selectCampaignsList = createSelector(
 export const selectActiveCampaigns = createSelector(
   selectCampaigns,
   ({ activeCampaigns }) => activeCampaigns,
+)
+
+export const selectRefetchTrigger = createSelector(
+  selectCampaigns,
+  ({ refetchTrigger }) => refetchTrigger,
 )
 
 export const selectAgentAssignedCampaigns = createSelector(

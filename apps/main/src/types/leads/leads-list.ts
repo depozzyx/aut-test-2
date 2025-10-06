@@ -9,6 +9,7 @@ export type TLeadsList = {
   status: 'active' | 'inactive'
   feedbackStatus?: 'successful' | 'unsuccessful'
   phone: string
+  country: string
   source: string
   leadList: TLeadList
 }

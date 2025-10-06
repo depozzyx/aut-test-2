@@ -53,7 +53,13 @@ export const Text = React.forwardRef<
       arrowBorderColor="main2"
       trigger={<span style={{ display: 'inline-block' }}>{textElement}</span>}
       renderMenu={() => (
-        <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
           {getTooltipIcon()}
           {customTooltipTextComponent || <span>{tooltipText}</span>}
         </span>

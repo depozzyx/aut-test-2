@@ -35,7 +35,7 @@ export const ActiveCampaigns = (): JSX.Element => {
     pagination: { page, total, limit },
     filters,
     handlerResetFilters,
-  } = useCampaignsManager(asyncGetActiveCampaigns, 5000)
+  } = useCampaignsManager(asyncGetActiveCampaigns)
 
   const [campaignOptions, setCampaignOptions] = useState<TValue[]>([])
 

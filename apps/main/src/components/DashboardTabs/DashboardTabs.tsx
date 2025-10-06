@@ -6,6 +6,7 @@ import { LoudSpeakerIcon } from '@/icons/LoudSpeakerIcon'
 import { TTabsProps } from '@/components/Tabs/Tabs'
 import { useRouter } from 'next/router'
 import { ROUTES } from '@/routes'
+import { PhoneIcon } from '../icons/PhoneIcon'
 
 export const DashboardTabs = (): JSX.Element => {
   const { t } = useTranslation()
@@ -23,6 +24,12 @@ export const DashboardTabs = (): JSX.Element => {
       value: 'active-agents',
       route: ROUTES.DASHBOARD_ACTIVE_AGENTS,
       icon: (color) => <CallOperatorIcon color={color} />,
+    },
+    {
+      label: t('campaign-statistics:reports_campaign_statistics_calls'),
+      value: 'call-statistics',
+      route: ROUTES.DASHBOARD_CALL_STATISTICS,
+      icon: (color) => <PhoneIcon color={color} />,
     },
   ]
 

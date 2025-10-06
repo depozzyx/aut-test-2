@@ -41,7 +41,7 @@ export const Container = styled.div<TContainer>(
 export const StyledMultiSelect = styled(CustomMultiSelect)<TStyledMultiSelectProps>(
   ({ theme, ...props }) => {
     const { palette, fonts, zIndex } = theme
-    const { size = 's', hasScroll, width, backgroundColor, styles, error } = props
+    const { size = 's', hasScroll, backgroundColor, styles, error } = props
 
     const fontControl = () => {
       if (size === 's') {
@@ -101,7 +101,7 @@ export const StyledMultiSelect = styled(CustomMultiSelect)<TStyledMultiSelectPro
         border: 1px solid ${palette.main21};
         border-radius: ${BORDER_RADIUS};
         background-color: ${backgroundColor || palette.base3};
-        width: ${width ? '100%' : 'fit-content'};
+        width: 100%;
         transition-property: border;
         transition-duration: ${TRANSITION_DURATION};
         transition-timing-function: linear;

@@ -76,7 +76,7 @@ export const RS = styled(CustomSelect)<TRSProps>(({ theme, ...props }) => {
         `
       case 'm':
         return css`
-          height: 30px;
+          height: 33px;
           padding: 0 16px;
         `
       case 'l':

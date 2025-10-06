@@ -1,0 +1,1 @@
+export { HeadphonesIcon } from './HeadphonesIcon'

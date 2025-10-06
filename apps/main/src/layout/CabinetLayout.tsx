@@ -5,7 +5,6 @@ import { Text } from '@peiko/components/Text'
 import { Sidebar } from '@/layout/common/Sidebar'
 import { Notification } from '@/features/common/notifications'
 import { Flex } from '@/components/Flex'
-import { Header } from './common/Header'
 
 type TProps = {
   minHeight?: CSSProperties['minHeight']
@@ -81,7 +80,6 @@ export const CabinetLayout: React.FC<TCabinetLayoutProps> = ({
 }) => (
   <>
     <BodyColor />
-    <Header />
     <ContentWrapper>
       <Sidebar />
       <Content padding="12px 26px 26px 26px" {...props}>

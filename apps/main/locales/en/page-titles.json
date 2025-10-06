@@ -1,8 +1,10 @@
 {
   "dashboard-campaigns": "Dashboard - Campaigns",
   "dashboard-agents": "Dashboard - Agents",
+  "dashboard-call-statistics": "Dashboard - Call statistics",
   "campaigns-list": "Campaigns - List",
   "agents-list": "Agents - List",
+  "agents-groups": "Agents - Groups",
   "create-agent": "Create Agent",
   "agents-analytics": "Agents - Analytics",
   "campaigns-analytics": "Campaigns - Analytics",
@@ -15,5 +17,7 @@
   "campaigns-management": "Campaigns - management",
   "leads-management": "Leads - management",
   "activity-log": "Activity log",
-  "account-management": "Account management"
+  "account-management": "Account management",
+  "reports-cdr": "Reports - CDR",
+  "reports-campaign-statistics": "Reports - Campaign statistics"
 }

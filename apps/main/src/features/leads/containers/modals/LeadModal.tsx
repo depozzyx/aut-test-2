@@ -53,8 +53,8 @@ export const LeadModal = ({
   onClose,
 }: {
   leadData: TLeadData
-  onSave: (id: number) => Promise<boolean>
-  onClose: () => void
+  onSave?: (id: number) => Promise<boolean>
+  onClose?: () => void
 }): JSX.Element => {
   const { t } = useTranslation('leads-list')
   const theme = useTheme()
@@ -66,7 +66,7 @@ export const LeadModal = ({
 
   const onCloseModal = () => {
     resetModals()
-    onClose()
+    onClose?.()
   }
 
   const showModal = modalState?.modalName === MODAL_NAMES.VIEW_LEAD && modalState.isOpen
@@ -81,12 +81,12 @@ export const LeadModal = ({
 
   const initFields = () => ({
     name: {
-      isEditable: true,
+      isEditable: onSave !== undefined,
       isEditing: false,
       value: leadData.name,
     },
     status: {
-      isEditable: true,
+      isEditable: onSave !== undefined,
       isEditing: false,
       value: leadData.status,
       display: (val: TLeadData) => getLeadStatus(leadStatuses, val.status),
@@ -184,7 +184,7 @@ export const LeadModal = ({
 
     try {
       await leadsApi.updateLead(leadData.id, payload)
-      await onSave(leadData.id)
+      await onSave?.(leadData.id)
       setFields(initFields())
     } catch (e) {
       handleRestError({ e, dispatch })

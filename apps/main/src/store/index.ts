@@ -22,6 +22,7 @@ import usersReducer from '@/features/users/store/users'
 import createUserReducer from '@/features/users/store/create-user'
 import editUserReducer from '@/features/users/store/edit-user'
 import callsReducer from '@/features/calls/store/calls'
+import reportsReducer from '@/features/reports/store/reports'
 
 const store = configureStore({
   reducer: {
@@ -48,6 +49,7 @@ const store = configureStore({
     createUser: createUserReducer,
     editUser: editUserReducer,
     calls: callsReducer,
+    reports: reportsReducer,
   },
 })
 

@@ -22,6 +22,8 @@ const AgentListPage: NextPage = () => {
     'edit',
     'delete',
     'campaigns',
+    'block',
+    'status',
   ].filter((col) => {
     if (col === 'edit' || col === 'delete') {
       return user?.permissions.includes(userPermissions[ERoles.AGENT][col])

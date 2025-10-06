@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { createStructuredSelector } from 'reselect'
 import { useUnmount } from 'react-use'
 import { shallowEqual } from 'react-redux'
@@ -19,6 +19,7 @@ import {
   selectFilterCampaignIds,
   selectOrder,
   selectIsLoading,
+  selectRefetchTrigger,
 } from '@/features/campaigns/store/campaigns'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
@@ -64,6 +65,7 @@ export const useCampaignsManager = (
     orderBy,
     order,
     isLoading,
+    refetchTrigger,
   } = select(
     createStructuredSelector({
       pagination: selectCampaignsPagination,
@@ -74,59 +76,63 @@ export const useCampaignsManager = (
       orderBy: selectOrderBy,
       order: selectOrder,
       isLoading: selectIsLoading,
+      refetchTrigger: selectRefetchTrigger,
     }),
     shallowEqual,
   )
 
-  const fetchWithParams = (newPage?: number) => {
-    const currentParams = {
-      page: newPage || page,
+  // keep latest page in a ref for timers/refetch effects
+  const pageRef = useRef(page)
+  useEffect(() => {
+    pageRef.current = page
+  }, [page])
+
+  // memo base params (without page)
+  const baseParams = useMemo(
+    () => ({
       limit,
       orderBy,
       order,
       ...(searchTerm && { search: searchTerm }),
       ...(filterCampaignIds.length > 0 && { ids: filterCampaignIds }),
       ...(filterStatus && { status: filterStatus }),
-      ...(filterDate?.from && { fromDate: filterDate?.from }),
-      ...(filterDate?.to && { toDate: filterDate?.to }),
-    }
+      ...(filterDate?.from && { fromDate: filterDate.from }),
+      ...(filterDate?.to && { toDate: filterDate.to }),
+    }),
+    [
+      limit,
+      orderBy,
+      order,
+      searchTerm,
+      filterCampaignIds,
+      filterStatus,
+      filterDate?.from,
+      filterDate?.to,
+    ],
+  )
 
-    dispatch(fetcher(currentParams))
-  }
+  // single fetch helper (stable)
+  const doFetch = useCallback(
+    (p: number) => {
+      dispatch(fetcher({ ...baseParams, page: p }))
+    },
+    [dispatch, fetcher, baseParams],
+  )
+
+  // interval refetch using latest page
+  useEffect(() => {
+    if (!refetchTimeout) return
+    const id = setInterval(() => doFetch(pageRef.current ?? 1), refetchTimeout)
+    return () => clearInterval(id)
+  }, [refetchTimeout, doFetch])
 
   useEffect(() => {
-    if (refetchTimeout) {
-      const interval = setInterval(() => {
-        fetchWithParams()
-      }, refetchTimeout)
-
-      return () => clearInterval(interval)
-    }
-  }, [
-    refetchTimeout,
-    dispatch,
-    page,
-    limit,
-    searchTerm,
-    filterCampaignIds,
-    filterStatus,
-    filterDate,
-    orderBy,
-    order,
-    fetcher,
-  ])
+    doFetch(pageRef.current ?? 1)
+  }, [refetchTrigger])
 
   useEffect(() => {
-    fetchWithParams(page ?? 1)
-  }, [dispatch, limit])
-
-  useEffect(() => {
-    fetchWithParams(1)
-  }, [searchTerm, filterCampaignIds, filterStatus, filterDate, orderBy, order])
-
-  useUnmount(() => {
-    dispatch(reset())
-  })
+    doFetch(1)
+  }, [baseParams, doFetch])
 
   const handleCreateCampaign = useCallback(() => {
     setModal({ modalName: MODAL_NAMES.CREATE_CAMPAIGN, isOpen: true })
@@ -134,30 +140,9 @@ export const useCampaignsManager = (
 
   const handleChangePage = useCallback(
     (newPage: number) => {
-      dispatch(
-        fetcher({
-          page: newPage,
-          limit,
-          orderBy,
-          order,
-          ...(searchTerm && { search: searchTerm }),
-          ...(filterCampaignIds.length > 0 && { ids: filterCampaignIds }),
-          ...(filterStatus && { status: filterStatus }),
-          ...(filterDate?.from && { fromDate: filterDate?.from }),
-          ...(filterDate?.to && { toDate: filterDate?.to }),
-        }),
-      )
+      doFetch(newPage)
     },
-    [
-      dispatch,
-      limit,
-      searchTerm,
-      filterCampaignIds,
-      filterStatus,
-      filterDate,
-      orderBy,
-      order,
-    ],
+    [doFetch],
   )
 
   const handleChangeDate = useCallback((date) => {
@@ -167,6 +152,10 @@ export const useCampaignsManager = (
     }
     dispatch(setFilterDate(newDate))
   }, [])
+
+  useUnmount(() => {
+    dispatch(reset())
+  })
 
   const filters = {
     ...(searchTerm && { searchTerm }),

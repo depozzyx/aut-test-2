@@ -1,0 +1,37 @@
+{
+    "headers": {
+        "list": {
+            "campaign": "Campaign",
+            "agent": "Agent",
+            "leadList": "Lead List",
+            "country": "Country",
+            "status": "Status",
+            "duration": "Duration",
+            "day": "Date",
+            "month": "Month",
+            "disposition": "Disposition",
+            "talkTime": "Talk Time",
+            "onCallTime": "On Call Time",
+            "leadsCount": "Leads Count",
+            "callsCount": "Calls Count",
+            "avgOnCallTime": "Avg On Call Time",
+            "avgTalkTime": "Avg Talk Time",
+            "callsPerHour": "Calls/Hour",
+            "callsPerTalkHour": "Talks time/Hour"
+        }
+    },
+    "filters": {
+        "placeholders": {
+            "status": "Status",
+            "campaignName": "Campaign",
+            "leadList": "Lead List",
+            "agent": "Agent",
+            "disposition": "Disposition"
+        }
+    },
+    "empty-data": "No data available",
+    "group-by": "Group by",
+    "reports_campaign_statistics": "Campaign statistics report",
+    "reports_campaign_statistics_calls": "Call statistics",
+    "reports_campaign_statistics_leads": "Lead statistics"
+}

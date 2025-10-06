@@ -24,6 +24,7 @@
   },
   "user": {
     "success-delete": "<value>{{ userName }}</value> <translate>was successfully deleted</translate>",
+    "success-toggle-block": "<value>{{ userName }}</value> <translate>'s status was successfully changed</translate>",
     "create-success": "<translate>New {{ role }}</translate> <value>{{ userName }}</value> <translate>was successfully added</translate>",
     "update-success": "<translate>{{ role }}`s info was successfully updated</translate>"
   },

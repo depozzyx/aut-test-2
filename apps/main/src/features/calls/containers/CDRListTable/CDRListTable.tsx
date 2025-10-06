@@ -22,6 +22,7 @@ import { SaveIcon } from '@peiko/components/icons/SaveIcon/SaveIcon'
 import { LoaderIcon } from '@peiko/components/icons/Loader'
 import { RotateContainer } from '@peiko/components/loaders/Loader/Loader.styles'
 import { notificationActions } from '@/features/common/notifications/store'
+import { BaseImage } from '@peiko/components/BaseImage'
 import { InfoColumn } from '../../../../components/InfoColumn'
 import {
   selectCallsList,
@@ -50,6 +51,8 @@ type TCallListRowKeys =
   | 'leadList'
   | 'play'
   | 'download'
+
+const img = '/images/flags4x3/'
 
 export const CDRListTable = memo((): JSX.Element => {
   const { t } = useTranslation('calls-list')
@@ -246,7 +249,14 @@ export const CDRListTable = memo((): JSX.Element => {
         />
       ),
       name: <InfoColumn title={cdrItem.lead?.name ?? ''} />,
-      country: <InfoColumn title={cdrItem.lead?.countryCode ?? ''} />,
+      country: (
+        <BaseImage
+          src={`${img}${cdrItem.lead?.countryCode?.toLowerCase()}.svg`}
+          alt={cdrItem.lead?.countryCode}
+          width={24}
+          height={24}
+        />
+      ),
       phone: <InfoColumn title={cdrItem.phone} />,
       disposition: <InfoColumn title={cdrItem.disposition} />,
       duration: <InfoColumn title={formatDuration(cdrItem.duration)} />,

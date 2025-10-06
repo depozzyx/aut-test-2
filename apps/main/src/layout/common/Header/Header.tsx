@@ -1,18 +1,22 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState, useCallback } from 'react'
 import { useHeaderHeight } from '@/layout/common/hooks/use-header-height'
 import { Flex } from '@/components/Flex'
 import { BaseImage } from '@peiko/components/BaseImage'
 import { UserProfile } from '@/layout/common/Header/components/UserProfile'
 import { AgentStatus } from '@/features/common/agentStatus/AgentStatus'
-import { useAuth } from '@/features/common/user'
+import { useAuth, userSelectors } from '@/features/common/user'
 import { useDisableClickOnCall } from 'main/src/hooks/use-disable-click-on-call'
 import { useRedux } from '@/hooks/use-redux'
 import { asyncGetAgentAssignedCampaigns } from '@/features/campaigns/store/campaigns'
 import { agentActions, agentStatusSelector } from '@/features/common/agentStatus/store'
 import { useSIPService } from '@/features/calls/hooks/useSIPService'
 import { RTCSession } from 'jssip/lib/RTCSession'
+import { useUnmount } from 'react-use'
+
 import { CallTimer } from './CallTimer'
 import { Container } from './Header.styled'
+
+import { PhoneChip } from './PhoneChip'
 
 const logo = '/images/logo.png'
 
@@ -22,41 +26,45 @@ export const Header: FC = () => {
   const { dispatch, select } = useRedux()
   const { headerRef } = useHeaderHeight()
   const { user } = useAuth()
+  const auth = select(userSelectors.user)
 
   const { menuDisabled, showErrorMessage } = useDisableClickOnCall()
 
   const { isEchoTestMode, pbxStatus } = select(agentStatusSelector)
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    // console.info('HEADER get asyncGetAgentAssignedCampaigns')
     dispatch(asyncGetAgentAssignedCampaigns())
   }, [])
 
   const [rtcSession, setRtcSession] = useState<RTCSession | null>(null)
-  const { connect, ua, makeEchoTest, hangupSip } = useSIPService(
-    true,
-    rtcSession,
-    setRtcSession,
-    {
-      onError: offEchoTest,
-      onCallEnd: offEchoTest,
-    },
-  )
+  const {
+    connect,
+    ua,
+    makeEchoTest,
+    hangupSip,
+    keepAlive,
+    whisperTo,
+    spyTo,
+    disconnect,
+  } = useSIPService(true, rtcSession, setRtcSession, {
+    onError: handleCallEnd,
+    onCallEnd: handleCallEnd,
+  })
 
-  const disconnectSipEchoTest = () => {
-    if (rtcSession) hangupSip(true)
+  const disconnectSip = () => {
+    if (rtcSession) hangupSip(isEchoTestMode)
   }
 
   function offEchoTest() {
     if (makeEchoTimeout) {
       clearTimeout(makeEchoTimeout)
     }
-    disconnectSipEchoTest()
+    disconnectSip()
     dispatch(agentActions.setHasCurrentRTCSession(false))
     dispatch(agentActions.setEchoTestMode(false))
   }
-  const connectToSip = () => {
+
+  const connectToEchoTest = () => {
     const isSipConnected = ua?.isConnected()
     if (!isSipConnected) {
       connect()
@@ -73,8 +81,49 @@ export const Header: FC = () => {
     } else {
       dispatch(agentActions.setSipCanConnect(false))
       dispatch(agentActions.setEchoTestMode(true))
+      connectToEchoTest()
+    }
+  }
+
+  const connectToSip = () => {
+    const isSipConnected = ua?.isConnected()
+    if (!isSipConnected) {
+      connect()
+      keepAlive()
+    }
+  }
+
+  useEffect(() => {
+    if (auth.user?.role !== 'agent' && auth.pbxAuth?.username && !ua?.isConnected()) {
+      console.info(`CONNECTING TO SIP... [${auth.pbxAuth.username}]`)
       connectToSip()
     }
+  }, [ua, auth.pbxAuth?.username])
+
+  useUnmount(() => {
+    if (ua?.isConnected()) {
+      console.info(`DISCONNECTING FROM SIP... [${auth.pbxAuth?.username}]`)
+      disconnectSip()
+      disconnect()
+    }
+  })
+
+  // Stable wrappers for functions passed to PhoneChip to avoid re-renders
+  const handleWhisperTo = useCallback((exten: string) => whisperTo(exten), [whisperTo])
+  const handleSpyTo = useCallback((exten: string) => spyTo(exten), [spyTo])
+  const handleDisconnectSip = useCallback(() => disconnectSip(), [disconnectSip])
+  const handleHangupSip = useCallback(() => {
+    hangupSip(isEchoTestMode)
+    dispatch(agentActions.setWhisperSpy(undefined))
+    dispatch(agentActions.setWhisperSpyLeadId(undefined))
+  }, [hangupSip, isEchoTestMode])
+
+  function handleCallEnd() {
+    if (isEchoTestMode) {
+      offEchoTest()
+    }
+    dispatch(agentActions.setWhisperSpy(undefined))
+    dispatch(agentActions.setWhisperSpyLeadId(undefined))
   }
 
   return (
@@ -103,10 +152,19 @@ export const Header: FC = () => {
           {isEchoTestMode && rtcSession && rtcSession?.status !== 8 && (
             <CallTimer onClick={onClickEchoTest} />
           )}
+          {user?.role !== 'agent' && auth.pbxAuth?.username && (
+            <PhoneChip
+              whisperTo={handleWhisperTo}
+              spyTo={handleSpyTo}
+              disconnectSip={handleDisconnectSip}
+              hangupSip={handleHangupSip}
+            />
+          )}
+
           <UserProfile
             disabled={menuDisabled || pbxStatus.status !== 'offline'}
             onClickEchoTest={onClickEchoTest}
-            disconnectSip={disconnectSipEchoTest}
+            disconnectSip={disconnectSip}
           />
         </Flex>
       </Flex>

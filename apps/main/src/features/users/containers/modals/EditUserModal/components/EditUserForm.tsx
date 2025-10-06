@@ -82,6 +82,7 @@ export const EditUserForm = ({ role }: { role: ERoles }): JSX.Element => {
               asyncGetUsersList(role, {
                 page: 1,
                 limit: 10,
+                showBlocked: true,
               }),
             )
           },

@@ -20,7 +20,7 @@
     "filters": {
         "placeholders": {
             "status": "Status",
-            "campaignName": "Campaign Name",
+            "campaignName": "Campaign",
             "leadList": "Lead List",
             "agent": "Agent",
             "disposition": "Disposition",
