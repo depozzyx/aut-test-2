@@ -114,7 +114,9 @@ export const Header: FC = () => {
   const handleDisconnectSip = useCallback(() => disconnectSip(), [disconnectSip])
   const handleHangupSip = useCallback(() => {
     hangupSip(isEchoTestMode)
-    dispatch(agentActions.setWhisperSpy(undefined))
+    setTimeout(() => {
+      dispatch(agentActions.setWhisperSpy(undefined))
+    }, 5000)
     dispatch(agentActions.setWhisperSpyLeadId(undefined))
   }, [hangupSip, isEchoTestMode])
 
@@ -122,7 +124,9 @@ export const Header: FC = () => {
     if (isEchoTestMode) {
       offEchoTest()
     }
-    dispatch(agentActions.setWhisperSpy(undefined))
+    setTimeout(() => {
+      dispatch(agentActions.setWhisperSpy(undefined))
+    }, 5000)
     dispatch(agentActions.setWhisperSpyLeadId(undefined))
   }
 

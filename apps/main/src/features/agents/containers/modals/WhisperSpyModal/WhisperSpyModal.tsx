@@ -18,6 +18,7 @@ export type WhisperSpyModalProps = {
   agentExten: string
   mode?: 'whisper' | 'spy'
   onHangup: () => void
+  allowHandUp?: boolean
 }
 
 export const WhisperSpyModal: React.FC<WhisperSpyModalProps> = ({
@@ -26,6 +27,7 @@ export const WhisperSpyModal: React.FC<WhisperSpyModalProps> = ({
   agentExten,
   mode,
   onHangup,
+  allowHandUp = false,
 }) => {
   const { t } = useTranslation('agents')
   const { modalState, resetModals } = useModals()
@@ -83,7 +85,7 @@ export const WhisperSpyModal: React.FC<WhisperSpyModalProps> = ({
         )}
 
         <Flex justify="center" align="center" gap={12}>
-          <FilledButton onClick={hangup} width="200px">
+          <FilledButton disabled={!allowHandUp} onClick={hangup} width="200px">
             {t('whisper-spy.hangup')}
           </FilledButton>
           <OutlinedButton onClick={close} width="200px">

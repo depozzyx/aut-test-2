@@ -35,11 +35,12 @@ const PhoneChipComponent = ({
   const { dispatch, select } = useRedux()
 
   const { setModal, modalState } = useModals()
+  const [allowHandup, setAllowHandup] = useState(false)
 
   const [whisperLeadData, setWhisperLeadData] = useState<TLeadData>()
   const { whisperSpy, whisperSpyLeadId } = select(agentStatusSelector)
 
-  const { seconds, minutes, hours, start, pause, reset } = useStopwatch({
+  const { seconds, minutes, hours, start, pause, reset, isRunning } = useStopwatch({
     autoStart: false,
   })
   const formatData = (value: number) => value.toString().padStart(2, '0')
@@ -60,6 +61,7 @@ const PhoneChipComponent = ({
   const handleWhisperSpy = async () => {
     if (!whisperSpy) {
       disconnectSip()
+      setAllowHandup(false)
       setWhisperLeadData(undefined)
       if (modalState?.modalName === MODAL_NAMES.WHISPER_SPY && modalState.isOpen) {
         setModal({ modalName: MODAL_NAMES.WHISPER_SPY, isOpen: false })
@@ -77,6 +79,8 @@ const PhoneChipComponent = ({
       }
       reset(undefined, false)
       start()
+      setModal({ modalName: MODAL_NAMES.WHISPER_SPY, isOpen: true })
+      setTimeout(() => setAllowHandup(true), 5000)
     } catch (e) {
       console.error(`[SIP] Failed to start ${mode} for ${exten}`, e)
       dispatch(agentActions.setWhisperSpy(undefined))
@@ -87,9 +91,7 @@ const PhoneChipComponent = ({
           values: {},
         }),
       )
-      return
     }
-    setModal({ modalName: MODAL_NAMES.WHISPER_SPY, isOpen: true })
   }
 
   useEffect(() => {
@@ -101,7 +103,11 @@ const PhoneChipComponent = ({
   }, [whisperSpyLeadId])
 
   function hangupCall() {
-    dispatch(agentActions.setWhisperSpy(undefined))
+    // Clear whisper spy after 5 seconds to avoid issues with a quick reconnect
+    setTimeout(() => {
+      dispatch(agentActions.setWhisperSpy(undefined))
+    }, 5000)
+    setAllowHandup(false)
     pause()
     reset(undefined, false)
     hangupSip()
@@ -112,10 +118,10 @@ const PhoneChipComponent = ({
   }, [whisperSpy])
 
   const icon = useMemo(() => {
-    if (whisperSpy?.mode === 'spy') {
+    if (whisperSpy?.mode === 'spy' && isRunning) {
       return <HeadphonesIcon color="main11" />
     }
-    if (whisperSpy?.mode === 'whisper') {
+    if (whisperSpy?.mode === 'whisper' && isRunning) {
       return <UserWithMicro color="main11" />
     }
     return <PhoneIcon color="main11" />
@@ -124,7 +130,7 @@ const PhoneChipComponent = ({
   return (
     <>
       <OutlinedButton
-        disabled={!whisperSpy}
+        disabled={!(whisperSpy && isRunning)}
         startIcon={icon}
         styles={{
           color: whisperSpy ? 'main' : 'main11',
@@ -143,13 +149,14 @@ const PhoneChipComponent = ({
           })
         }
       >
-        {whisperSpy?.mode ? `${whisperSpy.exten} ${callTime}` : ''}
+        {whisperSpy?.mode && isRunning ? `${whisperSpy.exten} ${callTime}` : ''}
       </OutlinedButton>
       <WhisperSpyModal
         mode={whisperSpy?.mode || 'spy'}
         agentName={whisperSpy?.agentName || ''}
         agentExten={whisperSpy?.exten || ''}
         leadData={whisperLeadData}
+        allowHandUp={allowHandup}
         onHangup={() => {
           hangupCall()
         }}
