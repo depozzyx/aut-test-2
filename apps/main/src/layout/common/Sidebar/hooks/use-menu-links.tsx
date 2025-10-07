@@ -122,12 +122,12 @@ export const useMenuLinks = (): TMenuItem[] => {
           disabled: false,
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
         },
-        {
-          title: t('agent_groups'),
-          link: ROUTES.AGENT_GROUPS,
-          disabled: false,
-          availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
-        },
+        // {
+        //   title: t('agent_groups'),
+        //   link: ROUTES.AGENT_GROUPS,
+        //   disabled: false,
+        //   availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
+        // },
         // {
         //   title: t('agents_analytics'),
         //   link: ROUTES.AGENTS_ANALYTICS,
