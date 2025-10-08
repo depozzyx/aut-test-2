@@ -33,6 +33,7 @@ export const useUserFilter = (role: ERoles): TReturn => {
       fetcher({
         page: pagination.page,
         limit: pagination.limit,
+        showBlocked: true,
       }),
     {
       revalidateOnFocus: false,

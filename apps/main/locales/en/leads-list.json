@@ -91,7 +91,8 @@
     "NA": "No Answer",
     "NNA": "Number Not Available",
     "NAA": "No Available Agents",
-    "CTNA": "Congestion Number Auto"
+    "CTNA": "Congestion Number Auto",
+    "ASP": "Agent Side Problem"
   },
   "tooltip": {
     "cannot-edit-active-campaign": "You can't edit lead list of {{ status }} campaign, wait for complete or pause it",

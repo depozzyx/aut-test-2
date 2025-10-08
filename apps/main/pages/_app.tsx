@@ -15,7 +15,7 @@ import { Header } from '../src/layout/common/Header'
 injectStore(store)
 
 const ConditionalHeader = () => {
-  const visible = useSelector((s: TRootState) => s.user.user)
+  const visible = useSelector((s: TRootState) => s.user.user?.role)
   if (!visible) return null
   return <Header />
 }
