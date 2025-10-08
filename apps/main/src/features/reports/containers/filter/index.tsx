@@ -71,7 +71,7 @@ export const CampaignStatisticsFilters: FC<Props> = ({
       from: date?.from ? startOfDay(date.from).valueOf() : undefined,
       to: date?.to ? endOfDay(date.to).valueOf() : undefined,
     }
-    filtersChanged({ date: newDate })
+    filtersChanged({ date: date?.from || date?.to ? newDate : undefined })
   }, [])
 
   const filtersNotEmpty = useMemo(

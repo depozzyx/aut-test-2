@@ -67,7 +67,6 @@ export const AgentStatus: FC = () => {
 
   // update available options
   useEffect(() => {
-    // console.info(`pbxStatus ${JSON.stringify(pbxStatus)}`)
     if (pbxStatus.status === 'offline') {
       setOptions(
         INIT_OPTIONS(t).filter(
@@ -101,7 +100,7 @@ export const AgentStatus: FC = () => {
         INIT_OPTIONS(t).filter(({ value }) => value === 'pause' || value === 'finish'),
       )
     }
-  }, [pbxStatus.status, pbxStatus.reason])
+  }, [pbxStatus.status, pbxStatus.reason, router.pathname])
 
   const setChangeStatusTemporaryDisabled = (timeout: number) => {
     setChangeStatusDisable(true)
