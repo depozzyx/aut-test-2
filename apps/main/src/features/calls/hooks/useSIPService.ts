@@ -8,11 +8,10 @@ import {
 import { AnswerOptions, EndEvent, RTCSession } from 'jssip/lib/RTCSession'
 import { useAuth } from '@/features/common/user'
 import { useRedux } from '@/hooks/use-redux'
-import { errorActions, handleRestError } from '@/features/common/error'
+import { errorActions } from '@/features/common/error'
 import { callSocket } from 'api/socket/call'
 import { socket } from 'api/socket/Socket'
 import { TCallsInit } from 'api/socket/call/types'
-import { apiAgents } from '@/api-rest/agents'
 import { API_SECRET_KEY, ICE_SERVERS } from '@/constants/config'
 import { decrypt } from '@peiko/utils/crypto-js'
 import { useStore } from 'react-redux'
@@ -92,14 +91,6 @@ export const useSIPService = (
   const jsSIPSocket = new JsSIP.WebSocketInterface(`wss://${pbxAuth?.domain}:7777/ws`)
   const [ua, setUA] = useState<UA | null>(null)
 
-  const hangupAsync = async () => {
-    try {
-      await apiAgents.hangup()
-    } catch (e) {
-      handleRestError({ e, dispatch })
-    }
-  }
-
   const onUnsubscribeCalls = () => {
     socket.unsubscribe(TEXTS.SUBSCRIBE_CALLS)
     socket.unsubscribe(TEXTS.SUBSCRIBE_CALLS_END)
@@ -150,9 +141,8 @@ export const useSIPService = (
     }
   }
 
-  const endCall = async (isClient?: boolean) => {
+  const endCall = async () => {
     setEndedCall(true)
-    if (isClient) await hangupAsync()
   }
 
   const initCallCallback = (e: TCallsInit) => {

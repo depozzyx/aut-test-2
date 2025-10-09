@@ -684,6 +684,28 @@ export const Calls: FC = () => {
     setLead(null)
   }
 
+  const hangupAsync = async () => {
+    try {
+      await apiAgents.hangup()
+    } catch (e) {
+      resetAllData()
+      await checkStatus(dispatch)
+      dispatch(
+        notificationActions.setNotification({
+          key: `notifications:agent.connection-restored`,
+          status: 'info',
+          values: {},
+        }),
+      )
+    }
+  }
+
+  const handleEndCall = async () => {
+    endCall()
+    await hangupAsync()
+    setEndedCall(true)
+  }
+
   const onCallFeedback = async (status: string) => {
     try {
       if (!lead) {
@@ -1045,7 +1067,7 @@ export const Calls: FC = () => {
                 callData={lead || undefined}
                 leadStatuses={leadStatuses}
               />
-              <CallButton onClick={() => endCall(true)} isLoading={endedCall}>
+              <CallButton onClick={() => handleEndCall()} isLoading={endedCall}>
                 <CallIcon />
               </CallButton>
             </Flex>

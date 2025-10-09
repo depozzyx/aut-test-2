@@ -17,7 +17,8 @@
     "update-success": "<translate>Agent`s info was successfully updated</translate>",
     "campaign-pause": "<translate>Campaign has been paused</translate>",
     "campaign-complete": "<translate>Campaign has been completed</translate>",
-    "campaign-active": "<translate>Campaign active but delayed until <value>{{ nearestTime }}</value></translate>"
+    "campaign-active": "<translate>Campaign active but delayed until <value>{{ nearestTime }}</value></translate>",
+    "connection-restored": "<translate>Connection has been restored</translate>"
   },
   "settings": {
     "user-data-changed": "<translate>Changes saved</translate>"
