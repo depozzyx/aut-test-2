@@ -144,7 +144,7 @@ export const Calls: FC = () => {
     onUnsubscribeCalls,
   } = useSIPService()
 
-  const { user, pbxAuth } = useAuth()
+  const { user, pbxAuth, userFetching } = useAuth()
   // const { user } = useAuth()
   const { modalState, setModal } = useModals()
   const [campaignCompleted, setCampaignCompleted] = useState(false)
@@ -262,6 +262,7 @@ export const Calls: FC = () => {
       // }, 500)
     }
     if (!sipCanConnect && ua?.isConnected()) {
+      console.info(`DISCONNECTING FROM SIP... [${pbxStatus.status}]`)
       disconnect()
     }
   }, [ua, hasCurrentRTCSession, sipCanConnect])
@@ -291,7 +292,7 @@ export const Calls: FC = () => {
     }
   }
   const testSIPConnection = useCallback(async () => {
-    if (!pbxAuth) return 'SIP not registered'
+    if (userFetching || !pbxAuth?.username) return 'SIP not registered'
 
     return new Promise<string>((resolve) => {
       // eslint-disable-next-line no-console
@@ -403,6 +404,7 @@ export const Calls: FC = () => {
       testUA?.start()
     })
   }, [pbxAuth])
+
   const checkSystemHealth = useCallback(async () => {
     setHealthStatus((prev) => ({
       ...prev,
@@ -576,14 +578,22 @@ export const Calls: FC = () => {
   }, [sipCounter.count])
 
   useMount(async () => {
-    if (user?.role === 'agent') {
-      checkSystemHealth()
-    }
     // eslint-disable-next-line no-console
     console.info('on mount isConnected: ', ua?.isConnected())
     dispatch(getLeadStatuses())
     await checkStatus(dispatch)
   })
+
+  // Run health check only once when auth and pbxAuth are ready to avoid racing before pbxAuth is set
+  const healthCheckStartedRef = useRef(false)
+  useEffect(() => {
+    if (healthCheckStartedRef.current) return
+    const isAgent = user?.role === ERoles.AGENT
+    if (!userFetching && isAgent && pbxAuth?.username) {
+      healthCheckStartedRef.current = true
+      checkSystemHealth()
+    }
+  }, [userFetching, user?.role, pbxAuth?.username, checkSystemHealth])
 
   useUnmount(() => {
     // eslint-disable-next-line no-console
