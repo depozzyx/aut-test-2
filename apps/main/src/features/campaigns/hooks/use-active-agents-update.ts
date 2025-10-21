@@ -27,6 +27,8 @@ export const useActiveAgentUpdates = (): void => {
                 ...data,
               })
               found = true
+            } else {
+              acc.push(agent)
             }
 
             if (whisperSpy && whisperSpy.agentId === data.id) {
