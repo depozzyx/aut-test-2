@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TPagination } from '@/types/entities/pagination'
-import { StatisticsTypeResponse, TCampaignStatus } from '@/features/campaigns/types'
+import {
+  StatisticsTypeResponse,
+  TCampaign,
+  TCampaignStatus,
+} from '@/features/campaigns/types'
 import { TOrder } from '@/types/entities/order'
 import { TLeadCallStatusStatisticRawData } from '@/api-rest/lead-list/types'
 import { TGeneratedSuccessStatuses } from '@/constants/success-status'
+import { TAgentGroup } from '../users/groups.types'
 
 export type TCampaignOrderBy = 'createdAt' | 'status' | 'name'
 
@@ -45,6 +50,7 @@ export type TCreateCampaignReq = {
   assignedAgentIds?: number[] | []
   reserveAgentIds?: number[] | []
   leadListIds?: number[] | []
+  agentGroupIds?: number[] | []
   holdTime: number
   mode: string
   coefficient: number
@@ -52,11 +58,39 @@ export type TCreateCampaignReq = {
   recycleRules: TRecycleRule[]
   workHours?: string
 }
+export type TLeadList = {
+  id: number
+  name: string
+  active: boolean
+  createdAt: string
+  updatedAt: string
+  campaign?: TCampaign
+}
 
+export type TAgent = {
+  id: number
+  username: string
+}
+
+export type TCampaignById = {
+  id: number
+  name: string
+  assignedAgents: TAgent[]
+  leadLists: TLeadList[]
+  agentGroups: TAgentGroup[]
+  holdTime: number
+  mode: string
+  coefficient: number
+  filterLeadStatuses: string[]
+  recycleRules: TRecycleRule[]
+  workHours: string
+  status: TCampaignStatus
+}
 export type TEditCampaignReq = TCreateCampaignReq & { id: number }
 
 export type TCampaignWSStatus = {
   data: TCampaignStatus
+  nearestTime?: string
 }
 
 export type TCampaignWSStatistic = {

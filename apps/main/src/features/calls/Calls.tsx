@@ -40,6 +40,7 @@ import { ButtonWithTooltip } from '@/features/campaigns/containers/tables/Campai
 import { notificationActions } from '@/features/common/notifications/store'
 import { useCounter } from '@/features/leads/hooks/useCounter'
 import { ERoles } from '@/constants/profile'
+import { RTCSession } from 'jssip/lib/RTCSession'
 import { CallButton } from './components/CallButton/CallButton'
 import { CallWindow } from './components/CallWindow'
 import { useSIPService } from './hooks/useSIPService'
@@ -125,15 +126,21 @@ export const Calls: FC = () => {
 
   const { dispatch, select } = useRedux()
   const store = useStore()
-  const { pbxStatus, checkCampaignId, sipCanConnect, hasCurrentRTCSession } =
-    select(agentStatusSelector)
+  const {
+    pbxStatus,
+    checkCampaignId,
+    sipCanConnect,
+    hasCurrentRTCSession,
+    microPhoneState,
+  } = select(agentStatusSelector)
   const [callDuration, setCallDuration] = useState(0)
   const [hasCampaignSubscription, setHasCampaignSubscription] = useState(false)
+  const [rtcSession, setRtcSession] = useState<RTCSession | null>(null)
 
   const {
     connect,
     keepAlive,
-    disconnect,
+    hangupSip,
     endCall,
     ua,
     lead,
@@ -142,7 +149,8 @@ export const Calls: FC = () => {
     setLead,
     onSubscribeCalls,
     onUnsubscribeCalls,
-  } = useSIPService()
+    toggleMicrophone,
+  } = useSIPService(false, rtcSession, setRtcSession)
 
   const { user, pbxAuth, userFetching } = useAuth()
   // const { user } = useAuth()
@@ -180,11 +188,9 @@ export const Calls: FC = () => {
         values: {},
       }),
     )
-    if (pbxStatus.status !== 'offline') {
-      dispatch(agentActions.setStatusAsync('finish'))
-    }
+    dispatch(agentActions.setStatusAsync('finish'))
     dispatch(agentActions.setSipCanConnect(false))
-    disconnect()
+    hangupSip()
     checkIfAllCampaignsCompleted()
     dispatch(setSelectedCampaignId(null))
   }
@@ -247,7 +253,6 @@ export const Calls: FC = () => {
     )
   }
 
-  // // connect to sip
   useEffect(() => {
     if (sipCanConnect && !hasCurrentRTCSession && !ua?.isConnected()) {
       // eslint-disable-next-line no-console
@@ -255,15 +260,10 @@ export const Calls: FC = () => {
       connect()
       onSubscribeCalls()
       keepAlive()
-      // setTimeout(() => {
-      //   // eslint-disable-next-line no-console
-      //   console.info('TIMER')
-      //   dispatch(agentActions.setStatusAsync('start'))
-      // }, 500)
     }
     if (!sipCanConnect && ua?.isConnected()) {
       console.info(`DISCONNECTING FROM SIP... [${pbxStatus.status}]`)
-      disconnect()
+      hangupSip()
     }
   }, [ua, hasCurrentRTCSession, sipCanConnect])
 
@@ -532,7 +532,7 @@ export const Calls: FC = () => {
       ua.unregister()
       ua.stop()
     }
-    disconnect()
+    hangupSip()
 
     setHealthStatus((prev) => ({
       ...prev,
@@ -544,7 +544,7 @@ export const Calls: FC = () => {
       isHealthy: apiOk && wsOk && sipOk,
     }))
     setModal({ modalName: MODAL_NAMES.HEALTH_CHECK_STATUS, isOpen: true })
-  }, [apiCounter, wsCounter, sipCounter, setModal, testSIPConnection, disconnect])
+  }, [apiCounter, wsCounter, sipCounter, setModal, testSIPConnection, hangupSip])
 
   useEffect(() => {
     if (healthStatus.api.status === 'loading' && healthStatus.api.progress < 99) {
@@ -853,6 +853,11 @@ export const Calls: FC = () => {
       setFeedbackTimeoutId(null)
     }
   }, [pbxStatus.status, pbxStatus.reason, dispatch, lead?.campaign?.holdTime, completed])
+
+  useEffect(() => {
+    console.info('Microphone state changed', microPhoneState)
+    if (rtcSession) toggleMicrophone()
+  }, [microPhoneState])
 
   // Show selected campaign name
   const showSelectedCampaignName = (): string => {

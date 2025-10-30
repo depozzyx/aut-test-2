@@ -9,8 +9,10 @@ import { BaseIconButton } from '@peiko/components/buttons/BaseIconButton'
 import { Input } from '@peiko/components/inputs/Input'
 import { LimitSelect } from '@/components/limit-select'
 import { SearchFieldIcon } from '@/icons/SearchFieldIcon'
-import { useCampaignNameFilter } from '@/features/campaigns/hooks/use-campaignNameFilter'
 import { CAMPAIGN_STATUSES } from '@/features/campaigns/constants'
+import { SingleValue } from 'react-select'
+import { TSelectOption } from '@/components/MutliSelect/types'
+import { useCampaignLoader } from '@/features/campaigns/hooks/useCampaignLoader'
 
 type Props = {
   filters: TFormik
@@ -30,7 +32,11 @@ export const LeadListFilters: FC<Props> = ({
     value: CAMPAIGN_STATUSES[key as keyof typeof CAMPAIGN_STATUSES],
   }))
 
-  const { campaignOptions, loadMoreCampaigns } = useCampaignNameFilter('list', true)
+  const {
+    options: campaignOptions,
+    loadMore: loadMoreCampaigns,
+    setSearch: setCampaignSearch,
+  } = useCampaignLoader([{ label: '-', value: 0 }])
 
   const onChangeId = (v: string) => {
     if (Number.isInteger(+v) && v.length < 11) {
@@ -45,6 +51,16 @@ export const LeadListFilters: FC<Props> = ({
     return Object.keys(filters.initialValues).some(
       (key) => filters.values[key] && filters.initialValues[key] !== filters.values[key],
     )
+  }
+
+  const onChangeFilter = (e: SingleValue<TSelectOption>, field: string) => {
+    if (e) {
+      if (e.value === 0) {
+        filters.setFieldValue(field, '')
+      } else {
+        filters.setFieldValue(field, e?.value)
+      }
+    }
   }
 
   return (
@@ -99,9 +115,12 @@ export const LeadListFilters: FC<Props> = ({
             ? v.label !== '-'
             : true,
         )}
+        onChange={(e) => onChangeFilter(e, 'campaignId')}
         onMenuScrollToBottom={loadMoreCampaigns}
+        onInputChange={setCampaignSearch}
         maxMenuHeight={200}
         width="200px"
+        isSearchable
       />
       <FormikSelect
         formik={filters}

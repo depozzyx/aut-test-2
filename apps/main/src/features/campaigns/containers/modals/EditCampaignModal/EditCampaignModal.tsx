@@ -7,10 +7,11 @@ import { TCampaignTableType } from '@/features/campaigns/types'
 import { EditCampaignForm } from './components/EditCampaignForm'
 
 type TProps = {
+  campaignId: number
   type: TCampaignTableType
 }
 
-export const EditCampaignModal = ({ type }: TProps): JSX.Element => {
+export const EditCampaignModal = ({ type, campaignId }: TProps): JSX.Element => {
   const { t } = useTranslation('campaigns')
   const { modalState, resetModals } = useModals()
 
@@ -27,7 +28,7 @@ export const EditCampaignModal = ({ type }: TProps): JSX.Element => {
       maxWidth="1000px"
       containerWidth="100%"
     >
-      <EditCampaignForm type={type} />
+      <EditCampaignForm campaignId={campaignId} type={type} />
     </ModalMessage>
   )
 }

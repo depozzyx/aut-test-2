@@ -15,7 +15,7 @@ import { TCallsInit } from 'api/socket/call/types'
 import { API_SECRET_KEY, ICE_SERVERS } from '@/constants/config'
 import { decrypt } from '@peiko/utils/crypto-js'
 import { useStore } from 'react-redux'
-import { agentActions } from '@/features/common/agentStatus/store'
+import { agentActions, agentStatusSelector } from '@/features/common/agentStatus/store'
 import { apiCalls } from '@/api-rest/calls'
 
 const TEXTS = {
@@ -61,12 +61,26 @@ export const useSIPService = (
   onUnsubscribeCalls: () => void
   whisperTo: (exten: string) => void
   spyTo: (exten: string) => void
+  toggleMicrophone: () => void
+  microPhoneState: 'on' | 'off'
 } => {
   const { pbxAuth } = useAuth()
-  const { dispatch } = useRedux()
+  const { dispatch, select } = useRedux()
   const store = useStore()
 
   const [endedCall, setEndedCall] = useState(false)
+  const { microPhoneState } = select(agentStatusSelector)
+
+  const toggleMicrophone = () => {
+    if (!currentSession) {
+      return
+    }
+    if (microPhoneState === 'on') {
+      currentSession.unmute({ audio: true })
+    } else {
+      currentSession.mute({ audio: true })
+    }
+  }
 
   const [lead, setLead] = useState<TCallsInit | null>(null)
 
@@ -105,20 +119,25 @@ export const useSIPService = (
   }
 
   const makeEchoTest = () => {
+    dispatch(agentActions.setMicroPhoneState('on'))
     if (pbxAuth?.username) return apiCalls.makeEchoTest({ exten: pbxAuth.username })
   }
 
   const whisperTo = (exten: string) => {
+    dispatch(agentActions.setMicroPhoneState('on'))
     if (pbxAuth?.username) return apiCalls.whisperTo({ to: exten })
   }
 
   const spyTo = (exten: string) => {
+    dispatch(agentActions.setMicroPhoneState('on'))
     if (pbxAuth?.username) return apiCalls.spyTo({ to: exten })
   }
 
   const hangupSip = (isEchoTest?: boolean) => {
     console.info('hangupSip', SipSessionStatusMap[currentSession?.status || 0])
     // IF TERMINATED
+    dispatch(agentActions.setMicroPhoneState('on'))
+
     if (answerTimeout) {
       clearTimeout(answerTimeout)
     }
@@ -142,6 +161,7 @@ export const useSIPService = (
   }
 
   const endCall = async () => {
+    dispatch(agentActions.setMicroPhoneState('on'))
     setEndedCall(true)
   }
 
@@ -313,5 +333,7 @@ export const useSIPService = (
     onUnsubscribeCalls,
     whisperTo,
     spyTo,
+    microPhoneState,
+    toggleMicrophone,
   }
 }

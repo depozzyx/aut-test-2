@@ -8,9 +8,9 @@ import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useRedux } from '@/hooks/use-redux'
-import { ERoles } from '../../../../../constants/profile'
-import { asyncRemoveUser, selectSelectedUser } from '../../../store/users'
-import { roleUserTranslationKey } from '../../../constants'
+import { ERoles } from '@/constants/profile'
+import { asyncRemoveUser, selectSelectedUser } from '@/features/users/store/users'
+import { roleUserTranslationKey } from '@/features/users/constants'
 
 export const DeleteUserModal = ({ role }: { role: ERoles }): JSX.Element => {
   const { t } = useTranslation(

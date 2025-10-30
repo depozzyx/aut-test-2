@@ -7,14 +7,13 @@ import { notificationActions } from '@/features/common/notifications/store'
 import { modalsActions } from '@/features/common/modals/store'
 import { ORDER } from '@/constants/order'
 import { calculateNewPage } from '@/utils/pagination'
-import { TUser, TUsersListRes, TUsersReq } from '../../../api/rest/users/types'
-import { apiUsers } from '../../../api/rest/users'
-import { ERoles } from '../../../constants/profile'
+import { ERoles } from '@/constants/profile'
+import { TUser, TUsersListRes, TUsersReq } from '@/api-rest/users/types'
+import { apiUsers } from '@/api-rest/users'
 import { TAgentActiveWorkStatus, TUserOrderBy } from '../types'
 
 export type TInit = {
   selectedId: null | number | string
-  isLoading: boolean
   usersList: TUser[]
   pagination: TPagination
   orderBy?: TUserOrderBy
@@ -22,11 +21,11 @@ export type TInit = {
   statusFilter?: TAgentActiveWorkStatus
   deletedUserData: null | TUser
   searchTerm: string
+  requestsQueue: Record<string, boolean>
 }
 
 const init: TInit = {
   selectedId: null,
-  isLoading: false,
   usersList: [],
   pagination: {
     page: 1,
@@ -36,15 +35,13 @@ const init: TInit = {
   statusFilter: undefined,
   deletedUserData: null,
   searchTerm: '',
+  requestsQueue: {},
 }
 
 const users = createSlice({
   name: 'users',
   initialState: init,
   reducers: {
-    setIsLoading(state, action: PayloadAction<TInit['isLoading']>) {
-      state.isLoading = action.payload
-    },
     setSelectedId(state, action: PayloadAction<TInit['selectedId']>) {
       state.selectedId = action.payload
     },
@@ -93,11 +90,16 @@ const users = createSlice({
       state.searchTerm = action.payload
     },
     reset: () => init,
+    addRequest(state, action: PayloadAction<string>) {
+      state.requestsQueue[action.payload] = true
+    },
+    deleteRequest(state, action: PayloadAction<string>) {
+      delete state.requestsQueue[action.payload]
+    },
   },
 })
 
 export const {
-  setIsLoading,
   setPagination,
   setSelectedId,
   setUsersList,
@@ -106,13 +108,15 @@ export const {
   setDeletedUserData,
   setSearchTerm,
   reset,
+  addRequest,
+  deleteRequest,
 } = users.actions
 
 export const selectUsers: TSelector<TInit> = (state) => state.users
 
 export const selectIsLoadingUsers = createSelector(
   selectUsers,
-  ({ isLoading }) => isLoading,
+  ({ requestsQueue }) => Object.keys(requestsQueue).length > 0,
 )
 
 export const selectUsersPagination = createSelector(
@@ -151,26 +155,46 @@ export const selectSearchTerm = createSelector(
 
 export default users.reducer
 
-const getUsersList = async (role: ERoles, params: TUsersReq): Promise<TUsersListRes> => {
-  const res = await apiUsers.getUsersList(role, params)
+const getUsersList = async (
+  role: ERoles,
+  params: TUsersReq,
+  controller?: AbortController,
+): Promise<TUsersListRes> => {
+  const res = await apiUsers.getUsersList(role, params, controller)
   return res.data
 }
 
+export const getGroupsUsers = async (
+  role: ERoles,
+  groupIds: number[],
+): Promise<TUser[]> => {
+  if (groupIds.length === 0) return []
+  const res = await apiUsers.getGroupsUsers(role, groupIds)
+  return res.data.data ?? []
+}
+
 export const asyncGetUsersList =
-  (role: ERoles, params: TUsersReq, append = false, withLoading = true): TAsyncAction =>
+  (
+    role: ERoles,
+    params: TUsersReq,
+    append = false,
+    withLoading = true,
+    controller: AbortController | undefined = undefined,
+  ): TAsyncAction =>
   async (dispatch) => {
+    const requestId = Math.random().toString(36).substring(2, 15)
     try {
       if (withLoading) {
-        dispatch(setIsLoading(true))
+        dispatch(addRequest(requestId))
       }
-      const data = await getUsersList(role, params)
+      const data = await getUsersList(role, params, controller)
       dispatch(setUsersList({ data: data.data ?? [], append }))
       dispatch(setPagination(data.pagination ?? { page: 1, limit: 10, total: 0 }))
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
       if (withLoading) {
-        dispatch(setIsLoading(false))
+        dispatch(deleteRequest(requestId))
       }
     }
   }
@@ -178,8 +202,9 @@ export const asyncGetUsersList =
 export const asyncRemoveUser =
   (role: ERoles, id: number): TAsyncAction =>
   async (dispatch) => {
+    const requestId = Math.random().toString(36).substring(2, 15)
     try {
-      dispatch(setIsLoading(true))
+      dispatch(addRequest(requestId))
       const {
         data: { data },
       } = await apiUsers.deleteUser(role, id)
@@ -202,15 +227,16 @@ export const asyncRemoveUser =
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
-      dispatch(setIsLoading(false))
+      dispatch(deleteRequest(requestId))
     }
   }
 
 export const asyncToggleBlockUser =
   (role: ERoles, id: number): TAsyncAction =>
   async (dispatch) => {
+    const requestId = Math.random().toString(36).substring(2, 15)
     try {
-      dispatch(setIsLoading(true))
+      dispatch(addRequest(requestId))
       const {
         data: { data },
       } = await apiUsers.toggleBlockUser(role, id)
@@ -232,6 +258,6 @@ export const asyncToggleBlockUser =
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
-      dispatch(setIsLoading(false))
+      dispatch(deleteRequest(requestId))
     }
   }

@@ -107,7 +107,13 @@
       "name": "Group Name",
       "description": "Description",
       "users": "Users",
-      "edit": "Edit"
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "filters": {
+      "placeholder": {
+        "search-by-name": "Search by name"
+      }
     },
     "create": {
       "title": "Create Agent Group",
@@ -116,6 +122,11 @@
     "edit": {
       "title": "Edit Agent Group",
       "submit": "Save"
+    },
+    "delete": {
+      "title": "Are you sure you want to delete {{ name }}?",
+      "confirm": "Delete",
+      "cancel": "Cancel"
     },
     "fields": {
       "name": "Name",

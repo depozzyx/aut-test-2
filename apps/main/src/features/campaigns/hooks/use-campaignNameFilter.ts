@@ -24,6 +24,7 @@ type TReturn = {
   campaignOptions: { label: string; value: string | number }[]
   pagination: TPagination
   loadMoreCampaigns: () => void
+  setSearchCampaigns: (search: string | undefined) => void
 }
 
 export const useCampaignNameFilter = (
@@ -39,6 +40,7 @@ export const useCampaignNameFilter = (
     limit: 10,
     total: 1,
   })
+  const [search, setSearchCampaigns] = useState<string>()
 
   const apiRequest = useMemo(
     () =>
@@ -61,14 +63,17 @@ export const useCampaignNameFilter = (
       fetcher({
         page: pagination.page,
         limit: pagination.limit,
+        search,
       }),
     {
       revalidateOnFocus: false,
       onSuccess: (data) => {
-        const formattedData = data.data.map((campaign: TUniversalCampaign) => ({
-          label: campaign.name,
-          value: useIdForValue ? campaign.id : campaign.name,
-        }))
+        const formattedData: TCampaignOption[] = data.data.map(
+          (campaign: TUniversalCampaign) => ({
+            label: campaign.name,
+            value: useIdForValue ? campaign.id : campaign.name,
+          }),
+        )
         if (formattedData.length > 0 && !campaignOptions.length && useIdForValue) {
           dispatch(
             setFilterCampaignIds(
@@ -76,7 +81,14 @@ export const useCampaignNameFilter = (
             ),
           )
         }
-        setCampaignOptions((prev) => [...prev, ...formattedData])
+        setCampaignOptions((prev) =>
+          formattedData.reduce((acc, item) => {
+            if (!acc.find((i) => i.value === item.value)) {
+              acc.push(item)
+            }
+            return acc
+          }, prev.slice()),
+        )
         setPagination(data.pagination)
       },
       onError: (e) => handleRestError({ e, dispatch }),
@@ -91,5 +103,5 @@ export const useCampaignNameFilter = (
     }
   }, [pagination])
 
-  return { campaignOptions, pagination, loadMoreCampaigns }
+  return { campaignOptions, pagination, loadMoreCampaigns, setSearchCampaigns }
 }

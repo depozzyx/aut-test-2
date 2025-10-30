@@ -4,9 +4,9 @@ import { useRedux } from '@/hooks/use-redux'
 import { handleRestError } from '@/features/common/error'
 import { TPagination } from '@/types/entities/pagination'
 import { setAgentNameFilter } from '@/features/agents/store/agent-analytics'
-import { ERoles } from '../../../constants/profile'
-import { apiUsers } from '../../../api/rest/users'
-import { TUser, TUsersReq } from '../../../api/rest/users/types'
+import { ERoles } from '@/constants/profile'
+import { apiUsers } from '@/api-rest/users'
+import { TUser, TUsersReq } from '@/api-rest/users/types'
 
 type TAgentOption = {
   label: string

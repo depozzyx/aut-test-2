@@ -79,12 +79,7 @@ export const RecycleRuleRow: FC<Props> = ({ formik, index, statuses }) => {
   )
 
   return (
-    <Flex
-      maxWidth="424px"
-      width="100%"
-      direction="column"
-      styles={{ marginBottom: '8px' }}
-    >
+    <Flex width="100%" direction="column" styles={{ marginBottom: '8px' }}>
       <Flex gap="12px" align="start" styles={{ marginBottom: '8px' }}>
         <FormikMultiSelect
           menuPortalTarget={document.body}
@@ -103,6 +98,7 @@ export const RecycleRuleRow: FC<Props> = ({ formik, index, statuses }) => {
           width="100%"
           maxMenuHeight={150}
           disabled={disabled}
+          isSearchable
         />
         <IconButton
           styles={{ alignSelf: 'flex-end' }}
@@ -152,6 +148,7 @@ export const RecycleRuleRow: FC<Props> = ({ formik, index, statuses }) => {
               !formik.values.recycleRules[index]?.status?.includes(option.value),
           )}
           maxMenuHeight={150}
+          isSearchable
         />
       </Flex>
     </Flex>

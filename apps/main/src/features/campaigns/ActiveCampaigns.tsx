@@ -7,7 +7,7 @@ import { Pagination } from '@peiko/components/Pagination'
 import { CAMPAIGN_TABLE_TYPES, FILTER_TYPE } from '@/features/campaigns/constants'
 import { PikedFilter } from '@/components/piked-filters/PikedFilter'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
-import { useCampaignUpdates } from '@/features/campaigns/hooks/use-active-campaigns-update'
+import { useCampaignStatisticUpdates } from '@/features/campaigns/hooks/use-active-campaigns-update'
 import { TValue } from '@/components/DropdownMenu/DropdownMenu'
 import { useRedux } from '@/hooks/use-redux'
 import { LimitSelect } from '@/components/limit-select'
@@ -22,11 +22,13 @@ import {
   setFilterCampaignIds,
   setPagination,
 } from './store/campaigns'
+import { useCampaignUpdates } from './hooks/use-campaigns-update'
 
 export const ActiveCampaigns = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
   const { dispatch } = useRedux()
 
+  useCampaignStatisticUpdates()
   useCampaignUpdates()
 
   const {
@@ -50,7 +52,7 @@ export const ActiveCampaigns = (): JSX.Element => {
     dispatch(
       setPagination({
         page,
-        limit: +option.value,
+        limit: +(option.value ?? 10),
         total,
       }),
     )
@@ -73,7 +75,10 @@ export const ActiveCampaigns = (): JSX.Element => {
           gap={16}
           align="center"
           styles={{
-            display: Object.keys(filters).length === 0 ? 'none' : 'flex',
+            display:
+              Object.keys(filters).filter((key) => key !== 'searchTerm').length === 0
+                ? 'none'
+                : 'flex',
             marginTop: '12px',
           }}
         >

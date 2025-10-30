@@ -14,8 +14,11 @@ const getLeadListCatalog = (
   params: TLeadListCatalogReq,
 ): TAxiosResponse<TLeadListCatalogRes> => api.get('/lead-list', { params })
 
-const getLeadLists = (params: TLeadListsReq): TAxiosResponse<TLeadListsRes> =>
-  api.get('/lead-list/list', { params })
+const getLeadLists = (
+  params: TLeadListsReq,
+  controller?: AbortController,
+): TAxiosResponse<TLeadListsRes> =>
+  api.get('/lead-list/list', { params, signal: controller?.signal })
 
 const getLeadListCallStatistic = (
   id: number,

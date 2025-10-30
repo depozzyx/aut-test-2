@@ -22,6 +22,7 @@
   "import_leads_instructions_title": "Import Leads Instruction",
   "settings": "Settings",
   "settings_admins_list": "Admins list",
+  "settings_routes_management": "Routes management",
   "settings_account_management": "Account management",
   "settings_campaigns_management": "Campaigns management",
   "settings_leads_management": "Leads management",
@@ -33,6 +34,7 @@
   "create_manager": "Create new Manager",
   "calls": "Calls",
   "campaign_view": "Campaign",
+  "campaign_edit": "Edit Campaign",
   "reports": "Reports",
   "reports_cdr": "CDR",
   "reports_campaign_statistics": "Campaign statistics"

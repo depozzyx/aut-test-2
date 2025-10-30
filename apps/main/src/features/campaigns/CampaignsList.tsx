@@ -23,6 +23,7 @@ import { useRedux } from '@/hooks/use-redux'
 import { LimitSelect } from '@/components/limit-select'
 import { SingleValue } from 'react-select'
 import { TSelectOption } from '@/components/MutliSelect/types'
+import { shallowEqual } from 'react-redux'
 import { CampaignSearchField } from './components/CampaignSearchField'
 import {
   Container,
@@ -32,9 +33,11 @@ import {
 } from './styles/CampaignsList.styled'
 import {
   asyncGetCampaignsList,
+  selectSelectedCampaignId,
   setFilterCampaignIds,
   setPagination,
 } from './store/campaigns'
+import { setSelectedCampaignId } from '../agents/store/agents'
 
 const {
   CreateCampaignModal,
@@ -60,7 +63,7 @@ const {
 export const CampaignsList = (): JSX.Element => {
   const { t } = useTranslation('campaigns')
   const { modalState } = useModals()
-  const { dispatch } = useRedux()
+  const { select, dispatch } = useRedux()
 
   const {
     handleCreateCampaign,
@@ -69,10 +72,9 @@ export const CampaignsList = (): JSX.Element => {
     pagination: { page, total, limit },
     filters,
     handlerResetFilters,
-    isLoading,
   } = useCampaignsManager(asyncGetCampaignsList)
 
-  const [selectedCampaignId, setSelectedCampaignId] = useState('')
+  const selectedCampaignId = select(selectSelectedCampaignId, shallowEqual)
 
   const createNew = () => {
     setSelectedCampaignId('')
@@ -88,29 +90,21 @@ export const CampaignsList = (): JSX.Element => {
     )
 
   const handleChangeLimit = (option: SingleValue<TSelectOption>) =>
-    option && dispatch(setPagination({ page, total, limit: +option.value }))
+    option && dispatch(setPagination({ page, total, limit: +(option.value ?? 10) }))
 
   return (
     <>
       <Container>
         <Panel>
           <Flex gap={16} align="center" width="100%">
-            <CampaignSearchField
-              disabled={isLoading}
-              placeholder={t('inputs:placeholder.search-campaign')}
-            />
+            <CampaignSearchField placeholder={t('inputs:placeholder.search-campaign')} />
             <CampaignNameFilter
               type={CAMPAIGN_TABLE_TYPES.LIST}
               setCampaignOptions={setCampaignOptions}
-              disabled={isLoading}
             />
-            <StatusFilter disabled={isLoading} />
-            <RangeDayPicker disabled={isLoading} onChange={handleChangeDate} />
-            <LimitSelect
-              disabled={isLoading}
-              limit={limit}
-              onChange={handleChangeLimit}
-            />
+            <StatusFilter />
+            <RangeDayPicker onChange={handleChangeDate} />
+            <LimitSelect limit={limit} onChange={handleChangeLimit} />
           </Flex>
           <FeaturePermission permissions={[EPermissions.CREATE_CAMPAIGN]}>
             <FilledButton
@@ -129,7 +123,10 @@ export const CampaignsList = (): JSX.Element => {
           gap={16}
           align="center"
           styles={{
-            display: Object.keys(filters).length === 0 ? 'none' : 'flex',
+            display:
+              Object.keys(filters).filter((key) => key !== 'searchTerm').length === 0
+                ? 'none'
+                : 'flex',
             marginTop: '12px',
           }}
         >
@@ -166,16 +163,16 @@ export const CampaignsList = (): JSX.Element => {
         </PaginationContainer>
       </Container>
       {modalState?.modalName === MODAL_NAMES.EDIT_CAMPAIGN && modalState.isOpen && (
-        <EditCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
+        <EditCampaignModal
+          campaignId={selectedCampaignId}
+          type={CAMPAIGN_TABLE_TYPES.LIST}
+        />
       )}
       {modalState?.modalName === MODAL_NAMES.DELETE_CAMPAIGN && modalState.isOpen && (
         <DeleteCampaignModal type={CAMPAIGN_TABLE_TYPES.LIST} />
       )}
       {modalState?.modalName === MODAL_NAMES.CREATE_CAMPAIGN && modalState.isOpen && (
-        <CreateCampaignModal
-          selectedCampaignId={selectedCampaignId}
-          setSelectedCampaignId={setSelectedCampaignId}
-        />
+        <CreateCampaignModal setSelectedCampaignId={setSelectedCampaignId} />
       )}
       {modalState?.modalName === MODAL_NAMES.REVIEW_CAMPAIGN && modalState.isOpen && (
         <NewCampaignReviewModal type={CAMPAIGN_TABLE_TYPES.LIST} />

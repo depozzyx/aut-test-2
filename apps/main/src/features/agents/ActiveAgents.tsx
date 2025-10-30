@@ -74,7 +74,7 @@ export const ActiveAgents = (): JSX.Element => {
     dispatch(
       setPagination({
         ...pagination,
-        limit: +option.value,
+        limit: +(option.value ?? 10),
       }),
     )
 

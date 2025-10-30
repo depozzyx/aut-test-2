@@ -18,6 +18,7 @@ export type TImportSubmitReq = {
   leadListId: number
   checkNumberUnique?: boolean
   useDefaultStatus?: boolean
+  shuffle?: boolean
 }
 
 export type TImportCheckReq = {
@@ -75,6 +76,7 @@ export type TLeadFilters = {
 
 export type TLeadListFilters = {
   id?: number
+  ids?: number[]
   name?: string
   campaignId?: number
   campaignStatus?: string
@@ -89,6 +91,7 @@ export type TLeadsListReq = {
 
 export type TLeadsGroupReq = {
   order?: TOrder
+  name?: string
 } & Pick<TPagination, 'page' | 'limit'>
 
 export type TCreateLeadGroupPayload = {

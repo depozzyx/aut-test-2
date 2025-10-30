@@ -185,8 +185,8 @@ export const LeadsTable = memo(({ reFetch }: { reFetch: () => void }): JSX.Eleme
       timezone: <InfoColumn title={lead.timezone} />,
       status: <InfoColumn title={getLeadStatus(leadStatuses, lead?.status)} />,
       source: <InfoColumn title={lead.source} />,
-      campaign: <InfoColumn title={lead?.leadList?.campaign?.name} />,
-      leadList: <InfoColumn title={lead?.leadList?.name} />,
+      campaign: <InfoColumn title={lead?.leadList?.campaign?.name ?? ''} />,
+      leadList: <InfoColumn title={lead?.leadList?.name ?? ''} />,
       view: (
         <IconButton onClick={() => handleView(lead.id)} iconColor="main3">
           <EyeIcon width="24px" height="24px" />

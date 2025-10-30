@@ -1,4 +1,4 @@
-import { ERoles } from '../../../constants/profile'
+import { ERoles } from '@/constants/profile'
 import { api } from '../instance'
 import { TAxiosResponse } from '../types'
 import {
@@ -10,6 +10,7 @@ import {
   TDeleteUserRes,
   TUpdateUserReq,
   TUpdateUserRes,
+  TUser,
 } from './types'
 
 const createUser = (role: ERoles, data: TCreateUserReq): TAxiosResponse<TCreateUserRes> =>
@@ -19,11 +20,21 @@ const updateMe = (
   data: Pick<TUpdateUserReq, 'username' | 'password'>,
 ): TAxiosResponse<TCreateUserRes> => api.put(`/users/me`, data)
 
-const getUsersList = (role: ERoles, params: TUsersReq): TAxiosResponse<TUsersListRes> =>
-  api.get(`/users/${role}`, { params })
+const getUsersList = (
+  role: ERoles,
+  params: TUsersReq,
+  controller?: AbortController,
+): TAxiosResponse<TUsersListRes> =>
+  api.get(`/users/${role}`, { params, signal: controller?.signal })
 
 const getUserById = (role: ERoles, id: number): TAxiosResponse<TUserByIdRes> =>
   api.get(`/users/${role}/${id}`)
+
+const getGroupsUsers = (
+  role: ERoles,
+  groupIds: number[],
+): TAxiosResponse<{ data: TUser[] }> =>
+  api.get(`/users/${role}/groups`, { params: { ids: groupIds } })
 
 const updateUser = (
   role: ERoles,
@@ -45,4 +56,5 @@ export const apiUsers = {
   deleteUser,
   updateMe,
   toggleBlockUser,
+  getGroupsUsers,
 }

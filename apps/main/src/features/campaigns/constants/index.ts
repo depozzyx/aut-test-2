@@ -61,12 +61,7 @@ export const SORT_BY = {
   NAME: 'name',
 } as const
 
-export const INITIAL_REQUEST_PARAMS_CREATE = {
-  page: 1,
-  limit: 10,
-}
-
-export const INITIAL_REQUEST_PARAMS_EDIT = {
+export const INITIAL_REQUEST_PARAMS = {
   page: 1,
   limit: 10,
 }

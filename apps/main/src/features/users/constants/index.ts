@@ -1,5 +1,5 @@
-import { EPermissions, ERoles } from '../../../constants/profile'
-import { TUserPermissions } from '../../../types/permissions'
+import { EPermissions, ERoles } from '@/constants/profile'
+import { TUserPermissions } from '@/types/permissions'
 
 export const USER_ORDER_BY = {
   CREATED_AT: 'createdAt',

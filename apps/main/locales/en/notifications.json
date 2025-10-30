@@ -20,6 +20,11 @@
     "campaign-active": "<translate>Campaign active but delayed until <value>{{ nearestTime }}</value></translate>",
     "connection-restored": "<translate>Connection has been restored</translate>"
   },
+  "group": {
+    "deleted": "<value>{{ groupName }}</value> <translate>was successfully deleted</translate>",
+    "created": "<translate>New group</translate> <value>{{ groupName }}</value> <translate>was successfully added</translate>",
+    "updated": "<translate>Group`s info was successfully updated</translate>"
+  },
   "settings": {
     "user-data-changed": "<translate>Changes saved</translate>"
   },
@@ -36,5 +41,10 @@
   },
   "cdr": {
     "recordNotFound": "<translate>Could not load call record</translate>"
+  },
+  "route": {
+    "success-create": "<value>{{ routeName }}</value> <translate>was successfully created</translate>",
+    "success-update": "<value>{{ routeName }}</value> <translate>was successfully updated</translate>",
+    "success-delete": "<translate>Route was successfully deleted</translate>"
   }
 }

@@ -30,7 +30,7 @@ import { CAMPAIGN_STATUSES, CAMPAIGN_TABLE_TYPES } from '../constants'
 
 export type TInit = {
   isLoading: boolean
-  selectedId: null | number | string
+  selectedId: null | number
   activeCampaigns: TActiveCampaign[] | []
   agentAssignedCampaigns: TAgentAssignedCampaign[] | [] // new state for agent assigned active campaigns
   campaignList: TCampaign[] | []
@@ -46,6 +46,7 @@ export type TInit = {
   order?: TOrder
   isCampaignSelected: boolean // New state for campaign selection
   refetchTrigger: number // New state to trigger refetch
+  requestsQueue: Record<string, boolean>
 }
 
 const init: TInit = {
@@ -70,6 +71,7 @@ const init: TInit = {
   order: undefined,
   isCampaignSelected: false, // Initialize as false
   refetchTrigger: Date.now(), // New state to trigger refetch
+  requestsQueue: {},
 }
 
 const campaigns = createSlice({
@@ -79,17 +81,34 @@ const campaigns = createSlice({
     setIsLoading(state, action: PayloadAction<TInit['isLoading']>) {
       state.isLoading = action.payload
     },
+    addRequest(state, action: PayloadAction<string>) {
+      state.requestsQueue[action.payload] = true
+    },
+    deleteRequest(state, action: PayloadAction<string>) {
+      delete state.requestsQueue[action.payload]
+    },
     setSelectedId(state, action: PayloadAction<TInit['selectedId']>) {
       state.selectedId = action.payload
     },
     setPagination(state, action: PayloadAction<TInit['pagination']>) {
       state.pagination = calculateNewPage(action.payload)
     },
-    setCampaignList(state, action: PayloadAction<TInit['campaignList']>) {
-      state.campaignList = action.payload
+    setCampaignList(
+      state,
+      action: PayloadAction<{ data: TInit['campaignList']; append?: boolean }>,
+    ) {
+      if (action.payload.append) {
+        state.campaignList = action.payload.data.reduce((acc, item) => {
+          if (!acc.find((i) => i.id === item.id)) {
+            acc.push(item)
+          }
+          return acc
+        }, state.campaignList.slice())
+      } else {
+        state.campaignList = action.payload.data
+      }
     },
     setActiveCampaigns(state, action: PayloadAction<TInit['activeCampaigns']>) {
-      // todo
       state.activeCampaigns = action.payload
     },
     setAgentAssignedCampaigns(
@@ -163,6 +182,8 @@ export const {
   resetFilters,
   reset,
   refetch,
+  addRequest,
+  deleteRequest,
 } = campaigns.actions
 
 export const selectCampaigns: TSelector<TInit> = (state) => state.campaigns
@@ -172,9 +193,23 @@ export const selectIsLoading = createSelector(
   ({ isLoading }) => isLoading,
 )
 
+export const selectIsRequested = createSelector(
+  selectCampaigns,
+  ({ requestsQueue }) => Object.keys(requestsQueue).length > 0,
+)
+
 export const selectCampaignsPagination = createSelector(
   selectCampaigns,
   ({ pagination }) => pagination,
+)
+
+export const selectCampaignsAsOptions = createSelector(
+  selectCampaigns,
+  ({ campaignList }) =>
+    campaignList.map((campaign) => ({
+      label: campaign.name,
+      value: campaign.id,
+    })),
 )
 
 export const selectCampaignsList = createSelector(
@@ -307,16 +342,26 @@ export const asyncGetAgentAssignedCampaigns = (): TAsyncAction => async (dispatc
 }
 
 export const asyncGetCampaignsList =
-  (params: TActiveCampaignsReq): TAsyncAction =>
+  (
+    params: TActiveCampaignsReq,
+    append = false,
+    withLoading = true,
+    controller: AbortController | undefined = undefined,
+  ): TAsyncAction =>
   async (dispatch, getState) => {
+    const requestId = Math.random().toString(36).substring(2, 15)
     try {
-      dispatch(setIsLoading(true))
+      if (withLoading) dispatch(setIsLoading(true))
+      dispatch(addRequest(requestId))
       const { filterCampaignIds } = getState().campaigns
-      const { data } = await apiCampaigns.getCampaignList({
-        ids: filterCampaignIds,
-        ...params,
-      })
-      dispatch(setCampaignList(data.data))
+      const { data } = await apiCampaigns.getCampaignList(
+        {
+          ids: filterCampaignIds,
+          ...params,
+        },
+        controller,
+      )
+      dispatch(setCampaignList({ data: data.data, append }))
       dispatch(setPagination(data.pagination))
     } catch (e) {
       handleRestError({
@@ -325,6 +370,7 @@ export const asyncGetCampaignsList =
       })
     } finally {
       dispatch(setIsLoading(false))
+      dispatch(deleteRequest(requestId))
     }
   }
 

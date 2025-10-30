@@ -1,8 +1,9 @@
 import {
   TGeneratedCallTime,
   TGeneratedCallFrequency,
+  CAMPAIGN_STATUSES,
 } from '@/features/campaigns/constants'
-import { TLeadList } from '@/features/campaigns/hooks/use-getCampaignById'
+import { TLeadList } from '../../../api/rest/campaigns/types'
 
 export type TCampaignTableType = 'active' | 'list'
 
@@ -63,3 +64,16 @@ export type TFilterType =
   | 'status'
   | 'filterDate'
   | 'all'
+
+export type OptionsLoader = {
+  options: { value: number | undefined; label: string }[]
+  loadMore: () => void
+  setSearch: (search: string) => void
+  reload: () => void
+}
+
+export const disabledEditStatuses: TCampaignStatus[] = [
+  CAMPAIGN_STATUSES.COMPLETE,
+  CAMPAIGN_STATUSES.ACTIVE,
+  CAMPAIGN_STATUSES.HOLD,
+]

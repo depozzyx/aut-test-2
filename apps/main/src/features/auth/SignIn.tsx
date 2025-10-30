@@ -19,8 +19,10 @@ import { signInAsync } from './store/sign-in'
 export const SignIn: FC = () => {
   const { t } = useTranslation('auth')
 
-  const { dispatch } = useRedux()
+  const { dispatch, select } = useRedux()
   const turnstile = useTurnstile()
+
+  const isLoading = select((state) => state.signIn.isLoading)
 
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
@@ -54,12 +56,14 @@ export const SignIn: FC = () => {
       return Boolean(
         !formik.values.captchaToken ||
           (formik.touched.email && formik.errors.email) ||
-          (formik.touched.password && formik.errors.password),
+          (formik.touched.password && formik.errors.password) ||
+          isLoading,
       )
     }
     return Boolean(
       (formik.touched.email && formik.errors.email) ||
-        (formik.touched.password && formik.errors.password),
+        (formik.touched.password && formik.errors.password) ||
+        isLoading,
     )
   }
 

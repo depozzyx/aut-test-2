@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { TSelector, TAsyncAction } from '@/store'
 import { apiAgents } from '@/api-rest/agents'
 import { TAgentWorkStatus } from '@/features/agents/types'
-import { AgentStatus, TAgentStatus } from '@/api-rest/agents/types'
+import { TAgentStatus } from '@/api-rest/agents/types'
 
 export type TInit = {
   status: TAgentWorkStatus | null
@@ -20,6 +20,7 @@ export type TInit = {
     agentName: string | null
   }
   whisperSpyLeadId?: number
+  microPhoneState: 'on' | 'off'
 }
 
 const init: TInit = {
@@ -37,6 +38,7 @@ const init: TInit = {
   sipConnected: false,
   hasCurrentRTCSession: false,
   isEchoTestMode: false,
+  microPhoneState: 'on',
 }
 
 const agentStatus = createSlice({
@@ -52,6 +54,9 @@ const agentStatus = createSlice({
     },
     setWhisperSpy(state, action: PayloadAction<TInit['whisperSpy']>) {
       state.whisperSpy = action.payload
+    },
+    setMicroPhoneState(state, action: PayloadAction<TInit['microPhoneState']>) {
+      state.microPhoneState = action.payload
     },
     setWhisperSpyLeadId(state, action: PayloadAction<TInit['whisperSpyLeadId']>) {
       state.whisperSpyLeadId = action.payload
@@ -91,23 +96,24 @@ const {
   setEchoTestMode,
   setWhisperSpy,
   setWhisperSpyLeadId,
+  setMicroPhoneState,
 } = agentStatus.actions
 
-const checkStoredAndPbxAgentStatus = async (
-  agentStatus: AgentStatus,
-  changeStoreAgentStatus: (payload: TInit['pbxStatus']) => void,
-): Promise<boolean> => {
-  const { data: response } = await apiAgents.getAgentStatus()
-  const pbxAgentStatus = response?.data?.status
-  const isDifferent = agentStatus !== pbxAgentStatus
-  if (isDifferent) {
-    console.warn(
-      `Agent status in PBX is ${pbxAgentStatus} but in Redux is '${agentStatus}'`,
-    )
-    changeStoreAgentStatus(response.data)
-  }
-  return isDifferent
-}
+// const checkStoredAndPbxAgentStatus = async (
+//   agentStatus: AgentStatus,
+//   changeStoreAgentStatus: (payload: TInit['pbxStatus']) => void,
+// ): Promise<boolean> => {
+//   const { data: response } = await apiAgents.getAgentStatus()
+//   const pbxAgentStatus = response?.data?.status
+//   const isDifferent = agentStatus !== pbxAgentStatus
+//   if (isDifferent) {
+//     console.warn(
+//       `Agent status in PBX is ${pbxAgentStatus} but in Redux is '${agentStatus}'`,
+//     )
+//     changeStoreAgentStatus(response.data)
+//   }
+//   return isDifferent
+// }
 
 const setStatusAsync =
   (workStatus: TAgentWorkStatus, reason?: string, onSuccess?: () => void): TAsyncAction =>
@@ -115,16 +121,16 @@ const setStatusAsync =
     try {
       dispatch(setLoading(true))
 
-      const agentStatus = getState().agentStatus.pbxStatus.status
+      //      const agentStatus = getState().agentStatus.pbxStatus.status
       const campaignId = getState().agents.selectedCampaignId || '-1'
 
-      const isDifferent = await checkStoredAndPbxAgentStatus(
-        agentStatus,
-        (payload: TInit['pbxStatus']) => dispatch(setPBXStatus(payload)),
-      )
-      if (isDifferent) {
-        return
-      }
+      // const isDifferent = await checkStoredAndPbxAgentStatus(
+      //   agentStatus,
+      //   (payload: TInit['pbxStatus']) => dispatch(setPBXStatus(payload)),
+      // )
+      // if (isDifferent) {
+      //   return
+      // }
 
       const { data } = await apiAgents.changeWorkStatus({
         workStatus,
@@ -154,6 +160,7 @@ export const agentActions = {
   setEchoTestMode,
   setWhisperSpy,
   setWhisperSpyLeadId,
+  setMicroPhoneState,
 }
 // selectors
 export const agentStatusSelector: TSelector<TInit> = (state) => state.agentStatus

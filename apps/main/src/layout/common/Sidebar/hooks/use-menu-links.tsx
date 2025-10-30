@@ -122,12 +122,12 @@ export const useMenuLinks = (): TMenuItem[] => {
           disabled: false,
           availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
         },
-        // {
-        //   title: t('agent_groups'),
-        //   link: ROUTES.AGENT_GROUPS,
-        //   disabled: false,
-        //   availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
-        // },
+        {
+          title: t('agent_groups'),
+          link: ROUTES.AGENT_GROUPS,
+          disabled: false,
+          availableRoles: [ERoles.MANAGER, ERoles.ADMIN, ERoles.SUPERADMIN],
+        },
         // {
         //   title: t('agents_analytics'),
         //   link: ROUTES.AGENTS_ANALYTICS,
@@ -183,6 +183,12 @@ export const useMenuLinks = (): TMenuItem[] => {
         {
           title: t('settings_admins_list'),
           link: ROUTES.SETTINGS_ADMINS_LIST,
+          disabled: false,
+          availableRoles: [ERoles.SUPERADMIN],
+        },
+        {
+          title: t('settings_routes_management'),
+          link: ROUTES.SETTINGS_ROUTES_LIST,
           disabled: false,
           availableRoles: [ERoles.SUPERADMIN],
         },

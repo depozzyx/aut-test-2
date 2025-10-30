@@ -1,7 +1,7 @@
-import { TLeadList } from '../../../features/campaigns/hooks/use-getCampaignById'
 import { TOrder } from '../../../types/entities/order'
 import { TPagination } from '../../../types/entities/pagination'
 import { TAgent } from '../agents/types'
+import { TLeadList } from '../campaigns/types'
 import { TLeadData } from '../leads/types'
 
 export type TFeedbackReq = {

@@ -4,7 +4,7 @@ import { CSSProperties, DefaultTheme } from 'styled-components'
 import { TStylesProps } from '@peiko/styles'
 import { TLabelProps } from '@peiko/components/inputs/types'
 
-export type TSelectOption<T = string | number | boolean> = {
+export type TSelectOption<T = string | number | boolean | undefined> = {
   /**
    * The value of the option.
    */
@@ -46,7 +46,12 @@ export type TMultiSelectProps = {
   /**
    * Select is controlled component, so you need to specify the value of the input select if you need to change it.
    * */
-  value?: Array<TSelectOption | string | number | boolean>
+  value?:
+    | Array<TSelectOption | string | number | boolean>
+    | TSelectOption
+    | string
+    | number
+    | boolean
   /**
    * Specify if the select is searchable. It allows to search for options by typing.
    * */
@@ -124,4 +129,7 @@ export type TMultiSelectProps = {
   onInputChange?: (inputValue: string) => void | string
   emitValues?: boolean
   hideSelectedOptions?: boolean
+  isMulti?: boolean
+  /** When true, selected values render inside the control; set false to hide chips */
+  controlShouldRenderValue?: boolean
 } & TStylesProps

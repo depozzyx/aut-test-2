@@ -28,6 +28,7 @@ export const MultiSelect = memo(
     size = 's',
     isSearchable = false,
     hideSelectedOptions = false,
+    controlShouldRenderValue = true,
     zIndex,
     ...props
   }: TMultiSelectProps): JSX.Element => {
@@ -58,9 +59,9 @@ export const MultiSelect = memo(
       if (!options || !value) return
       setState({
         optionSelected: props.emitValues
-          ? (value
-              .map((v) => options.find((o) => o.value === v))
-              .filter((v) => v) as MultiValue<TSelectOption>)
+          ? ((value as MultiValue<TSelectOption>)
+              .map((v: any) => options.find((o) => o.value === v))
+              .filter((v: any) => v) as MultiValue<TSelectOption>)
           : (value as MultiValue<TSelectOption>),
       })
     }, [value, options])
@@ -137,6 +138,7 @@ export const MultiSelect = memo(
             value={state.optionSelected}
             closeMenuOnSelect={false}
             hideSelectedOptions={hideSelectedOptions}
+            controlShouldRenderValue={controlShouldRenderValue}
             components={{
               Menu,
               Option,
@@ -149,7 +151,6 @@ export const MultiSelect = memo(
             onMenuOpen={() => setOpen(true)}
             classNamePrefix="multi-rs"
             isSearchable={isSearchable}
-            controlShouldRenderValue
             hasScroll={hasScroll}
             width={width}
             zIndex={zIndex}

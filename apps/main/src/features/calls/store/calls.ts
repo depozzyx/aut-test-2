@@ -14,6 +14,7 @@ export type CDRListFilters = {
   leadListId?: number
   campaignId?: number
   status?: string
+  agentGroupId?: number
   agentId?: number
   phone?: string
   country?: string
@@ -24,7 +25,7 @@ export type CDRListFilters = {
 export type TInit = {
   CDRList: TCDRList[]
   pagination: TPagination
-  isLoading: boolean
+  isLoading: Record<string, boolean>
   orderBy?: CallOrderBy
   order?: TOrder
   filters: CDRListFilters
@@ -37,7 +38,7 @@ const init: TInit = {
     limit: 10,
     total: 1,
   },
-  isLoading: false,
+  isLoading: {},
   orderBy: CallOrderBy.createdAt,
   order: 'DESC',
   filters: {
@@ -61,8 +62,11 @@ const calls = createSlice({
     setCDRFilters(state, action: PayloadAction<CDRListFilters>) {
       state.filters = action.payload
     },
-    setIsLoading(state, action: PayloadAction<boolean>) {
-      state.isLoading = action.payload
+    addIsLoading(state, action: PayloadAction<string>) {
+      state.isLoading[action.payload] = true
+    },
+    deleteIsLoading(state, action: PayloadAction<string>) {
+      delete state.isLoading[action.payload]
     },
     setCallsOrderBy(state, action: PayloadAction<TInit['orderBy']>) {
       // ASC => DESC => clear
@@ -85,11 +89,12 @@ const calls = createSlice({
 // actions
 export const {
   setPagination,
-  setIsLoading,
   setCallsOrderBy,
   reset,
   setCDRList,
   setCDRFilters,
+  addIsLoading,
+  deleteIsLoading,
 } = calls.actions
 
 // selectors
@@ -105,19 +110,25 @@ export const selectCallsFilters = createSelector(selectCalls, ({ filters }) => f
 export const selectCallsOrderBy = createSelector(selectCalls, ({ orderBy }) => orderBy)
 export const selectCallsOrder = createSelector(selectCalls, ({ order }) => order)
 
-export const selectIsLoading = createSelector(selectCalls, ({ isLoading }) => isLoading)
+export const selectIsLoading = createSelector(
+  selectCalls,
+  ({ isLoading }) => Object.keys(isLoading).length > 0,
+)
 
 export default calls.reducer
 
 export const getCallsList =
-  ({
-    date,
-    ...params
-  }: CDRListFilters &
-    Partial<TPagination> & { orderBy?: CallOrderBy; order?: TOrder }): TAsyncAction =>
+  (
+    {
+      date,
+      ...params
+    }: CDRListFilters & Partial<TPagination> & { orderBy?: CallOrderBy; order?: TOrder },
+    controller?: AbortController,
+  ): TAsyncAction =>
   async (dispatch) => {
+    const requestId = Math.random().toString(36).substring(2, 15)
     try {
-      dispatch(setIsLoading(true))
+      dispatch(addIsLoading(requestId))
       const filter = {
         ...params,
         page: params.page ?? 1,
@@ -125,7 +136,7 @@ export const getCallsList =
         dateFrom: date?.from,
         dateTo: date?.to,
       }
-      const { data } = await apiCalls.cdrList(filter)
+      const { data } = await apiCalls.cdrList(filter, controller)
 
       const cdrList = data.data
       dispatch(setCDRList(cdrList))
@@ -133,7 +144,7 @@ export const getCallsList =
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
-      dispatch(setIsLoading(false))
+      dispatch(deleteIsLoading(requestId))
     }
   }
 

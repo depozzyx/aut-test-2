@@ -105,6 +105,7 @@ export const asyncCreateCampaign =
         const dataForRequest = {
           ...formData,
           leadListIds: formData.leadListIds || [],
+          agentGroupIds: formData.agentGroupIds || [],
           assignedAgentIds: formData.assignedAgentIds || [],
           reserveAgentIds: formData.assignedAgentIds || [],
           filterLeadStatuses: formData.filterLeadStatuses || [],

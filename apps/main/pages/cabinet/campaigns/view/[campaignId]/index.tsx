@@ -13,7 +13,7 @@ import { Container } from '@/features/campaigns/styles/CampaignsList.styled'
 import { apiCampaigns } from '@/api-rest/campaigns'
 import { handleRestError } from '@/features/common/error'
 import { useRedux } from '@/hooks/use-redux'
-import { TCampaignInfo } from '@/api-rest/campaigns/types'
+import { TCampaignById, TCampaignInfo } from '@/api-rest/campaigns/types'
 import { Flex } from '@/components/Flex'
 import { Text } from '@peiko/components/Text/Text'
 import { Box } from '@peiko/components/Box'
@@ -33,7 +33,6 @@ import {
   selectLeadsOrder,
 } from '@/features/leads/store/leads'
 import { ROUTES } from '@/routes'
-import { TCampaign } from '@/features/campaigns/types'
 
 const CampaignViewPage: NextPage = () => {
   const { t } = useTranslation('campaigns')
@@ -47,7 +46,7 @@ const CampaignViewPage: NextPage = () => {
   const { dispatch, select } = useRedux()
   const campaignId = Number(router.query.campaignId)
   const [campaignInfo, setCampaignInfo] = useState<TCampaignInfo>()
-  const [campaign, setCampaign] = useState<TCampaign>()
+  const [campaign, setCampaign] = useState<TCampaignById>()
 
   const {
     pagination: { total, page, limit },

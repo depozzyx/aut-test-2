@@ -4,6 +4,7 @@ import {
   BUTTON_TRANSITION_DURATION,
   BUTTON_TRANSITION_TIMING_FUNCTION,
 } from '../constants/animation'
+import { getIconButtonSize } from '../utils/get-icon-button-size'
 
 export const LoaderCont = styled.div`
   display: inline-flex;
@@ -15,6 +16,7 @@ export const LoaderCont = styled.div`
 
 export const Button = styled.button<TButton>(
   (props) => css`
+    ${props.size ? getIconButtonSize(props.size) : ''}
     cursor: pointer;
     position: relative;
     width: ${props.width ?? 'fit-content'};

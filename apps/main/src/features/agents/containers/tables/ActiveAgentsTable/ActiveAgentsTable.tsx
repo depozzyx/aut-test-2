@@ -23,6 +23,19 @@ import { BaseImage } from '@peiko/components/BaseImage'
 import { StopIcon } from '@peiko/components/icons/StopIcon'
 import { agentActions, agentStatusSelector } from '@/features/common/agentStatus/store'
 
+import { ERoles } from '@/constants/profile'
+import { leadsApi } from '@/api-rest/leads'
+import { TLeadData } from '@/api-rest/leads/types'
+import { TActiveAgent } from '@/api-rest/agents/types'
+import { InfoColumn } from '@/components/InfoColumn'
+import { ORDER } from '@/constants/order'
+import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon/HeadphonesIcon'
+
+import { MODAL_NAMES } from '@/features/common/modals/constants'
+import { useModals } from '@/features/common/modals/hooks/use-modals'
+import { handleRestError } from '@/features/common/error'
+import { userSelectors } from '@/features/common/user'
+import { asyncToggleBlockUser } from '@/features/users/store/users'
 import {
   selectActiveAgents,
   selectAgentsPagination,
@@ -33,19 +46,6 @@ import {
   selectStatusFilter,
   setOrderBy,
 } from '../../../store/agents'
-import { InfoColumn } from '../../../../../components/InfoColumn'
-
-import { MODAL_NAMES } from '../../../../common/modals/constants'
-import { useModals } from '../../../../common/modals/hooks/use-modals'
-import { leadsApi } from '../../../../../api/rest/leads'
-import { handleRestError } from '../../../../common/error'
-import { TLeadData } from '../../../../../api/rest/leads/types'
-import { asyncToggleBlockUser } from '../../../../users/store/users'
-import { ERoles } from '../../../../../constants/profile'
-import { ORDER } from '../../../../../constants/order'
-import { HeadphonesIcon } from '../../../../../components/icons/HeadphonesIcon/HeadphonesIcon'
-import { TActiveAgent } from '../../../../../api/rest/agents/types'
-import { userSelectors } from '../../../../common/user'
 
 type TActiveAgentsRowKeys =
   | 'name'

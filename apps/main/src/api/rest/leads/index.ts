@@ -42,8 +42,11 @@ const importCheckLeads = (body: TImportCheckReq): TAxiosResponse<TImportCheckRes
 const importCancelLeads = (body: TImportCancelReq): TAxiosResponse<TImportLeadsRes> =>
   api.post('/leads/import-cancel', body)
 
-const leadsList = (params: TLeadsListReq): TAxiosResponse<TPaginatedRes<TLeadsList>> =>
-  api.get('/leads', { params })
+const leadsList = (
+  params: TLeadsListReq,
+  controller?: AbortController,
+): TAxiosResponse<TPaginatedRes<TLeadsList>> =>
+  api.get('/leads', { params, signal: controller?.signal })
 
 const leadsGroup = (params: TLeadsGroupReq): TAxiosResponse<TPaginatedRes<TLeadsGroup>> =>
   api.get('/lead-list', { params })

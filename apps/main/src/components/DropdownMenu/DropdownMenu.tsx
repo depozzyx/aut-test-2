@@ -6,7 +6,7 @@ import { MenuContainer, MenuItem } from './DropdownMenu.styled'
 import { CheckIcon } from '@/icons/CheckIcon'
 import { Text } from '@peiko/components/Text'
 
-export type TValue = { label: string; value: string | number }
+export type TValue<T = string | number> = { label: string; value: T }
 
 export type TDropdownMenuProps = {
   triggerElement: JSX.Element | ((isOpen: boolean) => JSX.Element)
@@ -18,6 +18,10 @@ export type TDropdownMenuProps = {
   selectedOptions?: TValue[]
   disabled?: boolean
   onMenuScrollToBottom?: () => void
+  closeOnSelect?: boolean
+  // Controlled open state (optional)
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 const Menu: FC<
@@ -86,9 +90,13 @@ export const DropdownMenu = memo(
     maxHeight,
     onMenuScrollToBottom,
     selectedOptions,
+    closeOnSelect = false,
     ...props
   }: TDropdownMenuProps): JSX.Element => {
     const [selectedItems, setSelectedItems] = useState<TValue[]>([])
+    const [internalOpen, setInternalOpen] = useState(false)
+    const isControlled = typeof props.open === 'boolean'
+    const effectiveOpen = isControlled ? (props.open as boolean) : internalOpen
 
     const handleSelect = (item: TValue) => {
       let newSelectedItems: TValue[] = []
@@ -109,14 +117,41 @@ export const DropdownMenu = memo(
 
       setSelectedItems(newSelectedItems)
       onChange(newSelectedItems)
+      // Close when single-select, or when explicitly requested for multi-select
+      if (!multiple || closeOnSelect) {
+        if (isControlled) {
+          props.onOpenChange?.(false)
+        } else {
+          setInternalOpen(false)
+        }
+      }
     }
 
     useEffect(() => {
       setSelectedItems(selectedOptions ?? [])
     }, [selectedOptions])
 
+    // Avoid passing conflicting props down; pick only ContextMenu-relevant overrides from rest
+    const {
+      open: _omitOpen,
+      onOpenChange: _omitOnOpenChange,
+      // Allow consumers to override popup behavior (like 'on' trigger type) if they pass it
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      ...rest
+    } = props as any
+
+    const triggerType = (rest && rest.on) || 'click'
+
     return (
       <ContextMenu
+        open={effectiveOpen}
+        // Keep parent and ContextMenu states in sync so we can programmatically open/close
+        customOpenHandler={() =>
+          isControlled ? props.onOpenChange?.(true) : setInternalOpen(true)
+        }
+        customCloseHandler={() =>
+          isControlled ? props.onOpenChange?.(false) : setInternalOpen(false)
+        }
         disabled={props.disabled}
         trigger={triggerElement}
         renderMenu={() => (
@@ -131,7 +166,8 @@ export const DropdownMenu = memo(
           />
         )}
         position="bottom left"
-        {...props}
+        on={triggerType}
+        {...rest}
       />
     )
   },

@@ -2,7 +2,7 @@ import { TPagination } from '@/types/entities/pagination'
 import { TOrder } from '@/types/entities/order'
 import { TCampaignStatus } from '@/features/campaigns/types'
 import { TUserRoles } from '@/types/roles'
-import { TLeadList } from '@/features/campaigns/hooks/use-getCampaignById'
+import { TLeadList } from '../campaigns/types'
 
 type TEntityType = 'campaign'
 

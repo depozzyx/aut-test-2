@@ -16,13 +16,13 @@ import { TFormik } from '@peiko/types/formik'
 import { TOrder } from '@/types/entities/order'
 import { ORDER } from '@/constants/order'
 import { calculateNewPage } from '@/utils/pagination'
+import { TSelectOption } from '@peiko/components/inputs/Select/types'
 import { TImportError, TImportProgress, TPreparedFiles } from '../types/files'
 import { dataURIToBlob } from '../utils/dataURIToBlob'
 
 export type TInit = {
   leadsList: TLeadsList[]
   pagination: TPagination
-  isLoading: boolean
   leadsGroups: TLeadsGroup[]
   leadsGroupsPagination: TPagination
   selectedLeadsGroup?: TLeadsGroup['id']
@@ -33,6 +33,9 @@ export type TInit = {
   order?: TOrder
   statuses: TLeadStatusData[]
   leadIsChecking: boolean
+  allowEmptyNames: boolean
+  leadsGroupOption?: TSelectOption
+  requestsQueue: Record<string, boolean>
 }
 
 const init: TInit = {
@@ -48,13 +51,15 @@ const init: TInit = {
     total: 1,
   },
   useDefaultStatus: 'fromFile',
-  isLoading: false,
   leadsGroups: [{ name: '-', id: 0 }],
   filesForImport: [],
   orderBy: undefined,
   order: undefined,
   statuses: [],
   leadIsChecking: false,
+  allowEmptyNames: false,
+  leadsGroupOption: undefined,
+  requestsQueue: {},
 }
 
 const leads = createSlice({
@@ -66,9 +71,6 @@ const leads = createSlice({
     },
     setLeadsList(state, action: PayloadAction<TLeadsList[]>) {
       state.leadsList = action.payload
-    },
-    setIsLoading(state, action: PayloadAction<boolean>) {
-      state.isLoading = action.payload
     },
     setLeadsGroups(state, action: PayloadAction<TLeadsGroup[]>) {
       state.leadsGroups = [...state.leadsGroups, ...action.payload]
@@ -98,6 +100,9 @@ const leads = createSlice({
     },
     setLeadsGroup(state, action: PayloadAction<TLeadsGroup['id']>) {
       state.selectedLeadsGroup = action.payload
+    },
+    setLeadsGroupOption(state, action: PayloadAction<TSelectOption>) {
+      state.leadsGroupOption = action.payload
     },
     setUseDefaultStatus(state, action: PayloadAction<string>) {
       state.useDefaultStatus = action.payload
@@ -142,6 +147,15 @@ const leads = createSlice({
     setLeadIsChecking(state, action: PayloadAction<boolean>) {
       state.leadIsChecking = action.payload
     },
+    setAllowEmptyNames(state, action: PayloadAction<boolean>) {
+      state.allowEmptyNames = action.payload
+    },
+    addRequest(state, action: PayloadAction<string>) {
+      state.requestsQueue[action.payload] = true
+    },
+    deleteRequest(state, action: PayloadAction<string>) {
+      delete state.requestsQueue[action.payload]
+    },
   },
 })
 
@@ -149,7 +163,6 @@ const leads = createSlice({
 export const {
   setPagination,
   setLeadsList,
-  setIsLoading,
   setLeadsGroups,
   setLeadsGroup,
   setImportFiles,
@@ -165,6 +178,10 @@ export const {
   setLeadIsChecking,
   setUseDefaultStatus,
   setStatuses,
+  setAllowEmptyNames,
+  setLeadsGroupOption,
+  addRequest,
+  deleteRequest,
 } = leads.actions
 // selectors
 
@@ -192,6 +209,11 @@ export const selectLeadsGroup = createSelector(
   ({ selectedLeadsGroup }) => selectedLeadsGroup,
 )
 
+export const selectLeadsGroupOption = createSelector(
+  selectLeads,
+  ({ leadsGroupOption }) => leadsGroupOption,
+)
+
 export const selectLeadsOrderBy = createSelector(selectLeads, ({ orderBy }) => orderBy)
 export const selectLeadsOrder = createSelector(selectLeads, ({ order }) => order)
 
@@ -199,8 +221,6 @@ export const selectLeadsGroupError = createSelector(
   selectLeads,
   ({ selectError }) => selectError,
 )
-
-export const selectIsLoading = createSelector(selectLeads, ({ isLoading }) => isLoading)
 
 export const selectFilesForImport = createSelector(
   selectLeads,
@@ -211,6 +231,10 @@ export const selectLeadIsChecking = createSelector(
   selectLeads,
   ({ leadIsChecking }) => leadIsChecking,
 )
+export const selectAllowEmptyNames = createSelector(
+  selectLeads,
+  ({ allowEmptyNames }) => allowEmptyNames,
+)
 
 export const selectUseDefaultStatus = createSelector(
   selectLeads,
@@ -219,21 +243,27 @@ export const selectUseDefaultStatus = createSelector(
 
 export const selectLeadStatuses = createSelector(selectLeads, ({ statuses }) => statuses)
 
+export const selectIsLoading = createSelector(
+  selectLeads,
+  ({ requestsQueue: requests }) => Object.keys(requests).length > 0,
+)
+
 export default leads.reducer
 
 export const getLeadList =
-  (params: TLeadsListReq): TAsyncAction =>
+  (params: TLeadsListReq, controller?: AbortController): TAsyncAction =>
   async (dispatch) => {
+    const requestId = Math.random().toString(36).substring(2, 15)
     try {
-      dispatch(setIsLoading(true))
-      const { data } = await leadsApi.leadsList(params)
+      dispatch(addRequest(requestId))
+      const { data } = await leadsApi.leadsList(params, controller)
 
       dispatch(setLeadsList(data.data))
       dispatch(setPagination(data.pagination))
     } catch (e) {
       handleRestError({ e, dispatch })
     } finally {
-      dispatch(setIsLoading(false))
+      dispatch(deleteRequest(requestId))
     }
   }
 
@@ -274,7 +304,10 @@ export const createLeadsGroups =
       dispatch(resetLeadGroups())
 
       dispatch(
-        getLeadsGroups({ page: 1, limit }, () => dispatch(setLeadsGroup(data.data.id))),
+        getLeadsGroups({ page: 1, limit }, () => {
+          dispatch(setLeadsGroup(data.data.id))
+          dispatch(setLeadsGroupOption({ value: data.data.id, label: data.data.name }))
+        }),
       )
       onSuccess()
     } catch (e) {
@@ -287,7 +320,8 @@ export const createLeadsGroups =
 export const importFilesAsync =
   (fileId: string, setController: (controller: AbortController) => void): TAsyncAction =>
   async (dispatch, _store) => {
-    const { filesForImport, selectedLeadsGroup, useDefaultStatus } = _store().leads
+    const { filesForImport, selectedLeadsGroup, useDefaultStatus, allowEmptyNames } =
+      _store().leads
 
     const file = filesForImport.find((item) => item.id === fileId)
     if (!file) return
@@ -321,6 +355,7 @@ export const importFilesAsync =
       }
       if (selectedLeadsGroup) formData.append('leadListId', selectedLeadsGroup.toString())
       if (useDefaultStatus === 'default') formData.append('useDefaultStatus', 'true')
+      if (allowEmptyNames) formData.append('allowEmptyNames', 'true')
 
       const { data } = await leadsApi.importLeads(formData, controller)
 
@@ -366,13 +401,15 @@ export const importFilesAsync =
                     ...file,
                     uploadProgress: 100,
                     error: messages,
-                    validationErrors: typedData.validationErrors,
-                    unknownStatuses: typedData.unknownStatuses?.map((status) => ({
-                      status,
-                      createNew: false,
-                    })),
-                    unknownStatusesNotFixed: (typedData.unknownStatuses?.length ?? 0) > 0,
-                    duplicatedPhoneNumbers: typedData.duplicatedPhoneNumbers,
+                    validationErrors: typedData?.validationErrors ?? [],
+                    unknownStatuses:
+                      typedData?.unknownStatuses?.map((status) => ({
+                        status,
+                        createNew: false,
+                      })) ?? [],
+                    unknownStatusesNotFixed:
+                      (typedData?.unknownStatuses?.length ?? 0) > 0,
+                    duplicatedPhoneNumbers: typedData?.duplicatedPhoneNumbers ?? [],
                     duplicatedPhoneNotFixed:
                       (typedData?.duplicatedPhoneNumbers?.length ?? 0) > 0,
                   }
@@ -427,45 +464,51 @@ export const importFilesCheckAsync = (): TAsyncAction => async (dispatch, _store
   }
 }
 
-export const importFilesSubmitAsync = (): TAsyncAction => async (dispatch, _store) => {
-  const store = _store().leads
-  const { filesForImport, selectedLeadsGroup, useDefaultStatus } = store
-  dispatch(setIsLoading(true))
-  const fileIds = filesForImport
-    .filter((item) => !item.error?.length)
-    .map((item: TPreparedFiles) => ({
-      fileId: item.id,
-      unknownStatuses: item.unknownStatuses,
-    }))
-  if (!fileIds.length || !selectedLeadsGroup) return
+export const importFilesSubmitAsync =
+  (shuffleBeforeImport: boolean): TAsyncAction =>
+  async (dispatch, _store) => {
+    const store = _store().leads
+    const { filesForImport, selectedLeadsGroup, useDefaultStatus } = store
+    const requestId = Math.random().toString(36).substring(2, 15)
+    const fileIds = filesForImport
+      .filter((item) => !item.error?.length)
+      .map((item: TPreparedFiles) => ({
+        fileId: item.id,
+        unknownStatuses: item.unknownStatuses,
+      }))
+    if (!fileIds.length || !selectedLeadsGroup) return
+    dispatch(addRequest(requestId))
 
-  try {
-    await leadsApi.importSubmitLeads({
-      fileIds,
-      leadListId: selectedLeadsGroup,
-      useDefaultStatus: useDefaultStatus === 'default',
-    })
-  } catch (e) {
-    handleRestError({
-      e,
-      dispatch,
-      custom: (_, data) => {
-        let messages = 'Errors occurred during files file import'
-        if (data?.message) {
-          if (Array.isArray(data.message)) {
-            messages = data.message.join(', ')
-          } else if (typeof data.message === 'object') {
-            messages = Object.values(data.message).join(', ')
-          } else {
-            messages = data.message
+    try {
+      await leadsApi.importSubmitLeads({
+        fileIds,
+        leadListId: selectedLeadsGroup,
+        useDefaultStatus: useDefaultStatus === 'default',
+        shuffle: shuffleBeforeImport,
+      })
+    } catch (e) {
+      handleRestError({
+        e,
+        dispatch,
+        custom: (_, data) => {
+          let messages = 'Errors occurred during files file import'
+          if (data?.message) {
+            if (Array.isArray(data.message)) {
+              messages = data.message.join(', ')
+            } else if (typeof data.message === 'object') {
+              messages = Object.values(data.message).join(', ')
+            } else {
+              messages = data.message
+            }
           }
-        }
-        dispatch(setSelectError(messages))
-        return true
-      },
-    })
+          dispatch(setSelectError(messages))
+          return true
+        },
+      })
+    } finally {
+      dispatch(deleteRequest(requestId))
+    }
   }
-}
 
 export const importFilesCancelAsync = (): TAsyncAction => async (dispatch, _store) => {
   const { filesForImport } = _store().leads

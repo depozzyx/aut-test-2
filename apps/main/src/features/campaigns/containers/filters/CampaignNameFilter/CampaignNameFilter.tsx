@@ -8,12 +8,11 @@ import {
   setFilterCampaignIds,
 } from '@/features/campaigns/store/campaigns'
 import { TCampaignTableType } from '@/features/campaigns/types'
-import { DropdownMenu } from '@/components/DropdownMenu'
-import { ArrowIcon } from '@peiko/components/icons/Arrow'
 import { useCampaignNameFilter } from '@/features/campaigns/hooks/use-campaignNameFilter'
 
 import { TValue } from '@/components/DropdownMenu/DropdownMenu'
-import { StyledTrigger } from './CampaignNameFilter.styled'
+import { VirtualizedMultiSelect } from '@/components/MutliSelect'
+import { TSelectEvent } from '@/components/MutliSelect/types'
 
 type TProps = {
   type: TCampaignTableType
@@ -30,10 +29,8 @@ export const CampaignNameFilter = ({
 }: TProps): JSX.Element => {
   const { select, dispatch } = useRedux()
   const { t } = useTranslation('campaigns')
-  const { campaignOptions, loadMoreCampaigns } = useCampaignNameFilter(
-    type,
-    useIdForValue,
-  )
+  const { campaignOptions, loadMoreCampaigns, setSearchCampaigns } =
+    useCampaignNameFilter(type, useIdForValue)
 
   useEffect(
     () => setCampaignOptions && setCampaignOptions(campaignOptions),
@@ -42,37 +39,42 @@ export const CampaignNameFilter = ({
 
   const filterCampaignIds = select(selectFilterCampaignIds, shallowEqual)
 
-  const handleOnChange = (selectedItems: TValue[]) => {
-    if (selectedItems.map((o) => o.label).includes('-')) {
+  const handleOnChange = (selectedItems: TSelectEvent) => {
+    const select = Array.isArray(selectedItems) ? selectedItems : []
+    if (!select.length) {
+      dispatch(setFilterCampaignIds([]))
+    } else if (select.map((o) => o.label).includes('-')) {
       dispatch(setFilterCampaignIds([]))
     } else {
-      const selectedIds = selectedItems.map((item) => item.value as number)
+      const selectedIds = select.map((item) => item.value as number)
       dispatch(setFilterCampaignIds(selectedIds))
     }
   }
 
-  return (
-    <DropdownMenu
-      multiple
-      disabled={disabled}
-      maxHeight="350px"
-      triggerElement={(isOpen) => (
-        <StyledTrigger>
-          {t('campaigns-filter')}{' '}
-          <ArrowIcon color="main5" size="s" direction={isOpen ? 'up' : 'down'} />
-        </StyledTrigger>
-      )}
-      selectedOptions={campaignOptions.filter((option) =>
+  const el = (
+    <VirtualizedMultiSelect
+      name="campaigns-filter"
+      value={campaignOptions.filter((option) =>
         filterCampaignIds.includes(option.value as number),
       )}
-      minWidth="210px"
       options={
         filterCampaignIds.length
           ? campaignOptions
           : campaignOptions.filter((el) => el.label !== '-')
       }
+      disabled={disabled}
       onChange={handleOnChange}
+      onInputChange={setSearchCampaigns}
       onMenuScrollToBottom={loadMoreCampaigns}
+      placeholder={t('campaigns-filter')}
+      styles={{
+        minWidth: '210px',
+      }}
+      controlShouldRenderValue={false}
+      size="s"
+      isSearchable
     />
   )
+
+  return el
 }

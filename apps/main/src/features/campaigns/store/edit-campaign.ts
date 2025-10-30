@@ -39,17 +39,20 @@ export const selectEditCampaign: TSelector<TInit> = (state) => state.editCampaig
 export default editCampaign.reducer
 
 export const asyncEditCampaign =
-  (formData: Omit<TEditCampaignReq, 'id'>, type: TCampaignTableType): TAsyncAction =>
+  (
+    id: number,
+    formData: Omit<TEditCampaignReq, 'id'>,
+    type?: TCampaignTableType,
+  ): TAsyncAction =>
   async (dispatch, getState) => {
+    if (!id) throw new Error('Campaign ID is required')
     try {
       dispatch(setIsLoading(true))
 
       if (formData) {
-        const { selectedId } = getState().campaigns
-
         const dataForRequest = {
-          id: selectedId as number,
           ...formData,
+          id,
           leadListIds: formData.leadListIds || [],
           assignedAgentIds: formData.assignedAgentIds || [],
           reserveAgentIds: formData.assignedAgentIds || [],
@@ -66,7 +69,7 @@ export const asyncEditCampaign =
             limit,
           }),
         )
-      } else {
+      } else if (type === CAMPAIGN_TABLE_TYPES.LIST) {
         dispatch(
           asyncGetCampaignsList({
             page,

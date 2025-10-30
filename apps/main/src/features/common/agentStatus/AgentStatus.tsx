@@ -53,7 +53,7 @@ const INIT_OPTIONS = (
 export const AgentStatus: FC = () => {
   const { t } = useTranslation('user')
   const { dispatch, select } = useRedux()
-  const { pbxStatus, hasCurrentRTCSession } = select(agentStatusSelector)
+  const { pbxStatus } = select(agentStatusSelector)
   const [options, setOptions] = useState(INIT_OPTIONS(t))
   const { user } = useAuth()
   const selectedCampaignId = select(selectSelectedCampaignId)
@@ -163,7 +163,7 @@ export const AgentStatus: FC = () => {
           changeStatusDisable ||
           pbxStatus.status === 'oncall' ||
           pbxStatus.status === 'ringing' ||
-          hasCurrentRTCSession ||
+          // hasCurrentRTCSession ||
           (pbxStatus.status === 'pause' && pbxStatus.reason === 'feedback')
         }
         onChange={checkAndSetCampaign}

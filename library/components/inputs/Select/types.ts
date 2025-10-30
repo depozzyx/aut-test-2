@@ -4,7 +4,7 @@ import { CSSProperties, DefaultTheme } from 'styled-components'
 import { TStylesProps } from '@peiko/styles'
 import { TLabelProps } from '../types'
 
-export type TSelectOption<T = string | number | boolean> = {
+export type TSelectOption<T = string | number | boolean | undefined> = {
   /**
    * The value of the option.
    */
@@ -57,7 +57,7 @@ export type TSelectProps = {
   /**
    * Select is controlled component, so you need to specify the value of the input select if you need to change it.
    * */
-  value?: TSelectOption['value']
+  value?: TSelectOption['value'] | TSelectOption
   /**
    * Specify if the select is searchable. It allows to search for options by typing.
    * */
@@ -117,7 +117,9 @@ export type TSelectProps = {
    * */
   zIndex?: CSSProperties['zIndex']
   onMenuScrollToBottom?: () => void
+  onInputChange?: (inputValue: string) => void | string
   readOnlySelection?: boolean
   // isOptionDisabled?: (option: TSelectOption) => boolean
   menuPortalTarget?: HTMLElement
+  emitValues?: boolean
 } & TStylesProps
