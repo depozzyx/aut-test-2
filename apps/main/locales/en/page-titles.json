@@ -19,5 +19,6 @@
   "activity-log": "Activity log",
   "account-management": "Account management",
   "reports-cdr": "Reports - CDR",
-  "reports-campaign-statistics": "Reports - Campaign statistics"
+  "reports-campaign-statistics": "Reports - Campaign statistics",
+  "routes-list": "Routes - List"
 }

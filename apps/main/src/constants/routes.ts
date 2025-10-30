@@ -10,6 +10,7 @@ export const ROUTES = {
   DASHBOARD_CAMPAIGN_EFFECTIVENESS: '/cabinet/dashboard/campaigns-effectiveness',
   CAMPAIGNS_LIST: '/cabinet/campaigns/list',
   CAMPAIGN_VIEW: (campaignId: number): string => `/cabinet/campaigns/view/${campaignId}`,
+  CAMPAIGN_EDIT: (campaignId: number): string => `/cabinet/campaigns/edit/${campaignId}`,
   CAMPAIGNS_ANALYTICS: '/cabinet/campaigns/analytics',
 
   AGENTS_LIST: '/cabinet/agents/list',
@@ -21,6 +22,7 @@ export const ROUTES = {
   IMPORT_LEADS: '/cabinet/leads/import',
   IMPORT_LEADS_INSTRUCTIONS: '/cabinet/leads/import-instructions',
   SETTINGS_ADMINS_LIST: '/cabinet/settings/admins-list',
+  SETTINGS_ROUTES_LIST: '/cabinet/settings/routes-list',
   SETTINGS_ACCOUNT_MANAGEMENT: '/cabinet/settings/account-management',
   SETTINGS_API_KEY_MANAGEMENT: '/cabinet/settings/api-key-management',
   SETTINGS_CAMPAIGNS_MANAGEMENT: '/cabinet/settings/campaigns-management',

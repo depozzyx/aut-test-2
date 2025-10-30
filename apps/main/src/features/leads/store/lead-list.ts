@@ -22,6 +22,7 @@ export type TInit = {
   isLoading: boolean
   orderBy?: ELeadListOrderBy
   order?: TOrder
+  requestsQueue: Record<string, boolean>
 }
 
 const init: TInit = {
@@ -33,6 +34,7 @@ const init: TInit = {
     total: 1,
   },
   isLoading: true,
+  requestsQueue: {},
   // orderBy: undefined,
   // order: undefined,
 }
@@ -65,6 +67,12 @@ const leadList = createSlice({
     setIsLoading(state, action: PayloadAction<TInit['isLoading']>) {
       state.isLoading = action.payload
     },
+    addRequest(state, action: PayloadAction<string>) {
+      state.requestsQueue[action.payload] = true
+    },
+    deleteRequest(state, action: PayloadAction<string>) {
+      delete state.requestsQueue[action.payload]
+    },
     setLeadListOrderBy(state, action: PayloadAction<TInit['orderBy']>) {
       // ASC => DESC => clear
       if (action.payload === state.orderBy) {
@@ -94,6 +102,8 @@ export const {
   setLeadListOrderBy,
   setLeadListOrder,
   reset,
+  addRequest,
+  deleteRequest,
 } = leadList.actions
 
 export const selectLeadList: TSelector<TInit> = (state) => state.leadList
@@ -134,6 +144,11 @@ export const selectLeadListCatalogAsOptions = createSelector(
     })),
 )
 
+export const selectIsRequested = createSelector(
+  selectLeadList,
+  ({ requestsQueue: requests }) => Object.keys(requests).length > 0,
+)
+
 export default leadList.reducer
 
 export const asyncGetLeadListCatalog =
@@ -157,13 +172,20 @@ export const asyncGetLeadListCatalog =
   }
 
 export const asyncGetLeadLists =
-  (params: TLeadListsReq, withLoading = true): TAsyncAction =>
+  (
+    params: TLeadListsReq,
+    controller?: AbortController,
+    withLoading = true,
+  ): TAsyncAction =>
   async (dispatch) => {
+    const requestId = Math.random().toString(36).substring(2, 15)
     try {
       if (withLoading) {
         dispatch(setIsLoading(true))
       }
-      const { data } = await apiLeadList.getLeadLists(params)
+      dispatch(addRequest(requestId))
+
+      const { data } = await apiLeadList.getLeadLists(params, controller)
 
       dispatch(setLeadLists(data.data.data))
       dispatch(setPagination(data.data.pagination))
@@ -172,6 +194,7 @@ export const asyncGetLeadLists =
     } finally {
       if (withLoading) {
         dispatch(setIsLoading(false))
+        dispatch(deleteRequest(requestId))
       }
     }
   }

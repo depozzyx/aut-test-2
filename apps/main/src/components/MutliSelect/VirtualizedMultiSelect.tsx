@@ -31,6 +31,7 @@ export const VirtualizedMultiSelect = memo(
     isSearchable = false,
     zIndex,
     onMenuScrollToBottom,
+    isMulti = true,
     ...props
   }: TMultiSelectProps): JSX.Element => {
     const { t } = useTranslation('inputs')
@@ -41,13 +42,22 @@ export const VirtualizedMultiSelect = memo(
 
     useEffect(() => {
       if (!options || !value) return
-      setState({
-        optionSelected: props.emitValues
-          ? value
-              .map((v) => options.find((option) => option.value === v))
-              .filter((option): option is TSelectOption => option !== undefined)
-          : (value as TSelectOption[]),
-      })
+      if (isMulti && Array.isArray(value)) {
+        setState({
+          optionSelected: props.emitValues
+            ? value
+                .map((v) => options.find((option) => option.value === v))
+                .filter((option): option is TSelectOption => option !== undefined)
+            : (value as TSelectOption[]),
+        })
+      } else if (!isMulti && !Array.isArray(value)) {
+        const selectedOption = options.find((option) => option.value === value)
+        if (selectedOption) {
+          setState({
+            optionSelected: value as TSelectOption,
+          })
+        }
+      }
     }, [value, options])
 
     const handleChange = useCallback(
@@ -210,7 +220,7 @@ export const VirtualizedMultiSelect = memo(
             controlShouldRenderValue
             width={width}
             zIndex={zIndex}
-            isMulti
+            isMulti={isMulti}
             {...props}
           />
         </Label>

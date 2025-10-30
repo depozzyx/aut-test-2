@@ -26,6 +26,7 @@
             "campaignName": "Campaign",
             "leadList": "Lead List",
             "agent": "Agent",
+            "agent-group": "Agent Group",
             "disposition": "Disposition"
         }
     },

@@ -3,9 +3,9 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { ModalMessage } from '@peiko/components/modals/ModalMessage'
 import { Text } from '@peiko/components/Text'
+import { ERoles } from '@/constants/profile'
+import { roleUserTranslationKey } from '@/features/users/constants'
 import { CreateNewUserForm } from './components'
-import { ERoles } from '../../../../../constants/profile'
-import { roleUserTranslationKey } from '../../../constants'
 
 export const CreateNewUserModal = ({ role }: { role: ERoles }): JSX.Element => {
   const { t } = useTranslation(

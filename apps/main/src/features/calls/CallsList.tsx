@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 import { Box } from '@peiko/components/Box'
 import { useRedux } from '@/hooks/use-redux'
@@ -49,8 +49,16 @@ export const CallsList: FC = () => {
     shallowEqual,
   )
 
-  const onChangePage = (page: number) =>
-    dispatch(getCallsList({ page, orderBy, order, limit, ...filters }))
+  const [controller, setController] = useState<AbortController>(new AbortController())
+
+  const onChangePage = (page: number) => {
+    let newController: AbortController = new AbortController()
+    if (isLoading) {
+      controller.abort()
+    }
+    dispatch(getCallsList({ page, orderBy, order, limit, ...filters }, newController))
+    setController(newController)
+  }
 
   const onChangeFilters = (page: number) => onChangePage(page)
 
@@ -63,7 +71,7 @@ export const CallsList: FC = () => {
     dispatch(
       setPagination({
         page,
-        limit: +option.value,
+        limit: +(option.value ?? 10),
         total,
       }),
     )
@@ -102,7 +110,7 @@ export const CallsList: FC = () => {
         styles={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}
       >
         <div style={{ width: '100%', flexGrow: 1 }}>
-          <CallsFilters disabled={isLoading} filters={filters} />
+          <CallsFilters filters={filters} />
         </div>
         <Flex gap={10}>
           <OutlinedButton
@@ -110,9 +118,9 @@ export const CallsList: FC = () => {
             size="s"
             startIcon={<ExcelIcon width="24px" height="24px" />}
           >
-            {t('Download')}
+            {t('download')}
           </OutlinedButton>
-          <LimitSelect disabled={isLoading} limit={limit} onChange={onChangeLimit} />
+          <LimitSelect limit={limit} onChange={onChangeLimit} />
         </Flex>
       </Box>
       <Box styles={{ marginTop: '6px' }}>

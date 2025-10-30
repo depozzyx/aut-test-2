@@ -1,16 +1,15 @@
 import { useRedux } from '@/hooks/use-redux'
 import { Select } from '@peiko/components/inputs/Select/Select'
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
 import useTranslation from 'next-translate/useTranslation'
-import { TSelectProps } from '@peiko/components/inputs/Select/types'
+import { TSelectEvent, TSelectProps } from '@peiko/components/inputs/Select/types'
+import { useLeadListLoader } from '@/features/campaigns/hooks/useLeadListLoader'
 import {
-  getLeadsGroups,
-  selectLeadsGroup,
-  selectLeadsGroupPagination,
-  selectLeadsGroups,
+  selectLeadsGroupOption,
   setLeadsGroup,
+  setLeadsGroupOption,
 } from '../../store/leads'
 
 type LeadListSelectProps = Omit<TSelectProps, 'name' | 'onChange' | 'value'> & {
@@ -21,37 +20,43 @@ export const LeadListSelect: FC<LeadListSelectProps> = ({ withoutEmpty, ...props
   const { select, dispatch } = useRedux()
   const { t } = useTranslation('leads-list')
 
-  const {
-    leadsGroup,
-    leadsGroups,
-    pagination: { page, limit, total },
-  } = select(
+  const { leadsGroupOption } = select(
     createStructuredSelector({
-      leadsGroup: selectLeadsGroup,
-      leadsGroups: selectLeadsGroups,
-      pagination: selectLeadsGroupPagination,
+      leadsGroupOption: selectLeadsGroupOption,
     }),
     shallowEqual,
   )
 
-  const onMenuScrollToBottom = () => {
-    const lastPage = total === 0 ? 1 : Math.ceil(total / (limit ?? 10))
-    if (page < lastPage) dispatch(getLeadsGroups({ page: page + 1, limit }))
+  const {
+    options: leadListOptions,
+    loadMore: loadMoreLeadLists,
+    setSearch: setLeadListSearch,
+    reload: reloadOptions,
+  } = useLeadListLoader(withoutEmpty ? [] : [{ label: '-', value: 0 }])
+
+  const onSelect = (data: TSelectEvent) => {
+    if (data) {
+      dispatch(setLeadsGroup(+(data.value ?? 0)))
+      dispatch(setLeadsGroupOption(data))
+    }
   }
+
+  useEffect(() => {
+    reloadOptions()
+  }, [leadsGroupOption])
 
   return (
     <Select
       name="leads-group"
-      options={leadsGroups
-        .map(({ id, name }) => ({ label: name, value: id.toString() }))
-        .filter((item) => (withoutEmpty ? item.label !== '-' : true))}
-      value={leadsGroup !== undefined ? leadsGroup.toString() : ''}
-      onChange={(data) => {
-        if (data) dispatch(setLeadsGroup(+data.value))
-      }}
-      onMenuScrollToBottom={onMenuScrollToBottom}
+      options={leadListOptions}
+      value={leadsGroupOption}
+      onChange={onSelect}
+      onMenuScrollToBottom={loadMoreLeadLists}
+      onInputChange={setLeadListSearch}
       placeholder={t('headers.select')}
       {...props}
+      isSearchable
+      emitValues={false}
     />
   )
 }

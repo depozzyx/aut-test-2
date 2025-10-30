@@ -20,16 +20,19 @@ import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { Button } from '@/features/leads/containers/LeadListSelect/LeadListSelect.styled'
 import { palette } from '@peiko/styles/palette'
+import { Checkbox } from '@peiko/components/inputs/checkboxes/Checkbox'
 import { BottomText } from './ImportFiles.styled'
 import {
   cancelImportFiles,
   getLeadStatuses,
+  selectAllowEmptyNames,
   selectFilesForImport,
   selectIsLoading,
   selectLeadsGroup,
   selectLeadsGroupError,
   selectLeadStatuses,
   selectUseDefaultStatus,
+  setAllowEmptyNames,
   setImportFiles,
   setUseDefaultStatus,
 } from '../../store/leads'
@@ -39,7 +42,7 @@ import { ImportFilesList } from '../ImportFilesList'
 const MAX_WIDTH = '616px'
 
 interface ImportFilesProps {
-  onSubmit: () => void
+  onSubmit: (shuffle: boolean) => void
 }
 
 const MAX_FILE_SIZE_MB = 4
@@ -56,14 +59,17 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
   const leadStatuses = select(selectLeadStatuses)
   const leadsGroupError = select(selectLeadsGroupError)
   const isLoading = select(selectIsLoading)
+  const allowEmptyNames = select(selectAllowEmptyNames)
 
   const setStatusSource = (value: string) => dispatch(setUseDefaultStatus(value))
+  const setAllowEmpty = (value: boolean) => dispatch(setAllowEmptyNames(value))
 
   useEffect(() => {
     dispatch(getLeadStatuses())
   }, [dispatch])
 
   const [error, setError] = useState<string | null>(null)
+  const [shuffleBeforeImport, setShuffleBeforeImport] = useState<boolean>(false)
 
   useEffect(() => {
     if (leadsGroupError) {
@@ -122,7 +128,7 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
   }
 
   const handleSubmit = async () => {
-    onSubmit()
+    onSubmit(shuffleBeforeImport)
   }
 
   const onButtonClick = () => {
@@ -222,6 +228,30 @@ export const ImportFiles: FC<ImportFilesProps> = ({ onSubmit }) => {
             />
             <Text>{t('default')}</Text>
           </Flex>
+        </Flex>
+        <Flex gap="12px" justify="center" styles={{ marginBottom: '14px' }}>
+          <Checkbox
+            name="allow-empty-name"
+            value={allowEmptyNames}
+            onChange={(e) => setAllowEmpty(e.value)}
+            label={
+              <Text variant="f7" color="main23">
+                {t('allowEmptyName')}
+              </Text>
+            }
+            size="s"
+          />
+          <Checkbox
+            name="shuffle-before-import"
+            value={shuffleBeforeImport}
+            onChange={(e) => setShuffleBeforeImport(e.value)}
+            label={
+              <Text variant="f7" color="main23">
+                {t('shuffleBeforeImport')}
+              </Text>
+            }
+            size="s"
+          />
         </Flex>
         <Flex justify="center" styles={{ marginBottom: '14px' }}>
           <Tooltip

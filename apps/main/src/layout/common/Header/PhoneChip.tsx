@@ -135,7 +135,8 @@ const PhoneChipComponent = ({
         styles={{
           color: whisperSpy ? 'main' : 'main11',
           fontWeight: 500,
-          height: '36px',
+          height: '40px',
+          width: whisperSpy?.mode && isRunning ? 'auto' : '40px',
           fontSize: '14px',
           borderRadius: '18px',
           border: '2px solid',

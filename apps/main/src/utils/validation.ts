@@ -85,7 +85,17 @@ export const recycleRuleSchema = yup.object().shape({
   finalStatus: yup.string().required('Field is required'),
 })
 
+export const routeSchema = yup.object().shape({
+  prefix: yup
+    .string()
+    .required('Field is required')
+    .min(1, 'Minimum 1 characters required')
+    .max(10, 'Maximum 10 characters allowed'),
+  routeId: yup.number().required('Field is required').min(1, 'Field is required'),
+})
+
 export const recycleRulesSchema = yup.array().of(recycleRuleSchema).default([])
+export const routesSchema = yup.array().of(routeSchema).default([])
 
 export const createCampaignValidationSchema = yup.object().shape({
   name: yup
@@ -122,6 +132,7 @@ export const createCampaignValidationSchema = yup.object().shape({
     .min(1, 'This field must have at least 1 item')
     .default([]),
   recycleRules: recycleRulesSchema,
+  routes: routesSchema,
 })
 
 export const createLeadListValidationSchema = yup.object().shape({

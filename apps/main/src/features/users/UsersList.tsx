@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { createStructuredSelector } from 'reselect'
 import { shallowEqual } from 'react-redux'
@@ -32,6 +32,7 @@ import {
   selectOrder,
   setPagination,
   selectSearchTerm,
+  selectIsLoadingUsers,
 } from './store/users'
 import { UserSearchField } from './components/UserSearchField'
 import { UsersListTable } from './containers/tables/AgentsListTable'
@@ -87,6 +88,7 @@ export const UsersList = ({
     order,
     statusFilter,
     nameFilter,
+    isLoading,
   } = select(
     createStructuredSelector({
       pagination: selectUsersPagination,
@@ -94,6 +96,7 @@ export const UsersList = ({
       order: selectOrder,
       statusFilter: selectStatusFilter,
       nameFilter: selectSearchTerm,
+      isLoading: selectIsLoadingUsers,
     }),
     shallowEqual,
   )
@@ -102,18 +105,31 @@ export const UsersList = ({
     setModal({ modalName: MODAL_NAMES.CREATE_USER, isOpen: true })
   }
 
+  const [controller, setController] = useState<AbortController>(new AbortController())
+
   const fetchUsersList = (newPage?: number) => {
+    let newController: AbortController = new AbortController()
+    if (isLoading) {
+      controller.abort()
+    }
     dispatch(
-      asyncGetUsersList(role, {
-        page: newPage || 1,
-        limit: limit ?? 10,
-        orderBy,
-        order,
-        workStatus: statusFilter,
-        search: nameFilter,
-        showBlocked: true,
-      }),
+      asyncGetUsersList(
+        role,
+        {
+          page: newPage || 1,
+          limit: limit ?? 10,
+          orderBy,
+          order,
+          workStatus: statusFilter,
+          search: nameFilter,
+          showBlocked: true,
+        },
+        false,
+        true,
+        newController,
+      ),
     )
+    setController(newController)
   }
 
   useEffect(() => {
@@ -131,7 +147,7 @@ export const UsersList = ({
     dispatch(
       setPagination({
         page,
-        limit: +option.value,
+        limit: +(option.value ?? limit ?? 10),
         total,
       }),
     )

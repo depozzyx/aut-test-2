@@ -54,8 +54,8 @@ export const ImportLeads: FC = () => {
     }
   })
 
-  const onImportSubmit = () => {
-    dispatch(importFilesSubmitAsync())
+  const onImportSubmit = (shuffle: boolean) => {
+    dispatch(importFilesSubmitAsync(shuffle))
   }
 
   useEffect(() => {

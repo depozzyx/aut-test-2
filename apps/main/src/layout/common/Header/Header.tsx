@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useCallback } from 'react'
+import React, { FC, useEffect, useState, useCallback, useMemo } from 'react'
 import { useHeaderHeight } from '@/layout/common/hooks/use-header-height'
 import { Flex } from '@/components/Flex'
 import { BaseImage } from '@peiko/components/BaseImage'
@@ -13,6 +13,7 @@ import { useSIPService } from '@/features/calls/hooks/useSIPService'
 import { RTCSession } from 'jssip/lib/RTCSession'
 import { useUnmount } from 'react-use'
 
+import { MicrophoneButton } from '@/features/common/sip/MicrophoneButton'
 import { CallTimer } from './CallTimer'
 import { Container } from './Header.styled'
 
@@ -29,8 +30,8 @@ export const Header: FC = () => {
   const auth = select(userSelectors.user)
 
   const { menuDisabled, showErrorMessage } = useDisableClickOnCall()
-
-  const { isEchoTestMode, pbxStatus } = select(agentStatusSelector)
+  const { whisperSpy, microPhoneState, isEchoTestMode, pbxStatus, hasCurrentRTCSession } =
+    select(agentStatusSelector)
 
   useEffect(() => {
     dispatch(asyncGetAgentAssignedCampaigns())
@@ -46,13 +47,14 @@ export const Header: FC = () => {
     whisperTo,
     spyTo,
     disconnect,
+    toggleMicrophone,
   } = useSIPService(true, rtcSession, setRtcSession, {
     onError: handleCallEnd,
     onCallEnd: handleCallEnd,
   })
 
   const disconnectSip = () => {
-    if (rtcSession) hangupSip(isEchoTestMode)
+    hangupSip(isEchoTestMode)
   }
 
   function offEchoTest() {
@@ -130,6 +132,30 @@ export const Header: FC = () => {
     dispatch(agentActions.setWhisperSpyLeadId(undefined))
   }
 
+  const microphoneEnabled = useMemo(
+    () =>
+      (user?.role === 'agent' && hasCurrentRTCSession) ||
+      (user?.role !== 'agent' && rtcSession && whisperSpy?.mode !== 'spy'),
+    [rtcSession, whisperSpy, hasCurrentRTCSession],
+  )
+
+  const microphoneColor = useMemo(() => {
+    if (microphoneEnabled) {
+      if (microPhoneState === 'on') {
+        return 'main11'
+      }
+      return 'main13'
+    }
+    return 'main22'
+  }, [microPhoneState, microphoneEnabled])
+
+  useEffect(() => {
+    if (rtcSession) toggleMicrophone()
+  }, [microPhoneState])
+
+  const onClickMicrophone = () =>
+    dispatch(agentActions.setMicroPhoneState(microPhoneState === 'on' ? 'off' : 'on'))
+
   return (
     <Container ref={headerRef}>
       <Flex width="100%" justify="space-between">
@@ -138,7 +164,7 @@ export const Header: FC = () => {
         </Flex>
         <Flex
           align="center"
-          gap="57px"
+          gap="24px"
           onClick={menuDisabled ? showErrorMessage : undefined}
         >
           {user?.role === 'agent' && (
@@ -164,7 +190,11 @@ export const Header: FC = () => {
               hangupSip={handleHangupSip}
             />
           )}
-
+          <MicrophoneButton
+            disabled={!microphoneEnabled}
+            bgColor={microphoneColor}
+            onClick={onClickMicrophone}
+          />
           <UserProfile
             disabled={menuDisabled || pbxStatus.status !== 'offline'}
             onClickEchoTest={onClickEchoTest}

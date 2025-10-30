@@ -70,7 +70,7 @@ export const Filters: FC<
 
   const changeLimit = async (option: SingleValue<TSelectOption>) => {
     if (!option) return
-    const newLimit = +option.value
+    const newLimit = +(option.value ?? 10)
     dispatch(setPagination({ ...pagination, limit: newLimit }))
     dispatch(
       getActivityLogsAsync({

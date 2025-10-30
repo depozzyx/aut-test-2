@@ -1,6 +1,8 @@
 import { Input } from '@peiko/components/inputs/Input'
 import { SearchFieldIcon } from '@/components/icons/SearchFieldIcon'
 import { useRedux } from '@/hooks/use-redux'
+import { BaseButton } from '@peiko/components/buttons/BaseButton'
+import { CloseIcon } from '@peiko/components/icons/CloseIcon'
 import { setSearchTerm, selectSearchTerm } from '../../store/campaigns'
 
 type TProps = {
@@ -33,6 +35,13 @@ export const CampaignSearchField = ({
       placeholder={placeholder}
       startAdornment={<SearchFieldIcon />}
       startAdornmentStyles={{ paddingRight: '0 !important' }}
+      endAdornment={
+        <BaseButton
+          onClick={() => handleOnChange('')}
+          disabled={!searchTerm}
+          startIcon={<CloseIcon />}
+        />
+      }
       onChange={handleOnChange}
       debounce={600}
     />

@@ -1,4 +1,4 @@
-import { TLeadList } from '@/features/campaigns/hooks/use-getCampaignById'
+import { TLeadList } from '../../api/rest/campaigns/types'
 
 export type TLeadListStatus = 'active' | 'inactive'
 

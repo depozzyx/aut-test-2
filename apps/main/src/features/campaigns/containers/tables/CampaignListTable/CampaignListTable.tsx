@@ -27,18 +27,19 @@ import {
 import { EyeIcon } from '@peiko/components/icons/EyeIcon/EyeIcon'
 import { ROUTES } from '@/routes'
 import { TCampaignOrderBy } from '@/api-rest/campaigns/types'
-import { useCampaignUpdates } from '@/features/campaigns/hooks/use-active-campaigns-update'
 import { ButtonWithTooltip } from '@/features/campaigns/containers/tables/CampaignListTable/ButtonWithTooltip'
 import { InfoCell } from '@/components/InfoCell'
+import { EditIcon } from '@peiko/components/icons/EditIcon'
 import { StatusChip } from '../../../components/StatusChip'
 import {
-  selectIsLoading,
   selectCampaignsListForView,
   setSelectedId,
   asyncStartOrStopCampaign,
   setOrderBy,
+  selectIsRequested,
 } from '../../../store/campaigns'
 import { formatCreatedAt } from '../../../utils/formatCreateAt'
+import { useCampaignUpdates } from '../../../hooks/use-campaigns-update'
 
 type TCampaignRowKeys =
   | 'view'
@@ -62,7 +63,7 @@ export const CampaignListTable = (): JSX.Element => {
 
   const { isLoading, data } = select(
     createStructuredSelector({
-      isLoading: selectIsLoading,
+      isLoading: selectIsRequested,
       data: selectCampaignsListForView,
     }),
     shallowEqual,
@@ -78,11 +79,6 @@ export const CampaignListTable = (): JSX.Element => {
   const handleStartOrStop = async (id: number, currentStatus: TCampaignStatus) => {
     dispatch(asyncStartOrStopCampaign(id, currentStatus))
   }
-
-  const handleEditCampaign = useCallback((id: number) => {
-    dispatch(setSelectedId(id))
-    setModal({ modalName: MODAL_NAMES.EDIT_CAMPAIGN, isOpen: true })
-  }, [])
 
   const validateAction = (campaign: TCampaign) => {
     let tooltipMsg = ''
@@ -177,18 +173,12 @@ export const CampaignListTable = (): JSX.Element => {
         </IconButton>
       ),
       edit: (
-        <ButtonWithTooltip
-          showTooltip={isCampaignDisabledAction(campaign.status as TCampaignActiveStatus)}
-          buttonDisabled={isCampaignDisabledAction(
-            campaign.status as TCampaignActiveStatus,
-          )}
-          onClick={() => handleEditCampaign(campaign.id)}
-          tooltipText={t(`tooltip.cannot-edit-active-campaign`, {
-            status: campaignDisabledActionStatusesMap[campaign.status],
-          })}
-          iconType="info"
-          buttonType="edit"
-        />
+        <IconButton
+          onClick={() => push(ROUTES.CAMPAIGN_EDIT(campaign.id))}
+          iconColor="main3"
+        >
+          <EditIcon width="24px" height="24px" />
+        </IconButton>
       ),
       delete: (
         <ButtonWithTooltip

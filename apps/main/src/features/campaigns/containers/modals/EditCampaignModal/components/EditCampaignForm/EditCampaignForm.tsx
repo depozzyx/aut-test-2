@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useDebounce } from 'react-use'
-import { shallowEqual } from 'react-redux'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+
 import { useFormik } from 'formik'
-import { createStructuredSelector } from 'reselect'
+
 import useTranslation from 'next-translate/useTranslation'
 
 import { useRedux } from '@/hooks/use-redux'
@@ -12,13 +11,7 @@ import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInpu
 import { useModals } from '@/features/common/modals/hooks/use-modals'
 import { FormikMultiSelect } from '@/components/formik-wrappers/FormikMultiSelect'
 import { Flex } from '@/components/Flex'
-import {
-  asyncGetLeadListCatalog,
-  selectLeadListCatalogAsOptions,
-  selectLeadListPagination,
-} from '@/features/leads/store/lead-list'
 
-import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 import { coefficients, modes, workHours } from '@/constants/settings'
 import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
@@ -26,24 +19,26 @@ import { hasArrayChanged } from '@/utils/array'
 import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
 import { TRecycleRule } from '@/api-rest/campaigns/types'
 import { createCampaignValidationSchema } from '@/utils/validation'
-import {
-  asyncGetUsersList,
-  selectUsersOptions,
-  selectUsersPagination,
-} from '@/features/users/store/users'
 import { TSelectOption } from '@/components/MutliSelect/types'
+import { AgentsFormikSelect } from '@/features/common/FormInputs/AgentsMultiSelect/AgentsFormikSelect'
+import { LeadListsSelect } from '@/features/common/FormInputs/LeadListsMultiSelect/LeadListsMultiSelect'
+import { asyncEditCampaign } from '@/features/campaigns/store/edit-campaign'
+import { TCampaignTableType } from '@/features/campaigns/types'
+import { useGetCampaignById } from '@/features/campaigns/hooks/use-getCampaignById'
+import { CAMPAIGN_STATUSES } from '@/features/campaigns/constants'
+import { AgentsGroupsSelect } from '@/features/common/FormInputs/AgentsGroupsSelect/AgentsGroupsFormikSelect'
 import { ERoles } from '@/constants/profile'
-import { asyncEditCampaign } from '../../../../../store/edit-campaign'
-import { TCampaignTableType } from '../../../../../types'
-import { useGetCampaignById } from '../../../../../hooks/use-getCampaignById'
-import { CAMPAIGN_STATUSES, INITIAL_REQUEST_PARAMS_EDIT } from '../../../../../constants'
+import { TUser } from '@/api-rest/users/types'
+import { getGroupsUsers } from '@/features/users/store/users'
 
 type TProps = {
+  campaignId: number
   type: TCampaignTableType
 }
 
 type TFormValues = {
   name: string
+  agentGroups: TSelectOption<number>[]
   assignedAgent: TSelectOption<number>[]
   leadList: TSelectOption<number>[]
   holdTime: number
@@ -54,28 +49,12 @@ type TFormValues = {
   workHours?: string
 }
 
-export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
+export const EditCampaignForm = ({ campaignId, type }: TProps): JSX.Element => {
   const { t } = useTranslation('campaigns')
   const { resetModals } = useModals()
   const { dispatch, select } = useRedux()
-  const campaignId = select(selectSelectedCampaignId)
 
-  const {
-    leadsPagination: { page: leadsPage, limit: leadsLimit, total: leadsTotal },
-    leadListOptions,
-    agentsPagination: { page: agentsPage, limit: agentsLimit, total: agentsTotal },
-    agentsOptions,
-  } = select(
-    createStructuredSelector({
-      leadsPagination: selectLeadListPagination,
-      leadListOptions: selectLeadListCatalogAsOptions,
-      agentsPagination: selectUsersPagination,
-      agentsOptions: selectUsersOptions,
-    }),
-    shallowEqual,
-  )
-
-  const { data } = useGetCampaignById()
+  const { data } = useGetCampaignById(campaignId)
 
   const leadStatuses = select(selectLeadStatuses)
 
@@ -86,6 +65,7 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
   const formik = useFormik<TFormValues>({
     initialValues: {
       name: '',
+      agentGroups: [],
       assignedAgent: [],
       leadList: [],
       holdTime: 0,
@@ -97,11 +77,13 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     },
     validationSchema: createCampaignValidationSchema,
     onSubmit: (formData) => {
-      const { leadList, assignedAgent, ...data } = formData
+      const { leadList, assignedAgent, agentGroups, ...data } = formData
       dispatch(
         asyncEditCampaign(
+          campaignId,
           {
             ...data,
+            agentGroupIds: (agentGroups ?? []).map((item) => item.value),
             leadListIds: leadList.map((item) => item.value),
             assignedAgentIds: assignedAgent.map((item) => item.value),
           },
@@ -111,14 +93,12 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     },
   })
 
-  const [leadListSearch, setLeadListSearch] = useState<string>()
-  const [assignedAgentSearch, setAssignedAgentSearch] = useState<string>()
-
   useEffect(() => {
     if (data) {
       formik.setValues({
         name: data.name,
         assignedAgent: data?.assignedAgents,
+        agentGroups: data?.agentGroups,
         leadList: data?.leadLists,
         holdTime: data?.holdTime,
         mode: data?.mode,
@@ -146,97 +126,21 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     })
   }, [formik.values.recycleRules])
 
-  const onLeadsScrollToBottom = useCallback(() => {
-    const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 10))
-    if (leadsPage < lastPage)
-      dispatch(
-        asyncGetLeadListCatalog(
-          {
-            page: leadsPage + 1,
-            limit: leadsLimit,
-            withoutCampaigns: true,
-            campaignId: campaignId && +campaignId,
-            name: leadListSearch,
-          },
-          true,
-          true,
-        ),
-      )
-  }, [leadsPage, leadsTotal, leadsLimit])
-
-  // Debounced remote search for lead lists
-  useDebounce(
-    () => {
-      if (leadListSearch === undefined) return
-      dispatch(
-        asyncGetLeadListCatalog(
-          {
-            page: 1,
-            limit: leadsLimit,
-            withoutCampaigns: true,
-            campaignId: campaignId && +campaignId,
-            name: leadListSearch,
-          },
-          false,
-          false,
-        ),
-      )
-    },
-    400,
-    [leadListSearch],
-  )
-
-  // Debounced remote search for agents
-  useDebounce(
-    () => {
-      if (assignedAgentSearch === undefined) return
-      dispatch(
-        asyncGetUsersList(
-          ERoles.AGENT,
-          {
-            page: 1,
-            limit: agentsLimit,
-            search: assignedAgentSearch,
-          },
-          false,
-          false,
-        ),
-      )
-    },
-    400,
-    [assignedAgentSearch],
-  )
-
   useEffect(() => {
-    Promise.all([
-      dispatch(asyncGetUsersList(ERoles.AGENT, INITIAL_REQUEST_PARAMS_EDIT)),
-      dispatch(
-        asyncGetLeadListCatalog({
-          ...INITIAL_REQUEST_PARAMS_EDIT,
-          withoutCampaigns: true,
-          campaignId: campaignId && +campaignId,
-        }),
-      ),
-    ])
-  }, [])
-
-  const onAgentsScrollToBottom = useCallback(() => {
-    const lastPage = agentsTotal === 0 ? 1 : Math.ceil(agentsTotal / (agentsLimit ?? 10))
-    if (agentsPage < lastPage) {
-      dispatch(
-        asyncGetUsersList(
-          ERoles.AGENT,
-          {
-            page: agentsPage + 1,
-            limit: agentsLimit,
-            search: assignedAgentSearch,
-          },
-          true,
-          true,
-        ),
-      )
-    }
-  }, [agentsPage, agentsLimit, agentsTotal])
+    getGroupsUsers(
+      ERoles.AGENT,
+      formik.values.agentGroups.map((g) => g.value),
+    ).then((agents: TUser[]) => {
+      formik.setFieldValue('assignedAgent', [
+        ...formik.values.assignedAgent,
+        ...(
+          agents.filter(
+            (agent) => !formik.values.assignedAgent.some((a) => a.value === agent.id),
+          ) || []
+        ).map((agent: TUser) => ({ value: agent.id, label: agent.username })),
+      ])
+    })
+  }, [formik.values.agentGroups])
 
   const isChanged = () =>
     data &&
@@ -249,6 +153,10 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
       hasArrayChanged(
         data.leadLists.map((a) => a.value as number),
         formik.values.leadList.map((a) => a.value as number),
+      ) ||
+      hasArrayChanged(
+        data.agentGroups.map((a) => a.value as number),
+        formik.values.agentGroups.map((a) => a.value as number),
       ) ||
       data.holdTime !== formik.values.holdTime ||
       data.mode !== formik.values.mode ||
@@ -263,24 +171,20 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
     setTimeout(() => formik.setTouched({ filterLeadStatuses: true }, true), 0)
   }
 
-  const handleAssignedAgentIdsChange = () => {
-    setTimeout(() => formik.setTouched({ assignedAgent: [] }, true), 0)
-  }
-
   const refLeftColumn = useRef<HTMLDivElement>(null)
   const refLeadStatuses = useRef<HTMLDivElement>(null)
-  const [height, setHeight] = useState<number>()
+  const [height, setHeight] = useState<number>(540)
 
-  useEffect(() => {
-    if (refLeftColumn.current && refLeadStatuses.current) {
-      setHeight(refLeftColumn.current.clientHeight - refLeadStatuses.current.clientHeight)
+  useLayoutEffect(() => {
+    if (refLeftColumn.current) {
+      setHeight(refLeftColumn.current.clientHeight)
     }
-  }, [refLeftColumn.current?.clientHeight, refLeadStatuses.current?.clientHeight])
+  }, [refLeftColumn.current?.clientHeight])
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
-      <Flex direction="column" align="center" gap={48} margin="40px 0 0 0">
-        <Flex direction="row" gap={48}>
+      <Flex direction="column" align="center" gap={48} margin="20px 0 0 0">
+        <Flex direction="row" gap={32}>
           <Flex
             ref={refLeftColumn}
             direction="column"
@@ -298,30 +202,21 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
               width={424}
               styles={{ padding: '0 14px' }}
             />
-            <FormikMultiSelect
+            <AgentsGroupsSelect
               formik={formik}
-              disabled={data?.status === CAMPAIGN_STATUSES.COMPLETE}
-              name="assignedAgent"
-              label={{ label: t('edit-campaign.agent-assignment') }}
-              width={424}
-              size="s"
-              options={agentsOptions}
-              onInputChange={(e) => setAssignedAgentSearch(e)}
-              onMenuScrollToBottom={onAgentsScrollToBottom}
-              isSearchable
-              onChange={handleAssignedAgentIdsChange}
+              name="agentGroups"
+              label={t('edit-campaign.agent-groups')}
             />
-            <FormikMultiSelect
+            <AgentsFormikSelect
               formik={formik}
-              disabled={data?.status === CAMPAIGN_STATUSES.COMPLETE}
+              name="assignedAgent"
+              label={t('edit-campaign.agent-assignment')}
+            />
+            <LeadListsSelect
+              formik={formik}
               name="leadList"
-              label={{ label: t('edit-campaign.lead-selection') }}
-              size="s"
-              width={424}
-              options={leadListOptions}
-              onInputChange={(e) => setLeadListSearch(e)}
-              onMenuScrollToBottom={onLeadsScrollToBottom}
-              isSearchable
+              label={t('edit-campaign.lead-selection')}
+              campaignId={campaignId}
             />
             <FormikInput
               formik={formik}
@@ -366,21 +261,30 @@ export const EditCampaignForm = ({ type }: TProps): JSX.Element => {
               label={{ label: t('create-campaign.workHours-label') }}
             />
           </Flex>
-          <Flex direction="column" gap={48} maxWidth="424px" width="100%">
-            <Flex ref={refLeadStatuses} direction="column" width="100%">
+          <Flex
+            ref={refLeadStatuses}
+            direction="column"
+            gap={48}
+            maxWidth="432px"
+            width="100%"
+            height={height}
+          >
+            <Flex direction="column" width="100%">
               <FormikMultiSelect
                 formik={formik}
                 name="filterLeadStatuses"
                 emitValues
                 label={{ label: t('edit-campaign.lead-statuses') }}
                 size="s"
-                width={424}
+                width={432}
                 options={leadStatuses.map(({ name: label, value }) => ({ label, value }))}
                 isSearchable
                 onChange={handleFilterLeadStatusesChange}
               />
             </Flex>
-            <RecycleRules height={height} formik={formik} leadStatuses={leadStatuses} />
+            <div style={{ flex: 1, overflow: 'auto' }}>
+              <RecycleRules formik={formik} leadStatuses={leadStatuses} />
+            </div>
           </Flex>
         </Flex>
         <Flex align="center" justify="center" gap={24}>

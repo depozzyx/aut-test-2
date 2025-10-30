@@ -12,6 +12,8 @@
   "checkNumberUnique": "Your file will be check on duplicates",
   "fromFile": "Set status from import file",
   "default": "Set default status",
+  "allowEmptyName": "Allow empty names",
+  "shuffleBeforeImport": "Shuffle before import",
   "tooltip": {
     "title": "See the status descriptions",
     "code": "Code:",

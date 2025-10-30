@@ -48,7 +48,7 @@ export const LogsPanel = (): JSX.Element => {
     dispatch(
       setPagination({
         page,
-        limit: +option.value,
+        limit: +(option.value ?? 10),
         total,
       }),
     )

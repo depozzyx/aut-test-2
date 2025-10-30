@@ -18,18 +18,20 @@ export const Select: React.FC<TSelectProps> = ({
   value,
   options,
   onChange,
+  onInputChange,
   isSearchable = false,
   menuContent,
   readOnlySelection,
+  emitValues = true,
   ...props
 }) => {
   const { t } = useTranslation('inputs')
   const [openCount, setOpenCount] = useState(0)
   const [open, setOpen] = useState(false)
   const [hasScroll, setHasScroll] = useState(false)
-  const [selectValue, setValue] = useState<TSelectEvent>(
-    options?.find((item) => item.value === value) || null,
-  )
+  const [selectValue, setValue] = useState<
+    TSelectEvent | TSelectOption | TSelectOption['value'] | null
+  >(options?.find((item) => item.value === value) || null)
 
   // detect scroll menu
   useEffect(() => {
@@ -41,7 +43,19 @@ export const Select: React.FC<TSelectProps> = ({
   }, [openCount])
 
   useEffect(() => {
-    if (value === selectValue?.value) return
+    if (!emitValues) {
+      // when emitValues is false we keep raw primitive value in state
+      setValue(value as TSelectOption['value'] | null)
+      return
+    }
+
+    // resolve selected value whether it's an option object or a primitive
+    const selectValueValue =
+      selectValue && typeof selectValue === 'object' && 'value' in selectValue
+        ? (selectValue as TSelectOption).value
+        : (selectValue as TSelectOption['value'] | null)
+
+    if (value === selectValueValue) return
     const selectOption = options?.find((item) => item.value === value)
 
     if (!selectOption) return
@@ -100,21 +114,22 @@ export const Select: React.FC<TSelectProps> = ({
 
   const id = props.name
 
+  // TODO remove commented code if problems wont`t appear
   // handle case when options changed on the fly
-  const selectKey = options ? options.map((item) => item.value).join('-') : id
+  // const selectKey = options ? options.map((item) => item.value).join('-') : id
 
   // handle case when options changed and selected value not in options
-  useUpdateEffect(() => {
-    if (!options) return
+  // useUpdateEffect(() => {
+  //   if (!options) return
 
-    if (!selectValue) return
+  //   if (!selectValue) return
 
-    if (options.find((item) => item.value === selectValue.value)) return
+  //   if (options.find((item) => item.value === selectValue.value)) return
 
-    setValue(null)
+  //   setValue(null)
 
-    onChange?.(null)
-  }, [selectKey])
+  //   onChange?.(null)
+  // }, [selectKey])
 
   return (
     <S.Container width={width}>
@@ -122,7 +137,7 @@ export const Select: React.FC<TSelectProps> = ({
         <S.RS
           id={id}
           size={size}
-          value={readOnlySelection ? null : selectValue}
+          value={readOnlySelection ? null : (selectValue as TSelectOption)}
           options={options}
           error={error}
           instanceId={id}
@@ -135,6 +150,7 @@ export const Select: React.FC<TSelectProps> = ({
           classNamePrefix="custom-rs"
           onMenuOpen={() => setOpen(true)}
           onMenuClose={() => setOpen(false)}
+          onInputChange={onInputChange}
           blurInputOnSelect
           openMenuOnFocus={false}
           width={width}

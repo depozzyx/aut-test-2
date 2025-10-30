@@ -6,10 +6,10 @@ import { TFormPropsAsync } from '@peiko/types/formik'
 import { notificationActions } from '@/features/common/notifications/store'
 import { modalsActions } from '@/features/common/modals'
 import { TResponse } from '@peiko/types/handle-rest-error'
-import { ERoles } from '../../../constants/profile'
+import { ERoles } from '@/constants/profile'
+import { TUser } from '@/api-rest/users/types'
+import { apiUsers } from '@/api-rest/users'
 import { TUserFormData } from '../types'
-import { TUser } from '../../../api/rest/users/types'
-import { apiUsers } from '../../../api/rest/users'
 
 export type TInit = {
   isLoading: boolean

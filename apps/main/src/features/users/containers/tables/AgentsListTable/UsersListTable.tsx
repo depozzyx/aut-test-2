@@ -25,10 +25,10 @@ import {
 } from '@/features/users/store/users'
 import { SuccessIcon } from '@peiko/components/icons/SuccessIcon'
 import { ErrorIcon } from '@peiko/components/icons/ErrorIcon'
-import { roleUserTranslationKey, USER_ORDER_BY } from '../../../constants'
-import { ERoles } from '../../../../../constants/profile'
-import { CampaignsTooltip } from '../../../../agents/components/CampaignsTooltip'
-import { InfoColumn } from '../../../../../components/InfoColumn'
+import { ERoles } from '@/constants/profile'
+import { InfoColumn } from '@/components/InfoColumn'
+import { roleUserTranslationKey, USER_ORDER_BY } from '@/features/users/constants'
+import { CampaignsTooltip } from '@/features/agents/components/CampaignsTooltip'
 
 export type TUserRowKeys =
   | 'username'

@@ -8,14 +8,10 @@ import { useRedux } from '@/hooks/use-redux'
 import { CreateCampaignForm } from './components/CreateCampaignForm'
 
 type Props = {
-  selectedCampaignId: string
   setSelectedCampaignId: (id: string) => void
 }
 
-export const CreateCampaignModal: FC<Props> = ({
-  selectedCampaignId,
-  setSelectedCampaignId,
-}: Props) => {
+export const CreateCampaignModal: FC<Props> = ({ setSelectedCampaignId }: Props) => {
   const { t } = useTranslation('campaigns')
   const { resetModals } = useModals()
   const { dispatch } = useRedux()
@@ -35,10 +31,7 @@ export const CreateCampaignModal: FC<Props> = ({
       maxWidth="1000px"
       containerWidth="100%"
     >
-      <CreateCampaignForm
-        selectedCampaignId={selectedCampaignId}
-        setSelectedCampaignId={setSelectedCampaignId}
-      />
+      <CreateCampaignForm setSelectedCampaignId={setSelectedCampaignId} />
     </ModalMessage>
   )
 }

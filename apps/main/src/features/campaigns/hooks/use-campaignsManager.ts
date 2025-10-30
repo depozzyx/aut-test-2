@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createStructuredSelector } from 'reselect'
 import { useUnmount } from 'react-use'
 import { shallowEqual } from 'react-redux'
@@ -18,8 +18,8 @@ import {
   setFilterCampaignIds,
   selectFilterCampaignIds,
   selectOrder,
-  selectIsLoading,
   selectRefetchTrigger,
+  selectIsRequested,
 } from '@/features/campaigns/store/campaigns'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
@@ -47,6 +47,9 @@ type TReturn = {
 
 type TCampaignThunk = (
   params: TActiveCampaignsReq,
+  append?: boolean,
+  withLoading?: boolean,
+  controller?: AbortController,
 ) => ThunkAction<void, TRootState, unknown, AnyAction>
 
 export const useCampaignsManager = (
@@ -64,8 +67,8 @@ export const useCampaignsManager = (
     filterStatus,
     orderBy,
     order,
-    isLoading,
     refetchTrigger,
+    isRequested,
   } = select(
     createStructuredSelector({
       pagination: selectCampaignsPagination,
@@ -75,8 +78,8 @@ export const useCampaignsManager = (
       filterStatus: selectFilterStatus,
       orderBy: selectOrderBy,
       order: selectOrder,
-      isLoading: selectIsLoading,
       refetchTrigger: selectRefetchTrigger,
+      isRequested: selectIsRequested,
     }),
     shallowEqual,
   )
@@ -110,11 +113,18 @@ export const useCampaignsManager = (
       filterDate?.to,
     ],
   )
+  const [controller, setController] = useState<AbortController>(new AbortController())
 
   // single fetch helper (stable)
   const doFetch = useCallback(
     (p: number) => {
-      dispatch(fetcher({ ...baseParams, page: p }))
+      let newController: AbortController = new AbortController()
+      if (isRequested) {
+        controller.abort()
+      }
+
+      dispatch(fetcher({ ...baseParams, page: p }, false, true, newController))
+      setController(newController)
     },
     [dispatch, fetcher, baseParams],
   )
@@ -190,6 +200,6 @@ export const useCampaignsManager = (
     pagination: { total, page, limit },
     filters,
     handlerResetFilters,
-    isLoading,
+    isLoading: isRequested,
   }
 }

@@ -6,6 +6,7 @@ import { StyledChip } from './StatusChip.styled'
 
 interface IStatusChipProps {
   status: TLeadListStatus
+  cursor?: string
 }
 
 export const statusColor: Record<TLeadListStatus, keyof DefaultTheme['palette']> = {
@@ -13,7 +14,7 @@ export const statusColor: Record<TLeadListStatus, keyof DefaultTheme['palette']>
   inactive: 'main8-100',
 }
 
-export const LeadListStatusChip = ({ status }: IStatusChipProps): JSX.Element => {
+export const LeadListStatusChip = ({ status, cursor }: IStatusChipProps): JSX.Element => {
   const { t } = useTranslation('leads-list')
 
   return (
@@ -21,7 +22,7 @@ export const LeadListStatusChip = ({ status }: IStatusChipProps): JSX.Element =>
       <Text
         variant="f10"
         color={statusColor[status]}
-        styles={{ textTransform: 'uppercase' }}
+        styles={{ textTransform: 'uppercase', cursor: cursor || 'default' }}
       >
         {t(`statuses.lead-list.${status}`)}
       </Text>

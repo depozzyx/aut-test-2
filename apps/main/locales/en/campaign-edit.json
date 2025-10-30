@@ -1,0 +1,71 @@
+{
+  "empty-data": "No data",
+  "tabs": {
+    "general": "General",
+    "agents": "Agents",
+    "leads": "Leads",
+    "recycle": "Recycle",
+    "routes": "Routes"
+  },
+  "pages": {
+    "general": {
+      "title": "Edit Campaign",
+      "campaign-name": "Campaign Name",
+      "agent-assignment": "Agent Assignment",
+      "agent-groups": "Agent Groups",
+      "call-frequency": "Call Frequency",
+      "time-for-calls": "Time for Call",
+      "save": "Save",
+      "cancel": "Cancel",
+      "hold-time": "Agent Hold Time (seconds)",
+      "hold-time-placeholder": "max 60s",
+      "mode-label": "Mode",
+      "coefficient-label": "Coefficient",
+      "workHours-label": "Work Hours (local timecampaign-list-headers)",
+      "lead-statuses": "Select lead statuses to filter calls",
+      "lead-statuses-review": "Filtered lead statuses for calls"
+    },
+    "lead-list": {
+      "title": "Campaign Leads",
+      "lead-selection": "Lead Lists of the Campaign",
+      "prefix": "Prefix",
+      "caller-number": "Caller Number",
+      "edit-action": "Edit",
+      "delete-action": "Delete",
+      "no-routes": "No lead lists added yet.",
+      "id": "ID",
+      "name": "Name",
+      "active": "Status",
+      "leadCount": "Leads",
+      "lastCallDate": "Last Call",
+      "view": "View",
+      "edit": "Edit",
+      "remove": "Remove",
+      "remove-from-campaign-tooltip": "Remove lead list from campaign",
+      "status-active": "Active",
+      "status-inactive": "Inactive"
+    },
+    "routes": {
+      "title": "Campaign Routes",
+      "add-route": "Add Route",
+      "active": "Active",
+      "prefix": "Prefix",
+      "caller-number": "Caller Number",
+      "edit-action": "Edit",
+      "delete-action": "Delete",
+      "no-routes": "No routes added yet. Click 'Add Route' to create one."
+    }
+  },
+  "breadCrumbs": {
+    "campaigns": "Campaigns",
+    "campaign": "Campaign"
+  },
+  "modal": {
+    "unsaved-changes": {
+      "title": "Unsaved Changes",
+      "description": "You have unsaved changes. Are you sure you want to leave this page?",
+      "confirm-btn": "Leave Page",
+      "cancel-btn": "Stay on Page"
+    }
+  }
+}

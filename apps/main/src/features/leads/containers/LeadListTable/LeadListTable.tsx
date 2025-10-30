@@ -114,19 +114,6 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
     }
   }
 
-  // const [assignedLeads, setAssignedLeads] = useState<TLeadOption[]>([])
-
-  // const getAllLeadsOptions = async (id: number) => {
-  //   try {
-  //     const { data } = await leadsApi.getLeadsForSelect(id)
-  //     if (data?.data) {
-  //       setAssignedLeads(data.data)
-  //     }
-  //   } catch (e) {
-  //     handleRestError({ e, dispatch })
-  //   }
-  // }
-
   const handleEdit = async (id: number) => {
     const targetLeadList = data.find((list) => list.id === id)
     if (targetLeadList) {
@@ -283,12 +270,7 @@ export const LeadListTable = memo(({ reFetch }: { reFetch: () => void }): JSX.El
         />
       )}
       {isEditModalOpen && leadList && (
-        <EditLeadListModal
-          leadListData={leadList}
-          // assignedLeads={assignedLeads}
-          // initialLeadIds={assignedLeads.map((l) => l.value)}
-          onClose={onCloseEditLeadListModal}
-        />
+        <EditLeadListModal leadListData={leadList} onClose={onCloseEditLeadListModal} />
       )}
       <ConfirmDeleteModal
         title="Are you sure you want to delete it?"

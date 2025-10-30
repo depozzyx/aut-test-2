@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 import { Box } from '@peiko/components/Box'
 import { LeadListTable } from '@/features/leads/containers/LeadListTable'
@@ -8,14 +8,10 @@ import {
   selectLeadListPagination,
   selectLeadListsOrderBy,
   selectLeadListsOrder,
-  selectIsLoading,
+  selectIsRequested,
 } from '@/features/leads/store/lead-list'
 import { createStructuredSelector } from 'reselect'
-// import {
-//   selectLeadsPagination,
-//   selectLeadsOrderBy,
-//   selectLeadsOrder,
-// } from '@/features/leads/store/leads'
+
 import { shallowEqual } from 'react-redux'
 import { Pagination } from '@peiko/components/Pagination/Pagination'
 import { useFormik } from 'formik'
@@ -31,13 +27,13 @@ export const LeadList: FC = () => {
     pagination: { total, page, limit },
     orderBy,
     order,
-    isLoading,
+    isRequested,
   } = select(
     createStructuredSelector({
       pagination: selectLeadListPagination,
       orderBy: selectLeadListsOrderBy,
       order: selectLeadListsOrder,
-      isLoading: selectIsLoading,
+      isRequested: selectIsRequested,
     }),
     shallowEqual,
   )
@@ -53,14 +49,26 @@ export const LeadList: FC = () => {
     onSubmit: () => undefined,
   })
 
-  useEffect(() => {
-    dispatch(
-      asyncGetLeadLists({ page, limit, orderBy, order, ...cleanObject(filters.values) }),
-    )
-  }, [orderBy, order])
+  const [controller, setController] = useState<AbortController>(new AbortController())
 
-  const onChangePage = (page: number) =>
-    dispatch(asyncGetLeadLists({ page, orderBy, order, ...cleanObject(filters.values) }))
+  const onChangePage = (page: number) => {
+    let newController: AbortController = new AbortController()
+    if (isRequested) {
+      controller.abort()
+    }
+    dispatch(
+      asyncGetLeadLists(
+        { page, limit, orderBy, order, ...cleanObject(filters.values) },
+        newController,
+        true,
+      ),
+    )
+    setController(newController)
+  }
+
+  useEffect(() => {
+    onChangePage(page)
+  }, [orderBy, order])
 
   const onChangeFilters = () =>
     onChangePage(
@@ -76,11 +84,7 @@ export const LeadList: FC = () => {
   return (
     <>
       <Box styles={{ marginTop: '24px' }}>
-        <LeadListFilters
-          disabled={isLoading}
-          filters={filters}
-          onResetFilters={filters.resetForm}
-        />
+        <LeadListFilters filters={filters} onResetFilters={filters.resetForm} />
       </Box>
       <Box styles={{ marginTop: '6px' }}>
         <LeadListTable reFetch={() => onChangePage(page)} />

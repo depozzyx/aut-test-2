@@ -39,6 +39,13 @@ module.exports = {
       'leads-list',
       'page-titles',
     ],
+    '/cabinet/campaigns/edit/[campaignId]': [
+      'campaign-edit',
+      'routing',
+      'campaigns',
+      'leads-list',
+      'page-titles',
+    ],
     '/cabinet/dashboard/active-agents': [
       'user',
       'routing',
@@ -92,6 +99,7 @@ module.exports = {
       'activity-log',
     ],
     '/cabinet/settings/admins-list': ['user', 'routing', 'admins', 'validation'],
+    '/cabinet/settings/routes-list': ['routing', 'routes', 'validation'],
     '/cabinet/settings/api-key-management': ['user', 'routing', 'api-key', 'validation'],
     '/cabinet/settings/campaigns-management': ['settings', 'routing'],
     '/cabinet/settings/leads-management': ['settings', 'routing'],

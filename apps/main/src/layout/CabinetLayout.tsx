@@ -33,6 +33,7 @@ const ContentWrapper = styled.div<TCabinetLayoutProps>(
     min-height: ${props.minHeight || 'calc(100vh - var(--header-height))'};
     padding: ${props.padding ?? '0'};
     overflow-x: hidden;
+    overflow-y: hidden;
     align-items: stretch;
     width: 100%;
   `,

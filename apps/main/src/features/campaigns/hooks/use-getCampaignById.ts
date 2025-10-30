@@ -1,27 +1,12 @@
 import { useMemo } from 'react'
-import { shallowEqual } from 'react-redux'
 import useSWR from 'swr'
 import { useRedux } from '@/hooks/use-redux'
 import { apiCampaigns } from '@/api-rest/campaigns'
-import { selectSelectedCampaignId } from '@/features/campaigns/store/campaigns'
 import { handleRestError } from '@/features/common/error'
-import { TCampaign, TCampaignStatus } from '@/features/campaigns/types'
-import { TRecycleRule } from '@/api-rest/campaigns/types'
+import { TCampaignStatus } from '@/features/campaigns/types'
+import { TAgent, TLeadList, TRecycleRule } from '@/api-rest/campaigns/types'
 import { TSelectOption } from '@peiko/components/inputs/Select/types'
-
-export type TAgent = {
-  id: number
-  username: string
-}
-
-export type TLeadList = {
-  id: number
-  name: string
-  active: boolean
-  createdAt: string
-  updatedAt: string
-  campaign: TCampaign
-}
+import { TAgentGroup } from '@/api-rest/users/groups.types'
 
 type TReturn = {
   data?: {
@@ -29,6 +14,7 @@ type TReturn = {
     name: string
     status: TCampaignStatus
     assignedAgents: TSelectOption<number>[]
+    agentGroups: TSelectOption<number>[]
     leadLists: TSelectOption<number>[]
     holdTime: number
     mode: string
@@ -40,10 +26,8 @@ type TReturn = {
   isLoading: boolean
 }
 
-export const useGetCampaignById = (): TReturn => {
-  const { select, dispatch } = useRedux()
-
-  const id = select(selectSelectedCampaignId, shallowEqual)
+export const useGetCampaignById = (id: number): TReturn => {
+  const { dispatch } = useRedux()
 
   const key = useMemo(() => `/campaigns/${id}`, [id])
 
@@ -65,6 +49,7 @@ export const useGetCampaignById = (): TReturn => {
       status,
       assignedAgents,
       leadLists,
+      agentGroups,
       holdTime,
       mode,
       coefficient,
@@ -84,6 +69,10 @@ export const useGetCampaignById = (): TReturn => {
       leadLists: leadLists.map((list: TLeadList) => ({
         value: list?.id,
         label: list?.name,
+      })),
+      agentGroups: (agentGroups ?? []).map((group: TAgentGroup) => ({
+        value: group?.id,
+        label: group?.name,
       })),
       holdTime,
       mode,

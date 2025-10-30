@@ -6,9 +6,9 @@ import { TPagination } from '@/types/entities/pagination'
 import useTranslation from 'next-translate/useTranslation'
 import { useState } from 'react'
 import { ORDER } from '@/constants/order'
-import { TUsersReq } from '../../../api/rest/users/types'
-import { apiUsers } from '../../../api/rest/users'
-import { ERoles } from '../../../constants/profile'
+import { ERoles } from '@/constants/profile'
+import { TUsersReq } from '@/api-rest/users/types'
+import { apiUsers } from '@/api-rest/users'
 
 type TValue<T = string> = {
   label: string

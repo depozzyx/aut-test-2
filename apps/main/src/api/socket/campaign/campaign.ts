@@ -30,7 +30,24 @@ const campaignStatisticUpdate = ({
   })
 }
 
+const campaignChangesUpdate = ({
+  id,
+  callback,
+}: TSubscribeProps<
+  {
+    campaignId: number
+  } & TCampaignWSStatus
+>): void => {
+  socket.subscribe({
+    id,
+    callback,
+    scope: `campaign:campaignChangesUpdate`,
+    eventName: `campaign:campaignChangesUpdate`,
+  })
+}
+
 export const campaignSocket = {
   campaignStatusUpdate,
   campaignStatisticUpdate,
+  campaignChangesUpdate,
 }

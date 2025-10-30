@@ -1,0 +1,24 @@
+    {
+        "title": "Routes management",
+        "add-route": "Add Route",
+        "empty-data": "No routes added yet. Click 'Add Route' to create one.",
+        "headers": {
+            "name": "Route Name",
+            "caller-number": "Caller Number",
+            "edit": "Edit",
+            "delete": "Delete"
+        },
+        "filters": {
+            "placeholder": {
+                "search-by-name": "Search by name"
+            }
+        },
+        "delete": {
+            "title": "Are you sure you want to delete {{ name }}?",
+            "delete-btn": "Delete",
+            "cancel-btn": "Cancel"
+        },
+        "validation": {
+            "required-field": "This field is required"
+        }
+    }

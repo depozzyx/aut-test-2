@@ -63,11 +63,10 @@ export const RecycleRules: FC<Props> = ({ formik, leadStatuses, height }: Props)
   }, [height])
 
   return (
-    <Flex maxWidth="424px" width="100%" direction="column" justify="flex-start">
+    <Flex width="100%" direction="column" justify="flex-start">
       <Flex
         ref={refHead}
         justify="space-between"
-        width="424px"
         align="center"
         styles={{ marginBottom: '26px' }}
       >

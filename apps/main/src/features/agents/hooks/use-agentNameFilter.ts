@@ -5,9 +5,9 @@ import { TAgentsReq } from '@/api-rest/agents/types'
 import { handleRestError } from '@/features/common/error'
 import { TPagination } from '@/types/entities/pagination'
 import { setAgentNameFilter } from '@/features/agents/store/agent-analytics'
-import { apiUsers } from '../../../api/rest/users'
-import { ERoles } from '../../../constants/profile'
-import { TUser } from '../../../api/rest/users/types'
+import { ERoles } from '@/constants/profile'
+import { apiUsers } from '@/api-rest/users'
+import { TUser } from '@/api-rest/users/types'
 
 type TAgentOption = {
   label: string

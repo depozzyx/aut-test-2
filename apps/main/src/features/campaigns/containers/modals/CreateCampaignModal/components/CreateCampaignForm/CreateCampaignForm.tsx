@@ -1,21 +1,15 @@
-import React, { useEffect, useCallback, FC, useState, useRef } from 'react'
+import React, { useEffect, FC, useState, useRef, useLayoutEffect } from 'react'
 import { useFormik } from 'formik'
 import { shallowEqual, useStore } from 'react-redux'
-import { createStructuredSelector } from 'reselect'
+
 import useTranslation from 'next-translate/useTranslation'
-import debounce from 'lodash/debounce'
 
 import { Flex } from '@/components/Flex'
 import { useRedux } from '@/hooks/use-redux'
 import { OutlinedButton } from '@peiko/components/buttons/OutlinedButton'
 import { FilledButton } from '@peiko/components/buttons/FilledButton'
 import { useModals } from '@/features/common/modals/hooks/use-modals'
-import {
-  asyncGetLeadListCatalog,
-  selectLeadListPagination,
-  selectLeadListCatalogAsOptions,
-  reset as resetLeadsList,
-} from '@/features/leads/store/lead-list'
+
 import { FormikMultiSelect } from '@/components/formik-wrappers/FormikMultiSelect'
 
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput'
@@ -29,39 +23,31 @@ import {
   selectFormDataForReview,
 } from '@/features/campaigns/store/create-campaign'
 import { MODAL_NAMES } from '@/features/common/modals/constants'
-import { TCampaignOption } from '@/features/campaigns/hooks/use-campaignNameFilter'
 import { Select } from '@peiko/components/inputs/Select/Select'
 import { SingleValue } from 'react-select'
 import { TSelectOption } from '@/components/MutliSelect/types'
 import { apiCampaigns } from '@/api-rest/campaigns'
-import { TPagination } from '@/types/entities/pagination'
-import { handleRestError } from '@/features/common/error'
-import { TCampaign } from '@/features/campaigns/types'
+
 import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
-import {
-  INITIAL_REQUEST_PARAMS_CREATE,
-  PAGINATION_REQUEST_TIME,
-} from '@/features/campaigns/constants'
+
 import { RecycleRules } from '@/features/campaigns/components/RecycleRules'
-import { TRecycleRule } from '@/api-rest/campaigns/types'
+import { TAgent, TRecycleRule } from '@/api-rest/campaigns/types'
 import { createCampaignValidationSchema } from '@/utils/validation'
-import {
-  asyncGetUsersList,
-  selectUsersOptions,
-  selectUsersPagination,
-  reset as resetUsersList,
-} from '@/features/users/store/users'
-import { useDebounce } from 'react-use'
-import { ERoles } from '../../../../../../../constants/profile'
-import { TUser } from '../../../../../../../api/rest/users/types'
+
+import { AgentsFormikSelect } from '@/features/common/FormInputs/AgentsMultiSelect/AgentsFormikSelect'
+import { LeadListsSelect } from '@/features/common/FormInputs/LeadListsMultiSelect/LeadListsMultiSelect'
+import { AgentsGroupsSelect } from '@/features/common/FormInputs/AgentsGroupsSelect/AgentsGroupsFormikSelect'
+import { selectAgentGroupsList } from '@/features/agent-groups/store/agent-groups'
+import { TAgentGroup } from '@/api-rest/users/groups.types'
+import { useCampaignLoader } from '@/features/campaigns/hooks/useCampaignLoader'
 
 type Props = {
-  selectedCampaignId: string
   setSelectedCampaignId: (id: string) => void
 }
 
 type TFormValues = {
   name: string
+  agentGroups: TSelectOption<number>[]
   assignedAgent: TSelectOption<number>[]
   leadList: TSelectOption<number>[]
   holdTime: number
@@ -72,75 +58,22 @@ type TFormValues = {
   workHours?: string
 }
 
-export const CreateCampaignForm: FC<Props> = ({
-  selectedCampaignId,
-  setSelectedCampaignId,
-}: Props) => {
+export const CreateCampaignForm: FC<Props> = ({ setSelectedCampaignId }: Props) => {
   const { t } = useTranslation('campaigns')
   const { resetModals, modalState } = useModals()
   const { select, dispatch } = useRedux()
   const formDataForReview = select(selectFormDataForReview, shallowEqual)
   const store = useStore()
 
-  const [campaignOptions, setCampaignOptions] = useState<TCampaignOption[]>([
-    { label: '-', value: '' },
-  ])
-  const [campaignsPagination, setCampaignsPagination] = useState<TPagination>({
-    page: 1,
-    limit: 10,
-    total: 1,
-  })
-
-  const getAndSetCampaignParams = async () => {
-    try {
-      const { data } = await apiCampaigns.getCampaignList({
-        page: campaignsPagination.page,
-        limit: campaignsPagination.limit,
-      })
-      setCampaignOptions((prev) =>
-        data.data.reduce((acc: TCampaignOption[], campaign: TCampaign) => {
-          if (!acc.find((i: TCampaignOption) => i.value === campaign.id)) {
-            acc.push({
-              label: campaign.name,
-              value: campaign.id,
-            })
-          }
-          return acc
-        }, prev.slice()),
-      )
-      setCampaignsPagination(data.pagination)
-    } catch (e) {
-      handleRestError({ e, dispatch })
-    }
-  }
-  useEffect(() => {
-    getAndSetCampaignParams()
-  }, [campaignsPagination.page, campaignsPagination.limit])
-
-  const loadMoreCampaigns = useCallback(() => {
-    const nextPage = campaignsPagination.page + 1
-    const lastPage = Math.ceil(
-      campaignsPagination.total / (campaignsPagination.limit ?? 10),
-    )
-    if (campaignsPagination.page < lastPage) {
-      setCampaignsPagination((prev) => ({ ...prev, page: nextPage }))
-    }
-  }, [campaignsPagination])
-
   const {
-    leadsPagination: { page: leadsPage, limit: leadsLimit, total: leadsTotal },
-    leadListOptions,
-    agentsPagination: { page: agentsPage, limit: agentsLimit, total: agentsTotal },
-    agentsOptions,
-  } = select(
-    createStructuredSelector({
-      leadsPagination: selectLeadListPagination,
-      leadListOptions: selectLeadListCatalogAsOptions,
-      agentsPagination: selectUsersPagination,
-      agentsOptions: selectUsersOptions,
-    }),
-    shallowEqual,
-  )
+    options: campaignOptions,
+    loadMore: loadMoreCampaigns,
+    setSearch: setSearchCampaigns,
+  } = useCampaignLoader()
+
+  const agentGroups = select(selectAgentGroupsList)
+
+  const [oldAgentGroups, setOldAgentGroups] = useState<TAgentGroup[]>([])
 
   const { getSettingsAsync } = useSettings()
 
@@ -154,6 +87,7 @@ export const CreateCampaignForm: FC<Props> = ({
     initialValues: {
       name: '',
       assignedAgent: [],
+      agentGroups: [],
       leadList: [],
       holdTime: 0,
       mode: '',
@@ -164,11 +98,12 @@ export const CreateCampaignForm: FC<Props> = ({
     },
     validationSchema: createCampaignValidationSchema,
     onSubmit: (formData) => {
-      const { leadList, assignedAgent, ...data } = formData
+      const { leadList, assignedAgent, agentGroups, ...data } = formData
       dispatch(
         reviewFormData({
           ...data,
           leadListIds: leadList.map((item) => item.value),
+          agentGroupIds: agentGroups.map((item) => item.value),
           assignedAgentIds: assignedAgent.map((item) => item.value),
         }),
       )
@@ -190,64 +125,8 @@ export const CreateCampaignForm: FC<Props> = ({
   useEffect(() => {
     if (!formDataForReview && modalState?.isOpen) {
       getSettings(formik)
-      dispatch(resetLeadsList())
-      dispatch(resetUsersList())
-      Promise.all([
-        dispatch(asyncGetUsersList(ERoles.AGENT, INITIAL_REQUEST_PARAMS_CREATE)),
-        dispatch(
-          asyncGetLeadListCatalog({
-            ...INITIAL_REQUEST_PARAMS_CREATE,
-            withoutCampaigns: true,
-          }),
-        ),
-      ])
     }
   }, [formDataForReview])
-
-  const [leadListSearch, setLeadListSearch] = useState<string>()
-  const [assignedAgentSearch, setAssignedAgentSearch] = useState<string>()
-
-  // Debounced remote search for lead lists
-  useDebounce(
-    () => {
-      if (leadListSearch === undefined) return
-      dispatch(
-        asyncGetLeadListCatalog(
-          {
-            page: 1,
-            limit: leadsLimit,
-            withoutCampaigns: true,
-            name: leadListSearch,
-          },
-          false,
-          false,
-        ),
-      )
-    },
-    400,
-    [leadListSearch],
-  )
-
-  // Debounced remote search for agents
-  useDebounce(
-    () => {
-      if (assignedAgentSearch === undefined) return
-      dispatch(
-        asyncGetUsersList(
-          ERoles.AGENT,
-          {
-            page: 1,
-            limit: agentsLimit,
-            search: assignedAgentSearch,
-          },
-          false,
-          false,
-        ),
-      )
-    },
-    400,
-    [assignedAgentSearch],
-  )
 
   useEffect(() => {
     if (
@@ -296,21 +175,30 @@ export const CreateCampaignForm: FC<Props> = ({
       } = await apiCampaigns.getCampaignById(id)
 
       if (campaign) {
-        ;['mode', 'coefficient', 'holdTime', 'workHours'].forEach((field) => {
-          if (campaign[field]) {
+        ;(['mode', 'coefficient', 'holdTime', 'workHours'] as const).forEach((field) => {
+          if (campaign[field] !== undefined) {
             formik.setFieldValue(field, campaign[field])
           }
         })
 
         if (campaign?.assignedAgents?.length) {
-          const newAssignedAgent = campaign.assignedAgents.map((agent: TUser) => ({
+          const newAssignedAgent = campaign.assignedAgents.map((agent) => ({
             value: agent.id,
             label: agent.username,
           }))
-
           await formik.setFieldValue('assignedAgent', newAssignedAgent)
-          await formik.setFieldValue('filterLeadStatuses', campaign.filterLeadStatuses)
-          await formik.setFieldValue('recycleRules', campaign.recycleRules)
+        }
+
+        await formik.setFieldValue('filterLeadStatuses', campaign.filterLeadStatuses)
+        await formik.setFieldValue('recycleRules', campaign.recycleRules)
+        if (campaign.agentGroups.length) {
+          await formik.setFieldValue(
+            'agentGroups',
+            campaign.agentGroups.map((group) => ({
+              value: group.id,
+              label: group.name,
+            })),
+          )
         }
       }
     } else if (option?.label === '-') {
@@ -319,26 +207,6 @@ export const CreateCampaignForm: FC<Props> = ({
       await getSettings(formik)
     }
   }
-
-  const onLeadsScrollToBottom = useCallback(
-    debounce(() => {
-      const lastPage = leadsTotal === 0 ? 1 : Math.ceil(leadsTotal / (leadsLimit ?? 10))
-      if (leadsPage < lastPage)
-        dispatch(
-          asyncGetLeadListCatalog(
-            {
-              page: leadsPage + 1,
-              limit: leadsLimit,
-              withoutCampaigns: true,
-              name: leadListSearch,
-            },
-            true,
-            true,
-          ),
-        )
-    }, PAGINATION_REQUEST_TIME),
-    [leadsPage, leadsLimit, leadsTotal],
-  )
 
   useEffect(() => {
     if (!formik.values?.recycleRules?.length) {
@@ -356,53 +224,71 @@ export const CreateCampaignForm: FC<Props> = ({
     })
   }, [formik.values.recycleRules])
 
-  const onAgentsScrollToBottom = useCallback(
-    debounce(() => {
-      const lastPage =
-        agentsTotal === 0 ? 1 : Math.ceil(agentsTotal / (agentsLimit ?? 10))
-      if (agentsPage < lastPage) {
-        dispatch(
-          asyncGetUsersList(
-            ERoles.AGENT,
-            {
-              page: agentsPage + 1,
-              limit: agentsLimit,
-              search: assignedAgentSearch,
-            },
-            true,
-            true,
-          ),
-        )
-      }
-    }, PAGINATION_REQUEST_TIME),
-    [agentsPage, agentsLimit, agentsTotal],
-  )
-
   const isRecycleRulesInvalid = () =>
     formik.values.recycleRules?.length && !formik.values.recycleRules[0].status
+
+  const refLeftColumn = useRef<HTMLDivElement>(null)
+  const refLeadStatuses = useRef<HTMLDivElement>(null)
+  const [height, setHeight] = useState<number>(608)
+
+  useLayoutEffect(() => {
+    if (refLeftColumn.current) {
+      setHeight(refLeftColumn.current.clientHeight)
+    }
+  }, [refLeftColumn.current?.clientHeight])
 
   const handleFilterLeadStatusesChange = () => {
     setTimeout(() => formik.setTouched({ filterLeadStatuses: true }, true), 0)
   }
 
-  const handleAssignedAgentIdsChange = () => {
-    setTimeout(() => formik.setTouched({ assignedAgent: [] }, true), 0)
-  }
-
-  const refLeftColumn = useRef<HTMLDivElement>(null)
-  const refLeadStatuses = useRef<HTMLDivElement>(null)
-  const [height, setHeight] = useState<number>()
-
   useEffect(() => {
-    if (refLeftColumn.current && refLeadStatuses.current) {
-      setHeight(refLeftColumn.current.clientHeight - refLeadStatuses.current.clientHeight)
-    }
-  }, [refLeftColumn.current?.clientHeight, refLeadStatuses.current?.clientHeight])
+    const currentAgents = formik.values.assignedAgent
+    const addedGroups = formik.values.agentGroups
+      .filter((g) => !oldAgentGroups.some((og) => og.id === g.value))
+      .map((g) => agentGroups.find((ag) => ag.id === g.value))
+
+    const addedAgents = addedGroups
+      .flatMap((group) => group?.agents ?? [])
+      .reduce((acc, agent) => {
+        if (
+          !acc.find((a) => a.id === agent.id) &&
+          !currentAgents.find((a) => a.value === agent.id)
+        )
+          acc.push(agent)
+        return acc
+      }, [] as TAgent[])
+
+    const deletedGroups = oldAgentGroups.filter(
+      (og) => !formik.values.agentGroups.some((g) => g.value === og.id),
+    )
+    const agents = oldAgentGroups
+      .filter((og) => !deletedGroups.some((dg) => dg.id === og.id))
+      .flatMap((group) => group?.agents ?? [])
+
+    const deletedAgents = deletedGroups
+      .flatMap((group) => group.agents)
+      .reduce((acc, agent) => {
+        if (agent && !agents.find((a) => a.id === agent.id)) acc.add(agent.id)
+        return acc
+      }, new Set())
+
+    const newAgents = [
+      ...formik.values.assignedAgent.filter((agent) => !deletedAgents.has(agent.value)),
+      ...addedAgents.map((agent) => ({ value: agent.id, label: agent.username })),
+    ]
+
+    formik.setFieldValue('assignedAgent', newAgents)
+    setOldAgentGroups(
+      oldAgentGroups
+        .filter((og) => !deletedGroups.some((g) => g.id === og.id))
+        .concat(addedGroups.filter((g): g is TAgentGroup => !!g)),
+    )
+  }, [formik.values.agentGroups])
 
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off" style={{ width: '100%' }}>
-      <Flex width="100%" direction="column" align="center" gap={48} margin="40px 0 0 0">
-        <Flex direction="row" gap={48}>
+      <Flex width="100%" direction="column" align="center" gap={48} margin="20px 0 0 0">
+        <Flex direction="row" gap={32}>
           <Flex
             ref={refLeftColumn}
             maxWidth="424px"
@@ -415,17 +301,12 @@ export const CreateCampaignForm: FC<Props> = ({
               onChange={handleCampaignSelect}
               placeholder={t('create-campaign.select-campaign-placeholder')}
               label={{ label: t('create-campaign.select-campaign-label') }}
-              options={campaignOptions.filter((v) =>
-                String(selectedCampaignId) === '' ? v.label !== '-' : true,
-              )}
-              value={
-                campaignOptions.find(
-                  (i) => String(i.value) === String(selectedCampaignId),
-                )?.value
-              }
+              options={campaignOptions}
               onMenuScrollToBottom={loadMoreCampaigns}
+              onInputChange={setSearchCampaigns}
               maxMenuHeight={200}
               width="100%"
+              isSearchable
             />
             <FormikInput
               size="s"
@@ -436,28 +317,20 @@ export const CreateCampaignForm: FC<Props> = ({
               width="100%"
               styles={{ padding: '0 14px' }}
             />
-            <FormikMultiSelect
+            <AgentsGroupsSelect
+              formik={formik}
+              name="agentGroups"
+              label={t('create-campaign.agent-groups')}
+            />
+            <AgentsFormikSelect
               formik={formik}
               name="assignedAgent"
-              label={{ label: t('create-campaign.agent-assignment') }}
-              width={424}
-              size="s"
-              options={agentsOptions}
-              onChange={handleAssignedAgentIdsChange}
-              onMenuScrollToBottom={onAgentsScrollToBottom}
-              onInputChange={(e) => setAssignedAgentSearch(e)}
-              isSearchable
+              label={t('create-campaign.agent-assignment')}
             />
-            <FormikMultiSelect
+            <LeadListsSelect
               formik={formik}
               name="leadList"
-              label={{ label: t('create-campaign.lead-selection') }}
-              size="s"
-              width={424}
-              options={leadListOptions}
-              onMenuScrollToBottom={onLeadsScrollToBottom}
-              onInputChange={(e) => setLeadListSearch(e)}
-              isSearchable
+              label={t('create-campaign.lead-selection')}
             />
             <FormikInput
               size="s"
@@ -498,21 +371,30 @@ export const CreateCampaignForm: FC<Props> = ({
               label={{ label: t('create-campaign.workHours-label') }}
             />
           </Flex>
-          <Flex direction="column" gap={48} maxWidth="424px" width="100%">
-            <Flex ref={refLeadStatuses} direction="column" width="100%">
+          <Flex
+            ref={refLeadStatuses}
+            direction="column"
+            gap={48}
+            maxWidth="432px"
+            width="100%"
+            height={height}
+          >
+            <Flex direction="column" width="100%">
               <FormikMultiSelect
                 formik={formik}
                 name="filterLeadStatuses"
                 label={{ label: t('create-campaign.lead-statuses') }}
                 size="s"
-                width={424}
+                width={432}
                 options={leadStatuses.map(({ name: label, value }) => ({ label, value }))}
                 isSearchable
                 emitValues
                 onChange={handleFilterLeadStatusesChange}
               />
             </Flex>
-            <RecycleRules height={height} formik={formik} leadStatuses={leadStatuses} />
+            <div style={{ flex: 1, overflow: 'auto' }}>
+              <RecycleRules formik={formik} leadStatuses={leadStatuses} />
+            </div>
           </Flex>
         </Flex>
         <Flex align="center" justify="center" gap={24}>

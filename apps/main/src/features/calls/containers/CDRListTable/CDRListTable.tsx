@@ -22,26 +22,26 @@ import { SaveIcon } from '@peiko/components/icons/SaveIcon/SaveIcon'
 import { LoaderIcon } from '@peiko/components/icons/Loader'
 import { RotateContainer } from '@peiko/components/loaders/Loader/Loader.styles'
 import { notificationActions } from '@/features/common/notifications/store'
-import { BaseImage } from '@peiko/components/BaseImage'
-import { InfoColumn } from '../../../../components/InfoColumn'
+// import { BaseImage } from '@peiko/components/BaseImage'
+import { CallOrderBy, TCDRList } from '@/api-rest/calls/types'
+import { apiCalls } from '@/api-rest/calls'
+import { InfoColumn } from '@/components/InfoColumn'
 import {
   selectCallsList,
   selectIsLoading,
   selectCallsOrderBy,
   setCallsOrderBy,
   selectCallsOrder,
-} from '../../store/calls'
-import { LoudSpeakerIcon } from '../../../../components/icons/LoudSpeakerIcon'
-import { CallOrderBy, TCDRList } from '../../../../api/rest/calls/types'
-import { apiCalls } from '../../../../api/rest/calls'
-import { getLeadStatuses, selectLeadStatuses } from '../../../leads/store/leads'
+} from '@/features/calls/store/calls'
+import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
+import { PlayIcon } from '@peiko/components/icons/PlayIcon'
+import { Flex } from '../../../../components/Flex'
 
 type TCallListRowKeys =
   | 'createdAt'
   | 'campaign'
   | 'agent'
   | 'name'
-  | 'country'
   | 'phone'
   | 'duration'
   | 'onCallTime'
@@ -53,6 +53,42 @@ type TCallListRowKeys =
   | 'download'
 
 const img = '/images/flags4x3/'
+
+const FlagWind = ({
+  src,
+  alt,
+  idSuffix,
+}: {
+  src: string
+  alt?: string
+  idSuffix: string | number
+}) => {
+  const clipId = `flag-clip-${idSuffix}`
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      aria-label={alt || 'flag'}
+      role="img"
+      style={{
+        display: 'block',
+        filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25))',
+      }}
+    >
+      {alt ? <title>{alt}</title> : null}
+      <image
+        href={src}
+        x="0"
+        y="0"
+        width="24"
+        height="24"
+        preserveAspectRatio="xMidYMid slice"
+        clipPath={`url(#${clipId})`}
+      />
+    </svg>
+  )
+}
 
 export const CDRListTable = memo((): JSX.Element => {
   const { t } = useTranslation('calls-list')
@@ -185,10 +221,6 @@ export const CDRListTable = memo((): JSX.Element => {
       value: 'name',
     },
     {
-      label: t('headers.list.country'),
-      value: 'country',
-    },
-    {
       label: t('headers.list.phone'),
       value: 'phone',
     },
@@ -249,15 +281,16 @@ export const CDRListTable = memo((): JSX.Element => {
         />
       ),
       name: <InfoColumn title={cdrItem.lead?.name ?? ''} />,
-      country: (
-        <BaseImage
-          src={`${img}${cdrItem.lead?.countryCode?.toLowerCase()}.svg`}
-          alt={cdrItem.lead?.countryCode}
-          width={24}
-          height={24}
-        />
+      phone: (
+        <Flex direction="row" align="center" gap="8px">
+          <FlagWind
+            src={`${img}${cdrItem.lead?.countryCode?.toLowerCase()}.svg`}
+            alt={cdrItem.lead?.countryCode || ''}
+            idSuffix={cdrItem.id}
+          />
+          <InfoColumn title={cdrItem.phone} />
+        </Flex>
       ),
-      phone: <InfoColumn title={cdrItem.phone} />,
       disposition: <InfoColumn title={cdrItem.disposition} />,
       duration: <InfoColumn title={formatDuration(cdrItem.duration)} />,
       onCallTime: <InfoColumn title={formatDuration(cdrItem.onCallTime)} />,
@@ -298,7 +331,7 @@ export const CDRListTable = memo((): JSX.Element => {
                       )
                     }
                     if (!audioUrls[cdrItem.requestId]) {
-                      return <LoudSpeakerIcon width="24px" height="24px" />
+                      return <PlayIcon width="24px" height="24px" />
                     }
                     return <StopIcon width="24px" height="24px" />
                   })()}
@@ -307,7 +340,7 @@ export const CDRListTable = memo((): JSX.Element => {
               renderMenu={() => (
                 <audio controls autoPlay src={audioUrls[cdrItem.requestId]}>
                   <track kind="captions" />
-                  {t('Your browser does not support the audio element.')}
+                  {t('audioError')}
                 </audio>
               )}
               onClose={() => handleStop(cdrItem.requestId)}

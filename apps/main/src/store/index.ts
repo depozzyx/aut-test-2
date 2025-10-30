@@ -23,6 +23,8 @@ import createUserReducer from '@/features/users/store/create-user'
 import editUserReducer from '@/features/users/store/edit-user'
 import callsReducer from '@/features/calls/store/calls'
 import reportsReducer from '@/features/reports/store/reports'
+import agentGroupsReducer from '@/features/agent-groups/store/agent-groups'
+import routesReducer from '@/features/routes/store/routes'
 
 const store = configureStore({
   reducer: {
@@ -50,6 +52,8 @@ const store = configureStore({
     editUser: editUserReducer,
     calls: callsReducer,
     reports: reportsReducer,
+    agentGroups: agentGroupsReducer,
+    routes: routesReducer,
   },
 })
 

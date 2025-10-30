@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useRedux } from '@/hooks/use-redux'
 import { createStructuredSelector } from 'reselect'
@@ -74,17 +74,30 @@ export const Leads: FC = () => {
     dispatch(reset())
   })
 
-  const onChangePage = (page: number) =>
-    canLoadList &&
-    dispatch(
-      getLeadList({
-        page,
-        orderBy,
-        order,
-        ...cleanObject(filters.values),
-      }),
-    )
+  const [controller, setController] = useState<AbortController>(new AbortController())
 
+  const onChangePage = (page: number) => {
+    if (!canLoadList) {
+      return
+    }
+    let newController: AbortController = new AbortController()
+    if (isLoading) {
+      controller.abort()
+    }
+
+    dispatch(
+      getLeadList(
+        {
+          page,
+          orderBy,
+          order,
+          ...cleanObject(filters.values),
+        },
+        newController,
+      ),
+    )
+    setController(newController)
+  }
   const onChangeFilters = () =>
     onChangePage(
       filters.values.limit !== limit
@@ -107,11 +120,7 @@ export const Leads: FC = () => {
   return (
     <>
       <Box styles={{ marginTop: '24px' }}>
-        <LeadFilters
-          disabled={isLoading}
-          filters={filters}
-          onResetFilters={filters.resetForm}
-        />
+        <LeadFilters filters={filters} onResetFilters={filters.resetForm} />
       </Box>
       <Box styles={{ marginTop: '6px' }}>
         <LeadsTable reFetch={() => onChangePage(page)} />

@@ -3,19 +3,9 @@ import React, { FC } from 'react'
 import { FormikInput } from '@peiko/components/inputs/formik-adapters/FormikInput/FormikInput'
 import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSelect'
 import { TFormik } from '@peiko/types/formik'
-import {
-  getLeadsGroups,
-  getLeadStatuses,
-  selectLeadsGroup,
-  selectLeadsGroupError,
-  selectLeadsGroupPagination,
-  selectLeadsGroups,
-  selectLeadStatuses,
-} from '@/features/leads/store/leads'
+import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
 import { useRedux } from '@/hooks/use-redux'
 import useTranslation from 'next-translate/useTranslation'
-import { createStructuredSelector } from 'reselect'
-import { shallowEqual } from 'react-redux'
 import { CloseIcon } from '@peiko/components/icons/CloseIcon/CloseIcon'
 import { BaseIconButton } from '@peiko/components/buttons/BaseIconButton'
 import { Input } from '@peiko/components/inputs/Input'
@@ -23,7 +13,8 @@ import { TSelectOption } from '@/components/MutliSelect/types'
 import { SingleValue } from 'react-select'
 import { LimitSelect } from '@/components/limit-select'
 import { SearchFieldIcon } from '@/icons/SearchFieldIcon'
-import { useCampaignNameFilter } from '@/features/campaigns/hooks/use-campaignNameFilter'
+import { useCampaignLoader } from '@/features/campaigns/hooks/useCampaignLoader'
+import { useLeadListLoader } from '@/features/campaigns/hooks/useLeadListLoader'
 
 type Props = {
   filters: TFormik
@@ -33,30 +24,19 @@ type Props = {
 
 export const LeadFilters: FC<Props> = ({ filters, onResetFilters, disabled }: Props) => {
   const { t } = useTranslation('leads-list')
-  const { select, dispatch } = useRedux()
+  const { select } = useRedux()
 
   const {
-    leadsGroup,
-    leadsGroups,
-    error,
-    pagination: { page, limit: leadListLimit, total },
-  } = select(
-    createStructuredSelector({
-      leadsGroup: selectLeadsGroup,
-      leadsGroups: selectLeadsGroups,
-      error: selectLeadsGroupError,
-      pagination: selectLeadsGroupPagination,
-    }),
-    shallowEqual,
-  )
+    options: campaignOptions,
+    loadMore: loadMoreCampaigns,
+    setSearch: setCampaignSearch,
+  } = useCampaignLoader([{ label: '-', value: 0 }])
 
-  const onMenuScrollToBottom = () => {
-    const lastPage = total === 0 ? 1 : Math.ceil(total / (leadListLimit ?? 10))
-    if (page < lastPage)
-      dispatch(getLeadsGroups({ page: page + 1, limit: leadListLimit }))
-  }
-
-  const { campaignOptions, loadMoreCampaigns } = useCampaignNameFilter('list', true)
+  const {
+    options: leadsListOptions,
+    loadMore: loadMoreLeadsLists,
+    setSearch: setLeadsListsSearch,
+  } = useLeadListLoader([{ label: '-', value: 0 }])
 
   getLeadStatuses()
   const statuses = select(selectLeadStatuses)
@@ -76,12 +56,12 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters, disabled }: Pr
     filters.setFieldValue('phone', filteredValue)
   }
 
-  const onChangeLeadList = (e: SingleValue<TSelectOption>) => {
+  const onChangeFilter = (e: SingleValue<TSelectOption>, field: string) => {
     if (e) {
-      if (e.value === '0') {
-        filters.setFieldValue('leadListId', '')
+      if (e.value === 0) {
+        filters.setFieldValue(field, '')
       } else {
-        filters.setFieldValue('leadListId', e?.value)
+        filters.setFieldValue(field, e?.value)
       }
     }
   }
@@ -170,6 +150,7 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters, disabled }: Pr
             value: value.toString(),
           })),
         ]}
+        isSearchable
       />
       <FormikSelect
         formik={filters}
@@ -181,31 +162,29 @@ export const LeadFilters: FC<Props> = ({ filters, onResetFilters, disabled }: Pr
             ? v.label !== '-'
             : true,
         )}
+        onChange={(e) => onChangeFilter(e, 'campaignId')}
         onMenuScrollToBottom={loadMoreCampaigns}
+        onInputChange={setCampaignSearch}
         maxMenuHeight={200}
         width="200px"
+        isSearchable
       />
       <FormikSelect
         formik={filters}
         disabled={disabled}
         name="leadListId"
         placeholder={t('leads.filters.placeholders.leadList')}
-        options={leadsGroups
-          .map(({ id, name }) => ({
-            label: name,
-            value: id.toString(),
-          }))
-          .filter((v) =>
-            [undefined, '', '0'].includes(filters.values.leadListId)
-              ? v.label !== '-'
-              : true,
-          )}
-        onChange={onChangeLeadList}
-        onMenuScrollToBottom={onMenuScrollToBottom}
-        value={leadsGroup !== undefined ? leadsGroup.toString() : ''}
-        error={error}
+        options={leadsListOptions.filter((v) =>
+          [undefined, '', '0'].includes(filters.values.leadListId)
+            ? v.label !== '-'
+            : true,
+        )}
+        onChange={(e) => onChangeFilter(e, 'leadListId')}
+        onMenuScrollToBottom={loadMoreLeadsLists}
+        onInputChange={setLeadsListsSearch}
         maxMenuHeight={200}
         width="200px"
+        isSearchable
       />
       <LimitSelect disabled={disabled} formik={filters} />
       <BaseIconButton disabled={!filtersChanged()} onClick={onResetFilters}>

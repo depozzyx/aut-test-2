@@ -25,8 +25,11 @@ const checkPbxApiHealth = (
 ): TAxiosResponse<TPbxHealthCheckResponse> =>
   api.get('/pbx/health', type ? { params: { type } } : undefined)
 
-const cdrList = (params: TCDRListReq): TAxiosResponse<TPaginatedRes<TCDRList>> =>
-  api.get('/call', { params })
+const cdrList = (
+  params: TCDRListReq,
+  controller?: AbortController,
+): TAxiosResponse<TPaginatedRes<TCDRList>> =>
+  api.get('/call', { params, signal: controller?.signal })
 
 const cdrRecord = async (requestId: string): Promise<string> => {
   const response = await api.get(`/call/record/${requestId}`, { responseType: 'blob' })

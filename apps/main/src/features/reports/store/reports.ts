@@ -19,6 +19,7 @@ export type ReportsFilters = {
   campaignId?: number
   onlyActive?: boolean
   status?: string
+  agentGroupId?: number
   agentId?: number
   country?: string
   disposition?: string

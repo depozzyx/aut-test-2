@@ -6,16 +6,18 @@ import useTranslation from 'next-translate/useTranslation'
 import { CloseIcon } from '@peiko/components/icons/CloseIcon/CloseIcon'
 import { BaseIconButton } from '@peiko/components/buttons/BaseIconButton'
 
-import { useCampaignNameFilter } from '@/features/campaigns/hooks/use-campaignNameFilter'
 import { Select } from '@peiko/components/inputs/Select/Select'
 import { endOfDay, startOfDay } from 'date-fns'
 import { RangeDayPicker } from '../../../../components/inputs/RangeDayPicker'
 
 import { getLeadStatuses, selectLeadStatuses } from '../../../leads/store/leads'
-import { useLeadListFilter } from '../../../campaigns/hooks/use-leadListFilter'
-import { useUserFilter } from '../../../campaigns/hooks/use-userFilter'
 import { ERoles } from '../../../../constants/profile'
 import { ReportsFilters, setCampaignStatisticsFilters } from '../../store/reports'
+import { useUserLoader } from '../../../campaigns/hooks/useUserLoader'
+import { useLeadListLoader } from '../../../campaigns/hooks/useLeadListLoader'
+import { useAgentGroupLoader } from '../../../campaigns/hooks/useAgentGroupLoader'
+import { useCampaignLoader } from '../../../campaigns/hooks/useCampaignLoader'
+import { dispositionOptions } from '../../../../types/calls'
 
 type Props = {
   filters: ReportsFilters
@@ -26,12 +28,6 @@ type Props = {
 type InactiveFilters = {
   [key in keyof ReportsFilters]: boolean
 }
-const dispositions = [
-  { label: 'Answered', value: 'answered' },
-  { label: 'Unanswered', value: 'no_answer' },
-  // { label: 'Failed', value: 'failed' },
-  // { label: 'Busy', value: 'busy' },
-]
 
 export const CampaignStatisticsFilters: FC<Props> = ({
   filters,
@@ -41,9 +37,29 @@ export const CampaignStatisticsFilters: FC<Props> = ({
   const { t } = useTranslation('campaign-statistics')
   const { select, dispatch } = useRedux()
 
-  const { campaignOptions, loadMoreCampaigns } = useCampaignNameFilter('list', true)
-  const { options: leadListOptions, loadMoreLeadLists } = useLeadListFilter()
-  const { options: userOptions, loadMoreUsers } = useUserFilter(ERoles.AGENT)
+  const {
+    options: userOptions,
+    loadMore: loadMoreUsers,
+    setSearch: setUserSearch,
+  } = useUserLoader(ERoles.AGENT, [{ label: '-', value: 0 }])
+
+  const {
+    options: campaignOptions,
+    loadMore: loadMoreCampaigns,
+    setSearch: setCampaignSearch,
+  } = useCampaignLoader([{ label: '-', value: 0 }])
+
+  const {
+    options: leadListOptions,
+    loadMore: loadMoreLeadLists,
+    setSearch: setLeadListSearch,
+  } = useLeadListLoader([{ label: '-', value: 0 }])
+
+  const {
+    options: agentGroupOptions,
+    loadMore: loadMoreAgentGroup,
+    setSearch: setAgentGroupSearch,
+  } = useAgentGroupLoader([{ label: '-', value: 0 }])
 
   const statuses = select(selectLeadStatuses)
 
@@ -113,8 +129,10 @@ export const CampaignStatisticsFilters: FC<Props> = ({
             )}
             onMenuScrollToBottom={loadMoreCampaigns}
             onChange={(e) => onChangeSelectFilter(e?.value, 'campaignId')}
+            onInputChange={setCampaignSearch}
             maxMenuHeight={200}
             width="100%"
+            isSearchable
           />
         </div>
       )}
@@ -130,8 +148,29 @@ export const CampaignStatisticsFilters: FC<Props> = ({
             )}
             onChange={(e) => onChangeSelectFilter(e?.value, 'leadListId')}
             onMenuScrollToBottom={loadMoreLeadLists}
+            onInputChange={setLeadListSearch}
             maxMenuHeight={200}
             width="100%"
+            isSearchable
+          />
+        </div>
+      )}
+      {!inactiveFilters?.agentId && (
+        <div style={{ flex: 1 }}>
+          <Select
+            value={filters.agentGroupId}
+            disabled={disabled}
+            name="agentGroupId"
+            placeholder={t('filters.placeholders.agent-group')}
+            options={agentGroupOptions.filter((v) =>
+              [undefined, 0].includes(filters.agentGroupId) ? v.label !== '-' : true,
+            )}
+            onChange={(e) => onChangeSelectFilter(e?.value, 'agentGroupId')}
+            onMenuScrollToBottom={loadMoreAgentGroup}
+            onInputChange={setAgentGroupSearch}
+            maxMenuHeight={200}
+            width="100%"
+            isSearchable
           />
         </div>
       )}
@@ -146,9 +185,11 @@ export const CampaignStatisticsFilters: FC<Props> = ({
               [undefined, 0].includes(filters.agentId) ? v.label !== '-' : true,
             )}
             onChange={(e) => onChangeSelectFilter(e?.value, 'agentId')}
+            onInputChange={setUserSearch}
             onMenuScrollToBottom={loadMoreUsers}
             maxMenuHeight={200}
             width="100%"
+            isSearchable
           />
         </div>
       )}
@@ -161,7 +202,7 @@ export const CampaignStatisticsFilters: FC<Props> = ({
             placeholder={t('filters.placeholders.disposition')}
             options={[
               ...(filters.disposition ? [{ label: '-', value: '' }] : []),
-              ...dispositions,
+              ...dispositionOptions,
             ]}
             width="100%"
             onChange={(e) => onChangeSelectFilter(e?.value, 'disposition')}
@@ -184,6 +225,7 @@ export const CampaignStatisticsFilters: FC<Props> = ({
             ]}
             width="100%"
             onChange={(e) => onChangeSelectFilter(e?.value, 'status')}
+            isSearchable
           />
         </div>
       )}

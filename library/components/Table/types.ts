@@ -32,6 +32,8 @@ export type TBodyCellProps = {
   children?: TElement
   whiteSpace?: CSSProperties['whiteSpace']
   bg?: keyof TPalette
+  height?: CSSProperties['height']
+  alignItems?: CSSProperties['alignItems']
 }
 
 export type TCollapseCellProps = {

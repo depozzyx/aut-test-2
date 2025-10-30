@@ -5,6 +5,7 @@ import {
   ECampaignDeleteOptions,
   TActiveCampaignsReq,
   TActiveCampaignsRes,
+  TCampaignById,
   TCampaignInfoRes,
   TCampaignListReq,
   TCreateCampaignReq,
@@ -15,8 +16,11 @@ const getActiveCampaigns = (
   params: TActiveCampaignsReq,
 ): TAxiosResponse<TActiveCampaignsRes> => api.get('/campaign/dashboard', { params })
 
-const getCampaignList = (params: TCampaignListReq): TAxiosResponse<TActiveCampaignsRes> =>
-  api.get('/campaign', { params })
+const getCampaignList = (
+  params: TCampaignListReq,
+  controller?: AbortController,
+): TAxiosResponse<TActiveCampaignsRes> =>
+  api.get('/campaign', { params, signal: controller?.signal })
 
 const editCampaign = (data: TEditCampaignReq): TAxiosResponse<any> =>
   api.put('/campaign', data)
@@ -29,7 +33,8 @@ const deleteCampaign = (
 const createCampaign = (data: TCreateCampaignReq): TAxiosResponse<any> =>
   api.post('/campaign', data)
 
-const getCampaignById = (id: string): TAxiosResponse<any> => api.get(`/campaign/${id}`)
+const getCampaignById = (id: string): TAxiosResponse<{ data: TCampaignById }> =>
+  api.get(`/campaign/${id}`)
 
 const getCampaignInfoById = (id: number): TAxiosResponse<TCampaignInfoRes> =>
   api.get(`/campaign/${id}/info`)

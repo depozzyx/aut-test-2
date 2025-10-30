@@ -6,38 +6,53 @@ import useTranslation from 'next-translate/useTranslation'
 import { CloseIcon } from '@peiko/components/icons/CloseIcon/CloseIcon'
 import { BaseIconButton } from '@peiko/components/buttons/BaseIconButton'
 
-import { useCampaignNameFilter } from '@/features/campaigns/hooks/use-campaignNameFilter'
 import { Select } from '@peiko/components/inputs/Select/Select'
 import { endOfDay, startOfDay } from 'date-fns'
 import { Input } from '@peiko/components/inputs/Input'
-import { RangeDayPicker } from '../../../../components/inputs/RangeDayPicker'
-import { CDRListFilters, setCDRFilters } from '../../store/calls'
+import { ERoles } from '@/constants/profile'
+import { RangeDayPicker } from '@/components/inputs/RangeDayPicker'
+import { SearchFieldIcon } from '@/components/icons/SearchFieldIcon'
 
-import { getLeadStatuses, selectLeadStatuses } from '../../../leads/store/leads'
-import { useLeadListFilter } from '../../../campaigns/hooks/use-leadListFilter'
-import { useUserFilter } from '../../../campaigns/hooks/use-userFilter'
-import { ERoles } from '../../../../constants/profile'
-import { SearchFieldIcon } from '../../../../components/icons/SearchFieldIcon'
+import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
+import { CDRListFilters, setCDRFilters } from '@/features/calls/store/calls'
+import { dispositionOptions } from '@/types/calls'
+import { useUserLoader } from '@/features/campaigns/hooks/useUserLoader'
+import { useLeadListLoader } from '@/features/campaigns/hooks/useLeadListLoader'
+import { useAgentGroupLoader } from '@/features/campaigns/hooks/useAgentGroupLoader'
+import { useCampaignLoader } from '@/features/campaigns/hooks/useCampaignLoader'
 
 type Props = {
   filters: CDRListFilters
   disabled?: boolean
 }
 
-const dispositions = [
-  { label: 'Answered', value: 'answered' },
-  { label: 'Unanswered', value: 'no_answer' },
-  // { label: 'Failed', value: 'failed' },
-  // { label: 'Busy', value: 'busy' },
-]
-
 export const CallsFilters: FC<Props> = ({ filters, disabled }: Props) => {
   const { t } = useTranslation('calls-list')
   const { select, dispatch } = useRedux()
 
-  const { campaignOptions, loadMoreCampaigns } = useCampaignNameFilter('list', true)
-  const { options: leadListOptions, loadMoreLeadLists } = useLeadListFilter()
-  const { options: userOptions, loadMoreUsers } = useUserFilter(ERoles.AGENT)
+  const {
+    options: campaignOptions,
+    loadMore: loadMoreCampaigns,
+    setSearch: setCampaignSearch,
+  } = useCampaignLoader([{ label: '-', value: 0 }])
+
+  const {
+    options: agentOptions,
+    loadMore: agentLoadMore,
+    setSearch: setAgentSearch,
+  } = useUserLoader(ERoles.AGENT, [{ label: '-', value: 0 }])
+
+  const {
+    options: leadListOptions,
+    loadMore: loadMoreLeadLists,
+    setSearch: setLeadListSearch,
+  } = useLeadListLoader([{ label: '-', value: 0 }])
+
+  const {
+    options: agentGroupOptions,
+    loadMore: loadMoreAgentGroup,
+    setSearch: setAgentGroupSearch,
+  } = useAgentGroupLoader([{ label: '-', value: 0 }])
 
   const statuses = select(selectLeadStatuses)
 
@@ -92,8 +107,10 @@ export const CallsFilters: FC<Props> = ({ filters, disabled }: Props) => {
           )}
           onMenuScrollToBottom={loadMoreCampaigns}
           onChange={(e) => onChangeSelectFilter(e?.value, 'campaignId')}
+          onInputChange={setCampaignSearch}
           maxMenuHeight={200}
           width="100%"
+          isSearchable
         />
       </div>
       <div style={{ flex: 1 }}>
@@ -107,8 +124,27 @@ export const CallsFilters: FC<Props> = ({ filters, disabled }: Props) => {
           )}
           onChange={(e) => onChangeSelectFilter(e?.value, 'leadListId')}
           onMenuScrollToBottom={loadMoreLeadLists}
+          onInputChange={setLeadListSearch}
           maxMenuHeight={200}
           width="100%"
+          isSearchable
+        />
+      </div>
+      <div style={{ flex: 1 }}>
+        <Select
+          value={filters.agentGroupId}
+          disabled={disabled}
+          name="agentGroupId"
+          placeholder={t('filters.placeholders.agent-group')}
+          options={agentGroupOptions.filter((v) =>
+            [undefined, 0].includes(filters.agentGroupId) ? v.label !== '-' : true,
+          )}
+          onChange={(e) => onChangeSelectFilter(e?.value, 'agentGroupId')}
+          onMenuScrollToBottom={loadMoreAgentGroup}
+          onInputChange={setAgentGroupSearch}
+          maxMenuHeight={200}
+          width="100%"
+          isSearchable
         />
       </div>
       <div style={{ flex: 1 }}>
@@ -117,13 +153,15 @@ export const CallsFilters: FC<Props> = ({ filters, disabled }: Props) => {
           disabled={disabled}
           name="agentId"
           placeholder={t('filters.placeholders.agent')}
-          options={userOptions.filter((v) =>
+          options={agentOptions.filter((v) =>
             [undefined, 0].includes(filters.agentId) ? v.label !== '-' : true,
           )}
           onChange={(e) => onChangeSelectFilter(e?.value, 'agentId')}
-          onMenuScrollToBottom={loadMoreUsers}
+          onMenuScrollToBottom={agentLoadMore}
+          onInputChange={setAgentSearch}
           maxMenuHeight={200}
           width="100%"
+          isSearchable
         />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -134,7 +172,7 @@ export const CallsFilters: FC<Props> = ({ filters, disabled }: Props) => {
           placeholder={t('filters.placeholders.disposition')}
           options={[
             ...(filters.disposition ? [{ label: '-', value: '' }] : []),
-            ...dispositions,
+            ...dispositionOptions,
           ]}
           width="100%"
           onChange={(e) => onChangeSelectFilter(e?.value, 'disposition')}
@@ -155,6 +193,7 @@ export const CallsFilters: FC<Props> = ({ filters, disabled }: Props) => {
           ]}
           width="100%"
           onChange={(e) => onChangeSelectFilter(e?.value, 'status')}
+          isSearchable
         />
       </div>
       <div style={{ flex: 1 }}>
