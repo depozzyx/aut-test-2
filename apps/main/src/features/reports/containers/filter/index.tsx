@@ -8,16 +8,19 @@ import { BaseIconButton } from '@peiko/components/buttons/BaseIconButton'
 
 import { Select } from '@peiko/components/inputs/Select/Select'
 import { endOfDay, startOfDay } from 'date-fns'
-import { RangeDayPicker } from '../../../../components/inputs/RangeDayPicker'
+import { useUserLoader } from '@/features/campaigns/hooks/useUserLoader'
+import { useLeadListLoader } from '@/features/campaigns/hooks/useLeadListLoader'
+import { useAgentGroupLoader } from '@/features/campaigns/hooks/useAgentGroupLoader'
+import { useCampaignLoader } from '@/features/campaigns/hooks/useCampaignLoader'
+import { RangeDayPicker } from '@/components/inputs/RangeDayPicker'
 
-import { getLeadStatuses, selectLeadStatuses } from '../../../leads/store/leads'
-import { ERoles } from '../../../../constants/profile'
-import { ReportsFilters, setCampaignStatisticsFilters } from '../../store/reports'
-import { useUserLoader } from '../../../campaigns/hooks/useUserLoader'
-import { useLeadListLoader } from '../../../campaigns/hooks/useLeadListLoader'
-import { useAgentGroupLoader } from '../../../campaigns/hooks/useAgentGroupLoader'
-import { useCampaignLoader } from '../../../campaigns/hooks/useCampaignLoader'
-import { dispositionOptions } from '../../../../types/calls'
+import { getLeadStatuses, selectLeadStatuses } from '@/features/leads/store/leads'
+import { ERoles } from '@/constants/profile'
+import { dispositionOptions } from '@/types/calls'
+import {
+  ReportsFilters,
+  setCampaignStatisticsFilters,
+} from '@/features/reports/store/reports'
 
 type Props = {
   filters: ReportsFilters
@@ -41,7 +44,7 @@ export const CampaignStatisticsFilters: FC<Props> = ({
     options: userOptions,
     loadMore: loadMoreUsers,
     setSearch: setUserSearch,
-  } = useUserLoader(ERoles.AGENT, [{ label: '-', value: 0 }])
+  } = useUserLoader(ERoles.AGENT, [{ label: '-', value: 0 }], { showBlocked: true })
 
   const {
     options: campaignOptions,
