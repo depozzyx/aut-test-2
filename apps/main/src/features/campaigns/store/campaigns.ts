@@ -306,15 +306,15 @@ export const asyncGetActiveCampaigns =
   async (dispatch, getState) => {
     try {
       dispatch(setIsLoading(true))
-      const { filterCampaignIds } = getState().campaigns
+      const { filterCampaignIds, pagination } = getState().campaigns
       const { data } = await apiCampaigns.getActiveCampaigns({
         status: CAMPAIGN_STATUSES.ACTIVE,
         ids: filterCampaignIds,
-        ...params,
+        ...{ page: pagination.page, limit: pagination.limit, ...params },
       })
 
       dispatch(setActiveCampaigns(data.data))
-      dispatch(setPagination(data.pagination))
+      dispatch(setPagination({ ...pagination, ...data.pagination }))
     } catch (e) {
       handleRestError({
         e,

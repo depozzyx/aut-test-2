@@ -26,7 +26,7 @@ export type TActiveCampaignsReq = {
   ids?: number[]
   fromDate?: string
   toDate?: string
-} & Pick<TPagination, 'page' | 'limit'>
+} & Partial<Pick<TPagination, 'page' | 'limit'>>
 
 export type TAgentAssignedCampaignsReq = {
   orderBy?: TCampaignOrderBy

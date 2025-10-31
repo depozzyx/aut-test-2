@@ -112,7 +112,7 @@ export const Leads: FC = () => {
   useEffect(() => {
     dispatch(getLeadsGroups({ page: 1, limit: groupsPagination.limit }))
     if (leadsGroup) {
-      filters.setFieldValue('leadListId', leadsGroup.toString())
+      filters.setFieldValue('leadListId', leadsGroup)
     }
     setCanLoadList(true)
   }, [])
