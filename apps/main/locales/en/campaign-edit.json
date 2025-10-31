@@ -53,7 +53,8 @@
       "caller-number": "Caller Number",
       "edit-action": "Edit",
       "delete-action": "Delete",
-      "no-routes": "No routes added yet. Click 'Add Route' to create one."
+      "no-routes": "No routes added yet. Click 'Add Route' to create one.",
+      "error-duplicate-route": "This route already exists in the route list."
     }
   },
   "breadCrumbs": {

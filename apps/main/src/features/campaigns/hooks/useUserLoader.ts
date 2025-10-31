@@ -10,11 +10,13 @@ import {
   selectUsersPagination,
 } from '@/features/users/store/users'
 import { ERoles } from '@/constants/profile'
+import { TUsersReq } from '@/api-rest/users/types'
 import { OptionsLoader } from '../types'
 
 export const useUserLoader = (
   role: ERoles,
   predefinedOptions: { value: number | undefined; label: string }[] = [],
+  predefinedFilters: Partial<TUsersReq> = {},
 ): OptionsLoader => {
   const { select, dispatch } = useRedux()
 
@@ -46,6 +48,7 @@ export const useUserLoader = (
           {
             page: 1,
             limit,
+            ...predefinedFilters,
             search,
           },
           false,
@@ -67,6 +70,7 @@ export const useUserLoader = (
           {
             page: page + 1,
             limit,
+            ...predefinedFilters,
             search,
           },
           true,

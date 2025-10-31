@@ -21,12 +21,14 @@ import { FormikSelect } from '@peiko/components/inputs/formik-adapters/FormikSel
 import { FormikCheckbox } from '@peiko/components/inputs/formik-adapters/FormikCheckbox'
 import { useRoutesLoader } from '../../hooks/useRoutesLoader'
 import { RouteRow } from '../../hooks/useCampaignEdit'
+import { errorActions } from '../../../common/error'
+import { useRedux } from '../../../../hooks/use-redux'
 
 type TColumns = 'active' | 'prefix' | 'callerNumber' | 'edit' | 'delete'
 
 export const CampaignRoutesPage = ({ formik }: { formik: TFormik }): JSX.Element => {
   const { t } = useTranslation('campaign-edit')
-
+  const { dispatch } = useRedux()
   const headers: THeader<TColumns>[] = useMemo(
     () => [
       { label: t('pages.routes.active'), value: 'active', width: '10%' },
@@ -83,6 +85,17 @@ export const CampaignRoutesPage = ({ formik }: { formik: TFormik }): JSX.Element
     const rowErrors = (errors as any)?.routes?.[index]
 
     if (rowErrors?.prefix || rowErrors?.routeId) {
+      return
+    }
+
+    const hasDuplicate = formik.values.routes.some(
+      (route: RouteRow, ind: number) =>
+        ind !== index &&
+        route.routeId === formik.values.routes[index].routeId &&
+        route.prefix === formik.values.routes[index].prefix,
+    )
+    if (hasDuplicate) {
+      dispatch(errorActions.showGlobalError(t('pages.routes.error-duplicate-route')))
       return
     }
 

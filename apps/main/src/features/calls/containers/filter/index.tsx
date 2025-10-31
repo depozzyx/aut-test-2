@@ -40,7 +40,7 @@ export const CallsFilters: FC<Props> = ({ filters, disabled }: Props) => {
     options: agentOptions,
     loadMore: agentLoadMore,
     setSearch: setAgentSearch,
-  } = useUserLoader(ERoles.AGENT, [{ label: '-', value: 0 }])
+  } = useUserLoader(ERoles.AGENT, [{ label: '-', value: 0 }], { showBlocked: true })
 
   const {
     options: leadListOptions,
