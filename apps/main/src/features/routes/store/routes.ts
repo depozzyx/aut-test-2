@@ -44,7 +44,7 @@ const routes = createSlice({
           return acc
         }, state.routes.slice())
       } else {
-        state.routes = action.payload.data
+        state.routes = data
       }
     },
     setCurrentRoute(state, action: PayloadAction<TRoute | null>) {

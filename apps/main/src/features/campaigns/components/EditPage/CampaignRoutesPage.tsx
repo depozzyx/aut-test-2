@@ -171,6 +171,7 @@ export const CampaignRoutesPage = ({ formik }: { formik: TFormik }): JSX.Element
                     })
                   formik.setFieldValue(`routes[${index}].routeName`, option?.label)
                 }}
+                isSearchable
               />
             ) : (
               <InfoCell title={route.routeName} />
@@ -212,7 +213,7 @@ export const CampaignRoutesPage = ({ formik }: { formik: TFormik }): JSX.Element
           ),
         },
       })),
-    [formik.values.routes, formik.errors, formik.touched, editedRow],
+    [formik.values.routes, formik.errors, formik.touched, editedRow, options],
   )
 
   return (
