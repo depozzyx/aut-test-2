@@ -58,7 +58,7 @@ export const useCampaignNameFilter = (
   )
 
   useSWR(
-    [key, pagination.page, pagination.limit],
+    [key, pagination.page, pagination.limit, search],
     () =>
       fetcher({
         page: pagination.page,
