@@ -4,11 +4,11 @@ FROM node:20.19.4 As build
 WORKDIR /app
 COPY . .
 
-# COPY yarn.lock tsconfig* /app/
+RUN corepack enable
 
-RUN yarn install --network-timeout 240000
-RUN yarn tsc
-RUN yarn lint-deploy
-RUN yarn build-main
+RUN pnpm install --frozen-lockfile --fetch-timeout 240000
+RUN pnpm tsc
+RUN pnpm lint-deploy
+RUN pnpm build-main
 
 EXPOSE 3001

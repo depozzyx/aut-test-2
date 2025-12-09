@@ -1,11 +1,11 @@
 ## Install
 
 - Install globally **node.js 18.17.1**
-- Install dependencies: **yarn install**
+- Install dependencies: **pnpm install**
 
 ## Commands
 
-- Start locale dev server: **yarn dev**
+- Start locale dev server: **pnpm --filter main dev**
 
 ## Config files
 
