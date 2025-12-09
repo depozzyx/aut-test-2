@@ -12,4 +12,4 @@ services:
     #   - /app/apps/main/dist
     env_file:
       - ./apps/main/.env
-    command: 'yarn start-main'
+    command: 'pnpm start-main'
